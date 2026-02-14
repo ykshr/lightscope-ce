@@ -1,0 +1,38 @@
+query TotalCountry(
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $articleFilter: ArticleFilterInput
+) {
+  trend(
+    startDate: $startDate
+    endDate: $endDate
+    articleFilter: $articleFilter
+    aggregation: { unit: TOTAL }
+    metric: VISITS_VIEWS
+  ) {
+    categoryGeo {
+      country
+      value
+    }
+  }
+}
+
+query TotalCity(
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $articleFilter: ArticleFilterInput
+  $country: String!
+) {
+  trend(
+    startDate: $startDate
+    endDate: $endDate
+    articleFilter: $articleFilter
+    aggregation: { unit: TOTAL }
+    metric: VISITS_VIEWS
+  ) {
+    categoryGeo(includeCountries: [$country]) {
+      city
+      value
+    }
+  }
+}

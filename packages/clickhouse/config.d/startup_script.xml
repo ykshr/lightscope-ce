@@ -1,0 +1,7 @@
+<clickhouse>
+    <startup_scripts>
+        <scripts>
+            <query>CREATE DATABASE IF NOT EXISTS lightscope</query>
+        </scripts>
+    </startup_scripts>
+</clickhouse>

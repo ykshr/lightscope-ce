@@ -1,0 +1,37 @@
+query TotalReferrerDomain(
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $articleFilter: ArticleFilterInput
+) {
+  trend(
+    startDate: $startDate
+    endDate: $endDate
+    articleFilter: $articleFilter
+    aggregation: { unit: TOTAL }
+    metric: VISITS_VIEWS
+  ) {
+    categoryReferrer {
+      domain
+      value
+    }
+  }
+}
+
+query TotalUtmCampaign(
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $articleFilter: ArticleFilterInput
+) {
+  trend(
+    startDate: $startDate
+    endDate: $endDate
+    articleFilter: $articleFilter
+    aggregation: { unit: TOTAL }
+    metric: VISITS_VIEWS
+  ) {
+    categoryUtm {
+      campaign
+      value
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "@lightscope/clickhouse",
+  "version": "0.0.1",
+  "scripts": {
+    "docker:build": "docker build --platform linux/arm64 -t @lightscope/clickhouse:latest -t @lightscope/clickhouse:$npm_package_version ."
+  }
+}

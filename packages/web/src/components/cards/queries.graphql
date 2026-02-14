@@ -1,0 +1,53 @@
+query TotalEngagementTime(
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $articleFilter: ArticleFilterInput
+) {
+  trend(
+    startDate: $startDate
+    endDate: $endDate
+    articleFilter: $articleFilter
+    aggregation: { unit: TOTAL }
+    metric: ENGAGEMENT_TIME
+  ) {
+    total {
+      value
+    }
+  }
+}
+
+query TotalViews(
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $articleFilter: ArticleFilterInput
+) {
+  trend(
+    startDate: $startDate
+    endDate: $endDate
+    articleFilter: $articleFilter
+    aggregation: { unit: TOTAL }
+    metric: VISITS_VIEWS
+  ) {
+    total {
+      value
+    }
+  }
+}
+
+query TotalUniqueUsers(
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $articleFilter: ArticleFilterInput
+) {
+  trend(
+    startDate: $startDate
+    endDate: $endDate
+    articleFilter: $articleFilter
+    aggregation: { unit: TOTAL }
+    metric: USERS_VIEWS
+  ) {
+    total {
+      value
+    }
+  }
+}

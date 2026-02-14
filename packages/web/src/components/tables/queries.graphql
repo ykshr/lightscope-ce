@@ -1,0 +1,150 @@
+query ArticleRank(
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $articleFilter: ArticleFilterInput
+  $limit: Int
+  $page: Int
+  $order: Order
+  $metric: Metric
+  $isArticles: Boolean = false
+  $isCategoryAge: Boolean = false
+  $isCategoryApp: Boolean = false
+  $isCategoryDevice: Boolean = false
+  $isCategoryGender: Boolean = false
+  $isCategoryGeo: Boolean = false
+  $isCategoryReferrer: Boolean = false
+  $isCategoryUtm: Boolean = false
+  $includeAges: [String!]
+  $excludeAges: [String!]
+  $includeAppTypes: [String!]
+  $excludeAppTypes: [String!]
+  $includeApps: [String!]
+  $excludeApps: [String!]
+  $includeDeviceTypes: [String!]
+  $excludeDeviceTypes: [String!]
+  $includeDeviceVendors: [String!]
+  $excludeDeviceVendors: [String!]
+  $includeDevices: [String!]
+  $excludeDevices: [String!]
+  $includeGenders: [String!]
+  $excludeGenders: [String!]
+  $includeContinents: [String!]
+  $excludeContinents: [String!]
+  $includeSubdivisions: [String!]
+  $excludeSubdivisions: [String!]
+  $includeCountries: [String!]
+  $excludeCountries: [String!]
+  $includeCities: [String!]
+  $excludeCities: [String!]
+  $includeDomains: [String!]
+  $excludeDomains: [String!]
+  $includeReferrers: [String!]
+  $excludeReferrers: [String!]
+  $includeSources: [String!]
+  $excludeSources: [String!]
+  $includeMediums: [String!]
+  $excludeMediums: [String!]
+  $includeCampaigns: [String!]
+  $excludeCampaigns: [String!]
+) {
+  rank(
+    startDate: $startDate
+    endDate: $endDate
+    articleFilter: $articleFilter
+    limit: $limit
+    page: $page
+    order: $order
+    metric: $metric
+  ) {
+    ...RankTemplate
+  }
+}
+
+fragment RankTemplate on Rank {
+  categoryAge(includeAges: $includeAges, excludeAges: $excludeAges)
+    @include(if: $isCategoryAge) {
+    ...RankAnalytics
+  }
+  categoryApp(
+    includeAppTypes: $includeAppTypes
+    excludeAppTypes: $excludeAppTypes
+    includeApps: $includeApps
+    excludeApps: $excludeApps
+  ) @include(if: $isCategoryApp) {
+    ...RankAnalytics
+  }
+  categoryDevice(
+    includeDeviceTypes: $includeDeviceTypes
+    excludeDeviceTypes: $excludeDeviceTypes
+    includeDeviceVendors: $includeDeviceVendors
+    excludeDeviceVendors: $excludeDeviceVendors
+    includeDevices: $includeDevices
+    excludeDevices: $excludeDevices
+  ) @include(if: $isCategoryDevice) {
+    ...RankAnalytics
+  }
+  categoryGender(
+    includeGenders: $includeGenders
+    excludeGenders: $excludeGenders
+  ) @include(if: $isCategoryGender) {
+    ...RankAnalytics
+  }
+  categoryGeo(
+    includeContinents: $includeContinents
+    excludeContinents: $excludeContinents
+    includeSubdivisions: $includeSubdivisions
+    excludeSubdivisions: $excludeSubdivisions
+    includeCountries: $includeCountries
+    excludeCountries: $excludeCountries
+    includeCities: $includeCities
+    excludeCities: $excludeCities
+  ) @include(if: $isCategoryGeo) {
+    ...RankAnalytics
+  }
+  categoryReferrer(
+    includeDomains: $includeDomains
+    excludeDomains: $excludeDomains
+    includeReferrers: $includeReferrers
+    excludeReferrers: $excludeReferrers
+  ) @include(if: $isCategoryReferrer) {
+    ...RankAnalytics
+  }
+  categoryUtm(
+    includeSources: $includeSources
+    excludeSources: $excludeSources
+    includeMediums: $includeMediums
+    excludeMediums: $excludeMediums
+    includeCampaigns: $includeCampaigns
+    excludeCampaigns: $excludeCampaigns
+  ) @include(if: $isCategoryUtm) {
+    ...RankAnalytics
+  }
+  articles @include(if: $isArticles) {
+    ...RankAnalytics
+  }
+}
+
+fragment RankAnalytics on RankAnalytics {
+  index
+  url
+  value
+  article {
+    url
+    title
+    type
+    image
+    siteName
+    publishedTime
+    section
+    analytics(
+      startDate: $startDate
+      endDate: $endDate
+      aggregation: { unit: TOTAL }
+      metric: $metric
+    ) {
+      analytics {
+        value
+      }
+    }
+  }
+}

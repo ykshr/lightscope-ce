@@ -1,0 +1,14 @@
+{
+  "name": "lightscope",
+  "private": true,
+  "workspaces": [
+    "packages/api",
+    "packages/clickhouse",
+    "packages/sandbox/*",
+    "packages/script",
+    "packages/web"
+  ],
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}

@@ -1,3 +1,4 @@
+// TODO: Add unit tests - This utility converts snake_case keys to camelCase. Tests should cover nested objects and arrays.
 const snakeToCamel = (str: string): string => {
   return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
 };

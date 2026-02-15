@@ -1,3 +1,4 @@
+// TODO: Add unit tests - Complex logic for encoding/decoding URL parameters. Tests needed for all data types (date, nestedArray, etc.) and configuration edge cases.
 import type { FilterToQuery } from '@/types/filter';
 import { convertDateString, formatDate } from './date';
 type DataType = 'date' | 'string' | 'array' | 'nestedArray' | 'number';

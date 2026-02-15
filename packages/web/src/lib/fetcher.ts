@@ -1,3 +1,4 @@
+// TODO: Add unit tests - The serializeDates function handles recursive date serialization and needs to be tested to ensure it handles nested objects and arrays correctly.
 import { account } from '@/lib/appwrite';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;

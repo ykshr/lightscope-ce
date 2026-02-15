@@ -1,3 +1,4 @@
+// TODO: Add unit tests - Test the mapping of category URL parameters to internal variables, ensuring all category types (age, app, device, etc.) are handled correctly.
 export const categoryUrlParamsToVariables = (urlParams: {
   [name: string]: any;
 }) => {

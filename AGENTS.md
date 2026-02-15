@@ -16,7 +16,10 @@ AI agents must respect package boundaries.
 
 # Global Rules
 
-## 1. Do Not Change Architecture
+## 1. Language
+- Write all projects in concise and intuitive English
+
+## 2. Do Not Change Architecture
 Never introduce:
 - ORM
 - New framework
@@ -24,17 +27,17 @@ Never introduce:
 - Global state libraries
 - Monorepo restructuring
 
-## 2. Minimal Diffs
+## 3. Minimal Diffs
 - Edit only necessary lines.
 - Do not reformat unrelated files.
 - Do not rewrite entire modules unless required.
 
-## 3. Type Safety
+## 4. Type Safety
 - No `any`
 - No unsafe casting
 - Strict TypeScript only
 
-## 4. No Deep Cross-Package Imports
+## 5. No Deep Cross-Package Imports
 
 Allowed:
   import from package public exports

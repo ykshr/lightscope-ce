@@ -1,6 +1,6 @@
 # AGENTS.md (root)
 
-This is a TypeScript monorepo using npm workspaces.
+This is a TypeScript monorepo using pnpm workspaces.
 
 packages/
   api/

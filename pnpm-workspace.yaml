@@ -1,0 +1,9 @@
+packages:
+  - packages/api
+  - packages/clickhouse
+  - packages/sandbox/*
+  - packages/script
+  - packages/web
+
+patchedDependencies:
+  psl: patches/psl.patch

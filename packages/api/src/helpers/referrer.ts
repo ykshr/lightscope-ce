@@ -1,4 +1,4 @@
-import psl from 'psl';
+import * as psl from 'psl';
 
 export default function processReferrer(referrer: string | undefined): {
   referrer: string;
@@ -16,7 +16,7 @@ export default function processReferrer(referrer: string | undefined): {
 
     const parsed = psl.parse(hostname);
 
-    if (parsed.error || !parsed.domain)
+    if ('error' in parsed || !parsed.domain)
       return {
         referrer,
         domain: 'unknown',

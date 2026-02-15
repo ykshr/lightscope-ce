@@ -46,7 +46,7 @@ export default function MapCountry() {
   }, []);
 
   // 1. Fetch map data
-  const { data: geographies, isLoading: isLoadingGeographies } = useQuery({
+  const { data: geographies } = useQuery({
     queryKey: ['geoData'],
     queryFn: async () => {
       const res = await fetch(geoUrl);
@@ -61,7 +61,7 @@ export default function MapCountry() {
   });
 
   // 2. Statistical data
-  const { data: dataCountries, isLoading: isLoadingCountries } =
+  const { data: dataCountries } =
     useTotalCountryQuery({
       startDate,
       endDate,

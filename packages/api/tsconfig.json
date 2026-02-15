@@ -14,11 +14,10 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "incremental": true,
-    "types": ["node"]
-  },
-  "include": ["src/**/*"],
+        "incremental": true
+      },  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

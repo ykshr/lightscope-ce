@@ -1,16 +1,11 @@
-import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/header';
 import Sidebar from '@/components/Sidebar';
 import Overview from '@/contents/overview';
-import { client, login } from '@/lib/appwrite';
 import Footer from '@/components/Footer';
 import Ranking from '@/contents/ranking';
 import Article from '@/contents/article';
-
-// client.ping().catch((error) => {
-//   console.error('ping failed:', error);
-// });
 
 function AppLayout() {
   return (
@@ -59,9 +54,9 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  useEffect(() => {
-    login();
-  }, []);
+  const { loading } = useAuth();
+
+  if (loading) return null;
 
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">

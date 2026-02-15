@@ -1,3 +1,4 @@
+// TODO: Add unit tests - Test referrer parsing logic, including direct traffic, valid URLs, and invalid/unknown domains.
 import * as psl from 'psl';
 
 export default function processReferrer(referrer: string | undefined): {

@@ -1,3 +1,4 @@
+// TODO: Add unit tests - Verify color cycling logic and correct array generation.
 const DEFAULT_COLORS = [
   'var(--chart-blue-1)',
   'var(--chart-blue-2)',

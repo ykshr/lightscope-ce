@@ -76,6 +76,6 @@ After modifying:
 - fragments
 
 Run:
-  npm run codegen
+  pnpm run codegen
 
 Never manually edit generated files.

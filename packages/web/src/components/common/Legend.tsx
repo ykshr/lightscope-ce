@@ -40,7 +40,7 @@ export function LegendItem({
 }: {
   color: string;
   label: string;
-  value?: number;
+  value?: number | string;
   pct?: number;
   isLoading?: boolean;
 }) {

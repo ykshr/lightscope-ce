@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArticleRankQuery } from '@/__generated__/graphql';
-import { type Column } from '../ArticleTable';
+import { type Column } from '../templates/types';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
 
 type ArticleData = {

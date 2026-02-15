@@ -1,6 +1,7 @@
 {
   "name": "lightscope",
   "private": true,
+  "packageManager": "pnpm@10.29.3",
   "workspaces": [
     "packages/api",
     "packages/clickhouse",
@@ -10,5 +11,10 @@
   ],
   "devDependencies": {
     "prettier": "^3.6.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "psl@1.15.0": "patches/psl.patch"
+    }
   }
 }

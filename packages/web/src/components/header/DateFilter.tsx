@@ -56,10 +56,8 @@ export default function DateFilter() {
   const [, updateUrlParams] = useUrlParams();
 
   const handleTabChange = (value: string) => {
-    let start = '';
     const found = RELATIVE_OPTIONS_QUICK_ACCESS.find((o) => o.label === value);
     if (found) {
-      start = found.startDateString;
       updateUrlParams({
         startDate: found.startDateString,
         endDate: found.endDateString,

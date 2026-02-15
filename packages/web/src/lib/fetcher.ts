@@ -1,4 +1,4 @@
-import { account } from '@/lib/appwrite';
+import createAuthProvider from '@/auth';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -8,10 +8,12 @@ export const fetchData = <TData, TVariables>(
   options?: RequestInit['headers']
 ): (() => Promise<TData>) => {
   return async () => {
-    const userId = (await account.get()).$id;
-    if (!userId) throw new Error('User not authenticated');
+    const auth = createAuthProvider();
+    await auth.initialize();
+    const user = await auth.getUser();
+    const token = await auth.getToken();
 
-    const token = localStorage.getItem('auth_token');
+    // if (!user?.id) throw new Error('User not authenticated');
 
     const serializedVariables = variables
       ? serializeDates(variables)
@@ -27,7 +29,7 @@ export const fetchData = <TData, TVariables>(
       body: JSON.stringify({
         query,
         variables: serializedVariables,
-        userId,
+        userId: user?.id,
       }),
     });
 

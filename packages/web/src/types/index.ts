@@ -1,4 +1,3 @@
-// export * from '@/types/appwrite';
 
 export type AppRouteHandle = {
   title: string;

@@ -1,4 +1,3 @@
-// TODO: Add unit tests - This utility handles deep merging of objects and needs to be tested with various edge cases like arrays, nulls, and nested structures.
 const isObject = (item: any): item is Record<string, any> => {
   return !!(item && typeof item === 'object' && !Array.isArray(item));
 };

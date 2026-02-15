@@ -1,4 +1,3 @@
-// TODO: Add unit tests - The serializeDates function handles recursive date serialization and needs to be tested to ensure it handles nested objects and arrays correctly.
 import createAuthProvider from '@/auth';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -48,7 +47,7 @@ export const fetchData = <TData, TVariables>(
 /**
  * Recursively traverses an object and converts Date types to strings
  */
-const serializeDates = (obj: any): any => {
+export const serializeDates = (obj: any): any => {
   // Check for null or undefined
   if (obj === null || obj === undefined) {
     return obj;

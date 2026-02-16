@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createArticle, createPV } from './processEvent';
-import { type Payload } from '../../types';
+import { type Payload } from '../types';
 import { type CityResponse } from 'maxmind';
 
 // Mock Payload data
@@ -22,6 +22,8 @@ const mockPayload: Payload = {
   referrer: 'https://google.com',
   event_id: 'evt_123',
   event_time_utc: '2023-01-03T12:00:00Z',
+  event_time: '2023-01-03T12:00:00Z',
+  user_agent: 'Mozilla/5.0 (Test)',
   user_id: 'user_123',
   visit_id: 'visit_123',
   visitor_id: 'visitor_123',
@@ -133,7 +135,7 @@ describe('processEvent', () => {
         };
         const pv = createPV(payloadWithParamsInOg, null);
         
-        expect(pv.query_params['foo']).toBe('bar');
+        expect(pv.query_params?.['foo']).toBe('bar');
         expect(pv.utm_source).toBe('test');
     });
 

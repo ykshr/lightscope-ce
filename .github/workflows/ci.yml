@@ -40,7 +40,7 @@ jobs:
       - name: Cache vitest
         uses: actions/cache@v4
         with:
-          path: '**/node_modules/.vitest'
+          path: '**/node_modules/.vite/vitest'
           key: ${{ runner.os }}-vitest-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-vitest-

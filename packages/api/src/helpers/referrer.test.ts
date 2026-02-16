@@ -32,6 +32,14 @@ describe('processReferrer', () => {
     });
   });
 
+  it('should extract domain from a private suffix (github.io)', () => {
+    const referrer = 'https://user.github.io/repo';
+    expect(processReferrer(referrer)).toEqual({
+      referrer,
+      domain: 'user.github.io',
+    });
+  });
+
   it('should return "unknown" domain for invalid URL', () => {
     const referrer = 'invalid-url';
     expect(processReferrer(referrer)).toEqual({
@@ -40,15 +48,10 @@ describe('processReferrer', () => {
     });
   });
 
-  it('should return "unknown" domain when psl cannot parse it', () => {
-    // psl returns null or error for IP addresses or local domains depending on config,
-    // but let's test a case that might fail psl parsing or be invalid
+  it('should return "unknown" domain when tldts cannot parse it', () => {
+    // tldts returns null for IP addresses or local domains by default
     const referrer = 'http://localhost:3000';
-    // localhost might not be in the public suffix list in the way psl expects for a "domain"
-    // psl.parse('localhost') returns { input: 'localhost', error: ... } or just input depending on version
-    // Let's check the behavior. Based on code: if ('error' in parsed || !parsed.domain)
-
-    // Actually localhost usually doesn't have a 'domain' property in psl result (it has 'tld': null or similar).
+    // localhost is not in the public suffix list, so tldts.getDomain('localhost') returns null
     expect(processReferrer(referrer).domain).toBe('unknown');
   });
 });

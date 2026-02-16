@@ -1,4 +1,4 @@
-import * as psl from 'psl';
+import { getDomain } from 'tldts';
 
 export default function processReferrer(referrer: string | undefined): {
   referrer: string;
@@ -14,9 +14,9 @@ export default function processReferrer(referrer: string | undefined): {
     const url = new URL(referrer);
     const hostname = url.hostname;
 
-    const parsed = psl.parse(hostname);
+    const domain = getDomain(hostname, { allowPrivateDomains: true });
 
-    if ('error' in parsed || !parsed.domain)
+    if (!domain)
       return {
         referrer,
         domain: 'unknown',
@@ -24,7 +24,7 @@ export default function processReferrer(referrer: string | undefined): {
 
     return {
       referrer,
-      domain: parsed.domain,
+      domain,
     };
   } catch (e) {
     return {

@@ -32,6 +32,14 @@ describe('processReferrer', () => {
     });
   });
 
+  it('should extract domain from a private suffix (github.io)', () => {
+    const referrer = 'https://user.github.io/repo';
+    expect(processReferrer(referrer)).toEqual({
+      referrer,
+      domain: 'user.github.io',
+    });
+  });
+
   it('should return "unknown" domain for invalid URL', () => {
     const referrer = 'invalid-url';
     expect(processReferrer(referrer)).toEqual({

@@ -14,7 +14,7 @@ export default function processReferrer(referrer: string | undefined): {
     const url = new URL(referrer);
     const hostname = url.hostname;
 
-    const domain = getDomain(hostname);
+    const domain = getDomain(hostname, { allowPrivateDomains: true });
 
     if (!domain)
       return {

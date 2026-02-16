@@ -1,4 +1,4 @@
-# @lightscope/web
+# @lightscope-ce/web
 
 This is the web frontend for LightScope, built with React and Vite.
 
@@ -28,11 +28,13 @@ Ensure you have Node.js and npm/yarn/pnpm installed.
 ## Development
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Start the development server:
+
    ```bash
    npm run dev
    ```

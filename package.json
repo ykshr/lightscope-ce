@@ -1,5 +1,5 @@
 {
-  "name": "lightscope",
+  "name": "lightscope-ce",
   "private": true,
   "packageManager": "pnpm@10.29.3",
   "workspaces": [
@@ -13,7 +13,12 @@
     "prettier": "^3.6.2"
   },
   "scripts": {
-    "ci": "pnpm -r run codegen --if-present && pnpm -r run build --if-present && pnpm -r run test --if-present && pnpm -r run lint --if-present"
+    "lint": "pnpm --recursive --if-present run lint",
+    "test": "pnpm --recursive --if-present run test",
+    "build": "pnpm --recursive --if-present run build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "ci": "pnpm -r run codegen --if-present && pnpm run lint && pnpm run build && pnpm run test && pnpm run format:check"
   },
   "pnpm": {
     "patchedDependencies": {

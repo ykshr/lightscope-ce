@@ -20,6 +20,5 @@
     "format:check": "prettier --check .",
     "ci": "pnpm run lint && pnpm run build && pnpm run test && pnpm run format:check"
   },
-  "pnpm": {
-  }
+  "pnpm": {}
 }

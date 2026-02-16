@@ -1,4 +1,3 @@
-// TODO: Add unit tests - Ensure correct mapping from string metrics to GraphQL Metric enums.
 import { Metric } from '@/__generated__/graphql';
 
 const returnMetric = (metric: string) => {

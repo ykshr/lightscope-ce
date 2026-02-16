@@ -8,8 +8,8 @@ import {
   CLICKHOUSE_PV_TABLE_NAME,
   CLICKHOUSE_INSERT_MAX_TRY,
 } from '@/helpers/context';
-import processReferrer from '@/helpers/referrer';
 import { PayloadSchema, type Payload, type PV, type Article } from '@/types';
+import { createArticle, createPV } from './processEvent';
 
 const router = Router();
 
@@ -66,78 +66,13 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   }
   const payload: Payload = parseResult.data;
 
-  const url = payload['og:url'] || payload.url;
-  if (!url) {
-    return res.status(400).json({ error: 'URL is required' });
-  }
+  const article = createArticle(payload);
+  articleBuffers[article.url] = article;
 
-  const site_name = payload['og:site_name'] || 'unknown';
-
-  const article: Article = {
-    url,
-    title: payload['og:title'],
-    type: payload['og:type'],
-    image: payload['og:image'],
-    description: payload['og:description'],
-    site_name,
-    locale: payload['og:locale'],
-    published_time: payload['article:published_time'],
-    modified_time: payload['article:modified_time'],
-    expiration_time: payload['article:expiration_time'],
-    authors: payload['article:authors'],
-    section: payload['article:section'],
-    tags: payload['article:tags'],
-  };
-  articleBuffers[url] = article;
-
-  const event_id = payload.event_id;
-  if (!event_id) {
-    return res.status(400).json({ error: 'Event ID is required' });
-  }
   const ip = req.ip;
   const geoInfo = geo && ip ? geo.get(ip) : undefined;
 
-  const query_params: Record<string, string> = {};
-  new URL(url).searchParams.forEach((value, key) => {
-    query_params[key] = value;
-  });
-
-  const processedReferrer = processReferrer(payload.referrer);
-
-  const pv: PV = {
-    site_name,
-    event_id,
-    url,
-    event_time: payload.event_time_utc,
-    user_id: payload.user_id,
-    visit_id: payload.visit_id,
-    visitor_id: payload.visitor_id,
-    referrer: processedReferrer.referrer,
-    domain: processedReferrer.domain,
-    device: payload.device,
-    device_type: payload.device_type,
-    device_vendor: payload.device_vendor,
-    os: payload.os,
-    os_version: payload.os_version,
-    app: payload.app,
-    app_type: payload.app_type,
-    app_version: payload.app_version,
-    age: payload.age,
-    gender: payload.gender,
-    geo_continent: geoInfo?.continent?.code,
-    geo_country: geoInfo?.country?.iso_code,
-    geo_subdivision:
-      geoInfo?.subdivisions && geoInfo.subdivisions.length > 0
-        ? geoInfo.subdivisions[0].iso_code
-        : undefined,
-    geo_city: geoInfo?.city?.names?.en,
-    query_params,
-    utm_source: query_params.utm_source,
-    utm_medium: query_params.utm_medium,
-    utm_campaign: query_params.utm_campaign,
-    language: payload.language,
-    engagement_time: payload.engagement_time ?? 0,
-  };
+  const pv = createPV(payload, geoInfo);
   pvBuffers.push(pv);
 
   await insertBuffer();

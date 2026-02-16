@@ -85,9 +85,19 @@ describe('processEvent', () => {
   describe('createPV', () => {
     it('should create a PV object from payload with full geo info', () => {
       const mockGeo: CityResponse = {
-        continent: { code: 'NA', geoname_id: 1, names: { en: 'North America' } },
-        country: { iso_code: 'US', geoname_id: 1, names: { en: 'United States' } },
-        subdivisions: [{ iso_code: 'CA', geoname_id: 1, names: { en: 'California' } }],
+        continent: {
+          code: 'NA',
+          geoname_id: 1,
+          names: { en: 'North America' },
+        },
+        country: {
+          iso_code: 'US',
+          geoname_id: 1,
+          names: { en: 'United States' },
+        },
+        subdivisions: [
+          { iso_code: 'CA', geoname_id: 1, names: { en: 'California' } },
+        ],
         city: { names: { en: 'San Francisco' }, geoname_id: 1 },
       } as any;
 
@@ -117,33 +127,37 @@ describe('processEvent', () => {
     });
 
     it('should extract query params from url', () => {
-        // payload.url has query params, but createPV prefers og:url if present.
-        // If we want to test extraction from the *active* url, we rely on the implementation logic.
-        // The implementation takes `url` (og:url || url) and parses it.
-        // mockPayload['og:url'] does NOT have params.
-        // mockPayload.url DOES have params.
-        
-        // Case 1: og:url present (no params in this mock), but payload.url has params.
-        // The implementation uses `const url = payload['og:url'] || payload.url;`
-        // Then `new URL(url).searchParams`.
-        // So if og:url is used, and it has no params, query_params will be empty.
-        
-        // Let's modify payload to have params in og:url for this test case
-        const payloadWithParamsInOg = { 
-            ...mockPayload, 
-            'og:url': 'https://example.com/article?foo=bar&utm_source=test' 
-        };
-        const pv = createPV(payloadWithParamsInOg, null);
-        
-        expect(pv.query_params?.['foo']).toBe('bar');
-        expect(pv.utm_source).toBe('test');
+      // payload.url has query params, but createPV prefers og:url if present.
+      // If we want to test extraction from the *active* url, we rely on the implementation logic.
+      // The implementation takes `url` (og:url || url) and parses it.
+      // mockPayload['og:url'] does NOT have params.
+      // mockPayload.url DOES have params.
+
+      // Case 1: og:url present (no params in this mock), but payload.url has params.
+      // The implementation uses `const url = payload['og:url'] || payload.url;`
+      // Then `new URL(url).searchParams`.
+      // So if og:url is used, and it has no params, query_params will be empty.
+
+      // Let's modify payload to have params in og:url for this test case
+      const payloadWithParamsInOg = {
+        ...mockPayload,
+        'og:url': 'https://example.com/article?foo=bar&utm_source=test',
+      };
+      const pv = createPV(payloadWithParamsInOg, null);
+
+      expect(pv.query_params?.['foo']).toBe('bar');
+      expect(pv.utm_source).toBe('test');
     });
 
     it('should handle invalid URL gracefully', () => {
-        const payload = { ...mockPayload, 'og:url': 'invalid-url', url: 'invalid-url' };
-        // Implementation wraps URL parsing in try/catch
-        const pv = createPV(payload, null);
-        expect(pv.query_params).toEqual({});
+      const payload = {
+        ...mockPayload,
+        'og:url': 'invalid-url',
+        url: 'invalid-url',
+      };
+      // Implementation wraps URL parsing in try/catch
+      const pv = createPV(payload, null);
+      expect(pv.query_params).toEqual({});
     });
   });
 });

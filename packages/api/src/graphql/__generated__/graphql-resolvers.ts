@@ -1,21 +1,40 @@
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import {
+  GraphQLResolveInfo,
+  GraphQLScalarType,
+  GraphQLScalarTypeConfig,
+} from 'graphql';
 import { Context } from '../index';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
+  [P in K]-?: NonNullable<T[P]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  DateTime: { input: string; output: string; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTime: { input: string; output: string };
 };
 
 export type Aggregation = {
@@ -39,7 +58,7 @@ export enum AggregationUnit {
   Month = 'MONTH',
   Total = 'TOTAL',
   Week = 'WEEK',
-  Year = 'YEAR'
+  Year = 'YEAR',
 }
 
 export type Analytics = AnalyticsBase & {
@@ -129,7 +148,6 @@ export type Article = {
   url: Scalars['String']['output'];
 };
 
-
 export type ArticleAnalyticsArgs = {
   aggregation?: InputMaybe<AggregationInput>;
   endDate: Scalars['DateTime']['input'];
@@ -192,20 +210,28 @@ export type ArticleFilter = {
 
 export type ArticleFilterInput = {
   description?: InputMaybe<Scalars['String']['input']>;
-  excludeAuthors?: InputMaybe<Array<InputMaybe<Array<Scalars['String']['input']>>>>;
+  excludeAuthors?: InputMaybe<
+    Array<InputMaybe<Array<Scalars['String']['input']>>>
+  >;
   excludeLocales?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeSections?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeSiteNames?: InputMaybe<Array<Scalars['String']['input']>>;
-  excludeTags?: InputMaybe<Array<InputMaybe<Array<Scalars['String']['input']>>>>;
+  excludeTags?: InputMaybe<
+    Array<InputMaybe<Array<Scalars['String']['input']>>>
+  >;
   excludeTypes?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeUrls?: InputMaybe<Array<Scalars['String']['input']>>;
   expirationTimeAfter?: InputMaybe<Scalars['DateTime']['input']>;
   expirationTimeBefore?: InputMaybe<Scalars['DateTime']['input']>;
-  includeAuthors?: InputMaybe<Array<InputMaybe<Array<Scalars['String']['input']>>>>;
+  includeAuthors?: InputMaybe<
+    Array<InputMaybe<Array<Scalars['String']['input']>>>
+  >;
   includeLocales?: InputMaybe<Array<Scalars['String']['input']>>;
   includeSections?: InputMaybe<Array<Scalars['String']['input']>>;
   includeSiteNames?: InputMaybe<Array<Scalars['String']['input']>>;
-  includeTags?: InputMaybe<Array<InputMaybe<Array<Scalars['String']['input']>>>>;
+  includeTags?: InputMaybe<
+    Array<InputMaybe<Array<Scalars['String']['input']>>>
+  >;
   includeTypes?: InputMaybe<Array<Scalars['String']['input']>>;
   includeUrls?: InputMaybe<Array<Scalars['String']['input']>>;
   modifiedTimeAfter?: InputMaybe<Scalars['DateTime']['input']>;
@@ -238,19 +264,19 @@ export enum CategoryName {
   GeoContinent = 'GEO_CONTINENT',
   GeoCountry = 'GEO_COUNTRY',
   GeoSubdivision = 'GEO_SUBDIVISION',
-  Referrer = 'REFERRER'
+  Referrer = 'REFERRER',
 }
 
 export enum Metric {
   EngagementTime = 'ENGAGEMENT_TIME',
   UsersViews = 'USERS_VIEWS',
   VisitorsViews = 'VISITORS_VIEWS',
-  VisitsViews = 'VISITS_VIEWS'
+  VisitsViews = 'VISITS_VIEWS',
 }
 
 export enum Order {
   Asc = 'ASC',
-  Desc = 'DESC'
+  Desc = 'DESC',
 }
 
 export type Query = {
@@ -260,11 +286,9 @@ export type Query = {
   trend?: Maybe<Trend>;
 };
 
-
 export type QueryArticleArgs = {
   url: Scalars['String']['input'];
 };
-
 
 export type QueryRankArgs = {
   articleFilter?: InputMaybe<ArticleFilterInput>;
@@ -275,7 +299,6 @@ export type QueryRankArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   startDate: Scalars['DateTime']['input'];
 };
-
 
 export type QueryTrendArgs = {
   aggregation?: InputMaybe<AggregationInput>;
@@ -301,12 +324,10 @@ export type Rank = {
   total: Scalars['Int']['output'];
 };
 
-
 export type RankCategoryAgeArgs = {
   excludeAges?: InputMaybe<Array<Scalars['String']['input']>>;
   includeAges?: InputMaybe<Array<Scalars['String']['input']>>;
 };
-
 
 export type RankCategoryAppArgs = {
   excludeAppTypes?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -314,7 +335,6 @@ export type RankCategoryAppArgs = {
   includeAppTypes?: InputMaybe<Array<Scalars['String']['input']>>;
   includeApps?: InputMaybe<Array<Scalars['String']['input']>>;
 };
-
 
 export type RankCategoryDeviceArgs = {
   excludeDeviceTypes?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -325,12 +345,10 @@ export type RankCategoryDeviceArgs = {
   includeDevices?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-
 export type RankCategoryGenderArgs = {
   excludeGenders?: InputMaybe<Array<Scalars['String']['input']>>;
   includeGenders?: InputMaybe<Array<Scalars['String']['input']>>;
 };
-
 
 export type RankCategoryGeoArgs = {
   excludeCities?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -343,14 +361,12 @@ export type RankCategoryGeoArgs = {
   includeSubdivisions?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-
 export type RankCategoryReferrerArgs = {
   excludeDomains?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeReferrers?: InputMaybe<Array<Scalars['String']['input']>>;
   includeDomains?: InputMaybe<Array<Scalars['String']['input']>>;
   includeReferrers?: InputMaybe<Array<Scalars['String']['input']>>;
 };
-
 
 export type RankCategoryUtmArgs = {
   excludeCampaigns?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -412,18 +428,15 @@ export type Trend = {
   total: Array<TrendAnalytics>;
 };
 
-
 export type TrendArticlesArgs = {
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryAgeArgs = {
   excludeAges?: InputMaybe<Array<Scalars['String']['input']>>;
   includeAges?: InputMaybe<Array<Scalars['String']['input']>>;
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryAppArgs = {
   excludeAppTypes?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -432,7 +445,6 @@ export type TrendCategoryAppArgs = {
   includeApps?: InputMaybe<Array<Scalars['String']['input']>>;
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryDeviceArgs = {
   excludeDeviceTypes?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -444,13 +456,11 @@ export type TrendCategoryDeviceArgs = {
   top?: InputMaybe<Scalars['Int']['input']>;
 };
 
-
 export type TrendCategoryGenderArgs = {
   excludeGenders?: InputMaybe<Array<Scalars['String']['input']>>;
   includeGenders?: InputMaybe<Array<Scalars['String']['input']>>;
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryGeoArgs = {
   excludeCities?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -464,7 +474,6 @@ export type TrendCategoryGeoArgs = {
   top?: InputMaybe<Scalars['Int']['input']>;
 };
 
-
 export type TrendCategoryReferrerArgs = {
   excludeDomains?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeReferrers?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -472,7 +481,6 @@ export type TrendCategoryReferrerArgs = {
   includeReferrers?: InputMaybe<Array<Scalars['String']['input']>>;
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryUtmArgs = {
   excludeCampaigns?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -590,15 +598,19 @@ export type TrendParameters = {
   startDate: Scalars['DateTime']['output'];
 };
 
-
-
 export type ResolverTypeWrapper<T> = Promise<T> | T;
-
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<
+  TResult,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>,
+> =
+  | ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -621,9 +633,25 @@ export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
-  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
-  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
+export interface SubscriptionSubscriberObject<
+  TResult,
+  TKey extends string,
+  TParent,
+  TContext,
+  TArgs,
+> {
+  subscribe: SubscriptionSubscribeFn<
+    { [key in TKey]: TResult },
+    TParent,
+    TContext,
+    TArgs
+  >;
+  resolve?: SubscriptionResolveFn<
+    TResult,
+    { [key in TKey]: TResult },
+    TContext,
+    TArgs
+  >;
 }
 
 export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
@@ -631,25 +659,55 @@ export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
   resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
 }
 
-export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
+export type SubscriptionObject<
+  TResult,
+  TKey extends string,
+  TParent,
+  TContext,
+  TArgs,
+> =
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
-  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+export type SubscriptionResolver<
+  TResult,
+  TKey extends string,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>,
+> =
+  | ((
+      ...args: any[]
+    ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
+export type TypeResolveFn<
+  TTypes,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<
+  T = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+> = (
+  obj: T,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = (
+export type DirectiveResolverFn<
+  TResult = Record<PropertyKey, never>,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>,
+> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -657,34 +715,30 @@ export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = 
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-
-
-
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-  AnalyticsBase:
-    | ( Analytics )
-    | ( AnalyticsAge )
-    | ( AnalyticsApp )
-    | ( AnalyticsDevice )
-    | ( AnalyticsGender )
-    | ( AnalyticsGeo )
-    | ( AnalyticsReferrer )
-    | ( AnalyticsUtm )
-  ;
-  RankAnalyticsBase: ( RankAnalytics );
-  TrendAnalyticsBase:
-    | ( TrendAnalytics )
-    | ( TrendAnalyticsAge )
-    | ( TrendAnalyticsApp )
-    | ( TrendAnalyticsArticle )
-    | ( TrendAnalyticsDevice )
-    | ( TrendAnalyticsGender )
-    | ( TrendAnalyticsGeo )
-    | ( TrendAnalyticsReferrer )
-    | ( TrendAnalyticsUtm )
-  ;
-};
+export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
+  {
+    AnalyticsBase:
+      | Analytics
+      | AnalyticsAge
+      | AnalyticsApp
+      | AnalyticsDevice
+      | AnalyticsGender
+      | AnalyticsGeo
+      | AnalyticsReferrer
+      | AnalyticsUtm;
+    RankAnalyticsBase: RankAnalytics;
+    TrendAnalyticsBase:
+      | TrendAnalytics
+      | TrendAnalyticsAge
+      | TrendAnalyticsApp
+      | TrendAnalyticsArticle
+      | TrendAnalyticsDevice
+      | TrendAnalyticsGender
+      | TrendAnalyticsGeo
+      | TrendAnalyticsReferrer
+      | TrendAnalyticsUtm;
+  };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
@@ -694,7 +748,9 @@ export type ResolversTypes = {
   Analytics: ResolverTypeWrapper<Analytics>;
   AnalyticsAge: ResolverTypeWrapper<AnalyticsAge>;
   AnalyticsApp: ResolverTypeWrapper<AnalyticsApp>;
-  AnalyticsBase: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['AnalyticsBase']>;
+  AnalyticsBase: ResolverTypeWrapper<
+    ResolversInterfaceTypes<ResolversTypes>['AnalyticsBase']
+  >;
   AnalyticsDevice: ResolverTypeWrapper<AnalyticsDevice>;
   AnalyticsGender: ResolverTypeWrapper<AnalyticsGender>;
   AnalyticsGeo: ResolverTypeWrapper<AnalyticsGeo>;
@@ -716,7 +772,9 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Rank: ResolverTypeWrapper<Rank>;
   RankAnalytics: ResolverTypeWrapper<RankAnalytics>;
-  RankAnalyticsBase: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['RankAnalyticsBase']>;
+  RankAnalyticsBase: ResolverTypeWrapper<
+    ResolversInterfaceTypes<ResolversTypes>['RankAnalyticsBase']
+  >;
   RankParameters: ResolverTypeWrapper<RankParameters>;
   Sort: ResolverTypeWrapper<Sort>;
   SortInput: SortInput;
@@ -726,7 +784,9 @@ export type ResolversTypes = {
   TrendAnalyticsAge: ResolverTypeWrapper<TrendAnalyticsAge>;
   TrendAnalyticsApp: ResolverTypeWrapper<TrendAnalyticsApp>;
   TrendAnalyticsArticle: ResolverTypeWrapper<TrendAnalyticsArticle>;
-  TrendAnalyticsBase: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['TrendAnalyticsBase']>;
+  TrendAnalyticsBase: ResolverTypeWrapper<
+    ResolversInterfaceTypes<ResolversTypes>['TrendAnalyticsBase']
+  >;
   TrendAnalyticsDevice: ResolverTypeWrapper<TrendAnalyticsDevice>;
   TrendAnalyticsGender: ResolverTypeWrapper<TrendAnalyticsGender>;
   TrendAnalyticsGeo: ResolverTypeWrapper<TrendAnalyticsGeo>;
@@ -780,25 +840,41 @@ export type ResolversParentTypes = {
   TrendParameters: TrendParameters;
 };
 
-export type AggregationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Aggregation'] = ResolversParentTypes['Aggregation']> = {
+export type AggregationResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['Aggregation'] =
+    ResolversParentTypes['Aggregation'],
+> = {
   interval?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   unit?: Resolver<ResolversTypes['AggregationUnit'], ParentType, ContextType>;
 };
 
-export type AnalyticsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Analytics'] = ResolversParentTypes['Analytics']> = {
+export type AnalyticsResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['Analytics'] =
+    ResolversParentTypes['Analytics'],
+> = {
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsAgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsAge'] = ResolversParentTypes['AnalyticsAge']> = {
+export type AnalyticsAgeResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['AnalyticsAge'] =
+    ResolversParentTypes['AnalyticsAge'],
+> = {
   age?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsAppResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsApp'] = ResolversParentTypes['AnalyticsApp']> = {
+export type AnalyticsAppResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['AnalyticsApp'] =
+    ResolversParentTypes['AnalyticsApp'],
+> = {
   app?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   appType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -806,37 +882,84 @@ export type AnalyticsAppResolvers<ContextType = Context, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsBase'] = ResolversParentTypes['AnalyticsBase']> = {
-  __resolveType: TypeResolveFn<'Analytics' | 'AnalyticsAge' | 'AnalyticsApp' | 'AnalyticsDevice' | 'AnalyticsGender' | 'AnalyticsGeo' | 'AnalyticsReferrer' | 'AnalyticsUtm', ParentType, ContextType>;
+export type AnalyticsBaseResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['AnalyticsBase'] =
+    ResolversParentTypes['AnalyticsBase'],
+> = {
+  __resolveType: TypeResolveFn<
+    | 'Analytics'
+    | 'AnalyticsAge'
+    | 'AnalyticsApp'
+    | 'AnalyticsDevice'
+    | 'AnalyticsGender'
+    | 'AnalyticsGeo'
+    | 'AnalyticsReferrer'
+    | 'AnalyticsUtm',
+    ParentType,
+    ContextType
+  >;
 };
 
-export type AnalyticsDeviceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsDevice'] = ResolversParentTypes['AnalyticsDevice']> = {
+export type AnalyticsDeviceResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['AnalyticsDevice'] =
+    ResolversParentTypes['AnalyticsDevice'],
+> = {
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   device?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  deviceType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  deviceVendor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  deviceType?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  deviceVendor?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsGenderResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsGender'] = ResolversParentTypes['AnalyticsGender']> = {
+export type AnalyticsGenderResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['AnalyticsGender'] =
+    ResolversParentTypes['AnalyticsGender'],
+> = {
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   gender?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsGeoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsGeo'] = ResolversParentTypes['AnalyticsGeo']> = {
+export type AnalyticsGeoResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['AnalyticsGeo'] =
+    ResolversParentTypes['AnalyticsGeo'],
+> = {
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  continent?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  continent?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
   country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  subdivision?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  subdivision?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsReferrerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsReferrer'] = ResolversParentTypes['AnalyticsReferrer']> = {
+export type AnalyticsReferrerResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['AnalyticsReferrer'] =
+    ResolversParentTypes['AnalyticsReferrer'],
+> = {
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   domain?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   referrer?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -844,7 +967,11 @@ export type AnalyticsReferrerResolvers<ContextType = Context, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsUtmResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsUtm'] = ResolversParentTypes['AnalyticsUtm']> = {
+export type AnalyticsUtmResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['AnalyticsUtm'] =
+    ResolversParentTypes['AnalyticsUtm'],
+> = {
   campaign?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   medium?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -853,15 +980,43 @@ export type AnalyticsUtmResolvers<ContextType = Context, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ArticleResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article']> = {
-  analytics?: Resolver<Maybe<ResolversTypes['ArticleAnalytics']>, ParentType, ContextType, RequireFields<ArticleAnalyticsArgs, 'aggregation' | 'endDate' | 'limit' | 'metric' | 'page' | 'startDate'>>;
+export type ArticleResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['Article'] =
+    ResolversParentTypes['Article'],
+> = {
+  analytics?: Resolver<
+    Maybe<ResolversTypes['ArticleAnalytics']>,
+    ParentType,
+    ContextType,
+    RequireFields<
+      ArticleAnalyticsArgs,
+      'aggregation' | 'endDate' | 'limit' | 'metric' | 'page' | 'startDate'
+    >
+  >;
   authors?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  expirationTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  description?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  expirationTime?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
   image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   locale?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  modifiedTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  publishedTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  modifiedTime?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
+  publishedTime?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
   section?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   siteName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
@@ -870,20 +1025,68 @@ export type ArticleResolvers<ContextType = Context, ParentType extends Resolvers
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
-export type ArticleAnalyticsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ArticleAnalytics'] = ResolversParentTypes['ArticleAnalytics']> = {
-  analytics?: Resolver<Maybe<Array<ResolversTypes['Analytics']>>, ParentType, ContextType>;
-  analyticsAge?: Resolver<Maybe<Array<ResolversTypes['AnalyticsAge']>>, ParentType, ContextType>;
-  analyticsApp?: Resolver<Maybe<Array<ResolversTypes['AnalyticsApp']>>, ParentType, ContextType>;
-  analyticsDevice?: Resolver<Maybe<Array<ResolversTypes['AnalyticsDevice']>>, ParentType, ContextType>;
-  analyticsGender?: Resolver<Maybe<Array<ResolversTypes['AnalyticsGender']>>, ParentType, ContextType>;
-  analyticsGeo?: Resolver<Maybe<Array<ResolversTypes['AnalyticsGeo']>>, ParentType, ContextType>;
-  analyticsReferrer?: Resolver<Maybe<Array<ResolversTypes['AnalyticsReferrer']>>, ParentType, ContextType>;
-  analyticsUtm?: Resolver<Maybe<Array<ResolversTypes['AnalyticsUtm']>>, ParentType, ContextType>;
-  parameters?: Resolver<ResolversTypes['ArticleAnalyticsParameters'], ParentType, ContextType>;
+export type ArticleAnalyticsResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['ArticleAnalytics'] =
+    ResolversParentTypes['ArticleAnalytics'],
+> = {
+  analytics?: Resolver<
+    Maybe<Array<ResolversTypes['Analytics']>>,
+    ParentType,
+    ContextType
+  >;
+  analyticsAge?: Resolver<
+    Maybe<Array<ResolversTypes['AnalyticsAge']>>,
+    ParentType,
+    ContextType
+  >;
+  analyticsApp?: Resolver<
+    Maybe<Array<ResolversTypes['AnalyticsApp']>>,
+    ParentType,
+    ContextType
+  >;
+  analyticsDevice?: Resolver<
+    Maybe<Array<ResolversTypes['AnalyticsDevice']>>,
+    ParentType,
+    ContextType
+  >;
+  analyticsGender?: Resolver<
+    Maybe<Array<ResolversTypes['AnalyticsGender']>>,
+    ParentType,
+    ContextType
+  >;
+  analyticsGeo?: Resolver<
+    Maybe<Array<ResolversTypes['AnalyticsGeo']>>,
+    ParentType,
+    ContextType
+  >;
+  analyticsReferrer?: Resolver<
+    Maybe<Array<ResolversTypes['AnalyticsReferrer']>>,
+    ParentType,
+    ContextType
+  >;
+  analyticsUtm?: Resolver<
+    Maybe<Array<ResolversTypes['AnalyticsUtm']>>,
+    ParentType,
+    ContextType
+  >;
+  parameters?: Resolver<
+    ResolversTypes['ArticleAnalyticsParameters'],
+    ParentType,
+    ContextType
+  >;
 };
 
-export type ArticleAnalyticsParametersResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ArticleAnalyticsParameters'] = ResolversParentTypes['ArticleAnalyticsParameters']> = {
-  aggregation?: Resolver<ResolversTypes['Aggregation'], ParentType, ContextType>;
+export type ArticleAnalyticsParametersResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['ArticleAnalyticsParameters'] =
+    ResolversParentTypes['ArticleAnalyticsParameters'],
+> = {
+  aggregation?: Resolver<
+    ResolversTypes['Aggregation'],
+    ParentType,
+    ContextType
+  >;
   endDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   limit?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   metric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType>;
@@ -893,60 +1096,231 @@ export type ArticleAnalyticsParametersResolvers<ContextType = Context, ParentTyp
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
-export type ArticleFilterResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ArticleFilter'] = ResolversParentTypes['ArticleFilter']> = {
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  excludeAuthors?: Resolver<Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>, ParentType, ContextType>;
-  excludeLocales?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  excludeSections?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  excludeSiteNames?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  excludeTags?: Resolver<Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>, ParentType, ContextType>;
-  excludeTypes?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  excludeUrls?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  expirationTimeAfter?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  expirationTimeBefore?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  includeAuthors?: Resolver<Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>, ParentType, ContextType>;
-  includeLocales?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  includeSections?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  includeSiteNames?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  includeTags?: Resolver<Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>, ParentType, ContextType>;
-  includeTypes?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  includeUrls?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  modifiedTimeAfter?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  modifiedTimeBefore?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  publishedTimeAfter?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  publishedTimeBefore?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+export type ArticleFilterResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['ArticleFilter'] =
+    ResolversParentTypes['ArticleFilter'],
+> = {
+  description?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  excludeAuthors?: Resolver<
+    Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>,
+    ParentType,
+    ContextType
+  >;
+  excludeLocales?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  excludeSections?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  excludeSiteNames?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  excludeTags?: Resolver<
+    Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>,
+    ParentType,
+    ContextType
+  >;
+  excludeTypes?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  excludeUrls?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  expirationTimeAfter?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
+  expirationTimeBefore?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
+  includeAuthors?: Resolver<
+    Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>,
+    ParentType,
+    ContextType
+  >;
+  includeLocales?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  includeSections?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  includeSiteNames?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  includeTags?: Resolver<
+    Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>,
+    ParentType,
+    ContextType
+  >;
+  includeTypes?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  includeUrls?: Resolver<
+    Maybe<Array<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >;
+  modifiedTimeAfter?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
+  modifiedTimeBefore?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
+  publishedTimeAfter?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
+  publishedTimeBefore?: Resolver<
+    Maybe<ResolversTypes['DateTime']>,
+    ParentType,
+    ContextType
+  >;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
-export type CategoryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
+export type CategoryResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['Category'] =
+    ResolversParentTypes['Category'],
+> = {
   name?: Resolver<ResolversTypes['CategoryName'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
-export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<
+  ResolversTypes['DateTime'],
+  any
+> {
   name: 'DateTime';
 }
 
-export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<QueryArticleArgs, 'url'>>;
-  rank?: Resolver<Maybe<ResolversTypes['Rank']>, ParentType, ContextType, RequireFields<QueryRankArgs, 'endDate' | 'limit' | 'metric' | 'order' | 'page' | 'startDate'>>;
-  trend?: Resolver<Maybe<ResolversTypes['Trend']>, ParentType, ContextType, RequireFields<QueryTrendArgs, 'aggregation' | 'endDate' | 'limit' | 'metric' | 'page' | 'startDate'>>;
+export type QueryResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['Query'] =
+    ResolversParentTypes['Query'],
+> = {
+  article?: Resolver<
+    Maybe<ResolversTypes['Article']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryArticleArgs, 'url'>
+  >;
+  rank?: Resolver<
+    Maybe<ResolversTypes['Rank']>,
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryRankArgs,
+      'endDate' | 'limit' | 'metric' | 'order' | 'page' | 'startDate'
+    >
+  >;
+  trend?: Resolver<
+    Maybe<ResolversTypes['Trend']>,
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryTrendArgs,
+      'aggregation' | 'endDate' | 'limit' | 'metric' | 'page' | 'startDate'
+    >
+  >;
 };
 
-export type RankResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Rank'] = ResolversParentTypes['Rank']> = {
-  articles?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType>;
-  categoryAge?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType, Partial<RankCategoryAgeArgs>>;
-  categoryApp?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType, Partial<RankCategoryAppArgs>>;
-  categoryDevice?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType, Partial<RankCategoryDeviceArgs>>;
-  categoryGender?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType, Partial<RankCategoryGenderArgs>>;
-  categoryGeo?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType, Partial<RankCategoryGeoArgs>>;
-  categoryReferrer?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType, Partial<RankCategoryReferrerArgs>>;
-  categoryUtm?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType, Partial<RankCategoryUtmArgs>>;
-  parameters?: Resolver<ResolversTypes['RankParameters'], ParentType, ContextType>;
+export type RankResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['Rank'] =
+    ResolversParentTypes['Rank'],
+> = {
+  articles?: Resolver<
+    Maybe<Array<ResolversTypes['RankAnalytics']>>,
+    ParentType,
+    ContextType
+  >;
+  categoryAge?: Resolver<
+    Maybe<Array<ResolversTypes['RankAnalytics']>>,
+    ParentType,
+    ContextType,
+    Partial<RankCategoryAgeArgs>
+  >;
+  categoryApp?: Resolver<
+    Maybe<Array<ResolversTypes['RankAnalytics']>>,
+    ParentType,
+    ContextType,
+    Partial<RankCategoryAppArgs>
+  >;
+  categoryDevice?: Resolver<
+    Maybe<Array<ResolversTypes['RankAnalytics']>>,
+    ParentType,
+    ContextType,
+    Partial<RankCategoryDeviceArgs>
+  >;
+  categoryGender?: Resolver<
+    Maybe<Array<ResolversTypes['RankAnalytics']>>,
+    ParentType,
+    ContextType,
+    Partial<RankCategoryGenderArgs>
+  >;
+  categoryGeo?: Resolver<
+    Maybe<Array<ResolversTypes['RankAnalytics']>>,
+    ParentType,
+    ContextType,
+    Partial<RankCategoryGeoArgs>
+  >;
+  categoryReferrer?: Resolver<
+    Maybe<Array<ResolversTypes['RankAnalytics']>>,
+    ParentType,
+    ContextType,
+    Partial<RankCategoryReferrerArgs>
+  >;
+  categoryUtm?: Resolver<
+    Maybe<Array<ResolversTypes['RankAnalytics']>>,
+    ParentType,
+    ContextType,
+    Partial<RankCategoryUtmArgs>
+  >;
+  parameters?: Resolver<
+    ResolversTypes['RankParameters'],
+    ParentType,
+    ContextType
+  >;
   total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 
-export type RankAnalyticsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RankAnalytics'] = ResolversParentTypes['RankAnalytics']> = {
+export type RankAnalyticsResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['RankAnalytics'] =
+    ResolversParentTypes['RankAnalytics'],
+> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -954,12 +1328,24 @@ export type RankAnalyticsResolvers<ContextType = Context, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type RankAnalyticsBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RankAnalyticsBase'] = ResolversParentTypes['RankAnalyticsBase']> = {
+export type RankAnalyticsBaseResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['RankAnalyticsBase'] =
+    ResolversParentTypes['RankAnalyticsBase'],
+> = {
   __resolveType: TypeResolveFn<'RankAnalytics', ParentType, ContextType>;
 };
 
-export type RankParametersResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RankParameters'] = ResolversParentTypes['RankParameters']> = {
-  articleFilter?: Resolver<Maybe<ResolversTypes['ArticleFilter']>, ParentType, ContextType>;
+export type RankParametersResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['RankParameters'] =
+    ResolversParentTypes['RankParameters'],
+> = {
+  articleFilter?: Resolver<
+    Maybe<ResolversTypes['ArticleFilter']>,
+    ParentType,
+    ContextType
+  >;
   endDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   limit?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   metric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType>;
@@ -968,25 +1354,89 @@ export type RankParametersResolvers<ContextType = Context, ParentType extends Re
   startDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
 };
 
-export type SortResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Sort'] = ResolversParentTypes['Sort']> = {
-  category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
+export type SortResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['Sort'] =
+    ResolversParentTypes['Sort'],
+> = {
+  category?: Resolver<
+    Maybe<ResolversTypes['Category']>,
+    ParentType,
+    ContextType
+  >;
   order?: Resolver<ResolversTypes['Order'], ParentType, ContextType>;
 };
 
-export type TrendResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Trend'] = ResolversParentTypes['Trend']> = {
-  articles?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsArticle']>>, ParentType, ContextType, RequireFields<TrendArticlesArgs, 'top'>>;
-  categoryAge?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsAge']>>, ParentType, ContextType, RequireFields<TrendCategoryAgeArgs, 'top'>>;
-  categoryApp?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsApp']>>, ParentType, ContextType, RequireFields<TrendCategoryAppArgs, 'top'>>;
-  categoryDevice?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsDevice']>>, ParentType, ContextType, RequireFields<TrendCategoryDeviceArgs, 'top'>>;
-  categoryGender?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsGender']>>, ParentType, ContextType, RequireFields<TrendCategoryGenderArgs, 'top'>>;
-  categoryGeo?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsGeo']>>, ParentType, ContextType, RequireFields<TrendCategoryGeoArgs, 'top'>>;
-  categoryReferrer?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsReferrer']>>, ParentType, ContextType, RequireFields<TrendCategoryReferrerArgs, 'top'>>;
-  categoryUtm?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsUtm']>>, ParentType, ContextType, RequireFields<TrendCategoryUtmArgs, 'top'>>;
-  parameters?: Resolver<ResolversTypes['TrendParameters'], ParentType, ContextType>;
-  total?: Resolver<Array<ResolversTypes['TrendAnalytics']>, ParentType, ContextType>;
+export type TrendResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['Trend'] =
+    ResolversParentTypes['Trend'],
+> = {
+  articles?: Resolver<
+    Maybe<Array<ResolversTypes['TrendAnalyticsArticle']>>,
+    ParentType,
+    ContextType,
+    RequireFields<TrendArticlesArgs, 'top'>
+  >;
+  categoryAge?: Resolver<
+    Maybe<Array<ResolversTypes['TrendAnalyticsAge']>>,
+    ParentType,
+    ContextType,
+    RequireFields<TrendCategoryAgeArgs, 'top'>
+  >;
+  categoryApp?: Resolver<
+    Maybe<Array<ResolversTypes['TrendAnalyticsApp']>>,
+    ParentType,
+    ContextType,
+    RequireFields<TrendCategoryAppArgs, 'top'>
+  >;
+  categoryDevice?: Resolver<
+    Maybe<Array<ResolversTypes['TrendAnalyticsDevice']>>,
+    ParentType,
+    ContextType,
+    RequireFields<TrendCategoryDeviceArgs, 'top'>
+  >;
+  categoryGender?: Resolver<
+    Maybe<Array<ResolversTypes['TrendAnalyticsGender']>>,
+    ParentType,
+    ContextType,
+    RequireFields<TrendCategoryGenderArgs, 'top'>
+  >;
+  categoryGeo?: Resolver<
+    Maybe<Array<ResolversTypes['TrendAnalyticsGeo']>>,
+    ParentType,
+    ContextType,
+    RequireFields<TrendCategoryGeoArgs, 'top'>
+  >;
+  categoryReferrer?: Resolver<
+    Maybe<Array<ResolversTypes['TrendAnalyticsReferrer']>>,
+    ParentType,
+    ContextType,
+    RequireFields<TrendCategoryReferrerArgs, 'top'>
+  >;
+  categoryUtm?: Resolver<
+    Maybe<Array<ResolversTypes['TrendAnalyticsUtm']>>,
+    ParentType,
+    ContextType,
+    RequireFields<TrendCategoryUtmArgs, 'top'>
+  >;
+  parameters?: Resolver<
+    ResolversTypes['TrendParameters'],
+    ParentType,
+    ContextType
+  >;
+  total?: Resolver<
+    Array<ResolversTypes['TrendAnalytics']>,
+    ParentType,
+    ContextType
+  >;
 };
 
-export type TrendAnalyticsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalytics'] = ResolversParentTypes['TrendAnalytics']> = {
+export type TrendAnalyticsResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalytics'] =
+    ResolversParentTypes['TrendAnalytics'],
+> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -994,7 +1444,11 @@ export type TrendAnalyticsResolvers<ContextType = Context, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsAgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsAge'] = ResolversParentTypes['TrendAnalyticsAge']> = {
+export type TrendAnalyticsAgeResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalyticsAge'] =
+    ResolversParentTypes['TrendAnalyticsAge'],
+> = {
   age?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -1003,7 +1457,11 @@ export type TrendAnalyticsAgeResolvers<ContextType = Context, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsAppResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsApp'] = ResolversParentTypes['TrendAnalyticsApp']> = {
+export type TrendAnalyticsAppResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalyticsApp'] =
+    ResolversParentTypes['TrendAnalyticsApp'],
+> = {
   app?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   appType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
@@ -1013,7 +1471,11 @@ export type TrendAnalyticsAppResolvers<ContextType = Context, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsArticleResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsArticle'] = ResolversParentTypes['TrendAnalyticsArticle']> = {
+export type TrendAnalyticsArticleResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalyticsArticle'] =
+    ResolversParentTypes['TrendAnalyticsArticle'],
+> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1021,22 +1483,54 @@ export type TrendAnalyticsArticleResolvers<ContextType = Context, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsBase'] = ResolversParentTypes['TrendAnalyticsBase']> = {
-  __resolveType: TypeResolveFn<'TrendAnalytics' | 'TrendAnalyticsAge' | 'TrendAnalyticsApp' | 'TrendAnalyticsArticle' | 'TrendAnalyticsDevice' | 'TrendAnalyticsGender' | 'TrendAnalyticsGeo' | 'TrendAnalyticsReferrer' | 'TrendAnalyticsUtm', ParentType, ContextType>;
+export type TrendAnalyticsBaseResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalyticsBase'] =
+    ResolversParentTypes['TrendAnalyticsBase'],
+> = {
+  __resolveType: TypeResolveFn<
+    | 'TrendAnalytics'
+    | 'TrendAnalyticsAge'
+    | 'TrendAnalyticsApp'
+    | 'TrendAnalyticsArticle'
+    | 'TrendAnalyticsDevice'
+    | 'TrendAnalyticsGender'
+    | 'TrendAnalyticsGeo'
+    | 'TrendAnalyticsReferrer'
+    | 'TrendAnalyticsUtm',
+    ParentType,
+    ContextType
+  >;
 };
 
-export type TrendAnalyticsDeviceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsDevice'] = ResolversParentTypes['TrendAnalyticsDevice']> = {
+export type TrendAnalyticsDeviceResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalyticsDevice'] =
+    ResolversParentTypes['TrendAnalyticsDevice'],
+> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   device?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  deviceType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  deviceVendor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  deviceType?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  deviceVendor?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsGenderResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsGender'] = ResolversParentTypes['TrendAnalyticsGender']> = {
+export type TrendAnalyticsGenderResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalyticsGender'] =
+    ResolversParentTypes['TrendAnalyticsGender'],
+> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   gender?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1045,19 +1539,35 @@ export type TrendAnalyticsGenderResolvers<ContextType = Context, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsGeoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsGeo'] = ResolversParentTypes['TrendAnalyticsGeo']> = {
+export type TrendAnalyticsGeoResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalyticsGeo'] =
+    ResolversParentTypes['TrendAnalyticsGeo'],
+> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  continent?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  continent?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
   country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  subdivision?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  subdivision?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsReferrerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsReferrer'] = ResolversParentTypes['TrendAnalyticsReferrer']> = {
+export type TrendAnalyticsReferrerResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalyticsReferrer'] =
+    ResolversParentTypes['TrendAnalyticsReferrer'],
+> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   domain?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1067,7 +1577,11 @@ export type TrendAnalyticsReferrerResolvers<ContextType = Context, ParentType ex
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsUtmResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsUtm'] = ResolversParentTypes['TrendAnalyticsUtm']> = {
+export type TrendAnalyticsUtmResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendAnalyticsUtm'] =
+    ResolversParentTypes['TrendAnalyticsUtm'],
+> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   campaign?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -1078,9 +1592,21 @@ export type TrendAnalyticsUtmResolvers<ContextType = Context, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendParametersResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendParameters'] = ResolversParentTypes['TrendParameters']> = {
-  aggregation?: Resolver<ResolversTypes['Aggregation'], ParentType, ContextType>;
-  articleFilter?: Resolver<Maybe<ResolversTypes['ArticleFilter']>, ParentType, ContextType>;
+export type TrendParametersResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['TrendParameters'] =
+    ResolversParentTypes['TrendParameters'],
+> = {
+  aggregation?: Resolver<
+    ResolversTypes['Aggregation'],
+    ParentType,
+    ContextType
+  >;
+  articleFilter?: Resolver<
+    Maybe<ResolversTypes['ArticleFilter']>,
+    ParentType,
+    ContextType
+  >;
   endDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   limit?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   metric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType>;
@@ -1124,4 +1650,3 @@ export type Resolvers<ContextType = Context> = {
   TrendAnalyticsUtm?: TrendAnalyticsUtmResolvers<ContextType>;
   TrendParameters?: TrendParametersResolvers<ContextType>;
 };
-

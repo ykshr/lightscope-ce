@@ -33,16 +33,13 @@ describe('fetcher lib', () => {
     });
 
     it('should handle complex nested structures', () => {
-        const date = new Date('2023-01-01T12:00:00Z');
-        const input = {
-            list: [
-                { created_at: date },
-                { updated_at: null }
-            ]
-        };
-        const output = serializeDates(input);
-        expect(output.list[0].created_at).toBe('2023-01-01T12:00:00.000Z');
-        expect(output.list[1].updated_at).toBe(null);
+      const date = new Date('2023-01-01T12:00:00Z');
+      const input = {
+        list: [{ created_at: date }, { updated_at: null }],
+      };
+      const output = serializeDates(input);
+      expect(output.list[0].created_at).toBe('2023-01-01T12:00:00.000Z');
+      expect(output.list[1].updated_at).toBe(null);
     });
   });
 });

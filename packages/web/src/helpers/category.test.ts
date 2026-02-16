@@ -37,35 +37,39 @@ describe('category helpers', () => {
     });
 
     it('should handle geo category', () => {
-        const result = categoryUrlParamsToVariables({ 
-            category: 'geoCountry',
-            includeCountries: ['US']
-        });
-        expect(result).toMatchObject({
-            isCategoryGeo: true,
-            isCategoryGeoCountry: true,
-            includeCountries: ['US']
-        });
+      const result = categoryUrlParamsToVariables({
+        category: 'geoCountry',
+        includeCountries: ['US'],
+      });
+      expect(result).toMatchObject({
+        isCategoryGeo: true,
+        isCategoryGeoCountry: true,
+        includeCountries: ['US'],
+      });
     });
 
     it('should handle referrer category', () => {
-        const result = categoryUrlParamsToVariables({ category: 'referrerDomain' });
-        expect(result).toMatchObject({
-            isCategoryReferrer: true,
-            isCategoryReferrerDomain: true
-        });
+      const result = categoryUrlParamsToVariables({
+        category: 'referrerDomain',
+      });
+      expect(result).toMatchObject({
+        isCategoryReferrer: true,
+        isCategoryReferrerDomain: true,
+      });
     });
 
     it('should handle utm category', () => {
-        const result = categoryUrlParamsToVariables({ category: 'utmSource' });
-        expect(result).toMatchObject({
-            isCategoryUtm: true,
-            isCategoryUtmSource: true
-        });
+      const result = categoryUrlParamsToVariables({ category: 'utmSource' });
+      expect(result).toMatchObject({
+        isCategoryUtm: true,
+        isCategoryUtmSource: true,
+      });
     });
-    
+
     it('should return undefined for unknown category', () => {
-        expect(categoryUrlParamsToVariables({ category: 'unknown' })).toBeUndefined();
+      expect(
+        categoryUrlParamsToVariables({ category: 'unknown' })
+      ).toBeUndefined();
     });
   });
 });

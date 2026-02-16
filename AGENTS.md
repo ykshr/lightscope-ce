@@ -14,6 +14,18 @@ AI agents must respect package boundaries.
 
 ---
 
+# CI/CD Checks
+
+Before marking a task as complete, you must run the following command to ensure all checks pass:
+
+```bash
+pnpm run ci
+```
+
+This command runs linting, type checking, unit tests, and formatting checks across all packages.
+
+---
+
 # Global Rules
 
 ## 1. Language

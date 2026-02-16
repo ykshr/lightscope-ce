@@ -61,12 +61,11 @@ export default function MapCountry() {
   });
 
   // 2. Statistical data
-  const { data: dataCountries } =
-    useTotalCountryQuery({
-      startDate,
-      endDate,
-      articleFilter,
-    });
+  const { data: dataCountries } = useTotalCountryQuery({
+    startDate,
+    endDate,
+    articleFilter,
+  });
   const countries =
     dataCountries?.trend?.categoryGeo
       ?.filter((d): d is typeof d & { country: string } => !!d.country)

@@ -2,19 +2,32 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { fetchData } from '@/lib/fetcher';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  DateTime: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTime: { input: any; output: any };
 };
 
 export type Aggregation = {
@@ -38,10 +51,11 @@ export const AggregationUnit = {
   Month: 'MONTH',
   Total: 'TOTAL',
   Week: 'WEEK',
-  Year: 'YEAR'
+  Year: 'YEAR',
 } as const;
 
-export type AggregationUnit = typeof AggregationUnit[keyof typeof AggregationUnit];
+export type AggregationUnit =
+  (typeof AggregationUnit)[keyof typeof AggregationUnit];
 export type Analytics = AnalyticsBase & {
   __typename?: 'Analytics';
   date: Scalars['DateTime']['output'];
@@ -129,7 +143,6 @@ export type Article = {
   url: Scalars['String']['output'];
 };
 
-
 export type ArticleAnalyticsArgs = {
   aggregation?: InputMaybe<AggregationInput>;
   endDate: Scalars['DateTime']['input'];
@@ -192,20 +205,28 @@ export type ArticleFilter = {
 
 export type ArticleFilterInput = {
   description?: InputMaybe<Scalars['String']['input']>;
-  excludeAuthors?: InputMaybe<Array<InputMaybe<Array<Scalars['String']['input']>>>>;
+  excludeAuthors?: InputMaybe<
+    Array<InputMaybe<Array<Scalars['String']['input']>>>
+  >;
   excludeLocales?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeSections?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeSiteNames?: InputMaybe<Array<Scalars['String']['input']>>;
-  excludeTags?: InputMaybe<Array<InputMaybe<Array<Scalars['String']['input']>>>>;
+  excludeTags?: InputMaybe<
+    Array<InputMaybe<Array<Scalars['String']['input']>>>
+  >;
   excludeTypes?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeUrls?: InputMaybe<Array<Scalars['String']['input']>>;
   expirationTimeAfter?: InputMaybe<Scalars['DateTime']['input']>;
   expirationTimeBefore?: InputMaybe<Scalars['DateTime']['input']>;
-  includeAuthors?: InputMaybe<Array<InputMaybe<Array<Scalars['String']['input']>>>>;
+  includeAuthors?: InputMaybe<
+    Array<InputMaybe<Array<Scalars['String']['input']>>>
+  >;
   includeLocales?: InputMaybe<Array<Scalars['String']['input']>>;
   includeSections?: InputMaybe<Array<Scalars['String']['input']>>;
   includeSiteNames?: InputMaybe<Array<Scalars['String']['input']>>;
-  includeTags?: InputMaybe<Array<InputMaybe<Array<Scalars['String']['input']>>>>;
+  includeTags?: InputMaybe<
+    Array<InputMaybe<Array<Scalars['String']['input']>>>
+  >;
   includeTypes?: InputMaybe<Array<Scalars['String']['input']>>;
   includeUrls?: InputMaybe<Array<Scalars['String']['input']>>;
   modifiedTimeAfter?: InputMaybe<Scalars['DateTime']['input']>;
@@ -238,24 +259,24 @@ export const CategoryName = {
   GeoContinent: 'GEO_CONTINENT',
   GeoCountry: 'GEO_COUNTRY',
   GeoSubdivision: 'GEO_SUBDIVISION',
-  Referrer: 'REFERRER'
+  Referrer: 'REFERRER',
 } as const;
 
-export type CategoryName = typeof CategoryName[keyof typeof CategoryName];
+export type CategoryName = (typeof CategoryName)[keyof typeof CategoryName];
 export const Metric = {
   EngagementTime: 'ENGAGEMENT_TIME',
   UsersViews: 'USERS_VIEWS',
   VisitorsViews: 'VISITORS_VIEWS',
-  VisitsViews: 'VISITS_VIEWS'
+  VisitsViews: 'VISITS_VIEWS',
 } as const;
 
-export type Metric = typeof Metric[keyof typeof Metric];
+export type Metric = (typeof Metric)[keyof typeof Metric];
 export const Order = {
   Asc: 'ASC',
-  Desc: 'DESC'
+  Desc: 'DESC',
 } as const;
 
-export type Order = typeof Order[keyof typeof Order];
+export type Order = (typeof Order)[keyof typeof Order];
 export type Query = {
   __typename?: 'Query';
   article?: Maybe<Article>;
@@ -263,11 +284,9 @@ export type Query = {
   trend?: Maybe<Trend>;
 };
 
-
 export type QueryArticleArgs = {
   url: Scalars['String']['input'];
 };
-
 
 export type QueryRankArgs = {
   articleFilter?: InputMaybe<ArticleFilterInput>;
@@ -278,7 +297,6 @@ export type QueryRankArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   startDate: Scalars['DateTime']['input'];
 };
-
 
 export type QueryTrendArgs = {
   aggregation?: InputMaybe<AggregationInput>;
@@ -304,12 +322,10 @@ export type Rank = {
   total: Scalars['Int']['output'];
 };
 
-
 export type RankCategoryAgeArgs = {
   excludeAges?: InputMaybe<Array<Scalars['String']['input']>>;
   includeAges?: InputMaybe<Array<Scalars['String']['input']>>;
 };
-
 
 export type RankCategoryAppArgs = {
   excludeAppTypes?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -317,7 +333,6 @@ export type RankCategoryAppArgs = {
   includeAppTypes?: InputMaybe<Array<Scalars['String']['input']>>;
   includeApps?: InputMaybe<Array<Scalars['String']['input']>>;
 };
-
 
 export type RankCategoryDeviceArgs = {
   excludeDeviceTypes?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -328,12 +343,10 @@ export type RankCategoryDeviceArgs = {
   includeDevices?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-
 export type RankCategoryGenderArgs = {
   excludeGenders?: InputMaybe<Array<Scalars['String']['input']>>;
   includeGenders?: InputMaybe<Array<Scalars['String']['input']>>;
 };
-
 
 export type RankCategoryGeoArgs = {
   excludeCities?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -346,14 +359,12 @@ export type RankCategoryGeoArgs = {
   includeSubdivisions?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-
 export type RankCategoryReferrerArgs = {
   excludeDomains?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeReferrers?: InputMaybe<Array<Scalars['String']['input']>>;
   includeDomains?: InputMaybe<Array<Scalars['String']['input']>>;
   includeReferrers?: InputMaybe<Array<Scalars['String']['input']>>;
 };
-
 
 export type RankCategoryUtmArgs = {
   excludeCampaigns?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -415,18 +426,15 @@ export type Trend = {
   total: Array<TrendAnalytics>;
 };
 
-
 export type TrendArticlesArgs = {
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryAgeArgs = {
   excludeAges?: InputMaybe<Array<Scalars['String']['input']>>;
   includeAges?: InputMaybe<Array<Scalars['String']['input']>>;
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryAppArgs = {
   excludeAppTypes?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -435,7 +443,6 @@ export type TrendCategoryAppArgs = {
   includeApps?: InputMaybe<Array<Scalars['String']['input']>>;
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryDeviceArgs = {
   excludeDeviceTypes?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -447,13 +454,11 @@ export type TrendCategoryDeviceArgs = {
   top?: InputMaybe<Scalars['Int']['input']>;
 };
 
-
 export type TrendCategoryGenderArgs = {
   excludeGenders?: InputMaybe<Array<Scalars['String']['input']>>;
   includeGenders?: InputMaybe<Array<Scalars['String']['input']>>;
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryGeoArgs = {
   excludeCities?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -467,7 +472,6 @@ export type TrendCategoryGeoArgs = {
   top?: InputMaybe<Scalars['Int']['input']>;
 };
 
-
 export type TrendCategoryReferrerArgs = {
   excludeDomains?: InputMaybe<Array<Scalars['String']['input']>>;
   excludeReferrers?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -475,7 +479,6 @@ export type TrendCategoryReferrerArgs = {
   includeReferrers?: InputMaybe<Array<Scalars['String']['input']>>;
   top?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type TrendCategoryUtmArgs = {
   excludeCampaigns?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -599,8 +602,13 @@ export type TotalEngagementTimeQueryVariables = Exact<{
   articleFilter?: InputMaybe<ArticleFilterInput>;
 }>;
 
-
-export type TotalEngagementTimeQuery = { __typename?: 'Query', trend?: { __typename?: 'Trend', total: Array<{ __typename?: 'TrendAnalytics', value: number }> } | null };
+export type TotalEngagementTimeQuery = {
+  __typename?: 'Query';
+  trend?: {
+    __typename?: 'Trend';
+    total: Array<{ __typename?: 'TrendAnalytics'; value: number }>;
+  } | null;
+};
 
 export type TotalViewsQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
@@ -608,8 +616,13 @@ export type TotalViewsQueryVariables = Exact<{
   articleFilter?: InputMaybe<ArticleFilterInput>;
 }>;
 
-
-export type TotalViewsQuery = { __typename?: 'Query', trend?: { __typename?: 'Trend', total: Array<{ __typename?: 'TrendAnalytics', value: number }> } | null };
+export type TotalViewsQuery = {
+  __typename?: 'Query';
+  trend?: {
+    __typename?: 'Trend';
+    total: Array<{ __typename?: 'TrendAnalytics'; value: number }>;
+  } | null;
+};
 
 export type TotalUniqueUsersQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
@@ -617,8 +630,13 @@ export type TotalUniqueUsersQueryVariables = Exact<{
   articleFilter?: InputMaybe<ArticleFilterInput>;
 }>;
 
-
-export type TotalUniqueUsersQuery = { __typename?: 'Query', trend?: { __typename?: 'Trend', total: Array<{ __typename?: 'TrendAnalytics', value: number }> } | null };
+export type TotalUniqueUsersQuery = {
+  __typename?: 'Query';
+  trend?: {
+    __typename?: 'Trend';
+    total: Array<{ __typename?: 'TrendAnalytics'; value: number }>;
+  } | null;
+};
 
 export type ArticleTrendQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
@@ -649,62 +667,321 @@ export type ArticleTrendQueryVariables = Exact<{
   isCategoryUtmSource?: InputMaybe<Scalars['Boolean']['input']>;
   isCategoryUtmMedium?: InputMaybe<Scalars['Boolean']['input']>;
   isCategoryUtmCampaign?: InputMaybe<Scalars['Boolean']['input']>;
-  includeAges?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeAges?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeAppTypes?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeAppTypes?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeApps?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeApps?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeDeviceTypes?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeDeviceTypes?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeDeviceVendors?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeDeviceVendors?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeDevices?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeDevices?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeGenders?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeGenders?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeContinents?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeContinents?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeSubdivisions?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeSubdivisions?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeCountries?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeCountries?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeCities?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeCities?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeDomains?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeDomains?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeReferrers?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeReferrers?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeSources?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeSources?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeMediums?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeMediums?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeCampaigns?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeCampaigns?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  includeAges?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeAges?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeAppTypes?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeAppTypes?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeApps?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeApps?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeDeviceTypes?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeDeviceTypes?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeDeviceVendors?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeDeviceVendors?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeDevices?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeDevices?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeGenders?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeGenders?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeContinents?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeContinents?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeSubdivisions?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeSubdivisions?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeCountries?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeCountries?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeCities?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeCities?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeDomains?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeDomains?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeReferrers?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeReferrers?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeSources?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeSources?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeMediums?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeMediums?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeCampaigns?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeCampaigns?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
 }>;
 
+export type ArticleTrendQuery = {
+  __typename?: 'Query';
+  trend?: {
+    __typename?: 'Trend';
+    categoryAge?: Array<{
+      __typename?: 'TrendAnalyticsAge';
+      age?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryApp?: Array<{
+      __typename?: 'TrendAnalyticsApp';
+      appType?: string | null;
+      app?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryDevice?: Array<{
+      __typename?: 'TrendAnalyticsDevice';
+      deviceType?: string | null;
+      device?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryGender?: Array<{
+      __typename?: 'TrendAnalyticsGender';
+      gender?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryGeo?: Array<{
+      __typename?: 'TrendAnalyticsGeo';
+      continent?: string | null;
+      country?: string | null;
+      subdivision?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryReferrer?: Array<{
+      __typename?: 'TrendAnalyticsReferrer';
+      domain?: string | null;
+      referrer?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryUtm?: Array<{
+      __typename?: 'TrendAnalyticsUtm';
+      source?: string | null;
+      medium?: string | null;
+      campaign?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    total?: Array<{ __typename?: 'TrendAnalytics'; date: any; value: number }>;
+  } | null;
+  total?: {
+    __typename?: 'Trend';
+    categoryAge?: Array<{
+      __typename?: 'TrendAnalyticsAge';
+      age?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryApp?: Array<{
+      __typename?: 'TrendAnalyticsApp';
+      appType?: string | null;
+      app?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryDevice?: Array<{
+      __typename?: 'TrendAnalyticsDevice';
+      deviceType?: string | null;
+      device?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryGender?: Array<{
+      __typename?: 'TrendAnalyticsGender';
+      gender?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryGeo?: Array<{
+      __typename?: 'TrendAnalyticsGeo';
+      continent?: string | null;
+      country?: string | null;
+      subdivision?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryReferrer?: Array<{
+      __typename?: 'TrendAnalyticsReferrer';
+      domain?: string | null;
+      referrer?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    categoryUtm?: Array<{
+      __typename?: 'TrendAnalyticsUtm';
+      source?: string | null;
+      medium?: string | null;
+      campaign?: string | null;
+      date: any;
+      value: number;
+    }> | null;
+    total?: Array<{ __typename?: 'TrendAnalytics'; date: any; value: number }>;
+  } | null;
+};
 
-export type ArticleTrendQuery = { __typename?: 'Query', trend?: { __typename?: 'Trend', categoryAge?: Array<{ __typename?: 'TrendAnalyticsAge', age?: string | null, date: any, value: number }> | null, categoryApp?: Array<{ __typename?: 'TrendAnalyticsApp', appType?: string | null, app?: string | null, date: any, value: number }> | null, categoryDevice?: Array<{ __typename?: 'TrendAnalyticsDevice', deviceType?: string | null, device?: string | null, date: any, value: number }> | null, categoryGender?: Array<{ __typename?: 'TrendAnalyticsGender', gender?: string | null, date: any, value: number }> | null, categoryGeo?: Array<{ __typename?: 'TrendAnalyticsGeo', continent?: string | null, country?: string | null, subdivision?: string | null, date: any, value: number }> | null, categoryReferrer?: Array<{ __typename?: 'TrendAnalyticsReferrer', domain?: string | null, referrer?: string | null, date: any, value: number }> | null, categoryUtm?: Array<{ __typename?: 'TrendAnalyticsUtm', source?: string | null, medium?: string | null, campaign?: string | null, date: any, value: number }> | null, total?: Array<{ __typename?: 'TrendAnalytics', date: any, value: number }> } | null, total?: { __typename?: 'Trend', categoryAge?: Array<{ __typename?: 'TrendAnalyticsAge', age?: string | null, date: any, value: number }> | null, categoryApp?: Array<{ __typename?: 'TrendAnalyticsApp', appType?: string | null, app?: string | null, date: any, value: number }> | null, categoryDevice?: Array<{ __typename?: 'TrendAnalyticsDevice', deviceType?: string | null, device?: string | null, date: any, value: number }> | null, categoryGender?: Array<{ __typename?: 'TrendAnalyticsGender', gender?: string | null, date: any, value: number }> | null, categoryGeo?: Array<{ __typename?: 'TrendAnalyticsGeo', continent?: string | null, country?: string | null, subdivision?: string | null, date: any, value: number }> | null, categoryReferrer?: Array<{ __typename?: 'TrendAnalyticsReferrer', domain?: string | null, referrer?: string | null, date: any, value: number }> | null, categoryUtm?: Array<{ __typename?: 'TrendAnalyticsUtm', source?: string | null, medium?: string | null, campaign?: string | null, date: any, value: number }> | null, total?: Array<{ __typename?: 'TrendAnalytics', date: any, value: number }> } | null };
+export type TrendTemplateFragment = {
+  __typename?: 'Trend';
+  categoryAge?: Array<{
+    __typename?: 'TrendAnalyticsAge';
+    age?: string | null;
+    date: any;
+    value: number;
+  }> | null;
+  categoryApp?: Array<{
+    __typename?: 'TrendAnalyticsApp';
+    appType?: string | null;
+    app?: string | null;
+    date: any;
+    value: number;
+  }> | null;
+  categoryDevice?: Array<{
+    __typename?: 'TrendAnalyticsDevice';
+    deviceType?: string | null;
+    device?: string | null;
+    date: any;
+    value: number;
+  }> | null;
+  categoryGender?: Array<{
+    __typename?: 'TrendAnalyticsGender';
+    gender?: string | null;
+    date: any;
+    value: number;
+  }> | null;
+  categoryGeo?: Array<{
+    __typename?: 'TrendAnalyticsGeo';
+    continent?: string | null;
+    country?: string | null;
+    subdivision?: string | null;
+    date: any;
+    value: number;
+  }> | null;
+  categoryReferrer?: Array<{
+    __typename?: 'TrendAnalyticsReferrer';
+    domain?: string | null;
+    referrer?: string | null;
+    date: any;
+    value: number;
+  }> | null;
+  categoryUtm?: Array<{
+    __typename?: 'TrendAnalyticsUtm';
+    source?: string | null;
+    medium?: string | null;
+    campaign?: string | null;
+    date: any;
+    value: number;
+  }> | null;
+  total?: Array<{ __typename?: 'TrendAnalytics'; date: any; value: number }>;
+};
 
-export type TrendTemplateFragment = { __typename?: 'Trend', categoryAge?: Array<{ __typename?: 'TrendAnalyticsAge', age?: string | null, date: any, value: number }> | null, categoryApp?: Array<{ __typename?: 'TrendAnalyticsApp', appType?: string | null, app?: string | null, date: any, value: number }> | null, categoryDevice?: Array<{ __typename?: 'TrendAnalyticsDevice', deviceType?: string | null, device?: string | null, date: any, value: number }> | null, categoryGender?: Array<{ __typename?: 'TrendAnalyticsGender', gender?: string | null, date: any, value: number }> | null, categoryGeo?: Array<{ __typename?: 'TrendAnalyticsGeo', continent?: string | null, country?: string | null, subdivision?: string | null, date: any, value: number }> | null, categoryReferrer?: Array<{ __typename?: 'TrendAnalyticsReferrer', domain?: string | null, referrer?: string | null, date: any, value: number }> | null, categoryUtm?: Array<{ __typename?: 'TrendAnalyticsUtm', source?: string | null, medium?: string | null, campaign?: string | null, date: any, value: number }> | null, total?: Array<{ __typename?: 'TrendAnalytics', date: any, value: number }> };
+type TrendAnalytics_TrendAnalytics_Fragment = {
+  __typename?: 'TrendAnalytics';
+  date: any;
+  value: number;
+};
 
-type TrendAnalytics_TrendAnalytics_Fragment = { __typename?: 'TrendAnalytics', date: any, value: number };
+type TrendAnalytics_TrendAnalyticsAge_Fragment = {
+  __typename?: 'TrendAnalyticsAge';
+  date: any;
+  value: number;
+};
 
-type TrendAnalytics_TrendAnalyticsAge_Fragment = { __typename?: 'TrendAnalyticsAge', date: any, value: number };
+type TrendAnalytics_TrendAnalyticsApp_Fragment = {
+  __typename?: 'TrendAnalyticsApp';
+  date: any;
+  value: number;
+};
 
-type TrendAnalytics_TrendAnalyticsApp_Fragment = { __typename?: 'TrendAnalyticsApp', date: any, value: number };
+type TrendAnalytics_TrendAnalyticsArticle_Fragment = {
+  __typename?: 'TrendAnalyticsArticle';
+  date: any;
+  value: number;
+};
 
-type TrendAnalytics_TrendAnalyticsArticle_Fragment = { __typename?: 'TrendAnalyticsArticle', date: any, value: number };
+type TrendAnalytics_TrendAnalyticsDevice_Fragment = {
+  __typename?: 'TrendAnalyticsDevice';
+  date: any;
+  value: number;
+};
 
-type TrendAnalytics_TrendAnalyticsDevice_Fragment = { __typename?: 'TrendAnalyticsDevice', date: any, value: number };
+type TrendAnalytics_TrendAnalyticsGender_Fragment = {
+  __typename?: 'TrendAnalyticsGender';
+  date: any;
+  value: number;
+};
 
-type TrendAnalytics_TrendAnalyticsGender_Fragment = { __typename?: 'TrendAnalyticsGender', date: any, value: number };
+type TrendAnalytics_TrendAnalyticsGeo_Fragment = {
+  __typename?: 'TrendAnalyticsGeo';
+  date: any;
+  value: number;
+};
 
-type TrendAnalytics_TrendAnalyticsGeo_Fragment = { __typename?: 'TrendAnalyticsGeo', date: any, value: number };
+type TrendAnalytics_TrendAnalyticsReferrer_Fragment = {
+  __typename?: 'TrendAnalyticsReferrer';
+  date: any;
+  value: number;
+};
 
-type TrendAnalytics_TrendAnalyticsReferrer_Fragment = { __typename?: 'TrendAnalyticsReferrer', date: any, value: number };
-
-type TrendAnalytics_TrendAnalyticsUtm_Fragment = { __typename?: 'TrendAnalyticsUtm', date: any, value: number };
+type TrendAnalytics_TrendAnalyticsUtm_Fragment = {
+  __typename?: 'TrendAnalyticsUtm';
+  date: any;
+  value: number;
+};
 
 export type TrendAnalyticsFragment =
   | TrendAnalytics_TrendAnalytics_Fragment
@@ -715,8 +992,7 @@ export type TrendAnalyticsFragment =
   | TrendAnalytics_TrendAnalyticsGender_Fragment
   | TrendAnalytics_TrendAnalyticsGeo_Fragment
   | TrendAnalytics_TrendAnalyticsReferrer_Fragment
-  | TrendAnalytics_TrendAnalyticsUtm_Fragment
-;
+  | TrendAnalytics_TrendAnalyticsUtm_Fragment;
 
 export type TotalCountryQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
@@ -724,8 +1000,17 @@ export type TotalCountryQueryVariables = Exact<{
   articleFilter?: InputMaybe<ArticleFilterInput>;
 }>;
 
-
-export type TotalCountryQuery = { __typename?: 'Query', trend?: { __typename?: 'Trend', categoryGeo?: Array<{ __typename?: 'TrendAnalyticsGeo', country?: string | null, value: number }> | null } | null };
+export type TotalCountryQuery = {
+  __typename?: 'Query';
+  trend?: {
+    __typename?: 'Trend';
+    categoryGeo?: Array<{
+      __typename?: 'TrendAnalyticsGeo';
+      country?: string | null;
+      value: number;
+    }> | null;
+  } | null;
+};
 
 export type TotalCityQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
@@ -734,8 +1019,17 @@ export type TotalCityQueryVariables = Exact<{
   country: Scalars['String']['input'];
 }>;
 
-
-export type TotalCityQuery = { __typename?: 'Query', trend?: { __typename?: 'Trend', categoryGeo?: Array<{ __typename?: 'TrendAnalyticsGeo', city?: string | null, value: number }> | null } | null };
+export type TotalCityQuery = {
+  __typename?: 'Query';
+  trend?: {
+    __typename?: 'Trend';
+    categoryGeo?: Array<{
+      __typename?: 'TrendAnalyticsGeo';
+      city?: string | null;
+      value: number;
+    }> | null;
+  } | null;
+};
 
 export type TotalReferrerDomainQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
@@ -743,8 +1037,17 @@ export type TotalReferrerDomainQueryVariables = Exact<{
   articleFilter?: InputMaybe<ArticleFilterInput>;
 }>;
 
-
-export type TotalReferrerDomainQuery = { __typename?: 'Query', trend?: { __typename?: 'Trend', categoryReferrer?: Array<{ __typename?: 'TrendAnalyticsReferrer', domain?: string | null, value: number }> | null } | null };
+export type TotalReferrerDomainQuery = {
+  __typename?: 'Query';
+  trend?: {
+    __typename?: 'Trend';
+    categoryReferrer?: Array<{
+      __typename?: 'TrendAnalyticsReferrer';
+      domain?: string | null;
+      value: number;
+    }> | null;
+  } | null;
+};
 
 export type TotalUtmCampaignQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
@@ -752,8 +1055,17 @@ export type TotalUtmCampaignQueryVariables = Exact<{
   articleFilter?: InputMaybe<ArticleFilterInput>;
 }>;
 
-
-export type TotalUtmCampaignQuery = { __typename?: 'Query', trend?: { __typename?: 'Trend', categoryUtm?: Array<{ __typename?: 'TrendAnalyticsUtm', campaign?: string | null, value: number }> | null } | null };
+export type TotalUtmCampaignQuery = {
+  __typename?: 'Query';
+  trend?: {
+    __typename?: 'Trend';
+    categoryUtm?: Array<{
+      __typename?: 'TrendAnalyticsUtm';
+      campaign?: string | null;
+      value: number;
+    }> | null;
+  } | null;
+};
 
 export type ArticleRankQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
@@ -771,47 +1083,455 @@ export type ArticleRankQueryVariables = Exact<{
   isCategoryGeo?: InputMaybe<Scalars['Boolean']['input']>;
   isCategoryReferrer?: InputMaybe<Scalars['Boolean']['input']>;
   isCategoryUtm?: InputMaybe<Scalars['Boolean']['input']>;
-  includeAges?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeAges?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeAppTypes?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeAppTypes?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeApps?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeApps?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeDeviceTypes?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeDeviceTypes?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeDeviceVendors?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeDeviceVendors?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeDevices?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeDevices?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeGenders?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeGenders?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeContinents?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeContinents?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeSubdivisions?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeSubdivisions?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeCountries?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeCountries?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeCities?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeCities?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeDomains?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeDomains?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeReferrers?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeReferrers?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeSources?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeSources?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeMediums?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeMediums?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  includeCampaigns?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  excludeCampaigns?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  includeAges?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeAges?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeAppTypes?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeAppTypes?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeApps?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeApps?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeDeviceTypes?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeDeviceTypes?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeDeviceVendors?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeDeviceVendors?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeDevices?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeDevices?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeGenders?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeGenders?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeContinents?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeContinents?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeSubdivisions?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeSubdivisions?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeCountries?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeCountries?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeCities?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeCities?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeDomains?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeDomains?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeReferrers?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeReferrers?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeSources?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeSources?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeMediums?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeMediums?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  includeCampaigns?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
+  excludeCampaigns?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >;
 }>;
 
+export type ArticleRankQuery = {
+  __typename?: 'Query';
+  rank?: {
+    __typename?: 'Rank';
+    categoryAge?: Array<{
+      __typename?: 'RankAnalytics';
+      index: number;
+      url: string;
+      value: number;
+      article?: {
+        __typename?: 'Article';
+        url: string;
+        title?: string | null;
+        type?: string | null;
+        image?: string | null;
+        siteName: string;
+        publishedTime?: any | null;
+        section?: string | null;
+        analytics?: {
+          __typename?: 'ArticleAnalytics';
+          analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+        } | null;
+      } | null;
+    }> | null;
+    categoryApp?: Array<{
+      __typename?: 'RankAnalytics';
+      index: number;
+      url: string;
+      value: number;
+      article?: {
+        __typename?: 'Article';
+        url: string;
+        title?: string | null;
+        type?: string | null;
+        image?: string | null;
+        siteName: string;
+        publishedTime?: any | null;
+        section?: string | null;
+        analytics?: {
+          __typename?: 'ArticleAnalytics';
+          analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+        } | null;
+      } | null;
+    }> | null;
+    categoryDevice?: Array<{
+      __typename?: 'RankAnalytics';
+      index: number;
+      url: string;
+      value: number;
+      article?: {
+        __typename?: 'Article';
+        url: string;
+        title?: string | null;
+        type?: string | null;
+        image?: string | null;
+        siteName: string;
+        publishedTime?: any | null;
+        section?: string | null;
+        analytics?: {
+          __typename?: 'ArticleAnalytics';
+          analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+        } | null;
+      } | null;
+    }> | null;
+    categoryGender?: Array<{
+      __typename?: 'RankAnalytics';
+      index: number;
+      url: string;
+      value: number;
+      article?: {
+        __typename?: 'Article';
+        url: string;
+        title?: string | null;
+        type?: string | null;
+        image?: string | null;
+        siteName: string;
+        publishedTime?: any | null;
+        section?: string | null;
+        analytics?: {
+          __typename?: 'ArticleAnalytics';
+          analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+        } | null;
+      } | null;
+    }> | null;
+    categoryGeo?: Array<{
+      __typename?: 'RankAnalytics';
+      index: number;
+      url: string;
+      value: number;
+      article?: {
+        __typename?: 'Article';
+        url: string;
+        title?: string | null;
+        type?: string | null;
+        image?: string | null;
+        siteName: string;
+        publishedTime?: any | null;
+        section?: string | null;
+        analytics?: {
+          __typename?: 'ArticleAnalytics';
+          analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+        } | null;
+      } | null;
+    }> | null;
+    categoryReferrer?: Array<{
+      __typename?: 'RankAnalytics';
+      index: number;
+      url: string;
+      value: number;
+      article?: {
+        __typename?: 'Article';
+        url: string;
+        title?: string | null;
+        type?: string | null;
+        image?: string | null;
+        siteName: string;
+        publishedTime?: any | null;
+        section?: string | null;
+        analytics?: {
+          __typename?: 'ArticleAnalytics';
+          analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+        } | null;
+      } | null;
+    }> | null;
+    categoryUtm?: Array<{
+      __typename?: 'RankAnalytics';
+      index: number;
+      url: string;
+      value: number;
+      article?: {
+        __typename?: 'Article';
+        url: string;
+        title?: string | null;
+        type?: string | null;
+        image?: string | null;
+        siteName: string;
+        publishedTime?: any | null;
+        section?: string | null;
+        analytics?: {
+          __typename?: 'ArticleAnalytics';
+          analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+        } | null;
+      } | null;
+    }> | null;
+    articles?: Array<{
+      __typename?: 'RankAnalytics';
+      index: number;
+      url: string;
+      value: number;
+      article?: {
+        __typename?: 'Article';
+        url: string;
+        title?: string | null;
+        type?: string | null;
+        image?: string | null;
+        siteName: string;
+        publishedTime?: any | null;
+        section?: string | null;
+        analytics?: {
+          __typename?: 'ArticleAnalytics';
+          analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+        } | null;
+      } | null;
+    }> | null;
+  } | null;
+};
 
-export type ArticleRankQuery = { __typename?: 'Query', rank?: { __typename?: 'Rank', categoryAge?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryApp?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryDevice?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryGender?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryGeo?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryReferrer?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryUtm?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, articles?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null } | null };
+export type RankTemplateFragment = {
+  __typename?: 'Rank';
+  categoryAge?: Array<{
+    __typename?: 'RankAnalytics';
+    index: number;
+    url: string;
+    value: number;
+    article?: {
+      __typename?: 'Article';
+      url: string;
+      title?: string | null;
+      type?: string | null;
+      image?: string | null;
+      siteName: string;
+      publishedTime?: any | null;
+      section?: string | null;
+      analytics?: {
+        __typename?: 'ArticleAnalytics';
+        analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+      } | null;
+    } | null;
+  }> | null;
+  categoryApp?: Array<{
+    __typename?: 'RankAnalytics';
+    index: number;
+    url: string;
+    value: number;
+    article?: {
+      __typename?: 'Article';
+      url: string;
+      title?: string | null;
+      type?: string | null;
+      image?: string | null;
+      siteName: string;
+      publishedTime?: any | null;
+      section?: string | null;
+      analytics?: {
+        __typename?: 'ArticleAnalytics';
+        analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+      } | null;
+    } | null;
+  }> | null;
+  categoryDevice?: Array<{
+    __typename?: 'RankAnalytics';
+    index: number;
+    url: string;
+    value: number;
+    article?: {
+      __typename?: 'Article';
+      url: string;
+      title?: string | null;
+      type?: string | null;
+      image?: string | null;
+      siteName: string;
+      publishedTime?: any | null;
+      section?: string | null;
+      analytics?: {
+        __typename?: 'ArticleAnalytics';
+        analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+      } | null;
+    } | null;
+  }> | null;
+  categoryGender?: Array<{
+    __typename?: 'RankAnalytics';
+    index: number;
+    url: string;
+    value: number;
+    article?: {
+      __typename?: 'Article';
+      url: string;
+      title?: string | null;
+      type?: string | null;
+      image?: string | null;
+      siteName: string;
+      publishedTime?: any | null;
+      section?: string | null;
+      analytics?: {
+        __typename?: 'ArticleAnalytics';
+        analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+      } | null;
+    } | null;
+  }> | null;
+  categoryGeo?: Array<{
+    __typename?: 'RankAnalytics';
+    index: number;
+    url: string;
+    value: number;
+    article?: {
+      __typename?: 'Article';
+      url: string;
+      title?: string | null;
+      type?: string | null;
+      image?: string | null;
+      siteName: string;
+      publishedTime?: any | null;
+      section?: string | null;
+      analytics?: {
+        __typename?: 'ArticleAnalytics';
+        analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+      } | null;
+    } | null;
+  }> | null;
+  categoryReferrer?: Array<{
+    __typename?: 'RankAnalytics';
+    index: number;
+    url: string;
+    value: number;
+    article?: {
+      __typename?: 'Article';
+      url: string;
+      title?: string | null;
+      type?: string | null;
+      image?: string | null;
+      siteName: string;
+      publishedTime?: any | null;
+      section?: string | null;
+      analytics?: {
+        __typename?: 'ArticleAnalytics';
+        analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+      } | null;
+    } | null;
+  }> | null;
+  categoryUtm?: Array<{
+    __typename?: 'RankAnalytics';
+    index: number;
+    url: string;
+    value: number;
+    article?: {
+      __typename?: 'Article';
+      url: string;
+      title?: string | null;
+      type?: string | null;
+      image?: string | null;
+      siteName: string;
+      publishedTime?: any | null;
+      section?: string | null;
+      analytics?: {
+        __typename?: 'ArticleAnalytics';
+        analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+      } | null;
+    } | null;
+  }> | null;
+  articles?: Array<{
+    __typename?: 'RankAnalytics';
+    index: number;
+    url: string;
+    value: number;
+    article?: {
+      __typename?: 'Article';
+      url: string;
+      title?: string | null;
+      type?: string | null;
+      image?: string | null;
+      siteName: string;
+      publishedTime?: any | null;
+      section?: string | null;
+      analytics?: {
+        __typename?: 'ArticleAnalytics';
+        analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+      } | null;
+    } | null;
+  }> | null;
+};
 
-export type RankTemplateFragment = { __typename?: 'Rank', categoryAge?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryApp?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryDevice?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryGender?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryGeo?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryReferrer?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, categoryUtm?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null, articles?: Array<{ __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null }> | null };
-
-export type RankAnalyticsFragment = { __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null };
-
+export type RankAnalyticsFragment = {
+  __typename?: 'RankAnalytics';
+  index: number;
+  url: string;
+  value: number;
+  article?: {
+    __typename?: 'Article';
+    url: string;
+    title?: string | null;
+    type?: string | null;
+    image?: string | null;
+    siteName: string;
+    publishedTime?: any | null;
+    section?: string | null;
+    analytics?: {
+      __typename?: 'ArticleAnalytics';
+      analytics?: Array<{ __typename?: 'Analytics'; value: number }> | null;
+    } | null;
+  } | null;
+};
 
 export const TrendAnalyticsFragmentDoc = `
     fragment TrendAnalytics on TrendAnalyticsBase {
@@ -998,22 +1718,34 @@ export const TotalEngagementTimeDocument = `
     `;
 
 export const useTotalEngagementTimeQuery = <
-      TData = TotalEngagementTimeQuery,
-      TError = unknown
-    >(
-      variables: TotalEngagementTimeQueryVariables,
-      options?: Omit<UseQueryOptions<TotalEngagementTimeQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<TotalEngagementTimeQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<TotalEngagementTimeQuery, TError, TData>(
-      {
-    queryKey: ['TotalEngagementTime', variables],
-    queryFn: fetchData<TotalEngagementTimeQuery, TotalEngagementTimeQueryVariables>(TotalEngagementTimeDocument, variables),
-    ...options
+  TData = TotalEngagementTimeQuery,
+  TError = unknown,
+>(
+  variables: TotalEngagementTimeQueryVariables,
+  options?: Omit<
+    UseQueryOptions<TotalEngagementTimeQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      TotalEngagementTimeQuery,
+      TError,
+      TData
+    >['queryKey'];
   }
-    )};
+) => {
+  return useQuery<TotalEngagementTimeQuery, TError, TData>({
+    queryKey: ['TotalEngagementTime', variables],
+    queryFn: fetchData<
+      TotalEngagementTimeQuery,
+      TotalEngagementTimeQueryVariables
+    >(TotalEngagementTimeDocument, variables),
+    ...options,
+  });
+};
 
-useTotalEngagementTimeQuery.getKey = (variables: TotalEngagementTimeQueryVariables) => ['TotalEngagementTime', variables];
+useTotalEngagementTimeQuery.getKey = (
+  variables: TotalEngagementTimeQueryVariables
+) => ['TotalEngagementTime', variables];
 
 export const TotalViewsDocument = `
     query TotalViews($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1031,23 +1763,27 @@ export const TotalViewsDocument = `
 }
     `;
 
-export const useTotalViewsQuery = <
-      TData = TotalViewsQuery,
-      TError = unknown
-    >(
-      variables: TotalViewsQueryVariables,
-      options?: Omit<UseQueryOptions<TotalViewsQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<TotalViewsQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<TotalViewsQuery, TError, TData>(
-      {
+export const useTotalViewsQuery = <TData = TotalViewsQuery, TError = unknown>(
+  variables: TotalViewsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<TotalViewsQuery, TError, TData>,
+    'queryKey'
+  > & { queryKey?: UseQueryOptions<TotalViewsQuery, TError, TData>['queryKey'] }
+) => {
+  return useQuery<TotalViewsQuery, TError, TData>({
     queryKey: ['TotalViews', variables],
-    queryFn: fetchData<TotalViewsQuery, TotalViewsQueryVariables>(TotalViewsDocument, variables),
-    ...options
-  }
-    )};
+    queryFn: fetchData<TotalViewsQuery, TotalViewsQueryVariables>(
+      TotalViewsDocument,
+      variables
+    ),
+    ...options,
+  });
+};
 
-useTotalViewsQuery.getKey = (variables: TotalViewsQueryVariables) => ['TotalViews', variables];
+useTotalViewsQuery.getKey = (variables: TotalViewsQueryVariables) => [
+  'TotalViews',
+  variables,
+];
 
 export const TotalUniqueUsersDocument = `
     query TotalUniqueUsers($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1066,22 +1802,34 @@ export const TotalUniqueUsersDocument = `
     `;
 
 export const useTotalUniqueUsersQuery = <
-      TData = TotalUniqueUsersQuery,
-      TError = unknown
-    >(
-      variables: TotalUniqueUsersQueryVariables,
-      options?: Omit<UseQueryOptions<TotalUniqueUsersQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<TotalUniqueUsersQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<TotalUniqueUsersQuery, TError, TData>(
-      {
-    queryKey: ['TotalUniqueUsers', variables],
-    queryFn: fetchData<TotalUniqueUsersQuery, TotalUniqueUsersQueryVariables>(TotalUniqueUsersDocument, variables),
-    ...options
+  TData = TotalUniqueUsersQuery,
+  TError = unknown,
+>(
+  variables: TotalUniqueUsersQueryVariables,
+  options?: Omit<
+    UseQueryOptions<TotalUniqueUsersQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      TotalUniqueUsersQuery,
+      TError,
+      TData
+    >['queryKey'];
   }
-    )};
+) => {
+  return useQuery<TotalUniqueUsersQuery, TError, TData>({
+    queryKey: ['TotalUniqueUsers', variables],
+    queryFn: fetchData<TotalUniqueUsersQuery, TotalUniqueUsersQueryVariables>(
+      TotalUniqueUsersDocument,
+      variables
+    ),
+    ...options,
+  });
+};
 
-useTotalUniqueUsersQuery.getKey = (variables: TotalUniqueUsersQueryVariables) => ['TotalUniqueUsers', variables];
+useTotalUniqueUsersQuery.getKey = (
+  variables: TotalUniqueUsersQueryVariables
+) => ['TotalUniqueUsers', variables];
 
 export const ArticleTrendDocument = `
     query ArticleTrend($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput, $limit: Int, $page: Int, $metric: Metric, $isArticles: Boolean = false, $isCategoryAge: Boolean = false, $isCategoryAgeAge: Boolean = false, $isCategoryApp: Boolean = false, $isCategoryAppAppType: Boolean = false, $isCategoryAppApp: Boolean = false, $isCategoryDevice: Boolean = false, $isCategoryDeviceDeviceType: Boolean = false, $isCategoryDeviceDevice: Boolean = false, $isCategoryGender: Boolean = false, $isCategoryGenderGender: Boolean = false, $isCategoryGeo: Boolean = false, $isCategoryGeoContinent: Boolean = false, $isCategoryGeoCountry: Boolean = false, $isCategoryGeoSubdivision: Boolean = false, $isCategoryReferrer: Boolean = false, $isCategoryReferrerDomain: Boolean = false, $isCategoryReferrerReferrer: Boolean = false, $isCategoryUtm: Boolean = false, $isCategoryUtmSource: Boolean = false, $isCategoryUtmMedium: Boolean = false, $isCategoryUtmCampaign: Boolean = false, $includeAges: [String!], $excludeAges: [String!], $includeAppTypes: [String!], $excludeAppTypes: [String!], $includeApps: [String!], $excludeApps: [String!], $includeDeviceTypes: [String!], $excludeDeviceTypes: [String!], $includeDeviceVendors: [String!], $excludeDeviceVendors: [String!], $includeDevices: [String!], $excludeDevices: [String!], $includeGenders: [String!], $excludeGenders: [String!], $includeContinents: [String!], $excludeContinents: [String!], $includeSubdivisions: [String!], $excludeSubdivisions: [String!], $includeCountries: [String!], $excludeCountries: [String!], $includeCities: [String!], $excludeCities: [String!], $includeDomains: [String!], $excludeDomains: [String!], $includeReferrers: [String!], $excludeReferrers: [String!], $includeSources: [String!], $excludeSources: [String!], $includeMediums: [String!], $excludeMediums: [String!], $includeCampaigns: [String!], $excludeCampaigns: [String!]) {
@@ -1111,22 +1859,31 @@ export const ArticleTrendDocument = `
     ${TrendTemplateFragmentDoc}`;
 
 export const useArticleTrendQuery = <
-      TData = ArticleTrendQuery,
-      TError = unknown
-    >(
-      variables: ArticleTrendQueryVariables,
-      options?: Omit<UseQueryOptions<ArticleTrendQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<ArticleTrendQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<ArticleTrendQuery, TError, TData>(
-      {
-    queryKey: ['ArticleTrend', variables],
-    queryFn: fetchData<ArticleTrendQuery, ArticleTrendQueryVariables>(ArticleTrendDocument, variables),
-    ...options
+  TData = ArticleTrendQuery,
+  TError = unknown,
+>(
+  variables: ArticleTrendQueryVariables,
+  options?: Omit<
+    UseQueryOptions<ArticleTrendQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<ArticleTrendQuery, TError, TData>['queryKey'];
   }
-    )};
+) => {
+  return useQuery<ArticleTrendQuery, TError, TData>({
+    queryKey: ['ArticleTrend', variables],
+    queryFn: fetchData<ArticleTrendQuery, ArticleTrendQueryVariables>(
+      ArticleTrendDocument,
+      variables
+    ),
+    ...options,
+  });
+};
 
-useArticleTrendQuery.getKey = (variables: ArticleTrendQueryVariables) => ['ArticleTrend', variables];
+useArticleTrendQuery.getKey = (variables: ArticleTrendQueryVariables) => [
+  'ArticleTrend',
+  variables,
+];
 
 export const TotalCountryDocument = `
     query TotalCountry($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1146,22 +1903,31 @@ export const TotalCountryDocument = `
     `;
 
 export const useTotalCountryQuery = <
-      TData = TotalCountryQuery,
-      TError = unknown
-    >(
-      variables: TotalCountryQueryVariables,
-      options?: Omit<UseQueryOptions<TotalCountryQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<TotalCountryQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<TotalCountryQuery, TError, TData>(
-      {
-    queryKey: ['TotalCountry', variables],
-    queryFn: fetchData<TotalCountryQuery, TotalCountryQueryVariables>(TotalCountryDocument, variables),
-    ...options
+  TData = TotalCountryQuery,
+  TError = unknown,
+>(
+  variables: TotalCountryQueryVariables,
+  options?: Omit<
+    UseQueryOptions<TotalCountryQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<TotalCountryQuery, TError, TData>['queryKey'];
   }
-    )};
+) => {
+  return useQuery<TotalCountryQuery, TError, TData>({
+    queryKey: ['TotalCountry', variables],
+    queryFn: fetchData<TotalCountryQuery, TotalCountryQueryVariables>(
+      TotalCountryDocument,
+      variables
+    ),
+    ...options,
+  });
+};
 
-useTotalCountryQuery.getKey = (variables: TotalCountryQueryVariables) => ['TotalCountry', variables];
+useTotalCountryQuery.getKey = (variables: TotalCountryQueryVariables) => [
+  'TotalCountry',
+  variables,
+];
 
 export const TotalCityDocument = `
     query TotalCity($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput, $country: String!) {
@@ -1180,23 +1946,26 @@ export const TotalCityDocument = `
 }
     `;
 
-export const useTotalCityQuery = <
-      TData = TotalCityQuery,
-      TError = unknown
-    >(
-      variables: TotalCityQueryVariables,
-      options?: Omit<UseQueryOptions<TotalCityQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<TotalCityQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<TotalCityQuery, TError, TData>(
-      {
-    queryKey: ['TotalCity', variables],
-    queryFn: fetchData<TotalCityQuery, TotalCityQueryVariables>(TotalCityDocument, variables),
-    ...options
+export const useTotalCityQuery = <TData = TotalCityQuery, TError = unknown>(
+  variables: TotalCityQueryVariables,
+  options?: Omit<UseQueryOptions<TotalCityQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<TotalCityQuery, TError, TData>['queryKey'];
   }
-    )};
+) => {
+  return useQuery<TotalCityQuery, TError, TData>({
+    queryKey: ['TotalCity', variables],
+    queryFn: fetchData<TotalCityQuery, TotalCityQueryVariables>(
+      TotalCityDocument,
+      variables
+    ),
+    ...options,
+  });
+};
 
-useTotalCityQuery.getKey = (variables: TotalCityQueryVariables) => ['TotalCity', variables];
+useTotalCityQuery.getKey = (variables: TotalCityQueryVariables) => [
+  'TotalCity',
+  variables,
+];
 
 export const TotalReferrerDomainDocument = `
     query TotalReferrerDomain($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1216,22 +1985,34 @@ export const TotalReferrerDomainDocument = `
     `;
 
 export const useTotalReferrerDomainQuery = <
-      TData = TotalReferrerDomainQuery,
-      TError = unknown
-    >(
-      variables: TotalReferrerDomainQueryVariables,
-      options?: Omit<UseQueryOptions<TotalReferrerDomainQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<TotalReferrerDomainQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<TotalReferrerDomainQuery, TError, TData>(
-      {
-    queryKey: ['TotalReferrerDomain', variables],
-    queryFn: fetchData<TotalReferrerDomainQuery, TotalReferrerDomainQueryVariables>(TotalReferrerDomainDocument, variables),
-    ...options
+  TData = TotalReferrerDomainQuery,
+  TError = unknown,
+>(
+  variables: TotalReferrerDomainQueryVariables,
+  options?: Omit<
+    UseQueryOptions<TotalReferrerDomainQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      TotalReferrerDomainQuery,
+      TError,
+      TData
+    >['queryKey'];
   }
-    )};
+) => {
+  return useQuery<TotalReferrerDomainQuery, TError, TData>({
+    queryKey: ['TotalReferrerDomain', variables],
+    queryFn: fetchData<
+      TotalReferrerDomainQuery,
+      TotalReferrerDomainQueryVariables
+    >(TotalReferrerDomainDocument, variables),
+    ...options,
+  });
+};
 
-useTotalReferrerDomainQuery.getKey = (variables: TotalReferrerDomainQueryVariables) => ['TotalReferrerDomain', variables];
+useTotalReferrerDomainQuery.getKey = (
+  variables: TotalReferrerDomainQueryVariables
+) => ['TotalReferrerDomain', variables];
 
 export const TotalUtmCampaignDocument = `
     query TotalUtmCampaign($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1251,22 +2032,34 @@ export const TotalUtmCampaignDocument = `
     `;
 
 export const useTotalUtmCampaignQuery = <
-      TData = TotalUtmCampaignQuery,
-      TError = unknown
-    >(
-      variables: TotalUtmCampaignQueryVariables,
-      options?: Omit<UseQueryOptions<TotalUtmCampaignQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<TotalUtmCampaignQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<TotalUtmCampaignQuery, TError, TData>(
-      {
-    queryKey: ['TotalUtmCampaign', variables],
-    queryFn: fetchData<TotalUtmCampaignQuery, TotalUtmCampaignQueryVariables>(TotalUtmCampaignDocument, variables),
-    ...options
+  TData = TotalUtmCampaignQuery,
+  TError = unknown,
+>(
+  variables: TotalUtmCampaignQueryVariables,
+  options?: Omit<
+    UseQueryOptions<TotalUtmCampaignQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      TotalUtmCampaignQuery,
+      TError,
+      TData
+    >['queryKey'];
   }
-    )};
+) => {
+  return useQuery<TotalUtmCampaignQuery, TError, TData>({
+    queryKey: ['TotalUtmCampaign', variables],
+    queryFn: fetchData<TotalUtmCampaignQuery, TotalUtmCampaignQueryVariables>(
+      TotalUtmCampaignDocument,
+      variables
+    ),
+    ...options,
+  });
+};
 
-useTotalUtmCampaignQuery.getKey = (variables: TotalUtmCampaignQueryVariables) => ['TotalUtmCampaign', variables];
+useTotalUtmCampaignQuery.getKey = (
+  variables: TotalUtmCampaignQueryVariables
+) => ['TotalUtmCampaign', variables];
 
 export const ArticleRankDocument = `
     query ArticleRank($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput, $limit: Int, $page: Int, $order: Order, $metric: Metric, $isArticles: Boolean = false, $isCategoryAge: Boolean = false, $isCategoryApp: Boolean = false, $isCategoryDevice: Boolean = false, $isCategoryGender: Boolean = false, $isCategoryGeo: Boolean = false, $isCategoryReferrer: Boolean = false, $isCategoryUtm: Boolean = false, $includeAges: [String!], $excludeAges: [String!], $includeAppTypes: [String!], $excludeAppTypes: [String!], $includeApps: [String!], $excludeApps: [String!], $includeDeviceTypes: [String!], $excludeDeviceTypes: [String!], $includeDeviceVendors: [String!], $excludeDeviceVendors: [String!], $includeDevices: [String!], $excludeDevices: [String!], $includeGenders: [String!], $excludeGenders: [String!], $includeContinents: [String!], $excludeContinents: [String!], $includeSubdivisions: [String!], $excludeSubdivisions: [String!], $includeCountries: [String!], $excludeCountries: [String!], $includeCities: [String!], $excludeCities: [String!], $includeDomains: [String!], $excludeDomains: [String!], $includeReferrers: [String!], $excludeReferrers: [String!], $includeSources: [String!], $excludeSources: [String!], $includeMediums: [String!], $excludeMediums: [String!], $includeCampaigns: [String!], $excludeCampaigns: [String!]) {
@@ -1284,20 +2077,26 @@ export const ArticleRankDocument = `
 }
     ${RankTemplateFragmentDoc}`;
 
-export const useArticleRankQuery = <
-      TData = ArticleRankQuery,
-      TError = unknown
-    >(
-      variables: ArticleRankQueryVariables,
-      options?: Omit<UseQueryOptions<ArticleRankQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<ArticleRankQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<ArticleRankQuery, TError, TData>(
-      {
-    queryKey: ['ArticleRank', variables],
-    queryFn: fetchData<ArticleRankQuery, ArticleRankQueryVariables>(ArticleRankDocument, variables),
-    ...options
+export const useArticleRankQuery = <TData = ArticleRankQuery, TError = unknown>(
+  variables: ArticleRankQueryVariables,
+  options?: Omit<
+    UseQueryOptions<ArticleRankQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<ArticleRankQuery, TError, TData>['queryKey'];
   }
-    )};
+) => {
+  return useQuery<ArticleRankQuery, TError, TData>({
+    queryKey: ['ArticleRank', variables],
+    queryFn: fetchData<ArticleRankQuery, ArticleRankQueryVariables>(
+      ArticleRankDocument,
+      variables
+    ),
+    ...options,
+  });
+};
 
-useArticleRankQuery.getKey = (variables: ArticleRankQueryVariables) => ['ArticleRank', variables];
+useArticleRankQuery.getKey = (variables: ArticleRankQueryVariables) => [
+  'ArticleRank',
+  variables,
+];

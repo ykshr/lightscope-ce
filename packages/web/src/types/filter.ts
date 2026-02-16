@@ -7,6 +7,7 @@ export type FilterToQuery = {
   page?: number;
   order?: string;
   metric?: string;
+  category?: string;
   includeAges?: string[];
   excludeAges?: string[];
   includeAppTypes?: string[];

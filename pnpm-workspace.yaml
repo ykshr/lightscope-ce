@@ -4,6 +4,3 @@ packages:
   - packages/sandbox/*
   - packages/script
   - packages/web
-
-patchedDependencies:
-  psl: patches/psl.patch

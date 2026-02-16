@@ -13,15 +13,45 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 10
+        uses: pnpm/action-setup@v4
 
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'pnpm'
+
+      - name: Cache eslint
+        uses: actions/cache@v4
+        with:
+          path: '**/.eslintcache'
+          key: ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-eslint-
+
+      - name: Cache prettier
+        uses: actions/cache@v4
+        with:
+          path: '**/.prettier-cache'
+          key: ${{ runner.os }}-prettier-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-prettier-
+
+      - name: Cache vitest
+        uses: actions/cache@v4
+        with:
+          path: '**/node_modules/.vite/vitest'
+          key: ${{ runner.os }}-vitest-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-vitest-
+
+      - name: Cache typescript
+        uses: actions/cache@v4
+        with:
+          path: '**/*.tsbuildinfo'
+          key: ${{ runner.os }}-typescript-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-typescript-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

@@ -8,7 +8,7 @@
     "test:watch": "vitest",
     "dev": "vite --host --port 60000",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --cache --cache-location .eslintcache",
     "preview": "vite preview",
     "shadcn": "pnpm dlx shadcn@latest add",
     "codegen": "graphql-codegen --config codegen.ts"

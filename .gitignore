@@ -3,3 +3,5 @@ dist
 .vscode
 .env
 *.tsbuildinfo
+.eslintcache
+.prettier-cache

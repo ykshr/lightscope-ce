@@ -24,7 +24,7 @@ export default function processReferrer(referrer: string | undefined): {
 
     return {
       referrer,
-      domain: domain,
+      domain,
     };
   } catch (e) {
     return {

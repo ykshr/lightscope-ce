@@ -12,6 +12,9 @@
   "devDependencies": {
     "prettier": "^3.6.2"
   },
+  "scripts": {
+    "ci": "pnpm -r run codegen --if-present && pnpm -r run build --if-present && pnpm -r run test --if-present && pnpm -r run lint --if-present"
+  },
   "pnpm": {
     "patchedDependencies": {
       "psl@1.15.0": "patches/psl.patch"

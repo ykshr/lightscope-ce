@@ -41,14 +41,14 @@ describe('processReferrer', () => {
   });
 
   it('should return "unknown" domain when psl cannot parse it', () => {
-      // psl returns null or error for IP addresses or local domains depending on config,
-      // but let's test a case that might fail psl parsing or be invalid
-      const referrer = 'http://localhost:3000'; 
-      // localhost might not be in the public suffix list in the way psl expects for a "domain"
-      // psl.parse('localhost') returns { input: 'localhost', error: ... } or just input depending on version
-      // Let's check the behavior. Based on code: if ('error' in parsed || !parsed.domain)
-      
-      // Actually localhost usually doesn't have a 'domain' property in psl result (it has 'tld': null or similar).
-      expect(processReferrer(referrer).domain).toBe('unknown');
+    // psl returns null or error for IP addresses or local domains depending on config,
+    // but let's test a case that might fail psl parsing or be invalid
+    const referrer = 'http://localhost:3000';
+    // localhost might not be in the public suffix list in the way psl expects for a "domain"
+    // psl.parse('localhost') returns { input: 'localhost', error: ... } or just input depending on version
+    // Let's check the behavior. Based on code: if ('error' in parsed || !parsed.domain)
+
+    // Actually localhost usually doesn't have a 'domain' property in psl result (it has 'tld': null or similar).
+    expect(processReferrer(referrer).domain).toBe('unknown');
   });
 });

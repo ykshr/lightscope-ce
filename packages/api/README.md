@@ -1,4 +1,4 @@
-# @lightscope/api
+# @lightscope-ce/api
 
 This package contains the API service for LightScope, built with Apollo Server and Express, connected to ClickHouse.
 

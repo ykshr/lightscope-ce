@@ -32,12 +32,12 @@ describe('deepMerge', () => {
     expect(deepMerge(target)).toEqual({ a: 1 }); // It returns a copy
     // Check if it is a copy or reference? The code says { ...target }
   });
-  
+
   it('should not merge arrays (overwrites them)', () => {
-      // The isObject check excludes arrays: !Array.isArray(item)
-      const target = { a: [1, 2] };
-      const source = { a: [3, 4] };
-      expect(deepMerge(target, source)).toEqual({ a: [3, 4] });
+    // The isObject check excludes arrays: !Array.isArray(item)
+    const target = { a: [1, 2] };
+    const source = { a: [3, 4] };
+    expect(deepMerge(target, source)).toEqual({ a: [3, 4] });
   });
 
   it('should ignore non-object sources', () => {

@@ -106,17 +106,17 @@ describe('date helpers', () => {
     });
 
     it('should parse ISO duration (P1D)', () => {
-        // Mock Date.now to have consistent test
-        const now = 1672531200000; // 2023-01-01T00:00:00Z
-        const originalDateNow = Date.now;
-        Date.now = () => now;
+      // Mock Date.now to have consistent test
+      const now = 1672531200000; // 2023-01-01T00:00:00Z
+      const originalDateNow = Date.now;
+      Date.now = () => now;
 
-        try {
-            const date = convertDateString('P1D'); // 1 day ago
-            expect(date.getTime()).toBe(now - 24 * 60 * 60 * 1000);
-        } finally {
-            Date.now = originalDateNow;
-        }
+      try {
+        const date = convertDateString('P1D'); // 1 day ago
+        expect(date.getTime()).toBe(now - 24 * 60 * 60 * 1000);
+      } finally {
+        Date.now = originalDateNow;
+      }
     });
 
     it('should parse standard date string', () => {

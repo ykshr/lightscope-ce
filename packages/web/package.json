@@ -1,5 +1,5 @@
 {
-  "name": "@lightscope/web",
+  "name": "@lightscope-ce/web",
   "private": true,
   "version": "0.0.0",
   "type": "module",

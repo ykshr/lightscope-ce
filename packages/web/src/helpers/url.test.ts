@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { encodeUrlParams, decodeUrlParams, PARAM_CONFIG } from './url';
+import { encodeUrlParams, decodeUrlParams } from './url';
 
 describe('url helpers', () => {
   describe('encodeUrlParams', () => {
@@ -34,16 +34,16 @@ describe('url helpers', () => {
       expect(values).toContain('john');
       expect(values).toContain('jane');
     });
-    
+
     it('should handle complex nested arrays', () => {
-        const params = { includeAuthors: [['a', 'b'], ['c']] };
-        const urlParams = encodeUrlParams(params, false);
-        // "a,b" and "c"
-        const values = urlParams.getAll('ia');
-        // code: subArray.map(encodeURIComponent).join(',') -> "a,b"
-        // URLSearchParams stores the value. getAll returns it.
-        expect(values).toContain('a,b');
-        expect(values).toContain('c');
+      const params = { includeAuthors: [['a', 'b'], ['c']] };
+      const urlParams = encodeUrlParams(params, false);
+      // "a,b" and "c"
+      const values = urlParams.getAll('ia');
+      // code: subArray.map(encodeURIComponent).join(',') -> "a,b"
+      // URLSearchParams stores the value. getAll returns it.
+      expect(values).toContain('a,b');
+      expect(values).toContain('c');
     });
 
     it('should remove null/undefined/empty values', () => {
@@ -66,19 +66,19 @@ describe('url helpers', () => {
       const result = decodeUrlParams(search);
       expect(result.articleFilter?.includeUrls).toEqual(['a', 'b']);
     });
-    
+
     it('should decode nested array params', () => {
-        const search = '?ia=a%2Cb&ia=c';
-        const result = decodeUrlParams(search);
-        // decodeURIComponent is called on value split by comma
-        // value "a,b" -> split -> ["a", "b"]
-        expect(result.articleFilter?.includeAuthors).toEqual([['a', 'b'], ['c']]);
+      const search = '?ia=a%2Cb&ia=c';
+      const result = decodeUrlParams(search);
+      // decodeURIComponent is called on value split by comma
+      // value "a,b" -> split -> ["a", "b"]
+      expect(result.articleFilter?.includeAuthors).toEqual([['a', 'b'], ['c']]);
     });
 
     it('should handle date params', () => {
-        // Mock convertDateString for deterministic test if needed, or rely on implementation
-        // decodeUrlParams uses convertDateString
-        // Let's assume convertDateString works (tested in date.test.ts)
+      // Mock convertDateString for deterministic test if needed, or rely on implementation
+      // decodeUrlParams uses convertDateString
+      // Let's assume convertDateString works (tested in date.test.ts)
     });
   });
 });

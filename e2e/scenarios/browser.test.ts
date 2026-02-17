@@ -1,10 +1,16 @@
 import { test, expect } from '@playwright/test';
-import { randomUUID } from 'crypto';
+import { generatePayload } from '../utils/generator';
 
 const API_URL = 'http://localhost:3000';
 const MOCK_SITE_URL = 'http://localhost:8080';
 
-test('Browser Tracking Script Verification', async ({ page }) => {
+test('Browser Tracking Script Verification', async ({ browser }) => {
+  const generated = generatePayload();
+  const userAgent = generated.user_agent;
+  
+  const context = await browser.newContext({ userAgent });
+  const page = await context.newPage();
+
   // 1. Navigate to the page and verify Page View event sent
   const pageViewPromise = page.waitForRequest(
     (req) =>

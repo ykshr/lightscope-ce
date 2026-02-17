@@ -1,7 +1,6 @@
 # AGENTS.md (web)
 
 Stack:
-
 - React 19
 - Vite
 - TanStack React Query v5
@@ -25,11 +24,9 @@ Stack:
 # State Management
 
 Prefer:
-
 - React Query (server state)
 
 Avoid:
-
 - Custom global stores
 - Redux
 - Zustand

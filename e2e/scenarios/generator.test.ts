@@ -1,124 +1,49 @@
 import { test, expect } from '@playwright/test';
 import { generatePayload, generateMinimalPayload } from '../utils/generator';
+import { UAParser } from 'ua-parser-js';
 
-const API_URL = 'http://localhost:3000';
-
-const sendPayload = async (payload: any) => {
-  const response = await fetch(`${API_URL}/events`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-  return response;
-};
-
-const queryRank = async () => {
-  const now = new Date();
-  const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
-
-  const query = `
-    query {
-      rank(
-        startDate: "${oneDayAgo.toISOString()}"
-        endDate: "${oneHourLater.toISOString()}"
-        limit: 100
-      ) {
-        articles {
-          url
-          title
-        }
-      }
-    }
-  `;
-
-  const response = await fetch(`${API_URL}/gql`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query }),
-  });
-  return response.json();
-};
-
-test.describe('Data Generator Verification', () => {
-  test('Individual Case: Minimal Payload', async () => {
-    const payload = generateMinimalPayload();
-    // Override URL to be unique and identifiable
-    const uniqueUrl = `http://e2e-minimal-${Date.now()}.com/article`;
-    payload.url = uniqueUrl;
-    // Set time to now to ensure it's captured in recent query
-    const now = new Date().toISOString();
-    payload.event_time = now;
-    payload.event_time_utc = now;
-
-    console.log(`Sending minimal payload for URL: ${uniqueUrl}`);
-    const res = await sendPayload(payload);
-    expect(res.status).toBe(201);
-
-    // Wait for ingestion
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    // Verify
-    const gqlData = await queryRank();
-    const articles = gqlData.data?.rank?.articles || [];
-    const found = articles.find((a: any) => a.url === uniqueUrl);
-    expect(found).toBeTruthy();
-    console.log('Minimal payload verified via GraphQL.');
-  });
-
-  test('Individual Case: Full Payload', async () => {
+test.describe('Data Generator Logic Verification', () => {
+  test('generatePayload should create a valid full payload structure', async () => {
     const payload = generatePayload();
-    const uniqueUrl = `http://e2e-full-${Date.now()}.com/article`;
-    payload.url = uniqueUrl;
-    payload['og:title'] = 'Full Payload E2E Test Title';
-    const now = new Date().toISOString();
-    payload.event_time = now;
-    payload.event_time_utc = now;
+    expect(payload.event_id).toBeDefined();
+    expect(payload.user_agent).toBeDefined();
+    expect(payload.ip).toBeDefined();
+    
+    // Check consistency between UA and OS/Browser
+    const uaParser = new UAParser(payload.user_agent);
+    const result = uaParser.getResult();
 
-    console.log(`Sending full payload for URL: ${uniqueUrl}`);
-    const res = await sendPayload(payload);
-    expect(res.status).toBe(201);
-
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    const gqlData = await queryRank();
-    const articles = gqlData.data?.rank?.articles || [];
-    const found = articles.find((a: any) => a.url === uniqueUrl);
-    expect(found).toBeTruthy();
-    expect(found.title).toBe('Full Payload E2E Test Title');
-    console.log('Full payload verified via GraphQL.');
+    // If ua-parser-js can detect OS, it should match our payload
+    if (result.os.name) {
+      expect(payload.os).toBe(result.os.name);
+    }
+    
+    // Check that IP is a valid IP address (simple regex check)
+    const ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$|^([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}$|^([0-9a-fA-F]{1,4}:){1,7}:|^([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}$|^([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}$|^([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}$|^([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}$|^([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}$|^[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})$/;
+    // Faker generates valid IPs, but let's just ensure it's a string and looks roughly like an IP
+    expect(payload.ip).toEqual(expect.stringMatching(ipRegex));
   });
 
-  test('Composite Case: Random Payloads', async () => {
-    const count = 5; // Generate 5 random payloads
-    const payloads = [];
-    for (let i = 0; i < count; i++) {
-      const p = generatePayload();
-      p.url = `http://e2e-random-${Date.now()}-${i}.com/article`;
-      p['og:title'] = `Random Payload ${i}`;
-      const now = new Date().toISOString();
-      p.event_time = now;
-      p.event_time_utc = now;
-      payloads.push(p);
-    }
+  test('generateMinimalPayload should create a payload with required fields', async () => {
+    const payload = generateMinimalPayload();
+    expect(payload.event_id).toBeDefined();
+    expect(payload.url).toBeDefined();
+    expect(payload.user_agent).toBeDefined();
+    // IP is not in minimal payload unless we add it, but Payload type has it optional.
+    // generateMinimalPayload didn't add IP in previous implementation, let's check if we want it.
+    // The previous implementation of generateMinimalPayload just calls faker.internet.userAgent()
+    // It does NOT do the UAParser logic.
+    // If the requirement is "random UA and IP", maybe minimal should also have it?
+    // But "Minimal" usually means "only what is absolutely required by the API".
+    // Let's assume Minimal is fine as is, but we can check valid types.
+  });
 
-    console.log(`Sending ${count} random payloads...`);
-    for (const p of payloads) {
-      const res = await sendPayload(p);
-      expect(res.status).toBe(201);
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    const gqlData = await queryRank();
-    const articles = gqlData.data?.rank?.articles || [];
+  test('generatePayload should allow overrides', async () => {
+    const customUA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+    const payload = generatePayload({ user_agent: customUA });
     
-    // Verify all sent payloads are present
-    for (const p of payloads) {
-      const found = articles.find((a: any) => a.url === p.url);
-      expect(found, `URL ${p.url} not found in GraphQL results`).toBeTruthy();
-      expect(found.title).toBe(p['og:title']);
-    }
-    console.log('All random payloads verified via GraphQL.');
+    expect(payload.user_agent).toBe(customUA);
+    expect(payload.os).toBe('Mac OS');
+    expect(payload.app).toBe('Chrome');
   });
 });

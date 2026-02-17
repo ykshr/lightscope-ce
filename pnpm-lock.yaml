@@ -23,6 +23,9 @@ importers:
       '@types/node':
         specifier: ^20.10.0
         version: 20.19.33
+      '@types/ua-parser-js':
+        specifier: ^0.7.39
+        version: 0.7.39
       playwright:
         specifier: ^1.40.1
         version: 1.58.2
@@ -32,6 +35,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.8.3
+      ua-parser-js:
+        specifier: ^2.0.9
+        version: 2.0.9
 
   packages/api:
     dependencies:
@@ -2399,6 +2405,9 @@ packages:
 
   '@types/topojson-specification@1.0.5':
     resolution: {integrity: sha512-C7KvcQh+C2nr6Y2Ub4YfgvWvWCgP2nOQMtfhlnwsRL4pYmmwzBS7HclGiS87eQfDOU/DLQpX6GEscviaz4yLIQ==}
+
+  '@types/ua-parser-js@0.7.39':
+    resolution: {integrity: sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg==}
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
@@ -7085,6 +7094,8 @@ snapshots:
   '@types/topojson-specification@1.0.5':
     dependencies:
       '@types/geojson': 7946.0.16
+
+  '@types/ua-parser-js@0.7.39': {}
 
   '@types/ws@8.18.1':
     dependencies:

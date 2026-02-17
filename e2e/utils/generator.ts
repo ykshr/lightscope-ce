@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { UAParser } from 'ua-parser-js';
 
 // Redefine Payload type to match packages/api/src/types/index.ts
 // We duplicate this to keep e2e tests independent and avoid complex import paths
@@ -42,6 +43,9 @@ export interface Payload {
 
 export const generatePayload = (overrides: Partial<Payload> = {}): Payload => {
   const eventTime = faker.date.recent().toISOString();
+  const userAgent = overrides.user_agent || faker.internet.userAgent();
+  const uaParser = new UAParser(userAgent);
+  const uaResult = uaParser.getResult();
   
   const defaultPayload: Payload = {
     event_id: faker.string.uuid(),
@@ -65,15 +69,15 @@ export const generatePayload = (overrides: Partial<Payload> = {}): Payload => {
     'article:authors': [faker.person.fullName(), faker.person.fullName()],
     'article:section': faker.commerce.department(),
     'article:tags': [faker.lorem.word(), faker.lorem.word()],
-    user_agent: faker.internet.userAgent(),
-    device: faker.lorem.word(),
-    device_type: faker.helpers.arrayElement(['mobile', 'tablet', 'desktop']),
-    device_vendor: faker.company.name(),
-    os: faker.helpers.arrayElement(['iOS', 'Android', 'Windows', 'macOS', 'Linux']),
-    os_version: faker.system.semver(),
-    app: faker.internet.domainWord(),
+    user_agent: userAgent,
+    device: uaResult.device.model || 'unknown',
+    device_type: uaResult.device.type || 'desktop',
+    device_vendor: uaResult.device.vendor || 'unknown',
+    os: uaResult.os.name || 'unknown',
+    os_version: uaResult.os.version || 'unknown',
+    app: uaResult.browser.name || 'unknown',
     app_type: 'browser',
-    app_version: faker.system.semver(),
+    app_version: uaResult.browser.version || 'unknown',
     age: faker.helpers.arrayElement(['18-24', '25-34', '35-44', '45-54', '55-64', '65+']),
     gender: faker.helpers.arrayElement(['male', 'female', 'other']),
     ip: faker.internet.ip(),

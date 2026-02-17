@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  clickhouse:
+    build:
+      context: packages/clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  api:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./packages/api:/app
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
+    environment:
+      - CLICKHOUSE_HOST=http://clickhouse:8123
+      - CLICKHOUSE_USERNAME=default
+      - CLICKHOUSE_PASSWORD=
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - clickhouse
+
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./packages/web:/app
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev --host"
+    environment:
+      - VITE_API_ENDPOINT=http://localhost:3000
+    ports:
+      - "60000:60000"
+    depends_on:
+      - api

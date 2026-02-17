@@ -1,3 +1,0 @@
-projects:
-  api:
-    schema: packages/api/src/graphql/**/*.graphql

@@ -3,11 +3,7 @@
   "private": true,
   "packageManager": "pnpm@10.29.3",
   "workspaces": [
-    "packages/api",
-    "packages/clickhouse",
-    "packages/sandbox/*",
-    "packages/script",
-    "packages/web"
+    "packages/*"
   ],
   "devDependencies": {
     "prettier": "^3.6.2"

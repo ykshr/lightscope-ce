@@ -6,10 +6,11 @@ const MOCK_SITE_URL = 'http://localhost:8080';
 
 test('Browser Tracking Script Verification', async ({ page }) => {
   // 1. Navigate to the page and verify Page View event sent
-  const pageViewPromise = page.waitForRequest(req => 
-    req.url().includes('/events') && 
-    req.method() === 'POST' &&
-    JSON.parse(req.postData() || '{}').event_name === 'page_view'
+  const pageViewPromise = page.waitForRequest(
+    (req) =>
+      req.url().includes('/events') &&
+      req.method() === 'POST' &&
+      JSON.parse(req.postData() || '{}').event_name === 'page_view'
   );
 
   await page.goto(`${MOCK_SITE_URL}/index.html`);
@@ -18,10 +19,11 @@ test('Browser Tracking Script Verification', async ({ page }) => {
   console.log('Page view event verified.');
 
   // 2. Click button and verify Custom Event sent
-  const clickPromise = page.waitForRequest(req => 
-    req.url().includes('/events') && 
-    req.method() === 'POST' &&
-    JSON.parse(req.postData() || '{}').event_name === 'manual_click'
+  const clickPromise = page.waitForRequest(
+    (req) =>
+      req.url().includes('/events') &&
+      req.method() === 'POST' &&
+      JSON.parse(req.postData() || '{}').event_name === 'manual_click'
   );
 
   await page.click('#track-btn');
@@ -59,7 +61,7 @@ test('Browser Tracking Script Verification', async ({ page }) => {
   const gqlData = await gqlRes.json();
   const articles = gqlData.data?.rank?.articles || [];
   const found = articles.find((a: any) => a.url.includes('index.html'));
-  
+
   expect(found).toBeTruthy();
   console.log('Data verification successful in GraphQL.');
 });

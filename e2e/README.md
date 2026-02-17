@@ -11,6 +11,7 @@ This directory contains the E2E test suite with multiple scenarios.
 ## Setup
 
 1. **Install Dependencies:**
+
    ```bash
    cd e2e
    npm install
@@ -19,6 +20,7 @@ This directory contains the E2E test suite with multiple scenarios.
 
 2. **Build the Script Package:**
    Ensure the browser script is built so it can be served to the test page.
+
    ```bash
    cd ../packages/script
    npm install
@@ -39,33 +41,44 @@ This directory contains the E2E test suite with multiple scenarios.
 ## Test Scenarios
 
 ### 1. Smoke Test (No Browser)
+
 A quick verification that the API accepts events and ClickHouse ingests them.
+
 ```bash
 cd e2e
 npm run test:smoke
 ```
 
 ### 2. Browser Verification (Playwright)
+
 Verifies the actual client-side tracking script (`packages/script`) running in a browser.
+
 - Loads the test page from `mock-site`.
 - Intercepts network requests to verify `page_view` and `custom_click` events.
 - Queries GraphQL to verify data ingestion.
+
 ```bash
 cd e2e
 npm run test
 ```
 
 ### 3. Load Test
+
 Sends a high volume of events concurrently to test API performance.
+
 - Default: 100 concurrent requests for 5 seconds.
+
 ```bash
 cd e2e
 npm run test:load
 ```
 
 ### 4. Long Running Test
+
 Sends events periodically over a duration to verify stability.
+
 - Default: 1 event/sec for 60 seconds.
+
 ```bash
 cd e2e
 npm run test:long-run

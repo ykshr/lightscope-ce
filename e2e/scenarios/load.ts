@@ -53,7 +53,9 @@ async function sendEvent() {
 }
 
 async function runLoadTest() {
-  console.log(`Starting Load Test: ${CONCURRENCY} concurrent requests for ${DURATION_SECONDS} seconds...`);
+  console.log(
+    `Starting Load Test: ${CONCURRENCY} concurrent requests for ${DURATION_SECONDS} seconds...`
+  );
   const startTime = Date.now();
   let totalSent = 0;
   let successCount = 0;
@@ -66,14 +68,18 @@ async function runLoadTest() {
     }
   };
 
-  const workers = Array(CONCURRENCY).fill(null).map(() => runWorker());
+  const workers = Array(CONCURRENCY)
+    .fill(null)
+    .map(() => runWorker());
   await Promise.all(workers);
 
   const duration = (Date.now() - startTime) / 1000;
   console.log(`
 Load Test Completed in ${duration.toFixed(2)}s`);
   console.log(`Total Requests: ${totalSent}`);
-  console.log(`Success Rate: ${((successCount / totalSent) * 100).toFixed(2)}%`);
+  console.log(
+    `Success Rate: ${((successCount / totalSent) * 100).toFixed(2)}%`
+  );
   console.log(`RPS: ${(totalSent / duration).toFixed(2)}`);
 }
 

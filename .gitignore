@@ -5,4 +5,4 @@ dist
 *.tsbuildinfo
 .eslintcache
 .prettier-cache
-e2e/test-results/
+e2e/test-results

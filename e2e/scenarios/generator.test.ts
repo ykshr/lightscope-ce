@@ -43,7 +43,7 @@ test.describe('Data Generator Logic Verification', () => {
     const payload = generatePayload({ user_agent: customUA });
     
     expect(payload.user_agent).toBe(customUA);
-    expect(payload.os).toBe('Mac OS');
+    expect(payload.os).toBe('macOS');
     expect(payload.app).toBe('Chrome');
   });
 });

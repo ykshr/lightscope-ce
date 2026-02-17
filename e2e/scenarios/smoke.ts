@@ -1,5 +1,5 @@
 import { strict as assert } from 'assert';
-import { randomUUID } from 'crypto';
+import { generatePayload } from '../utils/generator';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
 
@@ -7,40 +7,12 @@ async function main() {
   console.log('Starting E2E Test...');
 
   // 1. Send Event
-  const eventPayload = {
-    event_id: randomUUID(),
+  const eventPayload = generatePayload({
     event_name: 'page_view',
     site_name: 'localhost',
     url: 'http://localhost:60000/test-page',
-    event_time: new Date().toISOString().replace('T', ' ').split('.')[0],
-    created_at: new Date().toISOString().replace('T', ' ').split('.')[0],
-    engagement_time: 0,
-    visit_id: randomUUID(),
-    visitor_id: randomUUID(),
-    referrer: '',
     user_agent: 'E2E Test Agent',
-    language: 'en-US',
-    device: 'Test Device',
-    device_type: 'desktop',
-    device_vendor: 'Test Vendor',
-    os: 'Test OS',
-    os_version: '1.0',
-    app: 'Test Browser',
-    app_type: 'browser',
-    app_version: '1.0',
-    title: 'Test Page Title',
-    type: 'website',
-    image: '',
-    description: 'Test Description',
-    locale: 'en-US',
-    published_time: null,
-    modified_time: null,
-    expiration_time: null,
-    authors: [],
-    section: 'test',
-    tags: [],
-    query_params: {},
-  };
+  });
 
   console.log('Sending event...', eventPayload.event_id);
   const eventRes = await fetch(`${API_URL}/events`, {

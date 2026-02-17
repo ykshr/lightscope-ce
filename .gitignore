@@ -4,4 +4,4 @@ dist
 .env
 *.tsbuildinfo
 .eslintcache
-.prettier-cache
+.prettier-cachee2e/test-results/

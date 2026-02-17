@@ -30,6 +30,7 @@ This package is performance critical and size sensitive.
 # Public API Stability
 
 Never:
+
 - Change public function signature
 - Change event format
 - Change payload shape
@@ -41,6 +42,7 @@ Without explicit instruction.
 # Safety
 
 Never:
+
 - Block main thread unnecessarily
 - Introduce synchronous heavy computation
 - Leak memory via listeners

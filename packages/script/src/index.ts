@@ -194,9 +194,15 @@ export class AnalyticsTracker {
         getMeta(['og:site_name']) ||
         this.resolveFallbackSiteName(),
       'og:locale': getMeta(['og:locale']) || navigator.language,
-      'article:published_time': this.formatDate(getMeta(['article:published_time'])),
-      'article:modified_time': this.formatDate(getMeta(['article:modified_time'])),
-      'article:expiration_time': this.formatDate(getMeta(['article:expiration_time'])),
+      'article:published_time': this.formatDate(
+        getMeta(['article:published_time'])
+      ),
+      'article:modified_time': this.formatDate(
+        getMeta(['article:modified_time'])
+      ),
+      'article:expiration_time': this.formatDate(
+        getMeta(['article:expiration_time'])
+      ),
       'article:authors': getMetaArray('article:author'),
       'article:section': getMeta(['article:section']),
       'article:tags': getMetaArray('article:tag'),
@@ -285,7 +291,10 @@ export class AnalyticsTracker {
     });
 
     this.lastEventTime = Date.now();
-    localStorage.setItem('analytics_visit_last_ts', this.lastEventTime.toString());
+    localStorage.setItem(
+      'analytics_visit_last_ts',
+      this.lastEventTime.toString()
+    );
 
     try {
       await fetch(this.apiEndpoint, {
@@ -434,6 +443,7 @@ export const generateAnalyticsPayload = (params: {
   return {
     event_id: crypto.randomUUID(),
     event_name: params.eventName,
+    site_name: params.pageMetadata['og:site_name'],
     event_time: new Date(now).toISOString().replace('T', ' ').split('.')[0],
     event_time_utc: new Date(now).toISOString(),
     visit_id: params.visitId,

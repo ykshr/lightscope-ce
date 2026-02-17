@@ -7,7 +7,7 @@ const MOCK_SITE_URL = 'http://localhost:8080';
 test('Browser Tracking Script Verification', async ({ browser }) => {
   const generated = generatePayload();
   const userAgent = generated.user_agent;
-  
+
   const context = await browser.newContext({ userAgent });
   const page = await context.newPage();
 

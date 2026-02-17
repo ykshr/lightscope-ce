@@ -5,13 +5,15 @@ import {
   AnalyticsPayload,
   OGMetadata,
   UserAttributes,
-  BrowsingAttributes
+  BrowsingAttributes,
 } from '@lightscope-ce/script';
 
 // Export Payload as alias for AnalyticsPayload
 export type Payload = AnalyticsPayload;
 
-export const generatePayload = (overrides: Partial<AnalyticsPayload> = {}): AnalyticsPayload => {
+export const generatePayload = (
+  overrides: Partial<AnalyticsPayload> = {}
+): AnalyticsPayload => {
   const userAgent = overrides.user_agent || faker.internet.userAgent();
   const uaResult = new UAParser(userAgent).getResult();
   const url = overrides.url || faker.internet.url();
@@ -66,12 +68,14 @@ export const generatePayload = (overrides: Partial<AnalyticsPayload> = {}): Anal
     userAttributes,
     browsingAttributes,
     pageMetadata,
-    extraData: {}
+    extraData: {},
   });
 
   return { ...payload, ...overrides };
 };
 
-export const generateMinimalPayload = (overrides: Partial<AnalyticsPayload> = {}): AnalyticsPayload => {
-    return generatePayload(overrides);
+export const generateMinimalPayload = (
+  overrides: Partial<AnalyticsPayload> = {}
+): AnalyticsPayload => {
+  return generatePayload(overrides);
 };

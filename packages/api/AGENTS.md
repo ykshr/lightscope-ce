@@ -1,6 +1,7 @@
 # AGENTS.md (api)
 
 Stack:
+
 - Node (ESM)
 - Apollo Server v5
 - Express v5
@@ -11,13 +12,14 @@ Stack:
 - zod
 
 Entry:
-  src/index.ts
+src/index.ts
 
 ---
 
 # Architectural Rules
 
 ## Resolver Layer
+
 - Resolvers must stay thin.
 - Business logic belongs in service modules.
 - No raw SQL inside resolver body.
@@ -27,12 +29,14 @@ Entry:
 This is a high-volume analytics system.
 
 Never:
-- SELECT * without LIMIT
+
+- SELECT \* without LIMIT
 - Perform unbounded queries
 - Perform client-side aggregation
 - Build SQL via unsafe string concatenation
 
 Always:
+
 - Explicit GROUP BY
 - Explicit projections
 - Explicit WHERE
@@ -45,6 +49,7 @@ Always:
 GraphQL type definitions are not runtime validation.
 
 All external inputs must:
+
 - Be validated with zod
 - Be normalized before usage
 
@@ -61,6 +66,7 @@ All external inputs must:
 ## Security
 
 Never:
+
 - Log raw SQL errors
 - Expose internal table names
 - Trust client-provided column names
@@ -70,12 +76,13 @@ Never:
 ## Codegen
 
 After modifying:
+
 - schema
 - queries
 - mutations
 - fragments
 
 Run:
-  pnpm run codegen
+pnpm run codegen
 
 Never manually edit generated files.

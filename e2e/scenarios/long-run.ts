@@ -58,7 +58,7 @@ async function sendEvent() {
 
 async function verifyData() {
   console.log('Verifying data in ClickHouse...');
-  await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for ingestion
+  await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for ingestion
 
   const query = `
     query {
@@ -86,7 +86,7 @@ async function verifyData() {
     const gqlData = await gqlRes.json();
     const articles = gqlData.data?.rank?.articles || [];
     const found = articles.find((a: any) => a.url.includes('long-run-page'));
-    
+
     if (found) {
       console.log(`Success: Found ${found.value} events for long-run-page.`);
     } else {

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@lightscope-ce/script": ["../packages/script/src/index.ts"],
+      "@lightscope-ce/script/*": ["../packages/script/src/*"]
+    }
+  },
+  "include": ["**/*.ts", "../packages/script/src/**/*.ts"]
+}

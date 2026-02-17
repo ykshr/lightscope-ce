@@ -22,7 +22,7 @@ This directory contains the E2E test suite with multiple scenarios.
    Ensure the browser script is built so it can be served to the test page.
 
    ```bash
-   cd ../packages/script
+   cd ../script
    npm install
    npm run build:browser
    ```

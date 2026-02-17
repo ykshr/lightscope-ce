@@ -1,12 +1,12 @@
 import { UAParser } from 'ua-parser-js';
 
-interface UserAttributes {
-  use_id: string;
+export interface UserAttributes {
+  user_id: string;
   age: string;
   gender: string;
 }
 
-interface BrowsingAttributes {
+export interface BrowsingAttributes {
   referrer: string;
   user_agent: string;
   language: string;
@@ -29,20 +29,20 @@ interface AnalyticsConfig {
 }
 
 // OpenGraph
-interface OGMetadata {
+export interface OGMetadata {
   url: string;
-  title: string;
-  type: string;
-  image: string;
-  description: string;
-  site_name: string;
-  locale: string;
-  published_time: string | null;
-  modified_time: string | null;
-  expiration_time: string | null;
-  authors: string[];
-  section: string;
-  tags: string[];
+  'og:title': string;
+  'og:type': string;
+  'og:image': string;
+  'og:description': string;
+  'og:site_name': string;
+  'og:locale': string;
+  'article:published_time': string | null;
+  'article:modified_time': string | null;
+  'article:expiration_time': string | null;
+  'article:authors': string[];
+  'article:section': string;
+  'article:tags': string[];
 }
 
 /**
@@ -57,6 +57,7 @@ export interface AnalyticsPayload {
 
   // Timestamp and engagement
   event_time: string; // DateTime: 'YYYY-MM-DD HH:mm:ss' format
+  event_time_utc: string; // ISO8601
   created_at: string; // DateTime: time of sending
   engagement_time: number; // UInt32: seconds elapsed since last event sent
 
@@ -81,17 +82,18 @@ export interface AnalyticsPayload {
   app_version: string; // String: Browser version
 
   // OpenGraph / Content information
-  title: string; // String: og:title
-  type: string; // LowCardinality(String): og:type (article, website, etc.)
-  image: string; // String: og:image URL
-  description: string; // String: og:description
-  locale: string; // LowCardinality(String): og:locale
-  published_time: string | null; // DateTime (Nullable): article published date
-  modified_time: string | null; // DateTime (Nullable): article modified date
-  expiration_time: string | null; // DateTime (Nullable): article expiration date
-  authors: string[]; // Array(String): article:author list
-  section: string; // LowCardinality(String): article:section (category)
-  tags: string[]; // Array(String): article:tag list
+  'og:title': string; // String: og:title
+  'og:type': string; // LowCardinality(String): og:type (article, website, etc.)
+  'og:image': string; // String: og:image URL
+  'og:description': string; // String: og:description
+  'og:site_name': string;
+  'og:locale': string; // LowCardinality(String): og:locale
+  'article:published_time': string | null; // DateTime (Nullable): article published date
+  'article:modified_time': string | null; // DateTime (Nullable): article modified date
+  'article:expiration_time': string | null; // DateTime (Nullable): article expiration date
+  'article:authors': string[]; // Array(String): article:author list
+  'article:section': string; // LowCardinality(String): article:section (category)
+  'article:tags': string[]; // Array(String): article:tag list
 
   // Dynamic data
   query_params: Record<string, string>; // Map(String, String): URL query parameters
@@ -183,21 +185,27 @@ export class AnalyticsTracker {
 
     return {
       url: getMeta(['og:url']) || window.location.href,
-      title: getMeta(['og:title']) || document.title,
-      type: getMeta(['og:type']) || 'website',
-      image: getMeta(['og:image']),
-      description: getMeta(['og:description', 'description']),
-      site_name:
+      'og:title': getMeta(['og:title']) || document.title,
+      'og:type': getMeta(['og:type']) || 'website',
+      'og:image': getMeta(['og:image']),
+      'og:description': getMeta(['og:description', 'description']),
+      'og:site_name':
         this.config.site_name ||
         getMeta(['og:site_name']) ||
         this.resolveFallbackSiteName(),
-      locale: getMeta(['og:locale']) || navigator.language,
-      published_time: this.formatDate(getMeta(['article:published_time'])),
-      modified_time: this.formatDate(getMeta(['article:modified_time'])),
-      expiration_time: this.formatDate(getMeta(['article:expiration_time'])),
-      authors: getMetaArray('article:author'),
-      section: getMeta(['article:section']),
-      tags: getMetaArray('article:tag'),
+      'og:locale': getMeta(['og:locale']) || navigator.language,
+      'article:published_time': this.formatDate(
+        getMeta(['article:published_time'])
+      ),
+      'article:modified_time': this.formatDate(
+        getMeta(['article:modified_time'])
+      ),
+      'article:expiration_time': this.formatDate(
+        getMeta(['article:expiration_time'])
+      ),
+      'article:authors': getMetaArray('article:author'),
+      'article:section': getMeta(['article:section']),
+      'article:tags': getMetaArray('article:tag'),
     };
   }
 
@@ -266,41 +274,27 @@ export class AnalyticsTracker {
     eventName: string,
     extraData: Record<string, any> = {}
   ) {
-    const now = Date.now();
-    const engagementTimeSeconds = Math.floor((now - this.lastEventTime) / 1000);
-
-    const payload: AnalyticsPayload = {
-      event_id: crypto.randomUUID(),
-      event_name: eventName,
-      event_time: new Date(now).toISOString().replace('T', ' ').split('.')[0],
-      visit_id: this.visitId,
-      visitor_id: this.visitorId,
+    const payload = generateAnalyticsPayload({
+      eventName,
+      uaResult: this.ua,
+      visitId: this.visitId,
+      visitorId: this.visitorId,
       referrer: document.referrer,
-      device: this.ua.device.model || 'unknown',
-      device_type: this.ua.device.type || 'desktop',
-      device_vendor: this.ua.device.vendor || 'unknown',
-      os: this.ua.os.name || 'unknown',
-      os_version: this.ua.os.version || 'unknown',
-      app: this.ua.browser.name || 'unknown',
-      app_type: 'browser',
-      app_version: this.ua.browser.version || 'unknown',
-      user_agent: navigator.userAgent,
+      userAgent: navigator.userAgent,
       language: navigator.language,
-      engagement_time: engagementTimeSeconds,
-      query_params: this.getQueryParams(),
-      // User-provided user attributes
-      ...this.user,
-      // User-provided browsing attributes
-      ...this.browsing,
-      // OpenGraph information (included in all events)
-      ...this.pageMetadata,
-      // Additional information (e.g., clicked element label)
-      ...extraData,
-      created_at: new Date().toISOString().replace('T', ' ').split('.')[0],
-    };
+      lastEventTime: this.lastEventTime,
+      queryParams: this.getQueryParams(),
+      userAttributes: this.user,
+      browsingAttributes: this.browsing,
+      pageMetadata: this.pageMetadata,
+      extraData,
+    });
 
-    this.lastEventTime = now;
-    localStorage.setItem('analytics_visit_last_ts', now.toString());
+    this.lastEventTime = Date.now();
+    localStorage.setItem(
+      'analytics_visit_last_ts',
+      this.lastEventTime.toString()
+    );
 
     try {
       await fetch(this.apiEndpoint, {
@@ -427,3 +421,50 @@ export class AnalyticsTracker {
     if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
   }
 }
+
+export const generateAnalyticsPayload = (params: {
+  eventName: string;
+  uaResult: any; // UAParser.IResult
+  visitId: string;
+  visitorId: string;
+  referrer: string;
+  userAgent: string;
+  language: string;
+  lastEventTime: number;
+  queryParams: Record<string, string>;
+  userAttributes?: UserAttributes;
+  browsingAttributes?: BrowsingAttributes;
+  pageMetadata: OGMetadata;
+  extraData?: Record<string, any>;
+}): AnalyticsPayload => {
+  const now = Date.now();
+  const engagementTimeSeconds = Math.floor((now - params.lastEventTime) / 1000);
+
+  return {
+    event_id: crypto.randomUUID(),
+    event_name: params.eventName,
+    site_name: params.pageMetadata['og:site_name'],
+    event_time: new Date(now).toISOString().replace('T', ' ').split('.')[0],
+    event_time_utc: new Date(now).toISOString(),
+    visit_id: params.visitId,
+    visitor_id: params.visitorId,
+    referrer: params.referrer,
+    device: params.uaResult.device.model || 'unknown',
+    device_type: params.uaResult.device.type || 'desktop',
+    device_vendor: params.uaResult.device.vendor || 'unknown',
+    os: params.uaResult.os.name || 'unknown',
+    os_version: params.uaResult.os.version || 'unknown',
+    app: params.uaResult.browser.name || 'unknown',
+    app_type: 'browser',
+    app_version: params.uaResult.browser.version || 'unknown',
+    user_agent: params.userAgent,
+    language: params.language,
+    engagement_time: engagementTimeSeconds,
+    query_params: params.queryParams,
+    ...params.userAttributes,
+    ...params.browsingAttributes,
+    ...params.pageMetadata,
+    ...params.extraData,
+    created_at: new Date().toISOString().replace('T', ' ').split('.')[0],
+  };
+};

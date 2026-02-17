@@ -1,44 +1,16 @@
-import { randomUUID } from 'crypto';
+import { generatePayload } from '../utils/generator';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
 const DURATION_SECONDS = parseInt(process.argv[2] || '60', 10);
 const INTERVAL_MS = 1000;
 
 async function sendEvent() {
-  const eventPayload = {
-    event_id: randomUUID(),
+  const eventPayload = generatePayload({
     event_name: 'long_run_event',
     site_name: 'long-run-test',
     url: 'http://localhost:60000/long-run-page',
-    event_time: new Date().toISOString().replace('T', ' ').split('.')[0],
-    created_at: new Date().toISOString().replace('T', ' ').split('.')[0],
-    visit_id: randomUUID(),
-    visitor_id: randomUUID(),
-    engagement_time: 0,
-    referrer: '',
     user_agent: 'Long Run Test Agent',
-    language: 'en-US',
-    device: 'NodeJS',
-    device_type: 'server',
-    device_vendor: 'LongRunner',
-    os: 'Linux',
-    os_version: '1.0',
-    app: 'NodeJS',
-    app_type: 'browser',
-    app_version: '1.0',
-    title: 'Long Run Test',
-    type: 'website',
-    image: '',
-    description: 'Long Run Event',
-    locale: 'en-US',
-    published_time: null,
-    modified_time: null,
-    expiration_time: null,
-    authors: [],
-    section: 'long-run',
-    tags: [],
-    query_params: {},
-  };
+  });
 
   try {
     const res = await fetch(`${API_URL}/events`, {

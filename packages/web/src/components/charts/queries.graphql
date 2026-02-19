@@ -85,8 +85,7 @@ query ArticleTrend(
 }
 
 fragment TrendTemplate on Trend {
-  categoryAge(includeAges: $includeAges, excludeAges: $excludeAges)
-    @include(if: $isCategoryAge) {
+  categoryAge(includeAges: $includeAges, excludeAges: $excludeAges) @include(if: $isCategoryAge) {
     ...TrendAnalytics
     age @include(if: $isCategoryAgeAge)
   }
@@ -112,10 +111,8 @@ fragment TrendTemplate on Trend {
     deviceType @include(if: $isCategoryDeviceDeviceType)
     device @include(if: $isCategoryDeviceDevice)
   }
-  categoryGender(
-    includeGenders: $includeGenders
-    excludeGenders: $excludeGenders
-  ) @include(if: $isCategoryGender) {
+  categoryGender(includeGenders: $includeGenders, excludeGenders: $excludeGenders)
+    @include(if: $isCategoryGender) {
     ...TrendAnalytics
     gender @include(if: $isCategoryGenderGender)
   }

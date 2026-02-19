@@ -13,9 +13,7 @@ const returnMetric = (metric: string) => {
   }
 };
 
-export const metricUrlParamsToVariables = (urlParams: {
-  [name: string]: any;
-}) => {
+export const metricUrlParamsToVariables = (urlParams: { [name: string]: any }) => {
   const { metric = 'visits' } = urlParams;
   return {
     metric: returnMetric(metric),

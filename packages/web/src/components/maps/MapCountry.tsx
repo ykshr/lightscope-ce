@@ -10,10 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MapPin } from 'lucide-react';
-import {
-  useTotalCityQuery,
-  useTotalCountryQuery,
-} from '@/__generated__/graphql';
+import { useTotalCityQuery, useTotalCountryQuery } from '@/__generated__/graphql';
 import { useUrlParams } from '@/hooks/useUrl';
 import { Spinner } from '@/components/Loading';
 
@@ -136,9 +133,7 @@ export default function MapCountry() {
             className="touch-none outline-none"
             onClick={() => setSelectedCountry(null)} // Reset on background click
           >
-            <g
-              transform={`translate(${transform.x},${transform.y}) scale(${transform.k})`}
-            >
+            <g transform={`translate(${transform.x},${transform.y}) scale(${transform.k})`}>
               {geographies?.map((d: any) => {
                 const stat = countries.find((s) => s.id === d.id);
                 const isSelected = d.id != null && selectedCountry?.id === d.id;
@@ -148,9 +143,7 @@ export default function MapCountry() {
                     d={pathGenerator(d) || ''}
                     fill={stat ? colorScale(stat.value) : '#ffffff'}
                     stroke={isSelected ? '#2563eb' : '#cbd5e1'}
-                    strokeWidth={
-                      isSelected ? 1.5 / transform.k : 0.5 / transform.k
-                    }
+                    strokeWidth={isSelected ? 1.5 / transform.k : 0.5 / transform.k}
                     className="cursor-pointer hover:opacity-80"
                     onClick={(e) => handleCountryClick(e, d)}
                   />
@@ -184,13 +177,8 @@ export default function MapCountry() {
                 <TableBody>
                   {selectedCountry
                     ? cities.map((city: any) => (
-                        <TableRow
-                          key={city.name}
-                          className="hover:bg-transparent"
-                        >
-                          <TableCell className="py-2 text-xs font-medium">
-                            {city.name}
-                          </TableCell>
+                        <TableRow key={city.name} className="hover:bg-transparent">
+                          <TableCell className="py-2 text-xs font-medium">{city.name}</TableCell>
                           <TableCell className="py-2 text-right text-xs font-mono">
                             {city.count.toLocaleString()}
                           </TableCell>
@@ -210,9 +198,7 @@ export default function MapCountry() {
                               })
                             }
                           >
-                            <TableCell className="py-2 text-xs font-medium">
-                              {c.name}
-                            </TableCell>
+                            <TableCell className="py-2 text-xs font-medium">{c.name}</TableCell>
                             <TableCell className="py-2 text-right text-xs font-mono">
                               {c.value.toLocaleString()}
                             </TableCell>

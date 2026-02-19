@@ -1,20 +1,13 @@
 import { useState, useEffect } from 'react';
 import { ArticleTrendQuery } from '@/__generated__/graphql';
-import {
-  AreaCategoryConfig,
-  AreaChartDataItem,
-} from '@/components/charts/templates/AreaStacked';
+import { AreaCategoryConfig, AreaChartDataItem } from '@/components/charts/templates/AreaStacked';
 
 export default function useProcessData(data: ArticleTrendQuery | undefined) {
   const [chartData, setChartData] = useState<AreaChartDataItem[]>([]);
   const [chartConfigs, setChartConfigs] = useState<AreaCategoryConfig[]>([]);
 
-  const validateDataMap = (
-    map: { [dateString: string]: AreaChartDataItem },
-    date: any
-  ) => {
-    const dateString =
-      typeof date === 'string' ? date : date.toISOString().split('T')[0];
+  const validateDataMap = (map: { [dateString: string]: AreaChartDataItem }, date: any) => {
+    const dateString = typeof date === 'string' ? date : date.toISOString().split('T')[0];
     if (!map[dateString]) map[dateString] = { date };
     return dateString;
   };
@@ -103,44 +96,36 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       const dateString = validateDataMap(chartDataMap, date);
       chartDataMap[dateString][id] = value;
     });
-    data?.trend?.categoryDevice?.forEach(
-      ({ date, value, deviceType, device }) => {
-        const id = returnIdCategoryDevice(deviceType, device);
-        if (!id) return;
-        const dateString = validateDataMap(chartDataMap, date);
-        chartDataMap[dateString][id] = value;
-      }
-    );
+    data?.trend?.categoryDevice?.forEach(({ date, value, deviceType, device }) => {
+      const id = returnIdCategoryDevice(deviceType, device);
+      if (!id) return;
+      const dateString = validateDataMap(chartDataMap, date);
+      chartDataMap[dateString][id] = value;
+    });
     data?.trend?.categoryGender?.forEach(({ date, value, gender }) => {
       const id = returnIdCategoryGender(gender);
       if (!id) return;
       const dateString = validateDataMap(chartDataMap, date);
       chartDataMap[dateString][id] = value;
     });
-    data?.trend?.categoryGeo?.forEach(
-      ({ date, value, continent, country, subdivision }) => {
-        const id = returnIdCategoryGeo(continent, country, subdivision);
-        if (!id) return;
-        const dateString = validateDataMap(chartDataMap, date);
-        chartDataMap[dateString][id] = value;
-      }
-    );
-    data?.trend?.categoryReferrer?.forEach(
-      ({ date, value, domain, referrer }) => {
-        const id = returnIdCategoryReferrer(domain, referrer);
-        if (!id) return;
-        const dateString = validateDataMap(chartDataMap, date);
-        chartDataMap[dateString][id] = value;
-      }
-    );
-    data?.trend?.categoryUtm?.forEach(
-      ({ date, value, source, medium, campaign }) => {
-        const id = returnIdCategoryUtm(source, medium, campaign);
-        if (!id) return;
-        const dateString = validateDataMap(chartDataMap, date);
-        chartDataMap[dateString][id] = value;
-      }
-    );
+    data?.trend?.categoryGeo?.forEach(({ date, value, continent, country, subdivision }) => {
+      const id = returnIdCategoryGeo(continent, country, subdivision);
+      if (!id) return;
+      const dateString = validateDataMap(chartDataMap, date);
+      chartDataMap[dateString][id] = value;
+    });
+    data?.trend?.categoryReferrer?.forEach(({ date, value, domain, referrer }) => {
+      const id = returnIdCategoryReferrer(domain, referrer);
+      if (!id) return;
+      const dateString = validateDataMap(chartDataMap, date);
+      chartDataMap[dateString][id] = value;
+    });
+    data?.trend?.categoryUtm?.forEach(({ date, value, source, medium, campaign }) => {
+      const id = returnIdCategoryUtm(source, medium, campaign);
+      if (!id) return;
+      const dateString = validateDataMap(chartDataMap, date);
+      chartDataMap[dateString][id] = value;
+    });
 
     // Process total part of the data to extract total value for the legend
     data?.total?.total?.forEach(({ value }) => {
@@ -188,17 +173,15 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
-    data?.total?.categoryGeo?.forEach(
-      ({ value, continent, country, subdivision }) => {
-        const id = returnIdCategoryGeo(continent, country, subdivision);
-        if (!id) return;
-        chartConfigMap[id] = {
-          id,
-          label: id.charAt(0).toUpperCase() + id.slice(1),
-          total: (chartConfigMap[id]?.total || 0) + value,
-        };
-      }
-    );
+    data?.total?.categoryGeo?.forEach(({ value, continent, country, subdivision }) => {
+      const id = returnIdCategoryGeo(continent, country, subdivision);
+      if (!id) return;
+      chartConfigMap[id] = {
+        id,
+        label: id.charAt(0).toUpperCase() + id.slice(1),
+        total: (chartConfigMap[id]?.total || 0) + value,
+      };
+    });
     data?.total?.categoryReferrer?.forEach(({ value, domain, referrer }) => {
       const id = returnIdCategoryReferrer(domain, referrer);
       if (!id) return;

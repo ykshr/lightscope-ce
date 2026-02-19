@@ -1,10 +1,6 @@
 type Trend {
   total: [TrendAnalytics!]!
-  categoryAge(
-    top: Int = 10
-    includeAges: [String!]
-    excludeAges: [String!]
-  ): [TrendAnalyticsAge!]
+  categoryAge(top: Int = 10, includeAges: [String!], excludeAges: [String!]): [TrendAnalyticsAge!]
   categoryApp(
     top: Int = 10
     includeAppTypes: [String!]

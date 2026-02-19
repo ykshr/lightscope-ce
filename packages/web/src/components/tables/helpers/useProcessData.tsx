@@ -15,13 +15,8 @@ type ArticleData = {
   section?: string;
 };
 
-export default function useProcessData(
-  data: ArticleRankQuery | undefined,
-  metric: string
-) {
-  const [articles, setArticles] = useState<ArticleData[] | undefined>(
-    undefined
-  );
+export default function useProcessData(data: ArticleRankQuery | undefined, metric: string) {
+  const [articles, setArticles] = useState<ArticleData[] | undefined>(undefined);
   const [columns, setColumns] = useState<Column<ArticleData>[]>([]);
   const isDesktop = useIsDesktop();
 
@@ -33,9 +28,7 @@ export default function useProcessData(
         url,
         image: article?.image || '/placeholders/article.png',
         title: article?.title || 'No Title',
-        publishedTime: article?.publishedTime
-          ? new Date(article.publishedTime)
-          : undefined,
+        publishedTime: article?.publishedTime ? new Date(article.publishedTime) : undefined,
         siteName: article?.siteName || 'Unknown',
         type: article?.type || 'Unknown',
         section: article?.section || 'Unknown',
@@ -68,8 +61,7 @@ export default function useProcessData(
       {
         header: 'Title',
         accessorKey: 'title',
-        className:
-          'group-hover:text-primary transition-colors cursor-pointer truncate',
+        className: 'group-hover:text-primary transition-colors cursor-pointer truncate',
         gridSpan: 5,
       },
       {
@@ -78,9 +70,7 @@ export default function useProcessData(
         gridSpan: 2,
         render: ({ publishedTime }) => (
           <span className={classNameTime}>
-            {publishedTime
-              ? new Date(publishedTime).toLocaleDateString()
-              : 'Unknown'}
+            {publishedTime ? new Date(publishedTime).toLocaleDateString() : 'Unknown'}
           </span>
         ),
         hideMobile: true,
@@ -89,9 +79,7 @@ export default function useProcessData(
         header: 'Site name',
         accessorKey: 'siteName',
         gridSpan: 2,
-        render: ({ siteName }) => (
-          <span className={classNameLabel}>{siteName}</span>
-        ),
+        render: ({ siteName }) => <span className={classNameLabel}>{siteName}</span>,
         hideMobile: true,
       },
       {
@@ -109,9 +97,7 @@ export default function useProcessData(
       },
     ];
 
-    const filteredArticleColumns = articleColumns.filter(
-      (col) => !(col.hideMobile && !isDesktop)
-    );
+    const filteredArticleColumns = articleColumns.filter((col) => !(col.hideMobile && !isDesktop));
     setArticles(mappedArticles);
     setColumns(filteredArticleColumns);
   }, [data, metric, isDesktop]);

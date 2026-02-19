@@ -5,9 +5,7 @@ import { useUrlParams } from '@/hooks/useUrl';
 
 export default function CardLiveViews({ lastMins = 5 }: { lastMins?: number }) {
   const now = new Date();
-  const startDate = getStartOfMinute(
-    new Date(now.getTime() - lastMins * 60 * 1000)
-  );
+  const startDate = getStartOfMinute(new Date(now.getTime() - lastMins * 60 * 1000));
   const endDate = getStartOfNextMinute(now);
 
   const [urlParams] = useUrlParams();

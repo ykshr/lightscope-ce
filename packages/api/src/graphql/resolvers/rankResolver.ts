@@ -1,8 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import type {
-  Resolvers,
-  RankParameters,
-} from '@/graphql/__generated__/graphql-resolvers';
+import type { Resolvers, RankParameters } from '@/graphql/__generated__/graphql-resolvers';
 import getRankLoader from '@/graphql/loaders/rank';
 import { getArticle } from '@/graphql/resolvers/articleResolver';
 import { resolveRequestedAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';

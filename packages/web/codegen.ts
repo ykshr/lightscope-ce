@@ -7,11 +7,7 @@ const config: CodegenConfig = {
   documents: 'src/**/*.graphql',
   generates: {
     'src/__generated__/graphql.ts': {
-      plugins: [
-        'typescript',
-        'typescript-operations',
-        'typescript-react-query',
-      ],
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
       config: {
         enumsAsConst: true,
         fetcher: '@/lib/fetcher#fetchData',

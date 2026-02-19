@@ -53,10 +53,7 @@ export default function AreaStacked({
   }));
 
   return (
-    <ChartContainer
-      config={config}
-      className="mx-auto aspect-square w-full max-h-[250px]"
-    >
+    <ChartContainer config={config} className="mx-auto aspect-square w-full max-h-[250px]">
       <AreaChart
         accessibilityLayer
         data={data}
@@ -65,11 +62,7 @@ export default function AreaStacked({
           right: 0,
         }}
       >
-        <CartesianGrid
-          vertical={false}
-          strokeDasharray="3 3"
-          stroke="var(--border)"
-        />
+        <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="var(--border)" />
         <XAxis
           dataKey={xAxisKey}
           tickLine={false}
@@ -78,10 +71,7 @@ export default function AreaStacked({
           className="text-xs"
           tickFormatter={tickFormatter}
         />
-        <ChartTooltip
-          cursor={true}
-          content={<ChartTooltipContent indicator="line" />}
-        />
+        <ChartTooltip cursor={true} content={<ChartTooltipContent indicator="line" />} />
         {areas.map((area) => (
           <Area
             key={area.id}

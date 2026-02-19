@@ -84,12 +84,7 @@ export default function ArticleFilter() {
               afterValue={watch('publishedTimeAfter')}
               beforeValue={watch('publishedTimeBefore')}
               onChange={(name, d) =>
-                setValue(
-                  name === 'after'
-                    ? 'publishedTimeAfter'
-                    : 'publishedTimeBefore',
-                  d
-                )
+                setValue(name === 'after' ? 'publishedTimeAfter' : 'publishedTimeBefore', d)
               }
             />
             <DateBeforeAfterInput
@@ -97,10 +92,7 @@ export default function ArticleFilter() {
               afterValue={watch('modifiedTimeAfter')}
               beforeValue={watch('modifiedTimeBefore')}
               onChange={(name, d) =>
-                setValue(
-                  name === 'after' ? 'modifiedTimeAfter' : 'modifiedTimeBefore',
-                  d
-                )
+                setValue(name === 'after' ? 'modifiedTimeAfter' : 'modifiedTimeBefore', d)
               }
             />
             <DateBeforeAfterInput
@@ -108,12 +100,7 @@ export default function ArticleFilter() {
               afterValue={watch('expirationTimeAfter')}
               beforeValue={watch('expirationTimeBefore')}
               onChange={(name, d) =>
-                setValue(
-                  name === 'after'
-                    ? 'expirationTimeAfter'
-                    : 'expirationTimeBefore',
-                  d
-                )
+                setValue(name === 'after' ? 'expirationTimeAfter' : 'expirationTimeBefore', d)
               }
             />
 

@@ -69,9 +69,7 @@ describe('processEvent', () => {
       // Note: mockPayload.url has query params, createPV strips them in PV but createArticle takes exact string
       // The implementation uses: const url = payload['og:url'] || payload.url;
       const article = createArticle(payload);
-      expect(article.url).toBe(
-        'https://example.com/article?utm_source=google&utm_medium=cpc'
-      );
+      expect(article.url).toBe('https://example.com/article?utm_source=google&utm_medium=cpc');
     });
 
     it('should default site_name to "unknown" if missing', () => {
@@ -95,9 +93,7 @@ describe('processEvent', () => {
           geoname_id: 1,
           names: { en: 'United States' },
         },
-        subdivisions: [
-          { iso_code: 'CA', geoname_id: 1, names: { en: 'California' } },
-        ],
+        subdivisions: [{ iso_code: 'CA', geoname_id: 1, names: { en: 'California' } }],
         city: { names: { en: 'San Francisco' }, geoname_id: 1 },
       } as any;
 

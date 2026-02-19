@@ -9,11 +9,7 @@ interface TagInputProps {
   onChange: (tags: string[]) => void;
 }
 
-export default function TagInput({
-  label,
-  value = [],
-  onChange,
-}: TagInputProps) {
+export default function TagInput({ label, value = [], onChange }: TagInputProps) {
   const [inputValue, setInputValue] = useState('');
 
   const addTag = () => {
@@ -46,12 +42,7 @@ export default function TagInput({
             }
           }}
         />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={addTag}
-          className="px-3 py-2"
-        >
+        <Button type="button" variant="outline" onClick={addTag} className="px-3 py-2">
           Add
         </Button>
       </div>
@@ -62,11 +53,7 @@ export default function TagInput({
           <span className="text-muted-foreground">Nothing added yet</span>
         ) : (
           value.map((tag, index) => (
-            <Badge
-              key={`${tag}-${index}`}
-              name={tag}
-              onRemove={() => removeTag(index)}
-            />
+            <Badge key={`${tag}-${index}`} name={tag} onRemove={() => removeTag(index)} />
           ))
         )}
       </div>

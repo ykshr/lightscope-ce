@@ -8,10 +8,7 @@ export default function CardEngagementTime() {
   const [urlParams] = useUrlParams();
   const { startDate, endDate, articleFilter } = urlParams;
 
-  const { startDatePrevious, endDatePrevious } = getPreviousDates(
-    startDate,
-    endDate
-  );
+  const { startDatePrevious, endDatePrevious } = getPreviousDates(startDate, endDate);
 
   const { data, isLoading } = useTotalEngagementTimeQuery({
     startDate,
@@ -19,12 +16,11 @@ export default function CardEngagementTime() {
     articleFilter,
   });
 
-  const { data: dataPrevious, isLoading: isLoadingPrevious } =
-    useTotalEngagementTimeQuery({
-      startDate: startDatePrevious,
-      endDate: endDatePrevious,
-      articleFilter,
-    });
+  const { data: dataPrevious, isLoading: isLoadingPrevious } = useTotalEngagementTimeQuery({
+    startDate: startDatePrevious,
+    endDate: endDatePrevious,
+    articleFilter,
+  });
 
   const value = data?.trend?.total?.[0].value;
   const valuePrevious = dataPrevious?.trend?.total?.[0].value;

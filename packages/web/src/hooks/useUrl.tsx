@@ -1,11 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
-import {
-  decodeUrlParams,
-  encodeUrlParams,
-  PARAM_CONFIG,
-  type urlParamValue,
-} from '@/helpers/url';
+import { decodeUrlParams, encodeUrlParams, PARAM_CONFIG, type urlParamValue } from '@/helpers/url';
 
 export function useValidateUrlParams(allowedParams: string[]) {
   const [searchParams] = useSearchParams();
@@ -43,10 +38,7 @@ export function useUrlParams(localParams: { [name: string]: any } = {}) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const updateUrlParams = (
-    params: Record<string, urlParamValue>,
-    isMerge: boolean = true
-  ) => {
+  const updateUrlParams = (params: Record<string, urlParamValue>, isMerge: boolean = true) => {
     const newParams = encodeUrlParams(params, isMerge);
     navigate(`${pathname}?${newParams.toString()}`);
   };

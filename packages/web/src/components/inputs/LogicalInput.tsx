@@ -16,11 +16,7 @@ interface LogicalInputProps {
   onChange: (value: string[][]) => void;
 }
 
-export default function LogicalInput({
-  label,
-  value,
-  onChange,
-}: LogicalInputProps) {
+export default function LogicalInput({ label, value, onChange }: LogicalInputProps) {
   const [inputValue, setInputValue] = useState('');
 
   const safeValue = value?.filter((g) => g.length > 0) ?? [];
@@ -40,9 +36,7 @@ export default function LogicalInput({
 
   const removeTag = (gIdx: number, iIdx: number) => {
     const newValue = safeValue
-      .map((group, gi) =>
-        gi === gIdx ? group.filter((_, ii) => ii !== iIdx) : group
-      )
+      .map((group, gi) => (gi === gIdx ? group.filter((_, ii) => ii !== iIdx) : group))
       .filter((group) => group.length > 0);
     onChange(newValue);
   };
@@ -50,10 +44,7 @@ export default function LogicalInput({
   const convertAndToOr = (targetGroupIdx: number) => {
     const newValue = [...safeValue];
     const groupToMove = newValue[targetGroupIdx];
-    newValue[targetGroupIdx - 1] = [
-      ...newValue[targetGroupIdx - 1],
-      ...groupToMove,
-    ];
+    newValue[targetGroupIdx - 1] = [...newValue[targetGroupIdx - 1], ...groupToMove];
     newValue.splice(targetGroupIdx, 1);
     onChange(newValue);
   };
@@ -92,12 +83,7 @@ export default function LogicalInput({
             }
           }}
         />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => addTag(true)}
-          className="px-3 py-2"
-        >
+        <Button type="button" variant="outline" onClick={() => addTag(true)} className="px-3 py-2">
           Add
         </Button>
       </div>
@@ -115,9 +101,7 @@ export default function LogicalInput({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center">
-                  <DropdownMenuItem onClick={() => convertAndToOr(gIdx)}>
-                    OR
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => convertAndToOr(gIdx)}>OR</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
@@ -138,9 +122,7 @@ export default function LogicalInput({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="center">
-                        <DropdownMenuItem
-                          onClick={() => convertOrToAnd(gIdx, iIdx)}
-                        >
+                        <DropdownMenuItem onClick={() => convertOrToAnd(gIdx, iIdx)}>
                           AND
                         </DropdownMenuItem>
                       </DropdownMenuContent>

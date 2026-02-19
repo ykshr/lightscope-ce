@@ -1,9 +1,6 @@
 import dayjs from 'dayjs';
 import dayjsPluginUTC from 'dayjs/plugin/utc';
-import {
-  Aggregation,
-  AggregationUnit,
-} from '@/graphql/__generated__/graphql-resolvers';
+import { Aggregation, AggregationUnit } from '@/graphql/__generated__/graphql-resolvers';
 
 dayjs.extend(dayjsPluginUTC);
 
@@ -19,8 +16,7 @@ export function getAggregationUnit(
     return { unit: AggregationUnit.Total, interval: 0 };
   if (aggregation.unit === AggregationUnit.Auto) {
     const mins = (endDate.getTime() - startDate.getTime()) / 1000 / 60;
-    if (mins < 60 * 24 * 1)
-      return { unit: AggregationUnit.Minute, interval: 5 };
+    if (mins < 60 * 24 * 1) return { unit: AggregationUnit.Minute, interval: 5 };
     if (mins < 60 * 24 * 7) return { unit: AggregationUnit.Hour, interval: 1 };
     if (mins < 60 * 24 * 365) return { unit: AggregationUnit.Day, interval: 1 };
     return { unit: AggregationUnit.Month, interval: 1 };
@@ -62,22 +58,15 @@ const TableDataInterval: {
   min: { unit: 'minute', interval: 5 },
 };
 
-const getNextAvailableDate = (
-  date: Date,
-  unitIndex: number,
-  isForward: boolean = true
-): Date => {
+const getNextAvailableDate = (date: Date, unitIndex: number, isForward: boolean = true): Date => {
   const { unit = 'minute', interval = 5 } =
     TableDataInterval[ClickhouseTableUnits[unitIndex]] || {};
   const dayjsUTC = dayjs(date).utc();
 
   const mod = dayjsUTC.get(unit) % interval;
 
-  const minimumUnit =
-    TableDataInterval[ClickhouseTableUnits[ClickhouseTableUnits.length - 1]]
-      .unit;
-  if (mod === 0 && dayjsUTC.diff(dayjsUTC.startOf(unit), minimumUnit) === 0)
-    return date;
+  const minimumUnit = TableDataInterval[ClickhouseTableUnits[ClickhouseTableUnits.length - 1]].unit;
+  if (mod === 0 && dayjsUTC.diff(dayjsUTC.startOf(unit), minimumUnit) === 0) return date;
 
   return isForward
     ? dayjsUTC
@@ -108,13 +97,8 @@ function findUnitAndDate(
           ]
         : [];
     const left =
-      startDate < startDateNext
-        ? findUnitAndDate(startDate, startDateNext, unitIndex + 1)
-        : [];
-    const right =
-      endDateNext < endDate
-        ? findUnitAndDate(endDateNext, endDate, unitIndex + 1)
-        : [];
+      startDate < startDateNext ? findUnitAndDate(startDate, startDateNext, unitIndex + 1) : [];
+    const right = endDateNext < endDate ? findUnitAndDate(endDateNext, endDate, unitIndex + 1) : [];
 
     return [...mid, ...left, ...right];
   }
@@ -142,25 +126,13 @@ export function getTableUnitWithDates(
   endDate: Date,
   aggregationUnit?: AggregationUnit
 ): TableUnitWithDates[] {
-  const startDateRound = getNextAvailableDate(
-    startDate,
-    ClickhouseTableUnits.length - 1,
-    false
-  );
-  const endDateRound = getNextAvailableDate(
-    endDate,
-    ClickhouseTableUnits.length - 1,
-    true
-  );
+  const startDateRound = getNextAvailableDate(startDate, ClickhouseTableUnits.length - 1, false);
+  const endDateRound = getNextAvailableDate(endDate, ClickhouseTableUnits.length - 1, true);
 
   const startUnit = aggregationUnit
     ? mapAggregationUnitToClickhouseUnit(aggregationUnit)!
     : ClickhouseTableUnits[0];
   const startUnitIndex = ClickhouseTableUnits.indexOf(startUnit);
-  const collections = findUnitAndDate(
-    startDateRound,
-    endDateRound,
-    startUnitIndex
-  );
+  const collections = findUnitAndDate(startDateRound, endDateRound, startUnitIndex);
   return collections;
 }

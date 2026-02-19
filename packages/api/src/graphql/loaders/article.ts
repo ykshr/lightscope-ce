@@ -4,14 +4,9 @@ import query from '@/helpers/clickhouse';
 import { renameKeySnakeToCamel } from '@/helpers/rename';
 import { Context } from '@/graphql';
 
-export default function getLoader(
-  ctx: Context
-): DataLoader<string, Article | null> {
+export default function getLoader(ctx: Context): DataLoader<string, Article | null> {
   if (ctx.loaders.has('articleLoader')) {
-    return ctx.loaders.get('articleLoader') as DataLoader<
-      string,
-      Article | null
-    >;
+    return ctx.loaders.get('articleLoader') as DataLoader<string, Article | null>;
   }
   const loader = new DataLoader<string, Article | null>(
     async (urls: readonly string[]) => {
@@ -33,10 +28,7 @@ export default function getLoader(
   return loader;
 }
 
-async function fetchArticleByUrls(
-  tenantId: string,
-  urls: readonly string[]
-): Promise<Article[]> {
+async function fetchArticleByUrls(tenantId: string, urls: readonly string[]): Promise<Article[]> {
   if (urls.length === 0) return [];
 
   const url_hashes = urls.map((url) => `cityHash64('${url}')`).join(', ');

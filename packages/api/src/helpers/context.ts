@@ -5,8 +5,7 @@ import { createClient } from '@clickhouse/client';
 
 dotenv.config();
 
-const MAXMIND_DB_PATH =
-  process.env.MAXMIND_DB_PATH || 'data/GeoLite2-City.mmdb';
+const MAXMIND_DB_PATH = process.env.MAXMIND_DB_PATH || 'data/GeoLite2-City.mmdb';
 const dbExists = fs.existsSync(MAXMIND_DB_PATH);
 const geo = dbExists ? await maxmind.open<CityResponse>(MAXMIND_DB_PATH) : null;
 export { geo };
@@ -27,13 +26,9 @@ export const clickhouseClient = createClient({
   username: CLICKHOUSE_USERNAME,
   password: CLICKHOUSE_PASSWORD,
 });
-export const CLICKHOUSE_ARTICLE_TABLE_NAME =
-  process.env.CLICKHOUSE_ARTICLE_TABLE_NAME || 'article';
-export const CLICKHOUSE_PV_TABLE_NAME =
-  process.env.CLICKHOUSE_PV_TABLE_NAME || 'pv_raw';
-export const CLICKHOUSE_INSERT_BATCH_SIZE =
-  Number(process.env.BATCH_SIZE) || 1000;
+export const CLICKHOUSE_ARTICLE_TABLE_NAME = process.env.CLICKHOUSE_ARTICLE_TABLE_NAME || 'article';
+export const CLICKHOUSE_PV_TABLE_NAME = process.env.CLICKHOUSE_PV_TABLE_NAME || 'pv_raw';
+export const CLICKHOUSE_INSERT_BATCH_SIZE = Number(process.env.BATCH_SIZE) || 1000;
 export const CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS =
   Number(process.env.CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS) || 200;
-export const CLICKHOUSE_INSERT_MAX_TRY =
-  Number(process.env.INSERT_MAX_TRY) || 3;
+export const CLICKHOUSE_INSERT_MAX_TRY = Number(process.env.INSERT_MAX_TRY) || 3;

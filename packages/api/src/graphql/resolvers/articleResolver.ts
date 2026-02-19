@@ -21,10 +21,7 @@ const resolvers: Resolvers = {
   Article: {
     analytics: (parent, args) => {
       const startDate = new Date(
-        Math.max(
-          new Date(args.startDate).getTime(),
-          new Date(parent.publishedTime ?? 0).getTime()
-        )
+        Math.max(new Date(args.startDate).getTime(), new Date(parent.publishedTime ?? 0).getTime())
       ).toISOString();
       const endDate = new Date(args.endDate).toISOString();
       return {

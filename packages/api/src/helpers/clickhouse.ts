@@ -1,9 +1,6 @@
 import { clickhouseClient } from '@/helpers/context';
 
-export default async function <T>(
-  query: string,
-  query_params: any = undefined
-): Promise<T[]> {
+export default async function <T>(query: string, query_params: any = undefined): Promise<T[]> {
   const rows = await clickhouseClient.query({
     query,
     query_params,

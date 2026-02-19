@@ -16,8 +16,7 @@ const SAMPLE_ARTICLE: Article = {
   type: 'Article',
   image:
     'https://ichef.bbci.co.uk/news/1536/cpsprodpb/fb0c/live/24597b60-f8f7-11f0-a66e-ad6304ba581b.jpg.webp',
-  description:
-    'An in-depth analysis of global market shifts and financial forecasts.',
+  description: 'An in-depth analysis of global market shifts and financial forecasts.',
   site_name: 'LightScope Analytics',
   locale: 'en-US',
   published_time: '2023-10-24T14:00:00Z',

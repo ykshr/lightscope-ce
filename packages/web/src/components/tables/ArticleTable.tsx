@@ -41,14 +41,7 @@ export default function ArticleTable({
   const [localParams, setLocalParams] = useState<{ [name: string]: any }>({});
 
   const [urlParams, updateUrlParams] = useUrlParams(localParams);
-  const {
-    startDate,
-    endDate,
-    articleFilter,
-    page = 1,
-    limit,
-    metric = 'visits',
-  } = urlParams;
+  const { startDate, endDate, articleFilter, page = 1, limit, metric = 'visits' } = urlParams;
 
   const categoryVariables = categoryUrlParamsToVariables(urlParams);
   const metricVariables = metricUrlParamsToVariables(urlParams);
@@ -98,11 +91,7 @@ export default function ArticleTable({
             {description && <CardDescription>{description}</CardDescription>}
           </div>
           {viewMoreHref && (
-            <Button
-              variant="link"
-              className="text-sm flex items-center gap-1 ml-auto"
-              asChild
-            >
+            <Button variant="link" className="text-sm flex items-center gap-1 ml-auto" asChild>
               <a href={viewMoreHref}>
                 View More <ArrowRight size={16} />
               </a>
@@ -118,9 +107,7 @@ export default function ArticleTable({
                 {startItem}-{endItem}
               </span>
               of
-              <span className="font-medium text-foreground px-1">
-                {totalCount}
-              </span>
+              <span className="font-medium text-foreground px-1">{totalCount}</span>
               results
             </CardDescription>
           )}
@@ -128,9 +115,7 @@ export default function ArticleTable({
             <div className="ml-auto">
               <Sort
                 currentMetricValue={metric || 'unknown'}
-                currentSortValue={
-                  JSON.stringify(currentSort?.value) || 'unknown'
-                }
+                currentSortValue={JSON.stringify(currentSort?.value) || 'unknown'}
                 onMetricChange={onMetricChange}
                 onSortChange={onSortChange}
               />
@@ -143,22 +128,14 @@ export default function ArticleTable({
         <div className="overflow-x-auto border-t border-border">
           <Table className="table-fixed w-full">
             <TableHeader columns={columns} />
-            <TableBody
-              data={articles}
-              columns={columns}
-              isLoading={isLoading}
-            />
+            <TableBody data={articles} columns={columns} isLoading={isLoading} />
           </Table>
         </div>
       </CardContent>
 
       {/* Pagination Footer */}
       <CardFooter className="flex items-center justify-center border-t border-border py-4">
-        <TablePagination
-          page={page}
-          totalCount={totalCount}
-          itemsPerPage={itemsPerPage}
-        />
+        <TablePagination page={page} totalCount={totalCount} itemsPerPage={itemsPerPage} />
       </CardFooter>
     </Card>
   );

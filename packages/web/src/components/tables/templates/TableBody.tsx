@@ -34,10 +34,7 @@ export default function Body<T extends { id: string | number }>({
             className="group hover:bg-muted/50 transition-colors border-b border-border/50 last:border-0"
           >
             {columns.map((col) => (
-              <TableCell
-                key={`${item.id}-${col.header}`}
-                className={`truncate ${col.className}`}
-              >
+              <TableCell key={`${item.id}-${col.header}`} className={`truncate ${col.className}`}>
                 {col.render
                   ? col.render(item, idx)
                   : (item[col.accessorKey as keyof T] as React.ReactNode)}

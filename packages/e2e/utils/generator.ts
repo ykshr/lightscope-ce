@@ -11,9 +11,7 @@ import {
 // Export Payload as alias for AnalyticsPayload
 export type Payload = AnalyticsPayload;
 
-export const generatePayload = (
-  overrides: Partial<AnalyticsPayload> = {}
-): AnalyticsPayload => {
+export const generatePayload = (overrides: Partial<AnalyticsPayload> = {}): AnalyticsPayload => {
   const userAgent = overrides.user_agent || faker.internet.userAgent();
   const uaResult = new UAParser(userAgent).getResult();
   const url = overrides.url || faker.internet.url();

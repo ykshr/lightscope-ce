@@ -1,12 +1,6 @@
 import { useMemo } from 'react';
 import { Label, Pie, PieChart } from 'recharts';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartContainer,
   ChartTooltip,
@@ -53,8 +47,7 @@ export default function PieDonutText({
 
     const formatted = data.map((item, index) => {
       // if no color provided, assign from default colors
-      const itemColor =
-        item.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+      const itemColor = item.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length];
 
       generatedConfig[item.id] = {
         label: item.label,
@@ -84,15 +77,9 @@ export default function PieDonutText({
       </CardHeader>
 
       <CardContent className="flex flex-col">
-        <ChartContainer
-          config={config}
-          className="mx-auto aspect-square w-full max-h-[250px]"
-        >
+        <ChartContainer config={config} className="mx-auto aspect-square w-full max-h-[250px]">
           <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Pie
               data={chartData}
               dataKey="value"
@@ -142,10 +129,7 @@ export default function PieDonutText({
               key={item.id}
               label={item.label}
               value={`${item.value.toLocaleString()}${unit}`}
-              color={
-                config[item.id].color ||
-                DEFAULT_COLORS[DEFAULT_COLORS.length - 1]
-              }
+              color={config[item.id].color || DEFAULT_COLORS[DEFAULT_COLORS.length - 1]}
             />
           ))}
         </div>

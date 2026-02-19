@@ -46,18 +46,11 @@ export default function ResponsiveModal({
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-        <DialogContent
-          className={cn(
-            'sm:max-w-[max-content] md:max-w-[700px]',
-            dialogClassName
-          )}
-        >
+        <DialogContent className={cn('sm:max-w-[max-content] md:max-w-[700px]', dialogClassName)}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <div className="flex items-center justify-between w-full">
-              {description && (
-                <DialogDescription>{description}</DialogDescription>
-              )}
+              {description && <DialogDescription>{description}</DialogDescription>}
               {buttons && <div>{buttons}</div>}
             </div>
           </DialogHeader>
@@ -74,9 +67,7 @@ export default function ResponsiveModal({
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
           <div className="flex items-center justify-between w-full">
-            {description && (
-              <DrawerDescription>{description}</DrawerDescription>
-            )}
+            {description && <DrawerDescription>{description}</DrawerDescription>}
             {buttons && <div>{buttons}</div>}
           </div>
         </DrawerHeader>

@@ -67,9 +67,7 @@ describe('category helpers', () => {
     });
 
     it('should return undefined for unknown category', () => {
-      expect(
-        categoryUrlParamsToVariables({ category: 'unknown' })
-      ).toBeUndefined();
+      expect(categoryUrlParamsToVariables({ category: 'unknown' })).toBeUndefined();
     });
   });
 });

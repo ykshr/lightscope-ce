@@ -119,9 +119,7 @@ const categoryOptions = [
 ];
 
 const allKeysUsedInCategoryOptions = Array.from(
-  new Set<string>(
-    categoryOptions.flatMap((option) => Object.keys(option.value))
-  )
+  new Set<string>(categoryOptions.flatMap((option) => Object.keys(option.value)))
 ).sort();
 
 export const findCategoryOptionByValue = (value: any) => {
@@ -190,9 +188,7 @@ export default function Sort({
 }: SortProps) {
   const currentSort = JSON.parse(currentSortValue);
   const extenedSortOptions =
-    currentSort.label === 'Custom'
-      ? [...categoryOptions, currentSort]
-      : categoryOptions;
+    currentSort.label === 'Custom' ? [...categoryOptions, currentSort] : categoryOptions;
 
   const onMetricValueChange = (value: string) => {
     onMetricChange(value);
@@ -201,9 +197,7 @@ export default function Sort({
   const onSortValueChange = (value: string) => {
     const parsedValue = JSON.parse(value);
     const nextValue = {
-      ...Object.fromEntries(
-        allKeysUsedInCategoryOptions.map((key) => [key, undefined])
-      ),
+      ...Object.fromEntries(allKeysUsedInCategoryOptions.map((key) => [key, undefined])),
       ...parsedValue,
     };
 
@@ -212,9 +206,7 @@ export default function Sort({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-muted-foreground whitespace-nowrap">
-        Sort by:
-      </span>
+      <span className="text-xs text-muted-foreground whitespace-nowrap">Sort by:</span>
       <Select value={currentMetricValue} onValueChange={onMetricValueChange}>
         <SelectTrigger className="w-[160px] h-9 text-xs">
           <SelectValue placeholder="Metric" />
@@ -227,20 +219,14 @@ export default function Sort({
           ))}
         </SelectContent>
       </Select>
-      <span className="text-xs text-muted-foreground whitespace-nowrap">
-        of
-      </span>
+      <span className="text-xs text-muted-foreground whitespace-nowrap">of</span>
       <Select value={currentSortValue} onValueChange={onSortValueChange}>
         <SelectTrigger className="w-[160px] h-9 text-xs">
           <SelectValue placeholder="Sort" />
         </SelectTrigger>
         <SelectContent>
           {extenedSortOptions.map((option) => (
-            <SelectItem
-              key={option.label}
-              value={JSON.stringify(option.value)}
-              className="text-xs"
-            >
+            <SelectItem key={option.label} value={JSON.stringify(option.value)} className="text-xs">
               {option.label}
             </SelectItem>
           ))}

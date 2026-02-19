@@ -2,10 +2,7 @@ const isObject = (item: any): item is Record<string, any> => {
   return !!(item && typeof item === 'object' && !Array.isArray(item));
 };
 
-export default function deepMerge<T extends Record<string, any>>(
-  target: T,
-  ...sources: any[]
-): T {
+export default function deepMerge<T extends Record<string, any>>(target: T, ...sources: any[]): T {
   if (!sources.length) {
     return target;
   }

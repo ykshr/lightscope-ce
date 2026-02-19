@@ -15,10 +15,7 @@ type Rank {
     includeDevices: [String!]
     excludeDevices: [String!]
   ): [RankAnalytics!]
-  categoryGender(
-    includeGenders: [String!]
-    excludeGenders: [String!]
-  ): [RankAnalytics!]
+  categoryGender(includeGenders: [String!], excludeGenders: [String!]): [RankAnalytics!]
   categoryGeo(
     includeContinents: [String!]
     excludeContinents: [String!]

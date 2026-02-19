@@ -42,24 +42,12 @@ export default function getLoader(ctx: Context, loaderParams: LoaderParams) {
 
 async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
-  const {
-    startDate: s,
-    endDate: e,
-    articleFilter,
-    metric,
-    aggregation,
-    limit,
-    page,
-  } = queryParams;
+  const { startDate: s, endDate: e, articleFilter, metric, aggregation, limit, page } = queryParams;
   const { top = 10 } = categoryFilter || {};
   const startDate = new Date(s);
   const endDate = new Date(e);
 
-  const { unit, interval } = getAggregationUnit(
-    startDate,
-    endDate,
-    aggregation
-  );
+  const { unit, interval } = getAggregationUnit(startDate, endDate, aggregation);
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {
@@ -101,8 +89,7 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
   const pageToUse = page ?? 1;
   const limitAndOffset = `LIMIT ${limitToUse} OFFSET ${(pageToUse - 1) * limitToUse}`;
 
-  const categoryLimitStr =
-    top != null && top > 0 ? `LIMIT ${top} BY aggregatedDate` : '';
+  const categoryLimitStr = top != null && top > 0 ? `LIMIT ${top} BY aggregatedDate` : '';
 
   const sql = `
     SELECT

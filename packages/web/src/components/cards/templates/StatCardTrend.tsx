@@ -40,15 +40,9 @@ export default function StatCardTrend({
       {showPrevious && (
         <CardContent>
           <div className="flex items-center gap-2">
-            {isLoadingPrevious && valuePrevious == null && (
-              <Spinner sizeByCharLength={3} />
-            )}
-            {!isLoadingPrevious && (
-              <TrendBadge value={value} previousValue={valuePrevious} />
-            )}
-            <span className="text-xs text-muted-foreground/60">
-              vs last period
-            </span>
+            {isLoadingPrevious && valuePrevious == null && <Spinner sizeByCharLength={3} />}
+            {!isLoadingPrevious && <TrendBadge value={value} previousValue={valuePrevious} />}
+            <span className="text-xs text-muted-foreground/60">vs last period</span>
           </div>
         </CardContent>
       )}

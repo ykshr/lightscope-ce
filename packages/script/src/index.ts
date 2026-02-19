@@ -166,18 +166,14 @@ export class AnalyticsTracker {
   private extractOGMetadata(): OGMetadata {
     const getMeta = (props: string[]) => {
       for (const prop of props) {
-        const el = document.querySelector(
-          `meta[property="${prop}"], meta[name="${prop}"]`
-        );
+        const el = document.querySelector(`meta[property="${prop}"], meta[name="${prop}"]`);
         if (el) return el.getAttribute('content') || '';
       }
       return '';
     };
 
     const getMetaArray = (prop: string) => {
-      const elements = document.querySelectorAll(
-        `meta[property="${prop}"], meta[name="${prop}"]`
-      );
+      const elements = document.querySelectorAll(`meta[property="${prop}"], meta[name="${prop}"]`);
       return Array.from(elements)
         .map((el) => el.getAttribute('content') || '')
         .filter(Boolean);
@@ -190,19 +186,11 @@ export class AnalyticsTracker {
       'og:image': getMeta(['og:image']),
       'og:description': getMeta(['og:description', 'description']),
       'og:site_name':
-        this.config.site_name ||
-        getMeta(['og:site_name']) ||
-        this.resolveFallbackSiteName(),
+        this.config.site_name || getMeta(['og:site_name']) || this.resolveFallbackSiteName(),
       'og:locale': getMeta(['og:locale']) || navigator.language,
-      'article:published_time': this.formatDate(
-        getMeta(['article:published_time'])
-      ),
-      'article:modified_time': this.formatDate(
-        getMeta(['article:modified_time'])
-      ),
-      'article:expiration_time': this.formatDate(
-        getMeta(['article:expiration_time'])
-      ),
+      'article:published_time': this.formatDate(getMeta(['article:published_time'])),
+      'article:modified_time': this.formatDate(getMeta(['article:modified_time'])),
+      'article:expiration_time': this.formatDate(getMeta(['article:expiration_time'])),
       'article:authors': getMetaArray('article:author'),
       'article:section': getMeta(['article:section']),
       'article:tags': getMetaArray('article:tag'),
@@ -270,10 +258,7 @@ export class AnalyticsTracker {
 
   // --- Sending Logic ---
 
-  private async sendEvent(
-    eventName: string,
-    extraData: Record<string, any> = {}
-  ) {
+  private async sendEvent(eventName: string, extraData: Record<string, any> = {}) {
     const payload = generateAnalyticsPayload({
       eventName,
       uaResult: this.ua,
@@ -291,10 +276,7 @@ export class AnalyticsTracker {
     });
 
     this.lastEventTime = Date.now();
-    localStorage.setItem(
-      'analytics_visit_last_ts',
-      this.lastEventTime.toString()
-    );
+    localStorage.setItem('analytics_visit_last_ts', this.lastEventTime.toString());
 
     try {
       await fetch(this.apiEndpoint, {

@@ -23,10 +23,7 @@ export function createArticle(payload: Payload): Article {
   };
 }
 
-export function createPV(
-  payload: Payload,
-  geoInfo: CityResponse | null | undefined
-): PV {
+export function createPV(payload: Payload, geoInfo: CityResponse | null | undefined): PV {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';
   const event_id = payload.event_id;

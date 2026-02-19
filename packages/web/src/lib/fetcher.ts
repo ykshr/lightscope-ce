@@ -15,9 +15,7 @@ export const fetchData = <TData, TVariables>(
 
     // if (!user?.id) throw new Error('User not authenticated');
 
-    const serializedVariables = variables
-      ? serializeDates(variables)
-      : undefined;
+    const serializedVariables = variables ? serializeDates(variables) : undefined;
 
     const res = await fetch(`${API_ENDPOINT}/gql`, {
       method: 'POST',

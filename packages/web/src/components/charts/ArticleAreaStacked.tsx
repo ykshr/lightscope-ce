@@ -3,13 +3,7 @@ import { categoryUrlParamsToVariables } from '@/helpers/category';
 import { metricUrlParamsToVariables } from '@/helpers/metric';
 import { useUrlParams } from '@/hooks/useUrl';
 import { useArticleTrendQuery } from '@/__generated__/graphql';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import LegendItems from '../common/Legend';
 import AreaStacked from './templates/AreaStacked';
 import Filter, { findCategoryOptionByValue } from './templates/Filter';
@@ -47,14 +41,7 @@ export default function ArticleAreaStacked({
   const [localParams, setLocalParams] = useState<{ [name: string]: any }>({});
 
   const [urlParams, updateUrlParams] = useUrlParams(localParams);
-  const {
-    startDate,
-    endDate,
-    articleFilter,
-    page = 1,
-    limit,
-    metric = 'visits',
-  } = urlParams;
+  const { startDate, endDate, articleFilter, page = 1, limit, metric = 'visits' } = urlParams;
 
   const categoryParams = categoryUrlParamsToVariables(urlParams);
   const metricParams = metricUrlParamsToVariables(urlParams);
@@ -103,9 +90,7 @@ export default function ArticleAreaStacked({
             <div className="ml-auto">
               <Filter
                 currentMetricValue={metric || 'unknown'}
-                currentFilterValue={
-                  JSON.stringify(currentFilter?.value) || 'unknown'
-                }
+                currentFilterValue={JSON.stringify(currentFilter?.value) || 'unknown'}
                 onMetricChange={onMetricChange}
                 onFilterChange={onFilterChange}
               />
@@ -113,17 +98,11 @@ export default function ArticleAreaStacked({
           )}
         </div>
 
-        {showLegend && (
-          <LegendItems legendItems={chartConfigs} isLoading={isLoading} />
-        )}
+        {showLegend && <LegendItems legendItems={chartConfigs} isLoading={isLoading} />}
       </CardHeader>
 
       <CardContent className="flex flex-col">
-        <AreaStacked
-          data={chartData}
-          categories={chartConfigs}
-          xAxisKey="date"
-        />
+        <AreaStacked data={chartData} categories={chartConfigs} xAxisKey="date" />
       </CardContent>
     </Card>
   );

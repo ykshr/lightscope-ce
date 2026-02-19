@@ -16,16 +16,8 @@ const createArticleAnalyticsResolver =
     ctx: Context,
     info: GraphQLResolveInfo
   ): Promise<T[] | null> => {
-    const {
-      startDate,
-      endDate,
-      aggregation,
-      limit,
-      page,
-      siteName,
-      url,
-      metric,
-    } = parent.parameters;
+    const { startDate, endDate, aggregation, limit, page, siteName, url, metric } =
+      parent.parameters;
     const attributes = resolveRequestedAttributes(info);
     const loader = getArticleAnalyticsLoader<T>(ctx, {
       tableName,

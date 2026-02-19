@@ -2,10 +2,7 @@ import { TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Column } from './types';
 
 export default function Header<T>({ columns }: { columns: Column<T>[] }) {
-  const totalGridSpans = columns.reduce(
-    (acc, col) => acc + (col.gridSpan || 1),
-    0
-  );
+  const totalGridSpans = columns.reduce((acc, col) => acc + (col.gridSpan || 1), 0);
 
   return (
     <TableHeader>

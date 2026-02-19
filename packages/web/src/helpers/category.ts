@@ -1,6 +1,4 @@
-export const categoryUrlParamsToVariables = (urlParams: {
-  [name: string]: any;
-}) => {
+export const categoryUrlParamsToVariables = (urlParams: { [name: string]: any }) => {
   const { category } = urlParams;
   if (!category) {
     return {
@@ -17,11 +15,7 @@ export const categoryUrlParamsToVariables = (urlParams: {
     };
   }
 
-  if (
-    category === 'app' ||
-    category === 'appApp' ||
-    category === 'appAppType'
-  ) {
+  if (category === 'app' || category === 'appApp' || category === 'appAppType') {
     return {
       isCategoryApp: true,
       isCategoryAppAppType: category === 'appAppType',
@@ -33,11 +27,7 @@ export const categoryUrlParamsToVariables = (urlParams: {
     };
   }
 
-  if (
-    category === 'device' ||
-    category === 'deviceDeviceType' ||
-    category === 'deviceDevice'
-  ) {
+  if (category === 'device' || category === 'deviceDeviceType' || category === 'deviceDevice') {
     return {
       isCategoryDevice: true,
       isCategoryDeviceDeviceType: category === 'deviceDeviceType',
@@ -82,11 +72,7 @@ export const categoryUrlParamsToVariables = (urlParams: {
     };
   }
 
-  if (
-    category === 'referrer' ||
-    category === 'referrerDomain' ||
-    category === 'referrerReferrer'
-  ) {
+  if (category === 'referrer' || category === 'referrerDomain' || category === 'referrerReferrer') {
     return {
       isCategoryReferrer: true,
       isCategoryReferrerDomain: category === 'referrerDomain',

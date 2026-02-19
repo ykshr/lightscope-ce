@@ -40,23 +40,11 @@ export default function getLoader(ctx: Context, loaderParams: LoaderParams) {
 
 async function rank(tenantId: string, loaderParams: LoaderParams) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
-  const {
-    startDate: s,
-    endDate: e,
-    articleFilter,
-    metric,
-    order,
-    limit,
-    page,
-  } = queryParams;
+  const { startDate: s, endDate: e, articleFilter, metric, order, limit, page } = queryParams;
   const startDate = new Date(s);
   const endDate = new Date(e);
 
-  const units = getTableUnitWithDates(
-    startDate,
-    endDate,
-    AggregationUnit.Total
-  );
+  const units = getTableUnitWithDates(startDate, endDate, AggregationUnit.Total);
 
   const attributesRenamed = Array.from(
     new Set(attributes?.map((attr) => (attr === 'article' ? 'url' : attr)))

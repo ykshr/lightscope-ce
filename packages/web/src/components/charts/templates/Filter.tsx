@@ -56,9 +56,7 @@ const categoryOptions = [
 ];
 
 const allKeysUsedInCategoryOptions = Array.from(
-  new Set<string>(
-    categoryOptions.flatMap((option) => Object.keys(option.value))
-  )
+  new Set<string>(categoryOptions.flatMap((option) => Object.keys(option.value)))
 ).sort();
 
 export const findCategoryOptionByValue = (value: any) => {
@@ -127,9 +125,7 @@ export default function Filter({
 }: FilterProps) {
   const currentFilter = JSON.parse(currentFilterValue);
   const extendedFilterOptions =
-    currentFilter.label === 'Custom'
-      ? [...categoryOptions, currentFilter]
-      : categoryOptions;
+    currentFilter.label === 'Custom' ? [...categoryOptions, currentFilter] : categoryOptions;
 
   const onMetricValueChange = (value: string) => {
     onMetricChange(value);
@@ -138,9 +134,7 @@ export default function Filter({
   const onFilterValueChange = (value: string) => {
     const parsedValue = JSON.parse(value);
     const nextValue = {
-      ...Object.fromEntries(
-        allKeysUsedInCategoryOptions.map((key) => [key, undefined])
-      ),
+      ...Object.fromEntries(allKeysUsedInCategoryOptions.map((key) => [key, undefined])),
       ...parsedValue,
     };
 
@@ -149,9 +143,7 @@ export default function Filter({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-muted-foreground whitespace-nowrap">
-        Sort by:
-      </span>
+      <span className="text-xs text-muted-foreground whitespace-nowrap">Sort by:</span>
       <Select value={currentMetricValue} onValueChange={onMetricValueChange}>
         <SelectTrigger className="w-[160px] h-9 text-xs">
           <SelectValue placeholder="Metric" />
@@ -164,20 +156,14 @@ export default function Filter({
           ))}
         </SelectContent>
       </Select>
-      <span className="text-xs text-muted-foreground whitespace-nowrap">
-        of
-      </span>
+      <span className="text-xs text-muted-foreground whitespace-nowrap">of</span>
       <Select value={currentFilterValue} onValueChange={onFilterValueChange}>
         <SelectTrigger className="w-[160px] h-9 text-xs">
           <SelectValue placeholder="Sort" />
         </SelectTrigger>
         <SelectContent>
           {extendedFilterOptions.map((option) => (
-            <SelectItem
-              key={option.label}
-              value={JSON.stringify(option.value)}
-              className="text-xs"
-            >
+            <SelectItem key={option.label} value={JSON.stringify(option.value)} className="text-xs">
               {option.label}
             </SelectItem>
           ))}

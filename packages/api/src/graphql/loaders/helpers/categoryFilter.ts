@@ -48,9 +48,7 @@ function buildCondition<T>(
     const values = ((filter as Record<string, unknown>)[includeKey] as T[])
       .map((v: T) => `'${v}'`)
       .join(', ');
-    conditions.push(
-      `${column} IN (${needHash ? `cityHash64(${values})` : values})`
-    );
+    conditions.push(`${column} IN (${needHash ? `cityHash64(${values})` : values})`);
   }
   if (
     excludeKey in filter &&
@@ -60,16 +58,12 @@ function buildCondition<T>(
     const values = ((filter as Record<string, unknown>)[excludeKey] as T[])
       .map((v: T) => `'${v}'`)
       .join(', ');
-    conditions.push(
-      `${column} NOT IN (${needHash ? `cityHash64(${values})` : values})`
-    );
+    conditions.push(`${column} NOT IN (${needHash ? `cityHash64(${values})` : values})`);
   }
   return conditions;
 }
 
-export default function processCategoryFilter(
-  filter?: Filter
-): string | undefined {
+export default function processCategoryFilter(filter?: Filter): string | undefined {
   if (!filter) return undefined;
   const c: string[] = [];
 

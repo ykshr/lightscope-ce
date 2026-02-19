@@ -5,28 +5,17 @@ import duration from 'dayjs/plugin/duration';
 dayjs.extend(utc);
 dayjs.extend(duration);
 
-export function formatDate(
-  date: Date,
-  formatStr: string = 'YYYY-MM-DDTHH:mm[Z]'
-): string {
+export function formatDate(date: Date, formatStr: string = 'YYYY-MM-DDTHH:mm[Z]'): string {
   return dayjs(date).utc().format(formatStr);
 }
 
-export function getStartOfDay(
-  date: Date,
-  offset: number = 0,
-  interval: number = 1
-): Date {
+export function getStartOfDay(date: Date, offset: number = 0, interval: number = 1): Date {
   const days = date.getDate() - offset;
   const roundedDays = Math.floor(days / interval) * interval;
   return new Date(date.getFullYear(), date.getMonth(), roundedDays);
 }
 
-export function getStartOfNextDay(
-  date: Date,
-  offset: number = 1,
-  interval: number = 1
-): Date {
+export function getStartOfNextDay(date: Date, offset: number = 1, interval: number = 1): Date {
   const days = date.getDate() + offset;
   const roundedDays = Math.ceil(days / interval) * interval;
   return new Date(date.getFullYear(), date.getMonth(), roundedDays);
@@ -40,11 +29,7 @@ export function getPastDate(date: Date, timeBetween: number): Date {
   return new Date(date.getTime() - timeBetween);
 }
 
-export function getStartOfMinute(
-  date: Date,
-  offset: number = 0,
-  interval: number = 1
-): Date {
+export function getStartOfMinute(date: Date, offset: number = 0, interval: number = 1): Date {
   const minutes = date.getMinutes() - offset;
   const roundedMinutes = Math.floor(minutes / interval) * interval;
   return new Date(
@@ -56,11 +41,7 @@ export function getStartOfMinute(
   );
 }
 
-export function getStartOfNextMinute(
-  date: Date,
-  offset: number = 1,
-  interval: number = 1
-): Date {
+export function getStartOfNextMinute(date: Date, offset: number = 1, interval: number = 1): Date {
   const minutes = date.getMinutes() + offset;
   const roundedMinutes = Math.ceil(minutes / interval) * interval;
   return new Date(
@@ -72,10 +53,7 @@ export function getStartOfNextMinute(
   );
 }
 
-export function getStartOfNextFiveMinutes(
-  date: Date,
-  offset: number = 1
-): Date {
+export function getStartOfNextFiveMinutes(date: Date, offset: number = 1): Date {
   return getStartOfNextMinute(date, offset, 5);
 }
 

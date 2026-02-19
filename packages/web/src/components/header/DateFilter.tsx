@@ -14,11 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import {
-  convertDateString,
-  getStartOfMinute,
-  getStartOfNextMinute,
-} from '@/helpers/date';
+import { convertDateString, getStartOfMinute, getStartOfNextMinute } from '@/helpers/date';
 import { useUrlParams } from '@/hooks/useUrl';
 import ResponsiveModal from '@/components/common/ResponsiveModal';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
@@ -70,8 +66,7 @@ export default function DateFilter() {
   const getTabValue = () => {
     const found = RELATIVE_OPTIONS_QUICK_ACCESS.find(
       (o) =>
-        o.startDateString === currentStartDateString &&
-        o.endDateString === currentEndDateString
+        o.startDateString === currentStartDateString && o.endDateString === currentEndDateString
     );
     if (found) return found.label;
     return 'custom';
@@ -138,10 +133,7 @@ function CustomDateRangePicker({
     }
   };
 
-  const showCurrentDate = (
-    relativeStr: string,
-    isStartDate: boolean = true
-  ) => {
+  const showCurrentDate = (relativeStr: string, isStartDate: boolean = true) => {
     try {
       const date = convertDateString(relativeStr);
       const roundedDate = isStartDate
@@ -156,10 +148,7 @@ function CustomDateRangePicker({
   return (
     <ResponsiveModal
       trigger={
-        <Button
-          variant={isActive ? 'default' : 'outline'}
-          className="h-9 gap-2"
-        >
+        <Button variant={isActive ? 'default' : 'outline'} className="h-9 gap-2">
           <CalendarIcon className="h-4 w-4" />
         </Button>
       }

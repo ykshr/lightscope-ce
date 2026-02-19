@@ -84,28 +84,16 @@ export const PARAM_CONFIG: Record<string, KeyConfig> = {
 };
 
 const REVERSE_CONFIG = Object.fromEntries(
-  Object.entries(PARAM_CONFIG).map(([key, config]) => [
-    config.short,
-    { key, ...config },
-  ])
+  Object.entries(PARAM_CONFIG).map(([key, config]) => [config.short, { key, ...config }])
 );
 
-export type urlParamValue =
-  | null
-  | undefined
-  | number
-  | Date
-  | string
-  | string[]
-  | string[][];
+export type urlParamValue = null | undefined | number | Date | string | string[] | string[][];
 
 export function encodeUrlParams(
   params: Record<string, urlParamValue>, // Use any or appropriate union type to process based on config
   isMerge: boolean = true
 ): URLSearchParams {
-  const urlParams = isMerge
-    ? new URLSearchParams(window.location.search)
-    : new URLSearchParams();
+  const urlParams = isMerge ? new URLSearchParams(window.location.search) : new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
     const config = PARAM_CONFIG[key] || REVERSE_CONFIG[key];
@@ -141,10 +129,7 @@ export function encodeUrlParams(
         if (Array.isArray(value)) {
           value.forEach((subArray) => {
             if (Array.isArray(subArray)) {
-              urlParams.append(
-                shortKey,
-                subArray.map(encodeURIComponent).join(',')
-              );
+              urlParams.append(shortKey, subArray.map(encodeURIComponent).join(','));
             }
           });
         }
@@ -191,10 +176,7 @@ export function decodeUrlParams(search: string): FilterToQuery {
         convertedValue = convertDateString(value);
         break;
       case 'nestedArray':
-        convertedValue = value
-          .split(',')
-          .map(decodeURIComponent)
-          .filter(Boolean);
+        convertedValue = value.split(',').map(decodeURIComponent).filter(Boolean);
         break;
       case 'array':
         convertedValue = value; // Use the value as is for push

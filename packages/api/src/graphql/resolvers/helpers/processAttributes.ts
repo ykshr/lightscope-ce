@@ -1,8 +1,4 @@
-import {
-  GraphQLResolveInfo,
-  SelectionNode,
-  FragmentDefinitionNode,
-} from 'graphql';
+import { GraphQLResolveInfo, SelectionNode, FragmentDefinitionNode } from 'graphql';
 
 function collectSelectedFields(info: GraphQLResolveInfo): Set<string> {
   const result = new Set<string>();
@@ -21,8 +17,7 @@ function collectSelectedFields(info: GraphQLResolveInfo): Set<string> {
           break;
 
         case 'FragmentSpread': {
-          const fragment: FragmentDefinitionNode | undefined =
-            fragments[selection.name.value];
+          const fragment: FragmentDefinitionNode | undefined = fragments[selection.name.value];
           if (fragment) {
             walk(fragment.selectionSet.selections);
           }
@@ -60,20 +55,13 @@ const RequestAttributes = [
   'utm_campaign',
 ] as const;
 
-const RequestAttributesWithArticle = [
-  ...RequestAttributes,
-  'url',
-  'article',
-] as const;
+const RequestAttributesWithArticle = [...RequestAttributes, 'url', 'article'] as const;
 
 export type RequestAttribute = (typeof RequestAttributes)[number];
 
-export type RequestAttributesWithArticle =
-  (typeof RequestAttributesWithArticle)[number];
+export type RequestAttributesWithArticle = (typeof RequestAttributesWithArticle)[number];
 
-export function resolveRequestedAttributes(
-  info: GraphQLResolveInfo
-): RequestAttribute[] {
+export function resolveRequestedAttributes(info: GraphQLResolveInfo): RequestAttribute[] {
   const selected = collectSelectedFields(info);
   return RequestAttributes.filter((a) => selected.has(a));
 }

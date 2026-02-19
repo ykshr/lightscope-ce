@@ -8,12 +8,7 @@ export type Params = {
   description?: string;
 };
 
-export default function StatCardLive({
-  label,
-  value,
-  isLoading,
-  description,
-}: Params) {
+export default function StatCardLive({ label, value, isLoading, description }: Params) {
   return (
     <Card className="rounded-xl shadow-sm">
       <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
@@ -34,9 +29,7 @@ export default function StatCardLive({
       </CardHeader>
 
       <CardContent className="flex items-center gap-2">
-        <span className="text-xs font-bold tracking-wider text-primary">
-          LIVE
-        </span>
+        <span className="text-xs font-bold tracking-wider text-primary">LIVE</span>
         <span className="text-xs text-muted-foreground/60">{description}</span>
       </CardContent>
     </Card>

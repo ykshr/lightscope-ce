@@ -67,8 +67,7 @@ const resolvers: Resolvers = {
     categoryDevice: createCategoryResolver<TrendAnalyticsDevice>('pv_device'),
     categoryGender: createCategoryResolver<TrendAnalyticsGender>('pv_gender'),
     categoryGeo: createCategoryResolver<TrendAnalyticsGeo>('pv_geo'),
-    categoryReferrer:
-      createCategoryResolver<TrendAnalyticsReferrer>('pv_referrer'),
+    categoryReferrer: createCategoryResolver<TrendAnalyticsReferrer>('pv_referrer'),
     categoryUtm: createCategoryResolver<TrendAnalyticsUtm>('pv_utm'),
     articles: createCategoryResolver<TrendAnalyticsArticle>('pv'),
   },

@@ -61,8 +61,7 @@ query ArticleRank(
 }
 
 fragment RankTemplate on Rank {
-  categoryAge(includeAges: $includeAges, excludeAges: $excludeAges)
-    @include(if: $isCategoryAge) {
+  categoryAge(includeAges: $includeAges, excludeAges: $excludeAges) @include(if: $isCategoryAge) {
     ...RankAnalytics
   }
   categoryApp(
@@ -83,10 +82,8 @@ fragment RankTemplate on Rank {
   ) @include(if: $isCategoryDevice) {
     ...RankAnalytics
   }
-  categoryGender(
-    includeGenders: $includeGenders
-    excludeGenders: $excludeGenders
-  ) @include(if: $isCategoryGender) {
+  categoryGender(includeGenders: $includeGenders, excludeGenders: $excludeGenders)
+    @include(if: $isCategoryGender) {
     ...RankAnalytics
   }
   categoryGeo(

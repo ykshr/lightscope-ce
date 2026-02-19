@@ -36,10 +36,7 @@ async function insert(table: string, buffers: any[]) {
 
 async function insertBuffer(flush = false) {
   // Article
-  if (
-    flush ||
-    Object.keys(articleBuffers).length >= CLICKHOUSE_INSERT_BATCH_SIZE
-  ) {
+  if (flush || Object.keys(articleBuffers).length >= CLICKHOUSE_INSERT_BATCH_SIZE) {
     await insert(CLICKHOUSE_ARTICLE_TABLE_NAME, Object.values(articleBuffers));
     Object.keys(articleBuffers).forEach((key) => delete articleBuffers[key]);
   }

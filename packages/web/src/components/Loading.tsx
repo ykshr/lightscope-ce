@@ -4,11 +4,7 @@ export function Loading() {
   return <div className="animate-pulse">Loading...</div>;
 }
 
-export function Spinner({
-  sizeByCharLength = 4,
-}: {
-  sizeByCharLength?: number;
-}) {
+export function Spinner({ sizeByCharLength = 4 }: { sizeByCharLength?: number }) {
   const height = '1em';
   const width = `${sizeByCharLength}ch`;
   return (

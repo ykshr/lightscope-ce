@@ -1,10 +1,6 @@
 import DataLoader from 'dataloader';
 import { AnalyticsBase } from '@/graphql/__generated__/graphql-resolvers';
-import {
-  Aggregation,
-  AggregationUnit,
-  Metric,
-} from '@/graphql/__generated__/graphql-resolvers';
+import { Aggregation, AggregationUnit, Metric } from '@/graphql/__generated__/graphql-resolvers';
 import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
@@ -45,11 +41,7 @@ export default function getLoader<T extends AnalyticsBase>(
 
   const loader = new DataLoader<string, T[] | null>(
     async (urls: readonly string[]) => {
-      const analytics = await fetchArticleAnalyticsByUrls<T>(
-        ctx.tenantId,
-        loaderParams,
-        urls
-      );
+      const analytics = await fetchArticleAnalyticsByUrls<T>(ctx.tenantId, loaderParams, urls);
 
       const analyticsMap = new Map<string, T[]>();
       for (const a of analytics) {
@@ -94,23 +86,11 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
 ): Promise<(T & { url: string })[]> {
   if (urls.length === 0) return [];
 
-  const {
-    siteName,
-    aggregation,
-    startDate: s,
-    endDate: e,
-    metric,
-    limit,
-    page,
-  } = queryParams;
+  const { siteName, aggregation, startDate: s, endDate: e, metric, limit, page } = queryParams;
   const startDate = new Date(s);
   const endDate = new Date(e);
 
-  const { unit, interval } = getAggregationUnit(
-    startDate,
-    endDate,
-    aggregation
-  );
+  const { unit, interval } = getAggregationUnit(startDate, endDate, aggregation);
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {

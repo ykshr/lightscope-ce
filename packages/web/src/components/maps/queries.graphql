@@ -1,8 +1,4 @@
-query TotalCountry(
-  $startDate: DateTime!
-  $endDate: DateTime!
-  $articleFilter: ArticleFilterInput
-) {
+query TotalCountry($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
   trend(
     startDate: $startDate
     endDate: $endDate

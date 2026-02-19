@@ -35,59 +35,29 @@ const Sidebar = () => {
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-3 px-2">
           <a href="/">
-            <img
-              src="/LittleScope_logo.png"
-              alt="LittleScope Logo"
-              className="w-7 h-7"
-            />
+            <img src="/LittleScope_logo.png" alt="LittleScope Logo" className="w-7 h-7" />
           </a>
           {isOpen && (
-            <h1 className="text-base font-bold leading-tight tracking-tight">
-              LittleScope
-            </h1>
+            <h1 className="text-base font-bold leading-tight tracking-tight">LittleScope</h1>
           )}
         </div>
         <nav className="flex flex-col gap-1">
-          <SidebarItem
-            icon={LayoutDashboard}
-            label="Overview"
-            href="/"
-            isOpen={isOpen}
-          />
-          <SidebarItem
-            icon={List}
-            label="Ranking"
-            href="/ranking"
-            isOpen={isOpen}
-          />
-          <SidebarItem
-            icon={Newspaper}
-            label="Article"
-            href="/article"
-            isOpen={isOpen}
-          />
-          <SidebarItem
-            icon={Settings}
-            label="Settings"
-            href="/settings"
-            isOpen={isOpen}
-          />
+          <SidebarItem icon={LayoutDashboard} label="Overview" href="/" isOpen={isOpen} />
+          <SidebarItem icon={List} label="Ranking" href="/ranking" isOpen={isOpen} />
+          <SidebarItem icon={Newspaper} label="Article" href="/article" isOpen={isOpen} />
+          <SidebarItem icon={Settings} label="Settings" href="/settings" isOpen={isOpen} />
         </nav>
       </div>
       <div className="flex items-center gap-3 px-3 py-3 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive cursor-pointer">
         <LogOut size={18} />
-        {isOpen && (
-          <p className="text-sm font-medium leading-normal">Log out</p>
-        )}
+        {isOpen && <p className="text-sm font-medium leading-normal">Log out</p>}
       </div>
     </div>
   );
 
   return (
     <>
-      <aside
-        className={`relative border-r border-border ${isOpen ? 'w-50' : 'w-20'}`}
-      >
+      <aside className={`relative border-r border-border ${isOpen ? 'w-50' : 'w-20'}`}>
         <Button
           onClick={() => setIsOpen(!isOpen)}
           variant="ghost"

@@ -49,9 +49,7 @@ async function runLoadTest() {
   console.log(`
 Load Test Completed in ${duration.toFixed(2)}s`);
   console.log(`Total Requests: ${totalSent}`);
-  console.log(
-    `Success Rate: ${((successCount / totalSent) * 100).toFixed(2)}%`
-  );
+  console.log(`Success Rate: ${((successCount / totalSent) * 100).toFixed(2)}%`);
   console.log(`RPS: ${(totalSent / duration).toFixed(2)}`);
 }
 

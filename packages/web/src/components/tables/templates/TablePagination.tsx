@@ -35,11 +35,7 @@ export default function TablePagination({
                   if (page > 1) updateUrlParams({ page: page - 1 });
                 }}
                 aria-disabled={page <= 1}
-                className={
-                  page <= 1
-                    ? 'pointer-events-none opacity-50'
-                    : 'cursor-pointer'
-                }
+                className={page <= 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
               />
             </PaginationItem>
 
@@ -71,11 +67,7 @@ export default function TablePagination({
                   if (page < totalPages) updateUrlParams({ page: page + 1 });
                 }}
                 aria-disabled={page >= totalPages}
-                className={
-                  page >= totalPages
-                    ? 'pointer-events-none opacity-50'
-                    : 'cursor-pointer'
-                }
+                className={page >= totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
               />
             </PaginationItem>
           </PaginationContent>

@@ -12,11 +12,7 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
@@ -34,14 +30,12 @@ export default function DateBeforeAfterInput({
   beforeValue,
   onChange,
 }: DateBeforeAfterInputProps) {
-  const [mode, setMode] = useState<'after' | 'before' | 'range' | 'none'>(
-    () => {
-      if (afterValue && beforeValue) return 'range';
-      if (afterValue) return 'after';
-      if (beforeValue) return 'before';
-      return 'none';
-    }
-  );
+  const [mode, setMode] = useState<'after' | 'before' | 'range' | 'none'>(() => {
+    if (afterValue && beforeValue) return 'range';
+    if (afterValue) return 'after';
+    if (beforeValue) return 'before';
+    return 'none';
+  });
 
   const handleModeChange = (newMode: 'after' | 'before' | 'range' | 'none') => {
     setMode(newMode);
@@ -87,10 +81,7 @@ export default function DateBeforeAfterInput({
           <div className="grid grid-cols-2 gap-2">
             {mode === 'after' && (
               <div className="col-span-2 space-y-1">
-                <DatePickerField
-                  value={afterValue}
-                  onChange={(date) => onChange('after', date)}
-                />
+                <DatePickerField value={afterValue} onChange={(date) => onChange('after', date)} />
               </div>
             )}
             {mode === 'before' && (
@@ -124,22 +115,14 @@ const DatePickerField = ({
         <Button
           type="button"
           variant="outline"
-          className={cn(
-            'w-full justify-start',
-            !value && 'text-muted-foreground'
-          )}
+          className={cn('w-full justify-start', !value && 'text-muted-foreground')}
         >
           <CalendarIcon className="mr-2 h-3 w-3" />
           {value ? format(value, 'yyyy/MM/dd', { locale: ja }) : 'Select date'}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={value}
-          onSelect={onChange}
-          autoFocus
-        />
+        <Calendar mode="single" selected={value} onSelect={onChange} autoFocus />
       </PopoverContent>
     </Popover>
   );
@@ -164,10 +147,7 @@ const DateRangePickerField = ({
         <Button
           type="button"
           variant="outline"
-          className={cn(
-            'w-full justify-start',
-            !from && !to && 'text-muted-foreground'
-          )}
+          className={cn('w-full justify-start', !from && !to && 'text-muted-foreground')}
         >
           <CalendarIcon className="mr-2 h-3 w-3" />
           {from ? (

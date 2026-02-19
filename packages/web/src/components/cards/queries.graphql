@@ -16,11 +16,7 @@ query TotalEngagementTime(
   }
 }
 
-query TotalViews(
-  $startDate: DateTime!
-  $endDate: DateTime!
-  $articleFilter: ArticleFilterInput
-) {
+query TotalViews($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
   trend(
     startDate: $startDate
     endDate: $endDate

@@ -51,7 +51,7 @@ services:
     ports:
       - '8080:80'
     volumes:
-      - packages/e2/fixtures:/usr/share/nginx/html
+      - packages/e2e/fixtures:/usr/share/nginx/html
       - packages/script/dist:/usr/share/nginx/html/dist
     depends_on:
       - api

@@ -4,7 +4,7 @@ LightScope is a web analytics platform built as a TypeScript monorepo. It featur
 
 ## Project Structure
 
-This project uses **npm workspaces** to manage the following packages:
+This project uses **pnpm workspaces** to manage the following packages:
 
 - **packages/web**: Frontend application (React, Vite, TailwindCSS, Recharts).
 - **packages/api**: GraphQL API backend (Node.js, Express, Apollo Server, ClickHouse).
@@ -22,35 +22,95 @@ This project uses **npm workspaces** to manage the following packages:
 ### Prerequisites
 
 - Node.js (v20+ recommended)
-- npm
-- ClickHouse server (ensure it is running and configured)
+- pnpm (v9+ recommended)
+- Docker & Docker Compose (for running ClickHouse and the full stack)
 
 ### Installation
 
-Install dependencies from the root directory:
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/your-username/lightscope.git
+    cd lightscope
+    ```
+
+2.  Install dependencies:
+    ```bash
+    pnpm install
+    ```
+
+3.  Configure environment variables:
+    ```bash
+    cp .env.example .env
+    ```
+    Review and update `.env` with your settings.
+
+### Running Locally (Docker Compose)
+
+The easiest way to run the full stack is with Docker Compose:
 
 ```bash
-npm install
+cd packages/e2e
+docker-compose up --build
 ```
 
-### Development
+This will start:
+-   ClickHouse (http://localhost:8123)
+-   API (http://localhost:3000)
+-   Web Dashboard (http://localhost:60000)
 
-You can run the individual packages using their respective dev scripts.
+### Running Manually
 
-**Start the API:**
+1.  **Start ClickHouse:**
+    Ensure a ClickHouse instance is running. You can use the Docker image provided in `packages/clickhouse`.
+
+2.  **Start the API:**
+    ```bash
+    cd packages/api
+    pnpm dev
+    ```
+
+3.  **Start the Frontend:**
+    ```bash
+    cd packages/web
+    pnpm dev
+    ```
+
+## Configuration Options
+
+Configuration is managed via environment variables. See `.env.example` for a complete list.
+
+| Variable | Description | Default |
+| :--- | :--- | :--- |
+| `PORT` | API Port | `3000` |
+| `CLICKHOUSE_HOST` | ClickHouse connection URL | `http://localhost:8123` |
+| `CLICKHOUSE_USERNAME` | ClickHouse username | `lightscope` |
+| `CLICKHOUSE_PASSWORD` | ClickHouse password | `lightscope` |
+| `VITE_API_ENDPOINT` | API URL for the frontend | `http://localhost:3000` |
+
+## Architecture Overview
+
+LightScope consists of three main components:
+
+1.  **Ingestion & API**: A Node.js service that receives analytics events and serves data via GraphQL.
+2.  **Storage**: ClickHouse is used for storing high-volume event data and performing real-time aggregations.
+3.  **Dashboard**: A React application for visualizing the data.
+
+## Deployment Guide
+
+### Docker
+
+Build the images using the provided Dockerfiles in each package.
 
 ```bash
-cd packages/api
-npm run dev
+# Build API
+docker build -t lightscope-api ./packages/api
+
+# Build Web
+docker build -t lightscope-web ./packages/web
 ```
 
-**Start the Frontend:**
-
-```bash
-cd packages/web
-npm run dev
-```
+Deploy using your preferred container orchestrator (Kubernetes, Docker Swarm, etc.). Ensure the environment variables are correctly set.
 
 ## License
 
-Private
+MIT

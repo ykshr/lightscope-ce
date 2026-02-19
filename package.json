@@ -1,6 +1,13 @@
 {
   "name": "lightscope-ce",
+  "version": "0.1.0",
+  "description": "A high-performance web analytics platform powered by ClickHouse.",
   "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ykshr/lightscope-ce.git"
+  },
   "packageManager": "pnpm@10.29.3",
   "workspaces": [
     "packages/*"

@@ -56,6 +56,7 @@ query ArticleRank(
     order: $order
     metric: $metric
   ) {
+    total
     ...RankTemplate
   }
 }

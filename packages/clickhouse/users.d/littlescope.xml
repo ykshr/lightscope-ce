@@ -1,13 +1,13 @@
 <clickhouse>
     <users>
-        <lightscope>
-            <password>lightscope</password>
+        <__CLICKHOUSE_USERNAME__>
+            <password>__CLICKHOUSE_PASSWORD__</password>
             <networks>
                 <ip>::/0</ip>
             </networks>
             <profile>default</profile>
             <quota>default</quota>
-            <default_database>lightscope</default_database>
-        </lightscope>
+            <default_database>__CLICKHOUSE_DB__</default_database>
+        </__CLICKHOUSE_USERNAME__>
     </users>
 </clickhouse>

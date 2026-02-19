@@ -1,6 +1,13 @@
 {
   "name": "@lightscope-ce/clickhouse",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "description": "ClickHouse configuration for LightScope",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ykshr/lightscope-ce.git",
+    "directory": "packages/clickhouse"
+  },
   "scripts": {
     "docker:build": "docker build --platform linux/arm64 -t @lightscope-ce/clickhouse:latest -t @lightscope-ce/clickhouse:$npm_package_version ."
   }

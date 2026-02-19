@@ -46,10 +46,9 @@ This project uses **pnpm workspaces** to manage the following packages:
 
 ### Running Locally (Docker Compose)
 
-The easiest way to run the full stack is with Docker Compose:
+The easiest way to run the full stack is with Docker Compose from the root directory:
 
 ```bash
-cd packages/e2e
 docker-compose up --build
 ```
 

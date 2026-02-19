@@ -1,6 +1,13 @@
 {
   "name": "@lightscope-ce/script",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "description": "Tracking script for LightScope",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ykshr/lightscope-ce.git",
+    "directory": "packages/script"
+  },
   "scripts": {
     "build": "tsc",
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",

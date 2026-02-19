@@ -78,7 +78,7 @@ export default function ArticleTable({
 
   const currentSort = findCategoryOptionByValue(urlParams);
 
-  const totalCount = undefined; // TODO: get total count from API
+  const totalCount = data?.rank?.total;
   const startItem = (page - 1) * itemsPerPage + 1;
   const endItem = Math.min(page * itemsPerPage, totalCount || 0);
 

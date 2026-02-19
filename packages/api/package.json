@@ -1,6 +1,13 @@
 {
   "name": "@lightscope-ce/api",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "description": "GraphQL API for LightScope",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ykshr/lightscope-ce.git",
+    "directory": "packages/api"
+  },
   "type": "module",
   "scripts": {
     "test": "vitest run",

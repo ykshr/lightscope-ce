@@ -3,10 +3,14 @@ version: '3.8'
 services:
   clickhouse:
     build:
-      context: ../clickhouse
+      context: packages/clickhouse
     ports:
       - '8123:8123'
       - '9000:9000'
+    environment:
+      - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
     ulimits:
       nofile:
         soft: 262144
@@ -16,12 +20,13 @@ services:
     image: node:22-alpine
     working_dir: /app
     volumes:
-      - ../api:/app
+      - packages/api:/app
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     environment:
       - CLICKHOUSE_HOST=http://clickhouse:8123
-      - CLICKHOUSE_USERNAME=default
-      - CLICKHOUSE_PASSWORD=
+      - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
       - PORT=3000
     ports:
       - '3000:3000'
@@ -32,10 +37,10 @@ services:
     image: node:22-alpine
     working_dir: /app
     volumes:
-      - ../web:/app
+      - packages/web:/app
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev --host"
     environment:
-      - VITE_API_ENDPOINT=http://localhost:3000
+      - VITE_API_ENDPOINT=${VITE_API_ENDPOINT:-http://localhost:3000}
     ports:
       - '60000:60000'
     depends_on:
@@ -46,7 +51,7 @@ services:
     ports:
       - '8080:80'
     volumes:
-      - fixtures:/usr/share/nginx/html
-      - ../script/dist:/usr/share/nginx/html/dist
+      - packages/e2e/fixtures:/usr/share/nginx/html
+      - packages/script/dist:/usr/share/nginx/html/dist
     depends_on:
       - api

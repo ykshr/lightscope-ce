@@ -21,7 +21,9 @@
     "build": "pnpm --recursive --if-present run build",
     "format": "prettier --write .",
     "format:check": "prettier --check --cache --cache-location .prettier-cache .",
-    "ci": "pnpm run lint && pnpm run build && pnpm run test && pnpm run format:check"
+    "ci": "pnpm run lint && pnpm run build && pnpm run test && pnpm run format:check",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down"
   },
   "pnpm": {}
 }

@@ -20,7 +20,7 @@ services:
     image: node:22-alpine
     working_dir: /app
     volumes:
-      - packages/api:/app
+      - ./packages/api:/app
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     environment:
       - CLICKHOUSE_HOST=http://clickhouse:8123
@@ -37,7 +37,7 @@ services:
     image: node:22-alpine
     working_dir: /app
     volumes:
-      - packages/web:/app
+      - ./packages/web:/app
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev --host"
     environment:
       - VITE_API_ENDPOINT=${VITE_API_ENDPOINT:-http://localhost:3000}
@@ -51,7 +51,7 @@ services:
     ports:
       - '8080:80'
     volumes:
-      - packages/e2e/fixtures:/usr/share/nginx/html
-      - packages/script/dist:/usr/share/nginx/html/dist
+      - ./packages/e2e/fixtures:/usr/share/nginx/html
+      - ./packages/script/dist:/usr/share/nginx/html/dist
     depends_on:
       - api

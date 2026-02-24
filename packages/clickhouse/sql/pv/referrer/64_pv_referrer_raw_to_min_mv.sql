@@ -17,5 +17,5 @@ SELECT
     now() AS created_at,
     now() AS updated_at
 FROM lightscope.pv_raw
-WHERE referrer != ''
+WHERE domain_hash != cityHash64('')
 GROUP BY tenant_id, date, site_name, url_hash, domain_hash, referrer_hash;

@@ -2,7 +2,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS lightscope.pv_gender_raw_to_min_mv
 TO lightscope.pv_gender_min AS
 SELECT
     tenant_id,
-    toStartOfFiveMinutes(date) AS date,
+    toStartOfFiveMinutes(event_time) AS date,
     site_name,
     any(url) as url,
     url_hash,

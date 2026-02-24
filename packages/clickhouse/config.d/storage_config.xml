@@ -1,15 +1,10 @@
 <clickhouse>
   <storage_configuration>
-    <disks>
-        <main_disk>
-            <path>/var/lib/clickhouse/</path>
-        </main_disk>
-    </disks>
     <policies>
       <lightscope_storage_policy>
         <volumes>
           <main>
-            <disk>main_disk</disk>
+            <disk>default</disk>
           </main>
         </volumes>
       </lightscope_storage_policy>

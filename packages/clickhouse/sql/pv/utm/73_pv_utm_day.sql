@@ -7,9 +7,9 @@ CREATE TABLE IF NOT EXISTS lightscope.pv_utm_day (
     utm_source LowCardinality(String),
     utm_medium LowCardinality(String),
     utm_campaign LowCardinality(String),
-    visits_views AggregateFunction(uniqCombined64, UInt64),
-    visitors_views AggregateFunction(uniqCombined64, UInt64),
-    users_views AggregateFunction(uniqCombined64, UInt64),
+    visits_views AggregateFunction(uniqCombined64, String),
+    visitors_views AggregateFunction(uniqCombined64, String),
+    users_views AggregateFunction(uniqCombined64, String),
     engagement_time SimpleAggregateFunction(sum, UInt64),
     created_at SimpleAggregateFunction(min, DateTime),
     updated_at SimpleAggregateFunction(max, DateTime)

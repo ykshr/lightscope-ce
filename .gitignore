@@ -32,3 +32,4 @@ yarn-error.log*
 .eslintcache
 .prettier-cache
 packages/e2e/test-results
+.pnpm-store

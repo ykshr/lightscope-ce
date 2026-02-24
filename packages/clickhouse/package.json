@@ -9,6 +9,6 @@
     "directory": "packages/clickhouse"
   },
   "scripts": {
-    "docker:build": "docker build --platform linux/arm64 -t @lightscope-ce/clickhouse:latest -t @lightscope-ce/clickhouse:$npm_package_version ."
+    "docker:build": "docker build -t @lightscope-ce/clickhouse:latest -t @lightscope-ce/clickhouse:$npm_package_version ."
   }
 }

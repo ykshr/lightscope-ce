@@ -63,13 +63,18 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   }
   const payload: Payload = parseResult.data;
 
-  const article = createArticle(payload);
+  const tenant_id = Number(req.headers['x-tenant-id']);
+  if (isNaN(tenant_id)) {
+    return res.status(400).json({ error: 'Missing or invalid X-Tenant-Id header' });
+  }
+
+  const article = createArticle(payload, tenant_id);
   articleBuffers[article.url] = article;
 
   const ip = req.ip;
   const geoInfo = geo && ip ? geo.get(ip) : undefined;
 
-  const pv = createPV(payload, geoInfo);
+  const pv = createPV(payload, geoInfo, tenant_id);
   pvBuffers.push(pv);
 
   await insertBuffer();

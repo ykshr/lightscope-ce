@@ -15,9 +15,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', indexRouter);
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
-// Auth middleware - all routes below this require authentication
-app.use(authMiddleware());
+// Events endpoint has its own tracker token authentication
 app.use('/events', eventsRouter);
+
+// Auth middleware - all routes below this require authentication for dashboard users
+app.use(authMiddleware());
 app.use('/gql', graphql);
 
 // Start server

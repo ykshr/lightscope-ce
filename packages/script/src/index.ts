@@ -21,7 +21,6 @@ export interface BrowsingAttributes {
 }
 
 interface AnalyticsConfig {
-  tenant_id: number;
   token: string;
   site_name?: string;
   visit_timeout_minutes?: number;
@@ -284,7 +283,6 @@ export class AnalyticsTracker {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${this.config.token}`,
-          'X-Tenant-Id': String(this.config.tenant_id),
         },
         body: JSON.stringify(payload),
         keepalive: true,

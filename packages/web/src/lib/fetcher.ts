@@ -22,7 +22,7 @@ export const fetchData = <TData, TVariables>(
       headers: {
         'Content-Type': 'application/json',
         Authorization: token ? `Bearer ${token}` : '',
-        'X-Tenant-Id': '1',
+        'X-Tenant-Id': user?.tenant_id || '1',
         ...options,
       },
       body: JSON.stringify({

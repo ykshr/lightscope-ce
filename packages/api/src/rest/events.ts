@@ -52,7 +52,37 @@ setInterval(async () => {
   await insertBuffer(true);
 }, CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS);
 
-router.post('/', async (req: Request, res: Response, next: NextFunction) => {
+// Middleware to authenticate token and origin, and assign tenant_id
+const authenticateTracker = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  const origin = req.headers.origin || req.headers.referer;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing or invalid Authorization header' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Missing token' });
+  }
+
+  // In CE (Community Edition), we assume a single tenant and no user management.
+  // We just assign tenant_id = 1 as long as a token is provided.
+  //
+  // In the commercial version with multiple tenants, this is where you would
+  // verify the token AND the origin domain against the database to find the
+  // corresponding tenant_id.
+  // Example:
+  // const tenant = await db.findTenantByTokenAndOrigin(token, origin);
+  // if (!tenant) return res.status(403).json({ error: 'Invalid token or origin' });
+  // req.tenant_id = tenant.id;
+
+  req.tenant_id = 1;
+  next();
+};
+
+router.post('/', authenticateTracker, async (req: Request, res: Response, next: NextFunction) => {
   // Validate payload
   const parseResult = PayloadSchema.safeParse(req.body);
   if (!parseResult.success) {
@@ -63,9 +93,9 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   }
   const payload: Payload = parseResult.data;
 
-  const tenant_id = Number(req.headers['x-tenant-id']);
-  if (isNaN(tenant_id)) {
-    return res.status(400).json({ error: 'Missing or invalid X-Tenant-Id header' });
+  const tenant_id = req.tenant_id;
+  if (tenant_id === undefined || isNaN(tenant_id)) {
+    return res.status(400).json({ error: 'Missing or invalid tenant_id' });
   }
 
   const article = createArticle(payload, tenant_id);

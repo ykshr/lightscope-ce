@@ -69,7 +69,8 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   }
 
   const article = createArticle(payload, tenant_id);
-  articleBuffers[article.url] = article;
+  const articleKey = `${tenant_id}:${article.url}`;
+  articleBuffers[articleKey] = article;
 
   const ip = req.ip;
   const geoInfo = geo && ip ? geo.get(ip) : undefined;

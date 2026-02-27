@@ -8,6 +8,8 @@
     "url": "https://github.com/ykshr/lightscope-ce.git",
     "directory": "packages/script"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc && pnpm build:browser",
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",

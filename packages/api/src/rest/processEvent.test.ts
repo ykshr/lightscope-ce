@@ -47,6 +47,7 @@ describe('processEvent', () => {
       const article = createArticle(mockPayload, 1);
 
       expect(article).toEqual({
+        tenant_id: 1,
         url: 'https://example.com/article',
         title: 'Test Article',
         type: 'article',

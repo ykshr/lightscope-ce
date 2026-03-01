@@ -1,6 +1,7 @@
 export interface AuthUser {
   id: string;
   role?: string;
+  tenant_id?: string;
 }
 
 export default interface AuthProvider {

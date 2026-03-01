@@ -17,8 +17,7 @@ await server.start();
 
 export default expressMiddleware(server, {
   context: async ({ req }) => {
-    const tenantId = req.headers['x-tenant-id'] as string;
-    if (!tenantId) throw new Error('Missing tenantId');
+    const tenantId = req.user?.tenant_id ? String(req.user.tenant_id) : '1';
 
     return {
       tenantId,

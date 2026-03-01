@@ -44,9 +44,10 @@ const mockPayload: Payload = {
 describe('processEvent', () => {
   describe('createArticle', () => {
     it('should create an article object from payload', () => {
-      const article = createArticle(mockPayload);
+      const article = createArticle(mockPayload, 1);
 
       expect(article).toEqual({
+        tenant_id: 1,
         url: 'https://example.com/article',
         title: 'Test Article',
         type: 'article',
@@ -68,14 +69,14 @@ describe('processEvent', () => {
       delete payload['og:url'];
       // Note: mockPayload.url has query params, createPV strips them in PV but createArticle takes exact string
       // The implementation uses: const url = payload['og:url'] || payload.url;
-      const article = createArticle(payload);
+      const article = createArticle(payload, 1);
       expect(article.url).toBe('https://example.com/article?utm_source=google&utm_medium=cpc');
     });
 
     it('should default site_name to "unknown" if missing', () => {
       const payload = { ...mockPayload };
       delete payload['og:site_name'];
-      const article = createArticle(payload);
+      const article = createArticle(payload, 1);
       expect(article.site_name).toBe('unknown');
     });
   });
@@ -97,7 +98,7 @@ describe('processEvent', () => {
         city: { names: { en: 'San Francisco' }, geoname_id: 1 },
       } as any;
 
-      const pv = createPV(mockPayload, mockGeo);
+      const pv = createPV(mockPayload, mockGeo, 1);
 
       expect(pv.site_name).toBe('Example Site');
       expect(pv.event_id).toBe('evt_123');
@@ -114,7 +115,7 @@ describe('processEvent', () => {
     });
 
     it('should handle missing geo info', () => {
-      const pv = createPV(mockPayload, null);
+      const pv = createPV(mockPayload, null, 1);
 
       expect(pv.geo_continent).toBeUndefined();
       expect(pv.geo_country).toBeUndefined();
@@ -139,7 +140,7 @@ describe('processEvent', () => {
         ...mockPayload,
         'og:url': 'https://example.com/article?foo=bar&utm_source=test',
       };
-      const pv = createPV(payloadWithParamsInOg, null);
+      const pv = createPV(payloadWithParamsInOg, null, 1);
 
       expect(pv.query_params?.['foo']).toBe('bar');
       expect(pv.utm_source).toBe('test');
@@ -152,7 +153,7 @@ describe('processEvent', () => {
         url: 'invalid-url',
       };
       // Implementation wraps URL parsing in try/catch
-      const pv = createPV(payload, null);
+      const pv = createPV(payload, null, 1);
       expect(pv.query_params).toEqual({});
     });
   });

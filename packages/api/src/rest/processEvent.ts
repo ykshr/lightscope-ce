@@ -2,11 +2,12 @@ import { type CityResponse } from 'maxmind';
 import processReferrer from '../helpers/referrer';
 import { type Payload, type Article, type PV } from '../types';
 
-export function createArticle(payload: Payload): Article {
+export function createArticle(payload: Payload, tenant_id: number): Article {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';
 
   return {
+    tenant_id,
     url,
     title: payload['og:title'],
     type: payload['og:type'],
@@ -23,7 +24,11 @@ export function createArticle(payload: Payload): Article {
   };
 }
 
-export function createPV(payload: Payload, geoInfo: CityResponse | null | undefined): PV {
+export function createPV(
+  payload: Payload,
+  geoInfo: CityResponse | null | undefined,
+  tenant_id: number
+): PV {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';
   const event_id = payload.event_id;
@@ -40,6 +45,7 @@ export function createPV(payload: Payload, geoInfo: CityResponse | null | undefi
   const processedReferrer = processReferrer(payload.referrer);
 
   return {
+    tenant_id,
     site_name,
     event_id,
     url,

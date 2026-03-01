@@ -12,7 +12,7 @@ export const PayloadSchema = z
     visit_id: z.string(),
     visitor_id: z.string(),
     url: z.string().url(),
-    referrer: z.string().url().optional(),
+    referrer: z.string().optional(),
     'og:title': z.string().optional(),
     'og:type': z.string().optional(),
     'og:image': z.string().optional(),
@@ -49,6 +49,7 @@ export type Payload = z.infer<typeof PayloadSchema>;
 // PV type definition
 // --------------------
 export interface PV {
+  tenant_id: number;
   site_name: string;
   url: string;
   event_id: string;
@@ -84,6 +85,7 @@ export interface PV {
 // Article type definition
 // --------------------
 export interface Article {
+  tenant_id: number;
   url: string;
   title?: string;
   type?: string;

@@ -22,7 +22,7 @@ if (!CLICKHOUSE_HOST || !CLICKHOUSE_USERNAME || !CLICKHOUSE_PASSWORD) {
   // );
 }
 export const clickhouseClient = createClient({
-  host: CLICKHOUSE_HOST,
+  url: CLICKHOUSE_HOST,
   username: CLICKHOUSE_USERNAME,
   password: CLICKHOUSE_PASSWORD,
 });

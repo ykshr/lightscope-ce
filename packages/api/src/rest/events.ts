@@ -52,7 +52,39 @@ setInterval(async () => {
   await insertBuffer(true);
 }, CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS);
 
-router.post('/', async (req: Request, res: Response, next: NextFunction) => {
+// Middleware to authenticate token and origin, and assign tenant_id
+const authenticateTracker = (req: Request, res: Response, next: NextFunction): void => {
+  const authHeader = req.headers.authorization;
+  const origin = req.headers.origin || req.headers.referer;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Missing or invalid Authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  if (!token) {
+    res.status(401).json({ error: 'Missing token' });
+    return;
+  }
+
+  // In CE (Community Edition), we assume a single tenant and no user management.
+  // We just assign tenant_id = 1 as long as a token is provided.
+  //
+  // In the commercial version with multiple tenants, this is where you would
+  // verify the token AND the origin domain against the database to find the
+  // corresponding tenant_id.
+  // Example:
+  // const tenant = await db.findTenantByTokenAndOrigin(token, origin);
+  // if (!tenant) return res.status(403).json({ error: 'Invalid token or origin' });
+  // req.tenant_id = tenant.id;
+
+  req.tenant_id = 1;
+  next();
+};
+
+router.post('/', authenticateTracker, async (req: Request, res: Response, next: NextFunction) => {
   // Validate payload
   const parseResult = PayloadSchema.safeParse(req.body);
   if (!parseResult.success) {
@@ -63,13 +95,19 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   }
   const payload: Payload = parseResult.data;
 
-  const article = createArticle(payload);
-  articleBuffers[article.url] = article;
+  const tenant_id = req.tenant_id;
+  if (tenant_id === undefined || isNaN(tenant_id)) {
+    return res.status(400).json({ error: 'Missing or invalid tenant_id' });
+  }
+
+  const article = createArticle(payload, tenant_id);
+  const articleKey = `${tenant_id}:${article.url}`;
+  articleBuffers[articleKey] = article;
 
   const ip = req.ip;
   const geoInfo = geo && ip ? geo.get(ip) : undefined;
 
-  const pv = createPV(payload, geoInfo);
+  const pv = createPV(payload, geoInfo, tenant_id);
   pvBuffers.push(pv);
 
   await insertBuffer();

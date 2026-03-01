@@ -3,6 +3,6 @@ import AuthProvider from './provider';
 
 export class NoAuthProvider implements AuthProvider {
   async getUser(_req: Request) {
-    return { id: 'anonymous', role: 'admin' };
+    return { id: 'anonymous', role: 'admin', tenant_id: 1 };
   }
 }

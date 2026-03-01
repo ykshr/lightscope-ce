@@ -47,3 +47,17 @@ This document outlines the tasks required to prepare `lightscope-ce` for public 
 - [x] **Smoke Testing**
   - Perform a full production build (`pnpm run build`).
   - Verify the artifact runs correctly in a clean environment.
+
+## 7. E2E Test Expansion
+
+- [ ] **Web UI Tests**
+  - Add Playwright tests for Web Client pages (Overview, Ranking, Article).
+  - Verify data rendering, date range picker interactions, and filtering functionality.
+- [ ] **API Tests**
+  - Expand GraphQL endpoint testing to cover all queries (trends, article analytics, aggregations).
+  - Verify input validation and error handling for malformed events in `POST /events`.
+- [ ] **Tracking Script Edge Cases**
+  - Update `browser.test.ts` to test UTM parameters, varied referrers, and specific user-agent parsing.
+  - Remove hardcoded `waitForTimeout(3000)` in favor of dynamic polling to improve test stability.
+- [ ] **CI Integration**
+  - Configure GitHub Actions to automatically spin up the Docker environment and run `playwright test` on PRs.

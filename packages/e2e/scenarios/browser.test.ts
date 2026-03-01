@@ -19,10 +19,23 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
       JSON.parse(req.postData() || '{}').event_name === 'page_view'
   );
 
-  await page.goto(`${MOCK_SITE_URL}/index.html`);
+  const utmParams = '?utm_source=test_source&utm_medium=test_medium&utm_campaign=test_campaign';
+  const refererUrl = 'https://example.com/referrer-page';
+
+  await page.goto(`${MOCK_SITE_URL}/index.html${utmParams}`, {
+    referer: refererUrl,
+  });
+
   const pageViewReq = await pageViewPromise;
   expect(pageViewReq).toBeTruthy();
   console.log('Page view event verified.');
+
+  const postData = JSON.parse(pageViewReq.postData() || '{}');
+  expect(postData.url).toContain('utm_source=test_source');
+  expect(postData.referrer).toBe(refererUrl);
+  // Optional: User agent should be sent in headers, verified by API
+  const headers = await pageViewReq.headers();
+  expect(headers['user-agent']).toBe(userAgent);
 
   // 2. Click button and verify Custom Event sent
   const clickPromise = page.waitForRequest(
@@ -37,11 +50,11 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   expect(clickReq).toBeTruthy();
   console.log('Manual click event verified.');
 
-  // 3. Wait for ingestion
-  console.log('Waiting for ingestion...');
-  await page.waitForTimeout(3000);
+  // 3. Wait for ingestion with dynamic polling
+  console.log('Waiting for ingestion with dynamic polling...');
+  let found = false;
+  let articles = [];
 
-  // 4. Verify in ClickHouse via GraphQL
   const query = `
     query {
       rank(
@@ -58,17 +71,28 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
     }
   `;
 
-  const gqlRes = await fetch(`${API_URL}/gql`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ query }),
-  });
+  for (let i = 0; i < 20; i++) {
+    const gqlRes = await fetch(`${API_URL}/gql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    });
 
-  const gqlData = await gqlRes.json();
-  const articles = gqlData.data?.rank?.articles || [];
-  const found = articles.find((a: any) => a.url.includes('index.html'));
+    if (gqlRes.ok) {
+      const gqlData = await gqlRes.json();
+      articles = gqlData.data?.rank?.articles || [];
+      const foundArticle = articles.find((a: any) => a.url.includes('index.html'));
+      if (foundArticle) {
+        found = true;
+        break;
+      }
+    }
+
+    // Wait 500ms before retrying
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
 
   expect(found).toBeTruthy();
   console.log('Data verification successful in GraphQL.');

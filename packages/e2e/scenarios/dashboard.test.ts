@@ -41,4 +41,16 @@ test.describe('Web Dashboard Verification', () => {
     // Verify article page specific content
     await expect(page.locator('text=Global Economy Trends')).toBeVisible();
   });
+
+  test('should interact with date range picker and filtering', async ({ page }) => {
+    await page.goto(`${WEB_URL}/`);
+
+    // The DateFilter has a quick access button "This week" on desktop
+    const thisWeekBtn = page.locator('button', { hasText: 'This week' }).first();
+    await thisWeekBtn.click();
+
+    // Verify the URL gets updated with the date range query parameters
+    await expect(page).toHaveURL(/sd=So0W/);
+    await expect(page).toHaveURL(/ed=So1D/);
+  });
 });

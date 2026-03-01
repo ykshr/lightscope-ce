@@ -53,18 +53,20 @@ setInterval(async () => {
 }, CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS);
 
 // Middleware to authenticate token and origin, and assign tenant_id
-const authenticateTracker = (req: Request, res: Response, next: NextFunction) => {
+const authenticateTracker = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
   const origin = req.headers.origin || req.headers.referer;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Missing or invalid Authorization header' });
+    res.status(401).json({ error: 'Missing or invalid Authorization header' });
+    return;
   }
 
   const token = authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ error: 'Missing token' });
+    res.status(401).json({ error: 'Missing token' });
+    return;
   }
 
   // In CE (Community Edition), we assume a single tenant and no user management.

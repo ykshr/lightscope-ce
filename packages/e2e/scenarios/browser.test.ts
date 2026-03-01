@@ -62,7 +62,6 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Tenant-Id': '1',
     },
     body: JSON.stringify({ query }),
   });

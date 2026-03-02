@@ -118,7 +118,7 @@ export class AnalyticsTracker {
   constructor(
     apiEndpoint: string,
     config: AnalyticsConfig,
-    { user, browsing }: { user?: UserAttributes; browsing?: BrowsingAttributes }
+    { user, browsing }: { user?: UserAttributes; browsing?: BrowsingAttributes } = {}
   ) {
     this.apiEndpoint = apiEndpoint;
     this.config = {

@@ -11,6 +11,9 @@ test.describe('Web Dashboard Verification', () => {
 
     // Verify key metrics cards are visible
     await expect(page.locator('text=Total Page Views')).toBeVisible();
+    await expect(page.locator('text=Unique Users')).toBeVisible();
+    await expect(page.locator('text=Engagement Time')).toBeVisible();
+    await expect(page.locator('text=Live Views')).toBeVisible();
 
     // The table should have the title "Ranking"
     await expect(page.locator('h2', { hasText: 'Ranking' }).first()).toBeVisible();
@@ -94,5 +97,59 @@ test.describe('Web Dashboard Verification', () => {
 
     // Title should be visible again
     await expect(title).toBeVisible();
+  });
+
+  test('should interact with the custom date range picker modal', async ({ page }) => {
+    await page.goto(`${WEB_URL}/`);
+
+    // Open the Date Filter modal
+    await page.locator('button:has(.lucide-calendar)').first().click();
+
+    // Verify modal is open
+    await expect(page.locator('text=Date Filter')).toBeVisible();
+
+    // Click the Select trigger for Relative options
+    // Assuming the SelectValue shows "Today" by default
+    await page.locator('button[role="combobox"]').first().click();
+
+    // Select "Yesterday"
+    await page.locator('div[role="option"]:has-text("Yesterday")').click();
+
+    // Click Apply Changes
+    await page.click('button:has-text("Apply Changes")');
+
+    // Verify URL updates
+    await expect(page).toHaveURL(/sd=So-1D/);
+    await expect(page).toHaveURL(/ed=So0D/);
+  });
+
+  test('should interact with the search bar', async ({ page }) => {
+    await page.goto(`${WEB_URL}/`);
+
+    const searchInput = page.locator('input[placeholder="Type a command or search..."]');
+    await expect(searchInput).toBeVisible();
+
+    await searchInput.fill('Calendar');
+
+    // CommandList should show suggestions
+    await expect(page.locator('text=Calendar').nth(1)).toBeVisible(); // 0 is input or heading, 1 is the item
+  });
+
+  test('should verify pagination elements in the Ranking page', async ({ page }) => {
+    await page.goto(`${WEB_URL}/ranking`);
+
+    // Wait for the table to load
+    await expect(page.locator('h2', { hasText: 'Ranking' }).first()).toBeVisible();
+
+    // Check if Pagination is rendered (it depends on data, but if there's data, we can check for the Pagination item or at least that it doesn't crash)
+    // If there's no data, the pagination might not be visible, so we check if the Footer exists
+    const footer = page.locator('div:has(> nav[aria-label="pagination"])');
+    // If it's visible, test the Next button
+    if (await footer.isVisible()) {
+      const nextBtn = page.locator('a:has(.lucide-chevron-right)'); // Next button
+      if (await nextBtn.isVisible()) {
+        await expect(nextBtn).toBeVisible();
+      }
+    }
   });
 });

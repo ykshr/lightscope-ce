@@ -11,6 +11,19 @@ export interface Context {
 const server = new ApolloServer<Context>({
   typeDefs,
   resolvers,
+  plugins: [
+    {
+      async requestDidStart() {
+        return {
+          async willSendResponse({ response, errors }) {
+            if (errors && errors.length > 0) {
+              response.http.status = 500;
+            }
+          },
+        };
+      },
+    },
+  ],
 });
 
 await server.start();

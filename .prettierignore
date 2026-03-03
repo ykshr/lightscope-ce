@@ -2,3 +2,4 @@
 packages/web/src/components/ui
 **/__generated__
 pnpm-lock.yaml
+.serena

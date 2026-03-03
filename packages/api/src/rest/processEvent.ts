@@ -42,7 +42,7 @@ export function createPV(
     // Should not happen if payload validation passes url check
   }
 
-  const processedReferrer = processReferrer(payload.referrer);
+  const processedReferrer = processReferrer(payload.referrer ?? undefined);
 
   return {
     tenant_id,
@@ -76,7 +76,7 @@ export function createPV(
     utm_source: query_params.utm_source,
     utm_medium: query_params.utm_medium,
     utm_campaign: query_params.utm_campaign,
-    language: payload.language,
+    language: payload.language ?? undefined,
     engagement_time: payload.engagement_time ?? 0,
   };
 }

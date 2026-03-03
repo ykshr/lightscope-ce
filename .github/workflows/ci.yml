@@ -56,8 +56,33 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "VERSION=$(pnpm --filter lightscope-e2e exec playwright --version | awk '{print $2}')" >> $GITHUB_ENV
+
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.VERSION }}
+
       - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm --filter lightscope-e2e exec playwright install --with-deps
+
+      - name: Install Playwright OS Dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter lightscope-e2e exec playwright install-deps
 
       - name: Run CI checks
         run: pnpm run ci
+
+      - name: Start Docker environment
+        run: |
+          pnpm run docker:up -d
+          # Wait for services to be ready
+          npx wait-on tcp:3000 tcp:60000 tcp:8123 tcp:8080 -t 60000
+
+      - name: Run E2E tests
+        run: pnpm --filter lightscope-e2e run test:e2e

@@ -9,18 +9,18 @@ export function createArticle(payload: Payload, tenant_id: number): Article {
   return {
     tenant_id,
     url,
-    title: payload['og:title'],
-    type: payload['og:type'],
-    image: payload['og:image'],
-    description: payload['og:description'],
+    title: payload['og:title'] ?? undefined,
+    type: payload['og:type'] ?? undefined,
+    image: payload['og:image'] ?? undefined,
+    description: payload['og:description'] ?? undefined,
     site_name,
-    locale: payload['og:locale'],
-    published_time: payload['article:published_time'],
-    modified_time: payload['article:modified_time'],
-    expiration_time: payload['article:expiration_time'],
-    authors: payload['article:authors'],
-    section: payload['article:section'],
-    tags: payload['article:tags'],
+    locale: payload['og:locale'] ?? undefined,
+    published_time: payload['article:published_time'] ?? undefined,
+    modified_time: payload['article:modified_time'] ?? undefined,
+    expiration_time: payload['article:expiration_time'] ?? undefined,
+    authors: payload['article:authors'] ?? undefined,
+    section: payload['article:section'] ?? undefined,
+    tags: payload['article:tags'] ?? undefined,
   };
 }
 
@@ -42,7 +42,7 @@ export function createPV(
     // Should not happen if payload validation passes url check
   }
 
-  const processedReferrer = processReferrer(payload.referrer);
+  const processedReferrer = processReferrer(payload.referrer ?? undefined);
 
   return {
     tenant_id,
@@ -50,21 +50,21 @@ export function createPV(
     event_id,
     url,
     event_time: payload.event_time_utc,
-    user_id: payload.user_id,
-    visit_id: payload.visit_id,
-    visitor_id: payload.visitor_id,
+    user_id: payload.user_id ?? undefined,
+    visit_id: payload.visit_id ?? undefined,
+    visitor_id: payload.visitor_id ?? undefined,
     referrer: processedReferrer.referrer,
     domain: processedReferrer.domain,
-    device: payload.device,
-    device_type: payload.device_type,
-    device_vendor: payload.device_vendor,
-    os: payload.os,
-    os_version: payload.os_version,
-    app: payload.app,
-    app_type: payload.app_type,
-    app_version: payload.app_version,
-    age: payload.age,
-    gender: payload.gender,
+    device: payload.device ?? undefined,
+    device_type: payload.device_type ?? undefined,
+    device_vendor: payload.device_vendor ?? undefined,
+    os: payload.os ?? undefined,
+    os_version: payload.os_version ?? undefined,
+    app: payload.app ?? undefined,
+    app_type: payload.app_type ?? undefined,
+    app_version: payload.app_version ?? undefined,
+    age: payload.age ?? undefined,
+    gender: payload.gender ?? undefined,
     geo_continent: geoInfo?.continent?.code,
     geo_country: geoInfo?.country?.iso_code,
     geo_subdivision:
@@ -76,7 +76,7 @@ export function createPV(
     utm_source: query_params.utm_source,
     utm_medium: query_params.utm_medium,
     utm_campaign: query_params.utm_campaign,
-    language: payload.language,
+    language: payload.language ?? undefined,
     engagement_time: payload.engagement_time ?? 0,
   };
 }

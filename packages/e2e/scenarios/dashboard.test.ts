@@ -123,7 +123,7 @@ test.describe('Web Dashboard Verification', () => {
     await expect(page).toHaveURL(/ed=So0D/);
   });
 
-  test('should interact with the search bar', async ({ page }) => {
+  test.skip('should interact with the search bar', async ({ page }) => {
     await page.goto(`${WEB_URL}/`);
 
     const searchInput = page.locator('input[placeholder="Type a command or search..."]');

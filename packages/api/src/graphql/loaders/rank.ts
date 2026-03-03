@@ -53,10 +53,10 @@ async function rank(tenantId: string, loaderParams: LoaderParams) {
   const attStr = attributesRenamed?.length
     ? `${attributesRenamed
         .map((attr) => {
-          if (attr === 'url') return 'any(t.url) as url';
-          if (attr === 'domain') return 'any(t.domain) as domain';
-          if (attr === 'referrer') return 'any(t.referrer) as referrer';
-          return `t.${attr}`;
+          if (attr === 'url') return 'any(url) as url';
+          if (attr === 'domain') return 'any(domain) as domain';
+          if (attr === 'referrer') return 'any(referrer) as referrer';
+          return attr;
         })
         .join(', ')},`
     : '';
@@ -64,10 +64,10 @@ async function rank(tenantId: string, loaderParams: LoaderParams) {
   const groupStr = attributesRenamed?.length
     ? `GROUP BY ${attributesRenamed
         .map((attr) => {
-          if (attr === 'url') return 't.url_hash';
-          if (attr === 'domain') return 't.domain_hash';
-          if (attr === 'referrer') return 't.referrer_hash';
-          return `t.${attr}`;
+          if (attr === 'url') return 'url_hash';
+          if (attr === 'domain') return 'domain_hash';
+          if (attr === 'referrer') return 'referrer_hash';
+          return attr;
         })
         .join(', ')}`
     : '';
@@ -86,7 +86,7 @@ async function rank(tenantId: string, loaderParams: LoaderParams) {
     FROM (
       SELECT
         ${attStr}
-        uniqCombined64Merge(t.${metric?.toLowerCase()}) as value
+        uniqCombined64Merge(${metric?.toLowerCase()}) as value
       FROM (${units
         .map(
           ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `

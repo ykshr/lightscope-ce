@@ -22,6 +22,14 @@ app.use('/events', eventsRouter);
 app.use(authMiddleware());
 app.use('/gql', graphql);
 
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (err instanceof SyntaxError && 'status' in err && err.status === 400 && 'body' in err) {
+    res.status(400).send({ error: 'Bad request: Invalid JSON' });
+    return;
+  }
+  next();
+});
+
 // Start server
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 app.listen(PORT, () => {

@@ -94,8 +94,8 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {
-    if (unit === AggregationUnit.Total) return "'total' as aggregatedDate,";
-    return `toStartOfInterval(date, INTERVAL ${interval} ${unit.toUpperCase()}) as aggregatedDate,`;
+    if (unit === AggregationUnit.Total) return "'total' as date,";
+    return `toStartOfInterval(date, INTERVAL ${interval} ${unit.toUpperCase()}) as date,`;
   })();
 
   const aggStr =
@@ -110,24 +110,24 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
           .join(', ')},`;
 
   const groupStr = attributes.length
-    ? `GROUP BY aggregatedDate, url_hash, ${attributes
+    ? `GROUP BY date, url_hash, ${attributes
         .map((attr) => {
           if (attr === 'domain') return 'domain_hash';
           if (attr === 'referrer') return 'referrer_hash';
           return attr;
         })
         .join(', ')}`
-    : 'GROUP BY aggregatedDate, url_hash';
+    : 'GROUP BY date, url_hash';
 
   const orderStr = attributes.length
-    ? `ORDER BY aggregatedDate ASC, url, ${attributes
+    ? `ORDER BY date ASC, url, ${attributes
         .map((attr) => {
           if (attr === 'domain') return 'domain_hash';
           if (attr === 'referrer') return 'referrer_hash';
           return attr;
         })
         .join(', ')}`
-    : `ORDER BY aggregatedDate ASC, url`;
+    : `ORDER BY date ASC, url`;
 
   const limitToUse = limit ?? 100;
   const pageToUse = page ?? 1;

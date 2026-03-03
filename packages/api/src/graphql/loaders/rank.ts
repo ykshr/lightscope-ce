@@ -81,30 +81,34 @@ async function rank(tenantId: string, loaderParams: LoaderParams) {
 
   const sql = `
     SELECT
-      rowNumber() as index,
-      ${attStr}
-      uniqCombined64Merge(t.${metric?.toLowerCase()}) as value
-    FROM (${units
-      .map(
-        ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `
-        SELECT
-          *
-        FROM
-          lightscope.${tableName}_${unit} t
-          ${where ? `INNER JOIN lightscope.article a ON t.url_hash = a.url_hash` : ''}
-        WHERE
-          t.tenant_id = ${tenantId}
-          AND (
-            toDateTime('${formatToDateTime(unitStartDate)}') <= t.date
-            AND t.date < toDateTime('${formatToDateTime(unitEndDate)}')
-          )
-          ${where ? `AND ${where}` : ''}
-          ${categoryWhere ? `AND ${categoryWhere}` : ''}
-      `
-      )
-      .join(' UNION ALL ')})
-    ${groupStr}
-    ORDER BY value ${order === 'ASC' ? 'ASC' : 'DESC'}
+      rowNumberInAllBlocks() as index,
+      *
+    FROM (
+      SELECT
+        ${attStr}
+        uniqCombined64Merge(t.${metric?.toLowerCase()}) as value
+      FROM (${units
+        .map(
+          ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `
+          SELECT
+            *
+          FROM
+            lightscope.${tableName}_${unit} t
+            ${where ? `INNER JOIN lightscope.article a ON t.url_hash = a.url_hash` : ''}
+          WHERE
+            t.tenant_id = ${tenantId}
+            AND (
+              toDateTime('${formatToDateTime(unitStartDate)}') <= t.date
+              AND t.date < toDateTime('${formatToDateTime(unitEndDate)}')
+            )
+            ${where ? `AND ${where}` : ''}
+            ${categoryWhere ? `AND ${categoryWhere}` : ''}
+        `
+        )
+        .join(' UNION ALL ')})
+      ${groupStr}
+      ORDER BY value ${order === 'ASC' ? 'ASC' : 'DESC'}
+    )
     ${limitAndOffset}
   `;
 

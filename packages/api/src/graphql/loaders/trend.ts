@@ -51,8 +51,8 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {
-    if (unit === AggregationUnit.Total) return "'total' as aggregatedDate,";
-    return `toStartOfInterval(date, INTERVAL ${interval} ${unit.toUpperCase()}) as aggregatedDate,`;
+    if (unit === AggregationUnit.Total) return "'total' as date,";
+    return `toStartOfInterval(date, INTERVAL ${interval} ${unit.toUpperCase()}) as date,`;
   })();
 
   const attributesRenamed = Array.from(
@@ -69,10 +69,10 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
         .join(', ')},`
     : '';
 
-  const orderStr = `ORDER BY aggregatedDate ASC, value DESC`;
+  const orderStr = `ORDER BY date ASC, value DESC`;
 
   const groupStr = attributesRenamed?.length
-    ? `GROUP BY ${attributesRenamed
+    ? `GROUP BY date, ${attributesRenamed
         .map((attr) => {
           if (attr === 'url') return 't.url_hash';
           if (attr === 'domain') return 't.domain_hash';
@@ -80,7 +80,7 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
           return `t.${attr}`;
         })
         .join(', ')}`
-    : '';
+    : 'GROUP BY date';
 
   const where = processArticleFilter(articleFilter);
   const categoryWhere = processCategoryFilter(categoryFilter);
@@ -89,7 +89,7 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
   const pageToUse = page ?? 1;
   const limitAndOffset = `LIMIT ${limitToUse} OFFSET ${(pageToUse - 1) * limitToUse}`;
 
-  const categoryLimitStr = top != null && top > 0 ? `LIMIT ${top} BY aggregatedDate` : '';
+  const categoryLimitStr = top != null && top > 0 ? `LIMIT ${top} BY date` : '';
 
   const sql = `
     SELECT

@@ -106,7 +106,7 @@ test.describe('Web Dashboard Verification', () => {
     await page.locator('button:has(.lucide-calendar)').first().click();
 
     // Verify modal is open
-    await expect(page.locator('text=Date Filter')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Date Filter' })).toBeVisible();
 
     // Click the Select trigger for Relative options
     // Assuming the SelectValue shows "Today" by default

@@ -2,6 +2,10 @@ import { type CityResponse } from 'maxmind';
 import processReferrer from '../helpers/referrer';
 import { type Payload, type Article, type PV } from '../types';
 
+function formatDate(date: Date | string): string {
+  return new Date(date).toISOString().substring(0, 19);
+}
+
 export function createArticle(payload: Payload, tenant_id: number): Article {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';
@@ -49,7 +53,7 @@ export function createPV(
     site_name,
     event_id,
     url,
-    event_time: payload.event_time_utc,
+    event_time: formatDate(payload.event_time_utc),
     user_id: payload.user_id ?? undefined,
     visit_id: payload.visit_id ?? undefined,
     visitor_id: payload.visitor_id ?? undefined,

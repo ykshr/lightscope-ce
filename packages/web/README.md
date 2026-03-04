@@ -19,7 +19,7 @@ Ensure you have Node.js and npm/yarn/pnpm installed.
 
 ### Scripts
 
-- **`npm run dev`**: Starts the development server on port 60000.
+- **`npm run dev`**: Starts the development server on port 5173.
 - **`npm run build`**: Type-checks and builds the project for production.
 - **`npm run preview`**: Previews the production build locally.
 - **`npm run lint`**: Runs ESLint to check for code quality issues.
@@ -39,4 +39,4 @@ Ensure you have Node.js and npm/yarn/pnpm installed.
    npm run dev
    ```
 
-3. Open your browser at `http://localhost:60000`.
+3. Open your browser at `http://localhost:5173`.

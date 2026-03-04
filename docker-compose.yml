@@ -40,7 +40,7 @@ services:
     environment:
       - VITE_API_ENDPOINT=${VITE_API_ENDPOINT:-http://localhost:3000}
     ports:
-      - '60000:60000'
+      - '5173:5173'
     depends_on:
       - api
 

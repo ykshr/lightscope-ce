@@ -10,7 +10,7 @@ async function main() {
   const eventPayload = generatePayload({
     event_name: 'page_view',
     site_name: 'localhost',
-    url: 'http://localhost:60000/test-page',
+    url: 'http://localhost:5173/test-page',
     user_agent: 'E2E Test Agent',
   });
 

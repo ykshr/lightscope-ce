@@ -82,7 +82,7 @@ jobs:
         run: |
           pnpm run docker:up -d
           # Wait for services to be ready
-          npx wait-on tcp:3000 tcp:60000 tcp:8123 tcp:8080 -t 60000
+          npx wait-on tcp:3000 tcp:5173 tcp:8123 tcp:8080 -t 5173
 
       - name: Run E2E tests
         run: pnpm --filter lightscope-e2e run test:e2e

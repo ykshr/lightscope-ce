@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const WEB_URL = process.env.WEB_URL || 'http://localhost:60000';
+const WEB_URL = process.env.WEB_URL || 'http://localhost:5173';
 
 test.describe('Web Dashboard Verification', () => {
   test('should load the overview page and display key metrics', async ({ page }) => {

@@ -8,7 +8,7 @@ async function sendEvent() {
   const eventPayload = generatePayload({
     event_name: 'load_test_event',
     site_name: 'load-test',
-    url: 'http://localhost:60000/load-test',
+    url: 'http://localhost:5173/load-test',
     user_agent: 'Load Test Agent',
   });
 

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const API_URL = process.env.API_URL || 'http://localhost:3000';
+const API_URL = process.env.API_URL || 'http://localhost:3001';
 
 test.describe('API Error Handling and GraphQL Tests', () => {
   test('POST /events should handle malformed JSON', async ({ request }) => {

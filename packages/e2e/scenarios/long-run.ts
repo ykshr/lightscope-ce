@@ -1,6 +1,6 @@
 import { generatePayload } from '../utils/generator';
 
-const API_URL = process.env.API_URL || 'http://localhost:3000';
+const API_URL = process.env.API_URL || 'http://localhost:3001';
 const DURATION_SECONDS = parseInt(process.argv[2] || '60', 10);
 const INTERVAL_MS = 1000;
 

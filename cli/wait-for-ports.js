@@ -1,6 +1,6 @@
 const net = require('net');
 
-const ports = [3000, 5173, 8123, 8080];
+const ports = [3001, 5173, 8123, 8080];
 const timeout = 60000;
 const start = Date.now();
 

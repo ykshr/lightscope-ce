@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { generatePayload } from '../utils/generator';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'http://localhost:3001';
 const MOCK_SITE_URL = 'http://localhost:8080';
 
 test('Browser Tracking Script Verification', async ({ browser }) => {

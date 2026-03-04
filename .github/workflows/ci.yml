@@ -75,5 +75,23 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm --filter lightscope-e2e exec playwright install-deps
 
-      - name: Run CI checks
+      - name: Run format:check
         run: pnpm run ci
+
+      - name: Run lint
+        run: pnpm run ci
+
+      - name: Run build
+        run: pnpm run ci
+
+      - name: Run test
+        run: pnpm run ci
+
+      - name: Start Docker environment
+        run: |
+          pnpm run docker:up -d
+          # Wait for services to be ready
+          node scripts/wait-for-ports.js
+
+      - name: Run E2E tests
+        run: pnpm --filter lightscope-e2e run test:e2e

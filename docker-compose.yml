@@ -14,7 +14,7 @@ services:
         soft: 262144
         hard: 262144
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8123/ping"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:8123/ping']
       interval: 5s
       timeout: 5s
       retries: 10
@@ -37,7 +37,7 @@ services:
       clickhouse:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/health"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:3000/health']
       interval: 5s
       timeout: 5s
       retries: 20
@@ -56,7 +56,7 @@ services:
       api:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:5173/"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:5173/']
       interval: 5s
       timeout: 5s
       retries: 20
@@ -72,7 +72,7 @@ services:
       api:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:80/"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:80/']
       interval: 5s
       timeout: 5s
       retries: 20

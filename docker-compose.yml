@@ -13,6 +13,11 @@ services:
       nofile:
         soft: 262144
         hard: 262144
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8123/ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   api:
     image: node:22-alpine
@@ -29,7 +34,13 @@ services:
     ports:
       - '3000:3000'
     depends_on:
-      - clickhouse
+      clickhouse:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   web:
     image: node:22-alpine
@@ -42,7 +53,13 @@ services:
     ports:
       - '5173:5173'
     depends_on:
-      - api
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:5173/"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   mock-site:
     image: nginx:alpine
@@ -52,4 +69,37 @@ services:
       - ./packages/e2e/fixtures:/usr/share/nginx/html
       - ./packages/script/dist:/usr/share/nginx/html/dist
     depends_on:
-      - api
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:80/"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.40.1-jammy
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - API_URL=http://localhost:3000
+      - WEB_URL=http://localhost:5173
+      - MOCK_SITE_URL=http://localhost:8080
+    command: >
+      sh -c "
+        apt-get update && apt-get install -y socat &&
+        socat TCP-LISTEN:3000,fork TCP:api:3000 &
+        socat TCP-LISTEN:5173,fork TCP:web:5173 &
+        socat TCP-LISTEN:8080,fork TCP:mock-site:80 &
+        npm install -g pnpm && pnpm install && pnpm --filter lightscope-e2e run test:e2e
+      "
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+      mock-site:
+        condition: service_healthy
+    profiles:
+      - e2e

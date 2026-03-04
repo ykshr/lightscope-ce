@@ -22,7 +22,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check --cache --cache-location .prettier-cache .",
     "ci": "pnpm run format:check && pnpm run lint && pnpm run build && pnpm run test && pnpm run test:e2e",
-    "test:e2e": "pnpm run docker:up -d && node scripts/wait-for-ports.js && pnpm --filter lightscope-e2e run test:e2e",
+    "test:e2e": "pnpm build && docker compose --profile e2e up --build --exit-code-from e2e e2e",
     "docker:up": "pnpm build && docker compose up --build",
     "docker:down": "docker compose down"
   },

@@ -8,7 +8,7 @@ async function sendEvent() {
   const eventPayload = generatePayload({
     event_name: 'long_run_event',
     site_name: 'long-run-test',
-    url: 'http://localhost:60000/long-run-page',
+    url: 'http://localhost:5173/long-run-page',
     user_agent: 'Long Run Test Agent',
   });
 

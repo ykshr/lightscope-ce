@@ -35,7 +35,7 @@ This directory contains the E2E test suite with multiple scenarios.
    This starts:
    - ClickHouse (Database)
    - API (Backend at localhost:3000)
-   - Web (Frontend at localhost:60000)
+   - Web (Frontend at localhost:5173)
    - Mock Site (Test Page at localhost:8080)
 
 ## Test Scenarios

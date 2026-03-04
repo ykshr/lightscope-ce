@@ -55,7 +55,7 @@ docker-compose up --build
 This will start:
 -   ClickHouse (http://localhost:8123)
 -   API (http://localhost:3000)
--   Web Dashboard (http://localhost:60000)
+-   Web Dashboard (http://localhost:5173)
 
 ### Running Manually
 

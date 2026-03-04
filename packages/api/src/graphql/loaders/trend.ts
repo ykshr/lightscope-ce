@@ -51,8 +51,8 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {
-    if (unit === AggregationUnit.Total) return "'total' as aggregatedDate,";
-    return `toStartOfInterval(date, INTERVAL ${interval} ${unit.toUpperCase()}) as aggregatedDate,`;
+    if (unit === AggregationUnit.Total) return "'total' as date,";
+    return `toStartOfInterval(date, INTERVAL ${interval} ${unit.toUpperCase()}) as date,`;
   })();
 
   const attributesRenamed = Array.from(
@@ -61,26 +61,26 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
   const attStr = attributesRenamed?.length
     ? `${attributesRenamed
         .map((attr) => {
-          if (attr === 'url') return 'any(t.url) as url';
-          if (attr === 'domain') return 'any(t.domain) as domain';
-          if (attr === 'referrer') return 'any(t.referrer) as referrer';
-          return `t.${attr}`;
+          if (attr === 'url') return 'any(url) as url';
+          if (attr === 'domain') return 'any(domain) as domain';
+          if (attr === 'referrer') return 'any(referrer) as referrer';
+          return attr;
         })
         .join(', ')},`
     : '';
 
-  const orderStr = `ORDER BY aggregatedDate ASC, value DESC`;
+  const orderStr = `ORDER BY date ASC, value DESC`;
 
   const groupStr = attributesRenamed?.length
-    ? `GROUP BY ${attributesRenamed
+    ? `GROUP BY date, ${attributesRenamed
         .map((attr) => {
-          if (attr === 'url') return 't.url_hash';
-          if (attr === 'domain') return 't.domain_hash';
-          if (attr === 'referrer') return 't.referrer_hash';
-          return `t.${attr}`;
+          if (attr === 'url') return 'url_hash';
+          if (attr === 'domain') return 'domain_hash';
+          if (attr === 'referrer') return 'referrer_hash';
+          return attr;
         })
         .join(', ')}`
-    : '';
+    : 'GROUP BY date';
 
   const where = processArticleFilter(articleFilter);
   const categoryWhere = processCategoryFilter(categoryFilter);
@@ -89,13 +89,13 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
   const pageToUse = page ?? 1;
   const limitAndOffset = `LIMIT ${limitToUse} OFFSET ${(pageToUse - 1) * limitToUse}`;
 
-  const categoryLimitStr = top != null && top > 0 ? `LIMIT ${top} BY aggregatedDate` : '';
+  const categoryLimitStr = top != null && top > 0 ? `LIMIT ${top} BY date` : '';
 
   const sql = `
     SELECT
       ${dateStr}
       ${attStr}
-      uniqCombined64Merge(t.${metric?.toLowerCase()}) as value
+      uniqCombined64Merge(${metric?.toLowerCase()}) as value
     FROM (${units
       .map(
         ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `

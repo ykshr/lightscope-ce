@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = process.env.API_URL || 'http://localhost:3000';
 
 test.describe('API Error Handling and GraphQL Tests', () => {
   test('POST /events should handle malformed JSON', async ({ request }) => {
@@ -14,6 +14,10 @@ test.describe('API Error Handling and GraphQL Tests', () => {
 
   test('POST /events should handle missing required fields', async ({ request }) => {
     const response = await request.post(`${API_URL}/events`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer test-token',
+      },
       data: {
         event_name: 'page_view',
         // missing url, which is required
@@ -33,7 +37,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
           endDate: "${new Date(Date.now() + 3600000).toISOString()}"
           aggregation: { unit: DAY }
         ) {
-          analytics {
+          total {
             date
             value
           }
@@ -46,8 +50,8 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     });
     const json = await res.json();
     expect(res.ok()).toBeTruthy();
-    expect(json.data?.trend?.analytics).toBeDefined();
-    expect(Array.isArray(json.data.trend.analytics)).toBe(true);
+    expect(json.data?.trend?.total).toBeDefined();
+    expect(Array.isArray(json.data.trend.total)).toBe(true);
   });
 
   test('GraphQL queries should return expected structures for rank', async ({ request }) => {

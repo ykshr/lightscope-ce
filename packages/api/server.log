@@ -1,0 +1,6 @@
+
+> @lightscope-ce/api@0.1.0 dev /var/tmp/vibe-kanban/worktrees/d448-web-graphql-200/lightscope-ce/packages/api
+> tsx src/index.ts
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+api server listening on 3001

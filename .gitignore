@@ -27,9 +27,10 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+server.log*
 
 # Cache
 .eslintcache
 .prettier-cache
-packages/e2e/test-results
+test-results
 .pnpm-store

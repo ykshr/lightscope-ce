@@ -49,6 +49,9 @@ test.describe('API Error Handling and GraphQL Tests', () => {
       data: { query },
     });
     const json = await res.json();
+    if (!res.ok()) {
+      console.log('trend error response:', JSON.stringify(json, null, 2));
+    }
     expect(res.ok()).toBeTruthy();
     expect(json.data?.trend?.total).toBeDefined();
     expect(Array.isArray(json.data.trend.total)).toBe(true);

@@ -1,7 +1,7 @@
 import { strict as assert } from 'assert';
 import { generatePayload } from '../utils/generator';
 
-const API_URL = process.env.API_URL || 'http://localhost:3001';
+const API_URL = process.env.API_URL || 'http://localhost:3000';
 
 async function main() {
   console.log('Starting E2E Test...');

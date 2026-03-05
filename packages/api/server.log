@@ -3,4 +3,4 @@
 > tsx src/index.ts
 
 [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
-api server listening on 3001
+api server listening on 3000

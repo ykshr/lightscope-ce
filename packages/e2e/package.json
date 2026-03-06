@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "playwright install chromium",
     "pretest": "pnpm --filter @lightscope-ce/script run build",
-    "test": "playwright test",
+    "test:e2e": "playwright test",
     "test:smoke": "tsx scenarios/smoke.ts",
     "test:load": "tsx scenarios/load.ts",
     "test:long-run": "tsx scenarios/long-run.ts",

@@ -121,6 +121,9 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
     ${limitAndOffset}
   `;
 
-  const data = await query<T>(sql);
-  return data;
+  const data = await query<any>(sql);
+  return data.map((row: any) => ({
+    ...row,
+    ...(row.date && row.date !== 'total' ? { date: row.date.replace(' ', 'T') + 'Z' } : {}),
+  })) as T[];
 }

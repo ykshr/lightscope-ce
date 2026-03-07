@@ -19,7 +19,7 @@ async function main() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer test-token'
+      Authorization: 'Bearer test-token',
     },
     body: JSON.stringify(eventPayload),
   });

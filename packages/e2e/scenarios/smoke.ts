@@ -17,7 +17,10 @@ async function main() {
   console.log('Sending event...', eventPayload.event_id);
   const eventRes = await fetch(`${API_URL}/events`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer test-token',
+    },
     body: JSON.stringify(eventPayload),
   });
 

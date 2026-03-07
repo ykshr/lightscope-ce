@@ -164,6 +164,9 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
     ${limitAndOffset}
   `;
 
-  const data = await query<T & { url: string }>(sql);
-  return data;
+  const data = await query<any>(sql);
+  return data.map((row: any) => ({
+    ...row,
+    ...(row.date && row.date !== 'total' ? { date: row.date.replace(' ', 'T') + 'Z' } : {}),
+  })) as (T & { url: string })[];
 }

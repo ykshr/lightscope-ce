@@ -31,7 +31,7 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   console.log('Page view event verified.');
 
   const postData = JSON.parse(pageViewReq.postData() || '{}');
-  expect(postData.url).toContain('utm_source=test_source');
+  expect(postData.query_params?.utm_source).toBe('test_source');
   expect(postData.referrer).toBe(refererUrl);
   // Optional: User agent should be sent in headers, verified by API
   const headers = await pageViewReq.headers();

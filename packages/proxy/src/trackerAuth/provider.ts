@@ -1,5 +1,5 @@
-import { Request } from 'express';
+import { Context } from 'hono';
 
 export default interface TrackerAuthProvider {
-  getTenantId(req: Request): Promise<number | null>;
+  getTenantId(c: Context): Promise<number | null>;
 }

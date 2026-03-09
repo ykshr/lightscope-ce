@@ -1,18 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
+import { Context, Next } from 'hono';
 import createAuthProvider from './factory';
 
 export default function authMiddleware() {
   const auth = createAuthProvider();
 
-  return async (req: Request, res: Response, next: NextFunction) => {
-    const user = await auth.getUser(req);
+  return async (c: Context, next: Next) => {
+    const user = await auth.getUser(c);
 
     if (!user) {
-      res.status(401).json({ error: 'unauthorized' });
-      return;
+      return c.json({ error: 'unauthorized' }, 401);
     }
 
-    req.user = user;
-    next();
+    c.set('user', user);
+    await next();
   };
 }

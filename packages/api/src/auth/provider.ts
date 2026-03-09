@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Context } from 'hono';
 
 export type User = {
   id: string;
@@ -7,5 +7,5 @@ export type User = {
 };
 
 export default interface AuthProvider {
-  getUser(req: Request): Promise<User | null>;
+  getUser(c: Context): Promise<User | null>;
 }

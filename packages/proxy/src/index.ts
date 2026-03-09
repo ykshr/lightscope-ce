@@ -1,34 +1,27 @@
-import cors from 'cors';
-import express from 'express';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
 import indexRouter from '@/rest/index';
 import eventsRouter from '@/rest/events';
 
-const app = express();
+const app = new Hono();
 
-app.use(cors());
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use('*', logger());
+app.use('*', cors());
 
 // Public routes that don't require authentication
-app.use('/', indexRouter);
-app.get('/health', (_req, res) => res.json({ ok: true }));
+app.route('/', indexRouter);
+app.get('/health', (c) => c.json({ ok: true }));
 
 // Events endpoint has its own tracker token authentication
-app.use('/events', eventsRouter);
+app.route('/events', eventsRouter);
 
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  if (
-    (err instanceof SyntaxError && 'status' in err && err.status === 400 && 'body' in err) ||
-    err.type === 'entity.parse.failed'
-  ) {
-    res.status(400).send({ error: 'Bad request: Invalid JSON' });
-    return;
+app.onError((err, c) => {
+  if (err instanceof SyntaxError) {
+    return c.json({ error: 'Bad request: Invalid JSON' }, 400);
   }
-  next(err);
+  console.error(err);
+  return c.json({ error: 'Internal Server Error' }, 500);
 });
 
-// Start server
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
-app.listen(PORT, () => {
-  console.log(`insert server listening on ${PORT}`);
-});
+export default app;

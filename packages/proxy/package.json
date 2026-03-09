@@ -8,24 +8,24 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "tsc",
-    "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
-    "start": "node dist/index.js",
-    "dev": "tsx src/index.ts"
+    "build:notypecheck": "esbuild src/serve.ts --platform=node --bundle --outfile=dist/bundle.js",
+    "start": "node dist/bundle.js",
+    "dev": "tsx src/serve.ts"
   },
   "dependencies": {
     "@clickhouse/client": "^1.14.0",
+    "@hono/node-server": "^1.19.11",
     "cors": "^2.8.5",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1",
+    "hono": "^4.12.5",
+    "ioredis": "^5.8.2",
     "maxmind": "^5.0.1",
     "tldts": "^7.0.23",
-    "zod": "^3.21.4",
-    "ioredis": "^5.8.2"
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
     "@types/node": "^22.15.29",
     "tsx": "^4.21.0",
     "typescript": "^5.8.3",

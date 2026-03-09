@@ -45,7 +45,7 @@
         // The global name 'Lightscope' is defined in the build script
         // The class is exported as 'AnalyticsTracker'
         if (typeof Lightscope !== 'undefined' && Lightscope.AnalyticsTracker) {
-          window.tracker = new Lightscope.AnalyticsTracker('http://localhost:3000/events', {
+          window.tracker = new Lightscope.AnalyticsTracker('http://localhost:3001/events', {
             token: 'test-token',
             site_name: 'e2e-test-site',
             heartbeat_interval_ms: 5000,

@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
+const INSERT_URL = process.env.INSERT_URL || 'http://localhost:3001';
 
 test.describe('API Error Handling and GraphQL Tests', () => {
   test('POST /events should handle malformed JSON', async ({ request }) => {
-    const response = await request.post(`${API_URL}/events`, {
+    const response = await request.post(`${INSERT_URL}/events`, {
       headers: { 'Content-Type': 'application/json' },
       data: '{"bad json"',
     });
@@ -13,7 +14,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
   });
 
   test('POST /events should handle missing required fields', async ({ request }) => {
-    const response = await request.post(`${API_URL}/events`, {
+    const response = await request.post(`${INSERT_URL}/events`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer test-token',

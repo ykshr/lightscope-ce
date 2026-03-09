@@ -9,7 +9,7 @@ This project uses **pnpm workspaces** to manage the following packages:
 - **packages/web**: Frontend application (React, Vite, TailwindCSS, Recharts).
 - **packages/api**: GraphQL API backend (Node.js, Express, Apollo Server, ClickHouse).
 - **packages/clickhouse**: ClickHouse database configuration and SQL migrations.
-- **packages/track**: Utility scripts.
+- **packages/tracker**: Utility scripts.
 
 ## Tech Stack
 

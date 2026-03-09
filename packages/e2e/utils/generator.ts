@@ -6,7 +6,7 @@ import {
   OGMetadata,
   UserAttributes,
   BrowsingAttributes,
-} from '@lightscope-ce/track';
+} from '@lightscope-ce/tracker';
 
 // Export Payload as alias for AnalyticsPayload
 export type Payload = AnalyticsPayload;

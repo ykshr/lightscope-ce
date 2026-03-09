@@ -90,7 +90,7 @@ services:
       - '8080:80'
     volumes:
       - ./packages/e2e/fixtures:/usr/share/nginx/html
-      - ./packages/track/dist:/usr/share/nginx/html/dist
+      - ./packages/tracker/dist:/usr/share/nginx/html/dist
     depends_on:
       api:
         condition: service_healthy

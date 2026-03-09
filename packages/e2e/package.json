@@ -4,7 +4,7 @@
   "description": "End-to-End tests for Lightscope CE",
   "scripts": {
     "postinstall": "playwright install chromium",
-    "pretest": "pnpm --filter @lightscope-ce/track run build",
+    "pretest": "pnpm --filter @lightscope-ce/tracker run build",
     "test:e2e": "playwright test",
     "test:smoke": "tsx scenarios/smoke.ts",
     "test:load": "tsx scenarios/load.ts",
@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.3.0",
-    "@lightscope-ce/track": "workspace:*",
+    "@lightscope-ce/tracker": "workspace:*",
     "@playwright/test": "^1.40.1",
     "@types/node": "^20.10.0",
     "@types/ua-parser-js": "^0.7.39",

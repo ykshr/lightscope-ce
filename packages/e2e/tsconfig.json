@@ -7,9 +7,9 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@lightscope-ce/track": ["../packages/track/src/index.ts"],
-      "@lightscope-ce/track/*": ["../packages/track/src/*"]
+      "@lightscope-ce/tracker": ["../packages/tracker/src/index.ts"],
+      "@lightscope-ce/tracker/*": ["../packages/tracker/src/*"]
     }
   },
-  "include": ["**/*.ts", "../packages/track/src/**/*.ts"]
+  "include": ["**/*.ts", "../packages/tracker/src/**/*.ts"]
 }

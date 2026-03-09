@@ -42,11 +42,11 @@ services:
       timeout: 5s
       retries: 20
 
-  insert:
+  proxy:
     image: node:22-alpine
     working_dir: /app
     volumes:
-      - ./packages/insert:/app
+      - ./packages/proxy:/app
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     environment:
       - CLICKHOUSE_HOST=http://clickhouse:8123
@@ -90,7 +90,7 @@ services:
       - '8080:80'
     volumes:
       - ./packages/e2e/fixtures:/usr/share/nginx/html
-      - ./packages/script/dist:/usr/share/nginx/html/dist
+      - ./packages/tracker/dist:/usr/share/nginx/html/dist
     depends_on:
       api:
         condition: service_healthy

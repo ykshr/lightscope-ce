@@ -1,8 +1,8 @@
 packages:
   - packages/api
-  - packages/insert
+  - packages/proxy
   - packages/clickhouse
   - packages/e2e
   - packages/sandbox/*
-  - packages/script
+  - packages/tracker
   - packages/web

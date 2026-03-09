@@ -1,12 +1,12 @@
 {
-  "name": "@lightscope-ce/script",
+  "name": "@lightscope-ce/tracker",
   "version": "0.1.0",
   "description": "Tracking script for LightScope",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/ykshr/lightscope-ce.git",
-    "directory": "packages/script"
+    "directory": "packages/tracker"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

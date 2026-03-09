@@ -1,6 +1,7 @@
 import { generatePayload } from '../utils/generator';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
+const INSERT_URL = process.env.INSERT_URL || 'http://localhost:3001';
 const DURATION_SECONDS = parseInt(process.argv[2] || '60', 10);
 const INTERVAL_MS = 1000;
 
@@ -13,7 +14,7 @@ async function sendEvent() {
   });
 
   try {
-    const res = await fetch(`${API_URL}/events`, {
+    const res = await fetch(`${INSERT_URL}/events`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(eventPayload),

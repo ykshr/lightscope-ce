@@ -2,6 +2,7 @@ import { strict as assert } from 'assert';
 import { generatePayload } from '../utils/generator';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
+const INSERT_URL = process.env.INSERT_URL || 'http://localhost:3001';
 
 async function main() {
   console.log('Starting E2E Test...');
@@ -15,7 +16,7 @@ async function main() {
   });
 
   console.log('Sending event...', eventPayload.event_id);
-  const eventRes = await fetch(`${API_URL}/events`, {
+  const eventRes = await fetch(`${INSERT_URL}/events`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

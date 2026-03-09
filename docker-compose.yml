@@ -42,6 +42,29 @@ services:
       timeout: 5s
       retries: 20
 
+  insert:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./packages/insert:/app
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
+    environment:
+      - CLICKHOUSE_HOST=http://clickhouse:8123
+      - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
+      - PORT=3001
+    ports:
+      - '3001:3001'
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:3001/health']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
   web:
     image: node:22-alpine
     working_dir: /app

@@ -51,7 +51,7 @@ npm run test:smoke
 
 ### 2. Browser Verification (Playwright)
 
-Verifies the actual client-side tracking script (`packages/script`) running in a browser.
+Verifies the actual client-side tracking script (`packages/track`) running in a browser.
 
 - Loads the test page from `mock-site`.
 - Intercepts network requests to verify `page_view` and `custom_click` events.
@@ -89,4 +89,4 @@ npm run test:long-run -- 120
 ## Troubleshooting
 
 - **ClickHouse not ready:** If tests fail immediately, wait a few seconds for ClickHouse to fully start.
-- **Script not found:** Ensure `packages/script/dist/browser.js` exists. If not, run `npm run build:browser` in `packages/script`.
+- **Script not found:** Ensure `packages/track/dist/browser.js` exists. If not, run `npm run build:browser` in `packages/track`.

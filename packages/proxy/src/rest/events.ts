@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { geo } from '@/helpers/context';
+import { getGeo } from '@/helpers/context';
 import { PayloadSchema, type Payload } from '@/types';
 import { createArticle, createPV } from './processEvent';
 import trackerAuthMiddleware from '../trackerAuth';
@@ -34,6 +34,7 @@ router.post('/', async (c) => {
     destinationProvider.insertArticle(article);
 
     const ip = c.req.header('cf-connecting-ip') || c.req.header('x-forwarded-for') || '';
+    const geo = await getGeo();
     const geoInfo = geo && ip ? geo.get(ip) : undefined;
 
     const pv = createPV(payload, geoInfo, tenant_id);

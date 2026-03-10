@@ -111,6 +111,8 @@ importers:
         specifier: ^2.0.9
         version: 2.0.9
 
+  packages/mock-site: {}
+
   packages/proxy:
     dependencies:
       '@clickhouse/client':

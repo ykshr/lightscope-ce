@@ -11,6 +11,14 @@ app.get('/health', (c) => c.json({ ok: true }));
 
 // Auth middleware - all routes below this require authentication for dashboard users
 app.use('/gql/*', authMiddleware());
+
+app.use('/gql', async (c, next) => {
+  const user = c.get('user');
+  (c as any).tenantId = user?.tenant_id ? String(user.tenant_id) : '1';
+  (c as any).loaders = new Map();
+  await next();
+});
+
 app.all('/gql', graphqlHandler);
 
 app.onError((err, c) => {

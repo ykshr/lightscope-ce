@@ -19,8 +19,9 @@
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
-    "@apollo/server": "^5.2.0",
     "@clickhouse/client": "^1.14.0",
+    "@graphql-tools/schema": "^10.0.31",
+    "@hono/graphql-server": "^0.7.0",
     "@hono/node-server": "^1.19.11",
     "cors": "^2.8.5",
     "dataloader": "^2.2.3",

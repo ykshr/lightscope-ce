@@ -1,6 +1,6 @@
 import { type CityResponse } from 'maxmind';
-import processReferrer from '@/helpers/referrer';
-import { type Payload, type Article, type PV } from '@/types';
+import processReferrer from '../helpers/referrer';
+import { type Payload, type Article, type PV } from '../types';
 
 function formatDate(date: Date | string): string {
   return new Date(date).toISOString().substring(0, 19);

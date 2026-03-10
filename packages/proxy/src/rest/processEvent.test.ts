@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createArticle, createPV } from './processEvent';
-import { type Payload } from '@/types';
+import { type Payload } from '../types';
 import { type CityResponse } from 'maxmind';
 
 // Mock Payload data

@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
-import indexRouter from '@/routers/index';
-import eventsRouter from '@/routers/events';
+import indexRouter from '@/rest/index';
+import eventsRouter from '@/rest/events';
 
 const app = new Hono();
 

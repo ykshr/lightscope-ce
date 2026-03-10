@@ -1,3 +1,4 @@
+export default /* GraphQL */ `
 type Query {
   article(url: String!): Article
   rank(
@@ -19,3 +20,5 @@ type Query {
     metric: Metric = VISITS_VIEWS
   ): Trend
 }
+
+`;

@@ -1,3 +1,4 @@
+export default /* GraphQL */ `
 enum AggregationUnit {
   TOTAL
   AUTO
@@ -35,3 +36,5 @@ enum Order {
   ASC
   DESC
 }
+
+`;

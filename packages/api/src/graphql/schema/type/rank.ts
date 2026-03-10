@@ -1,3 +1,4 @@
+export default /* GraphQL */ `
 type Rank {
   total: Int!
   categoryAge(includeAges: [String!], excludeAges: [String!]): [RankAnalytics!]
@@ -67,3 +68,5 @@ type RankAnalytics implements RankAnalyticsBase {
   url: String!
   article: Article
 }
+
+`;

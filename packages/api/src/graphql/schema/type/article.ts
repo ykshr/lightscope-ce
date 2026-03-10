@@ -1,3 +1,4 @@
+export default /* GraphQL */ `
 type Article {
   url: String!
   title: String
@@ -105,3 +106,5 @@ type AnalyticsUtm implements AnalyticsBase {
   medium: String
   campaign: String
 }
+
+`;

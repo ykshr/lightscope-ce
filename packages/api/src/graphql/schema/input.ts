@@ -1,3 +1,4 @@
+export default /* GraphQL */ `
 input AggregationInput {
   unit: AggregationUnit!
   """
@@ -91,3 +92,5 @@ type ArticleFilter {
   # Each inner array represents a set of tags where at least one tag must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
   excludeTags: [[String!]]
 }
+
+`;

@@ -1,3 +1,4 @@
+export default /* GraphQL */ `
 type Trend {
   total: [TrendAnalytics!]!
   categoryAge(top: Int = 10, includeAges: [String!], excludeAges: [String!]): [TrendAnalyticsAge!]
@@ -148,3 +149,5 @@ type TrendAnalyticsUtm implements TrendAnalyticsBase {
   url: String!
   article: Article
 }
+
+`;

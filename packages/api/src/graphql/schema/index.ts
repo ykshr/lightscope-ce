@@ -6,9 +6,8 @@ import { dirname, join } from 'node:path';
 if (typeof require === 'undefined') {
   globalThis.require = createRequire(import.meta.url) as any;
 }
-const currentDir = typeof __dirname !== 'undefined'
-  ? __dirname
-  : dirname(fileURLToPath(import.meta.url));
+const currentDir =
+  typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url));
 
 function loadSchema(reqFn: () => any, path: string): string {
   try {
@@ -26,7 +25,7 @@ const typeDefs = [
   loadSchema(() => require('./scalar.graphql'), './scalar.graphql'),
   loadSchema(() => require('./type/article.graphql'), './type/article.graphql'),
   loadSchema(() => require('./type/rank.graphql'), './type/rank.graphql'),
-  loadSchema(() => require('./type/trend.graphql'), './type/trend.graphql')
+  loadSchema(() => require('./type/trend.graphql'), './type/trend.graphql'),
 ];
 
 export default typeDefs;

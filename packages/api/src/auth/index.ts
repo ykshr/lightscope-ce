@@ -12,6 +12,6 @@ export default function authMiddleware() {
     }
 
     c.set('user', user);
-    await next();
+    return await next();
   };
 }

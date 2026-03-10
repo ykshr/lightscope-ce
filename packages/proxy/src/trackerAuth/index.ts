@@ -13,7 +13,7 @@ export default function trackerAuthMiddleware() {
       }
 
       c.set('tenant_id', tenant_id);
-      await next();
+      return await next();
     } catch (e) {
       console.error('Tracker authentication failed:', e);
       return c.json({ error: 'internal server error' }, 500);

@@ -15,10 +15,13 @@ router.post('/', async (c) => {
     const body = await c.req.json();
     const parseResult = PayloadSchema.safeParse(body);
     if (!parseResult.success) {
-      return c.json({
-        error: 'Invalid payload',
-        details: parseResult.error.format(),
-      }, 400);
+      return c.json(
+        {
+          error: 'Invalid payload',
+          details: parseResult.error.format(),
+        },
+        400
+      );
     }
     const payload: Payload = parseResult.data;
 

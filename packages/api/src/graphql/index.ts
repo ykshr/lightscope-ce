@@ -32,7 +32,7 @@ await server.start();
 
 export const graphqlHandler = async (c: HonoContext) => {
   const req = c.req.raw;
-  
+
   const headers = new HeaderMap();
   for (const [key, value] of req.headers.entries()) {
     if (value !== undefined) {
@@ -63,10 +63,10 @@ export const graphqlHandler = async (c: HonoContext) => {
   }
 
   if (httpGraphQLResponse.body.kind === 'complete') {
-    return c.body(httpGraphQLResponse.body.string, {
-      status: httpGraphQLResponse.status || 200,
+    return c.body(httpGraphQLResponse.body.string as any, {
+      status: (httpGraphQLResponse.status || 200) as any,
     });
   }
-  
+
   return c.text('Chunked response not supported', 500);
 };

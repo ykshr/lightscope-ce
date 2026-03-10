@@ -10,10 +10,15 @@
   },
   "type": "module",
   "scripts": {
+    "predev": "node scripts/generate-schema.js",
+    "prebuild": "node scripts/generate-schema.js",
+    "prebuild:notypecheck": "node scripts/generate-schema.js",
+    "pretest": "node scripts/generate-schema.js",
+    "pretest:watch": "node scripts/generate-schema.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "tsc",
-    "build:notypecheck": "esbuild src/serve.ts --platform=node --bundle --loader:.graphql=text --outfile=dist/bundle.js",
+    "build:notypecheck": "esbuild src/serve.ts --platform=node --bundle --outfile=dist/bundle.js",
     "start": "node dist/bundle.js",
     "dev": "tsx src/serve.ts",
     "codegen": "graphql-codegen --config codegen.ts"

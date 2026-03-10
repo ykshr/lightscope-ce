@@ -1,13 +1,21 @@
 import dotenv from 'dotenv';
-import fs from 'fs';
-import maxmind, { type CityResponse } from 'maxmind';
+import maxmind, { type CityResponse, type Reader } from 'maxmind';
 import { createClient } from '@clickhouse/client';
 
 dotenv.config();
 
 const MAXMIND_DB_PATH = process.env.MAXMIND_DB_PATH || 'data/GeoLite2-City.mmdb';
-const dbExists = fs.existsSync(MAXMIND_DB_PATH);
-const geo = dbExists ? await maxmind.open<CityResponse>(MAXMIND_DB_PATH) : null;
+
+let geo: Reader<CityResponse> | null = null;
+try {
+  const fs = await import('node:fs');
+  if (fs.existsSync && fs.existsSync(MAXMIND_DB_PATH)) {
+    geo = await maxmind.open<CityResponse>(MAXMIND_DB_PATH);
+  }
+} catch (err) {
+  // fs is not available or maxmind.open failed
+  console.warn('Could not load maxmind db, proceeding without it.', err);
+}
 export { geo };
 
 // --------------------

@@ -1,23 +1,22 @@
-import { Request, Response, NextFunction } from 'express';
+import { Context, Next } from 'hono';
 import createTrackerAuthProvider from './factory';
 
 export default function trackerAuthMiddleware() {
   const auth = createTrackerAuthProvider();
 
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (c: Context, next: Next) => {
     try {
-      const tenant_id = await auth.getTenantId(req);
+      const tenant_id = await auth.getTenantId(c);
 
       if (tenant_id === null) {
-        res.status(401).json({ error: 'Missing or invalid token' });
-        return;
+        return c.json({ error: 'Missing or invalid token' }, 401);
       }
 
-      req.tenant_id = tenant_id;
-      next();
+      c.set('tenant_id', tenant_id);
+      return await next();
     } catch (e) {
       console.error('Tracker authentication failed:', e);
-      res.status(500).json({ error: 'internal server error' });
+      return c.json({ error: 'internal server error' }, 500);
     }
   };
 }

@@ -1,4 +1,3 @@
 export default /* GraphQL */ `
-scalar DateTime
-
+  scalar DateTime
 `;

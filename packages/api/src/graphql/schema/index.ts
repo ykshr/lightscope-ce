@@ -7,14 +7,6 @@ import articleType from './type/article';
 import rankType from './type/rank';
 import trendType from './type/trend';
 
-const typeDefs = [
-  enumType,
-  inputType,
-  queryType,
-  scalarType,
-  articleType,
-  rankType,
-  trendType,
-];
+const typeDefs = [enumType, inputType, queryType, scalarType, articleType, rankType, trendType];
 
 export default typeDefs;

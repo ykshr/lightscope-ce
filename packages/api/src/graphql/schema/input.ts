@@ -1,96 +1,95 @@
 export default /* GraphQL */ `
-input AggregationInput {
-  unit: AggregationUnit!
-  """
-  If unit is not AUTO or Total, specifies the interval for aggregation.
-  """
-  interval: Int
-}
+  input AggregationInput {
+    unit: AggregationUnit!
+    """
+    If unit is not AUTO or Total, specifies the interval for aggregation.
+    """
+    interval: Int
+  }
 
-type Aggregation {
-  unit: AggregationUnit!
-  """
-  If unit is not AUTO or Total, specifies the interval for aggregation.
-  """
-  interval: Int
-}
+  type Aggregation {
+    unit: AggregationUnit!
+    """
+    If unit is not AUTO or Total, specifies the interval for aggregation.
+    """
+    interval: Int
+  }
 
-input CategoryInput {
-  name: CategoryName!
-  value: String!
-}
+  input CategoryInput {
+    name: CategoryName!
+    value: String!
+  }
 
-type Category {
-  name: CategoryName!
-  value: String!
-}
+  type Category {
+    name: CategoryName!
+    value: String!
+  }
 
-input SortInput {
-  category: CategoryInput
-  order: Order!
-}
+  input SortInput {
+    category: CategoryInput
+    order: Order!
+  }
 
-type Sort {
-  category: Category
-  order: Order!
-}
+  type Sort {
+    category: Category
+    order: Order!
+  }
 
-input ArticleFilterInput {
-  includeUrls: [String!]
-  excludeUrls: [String!]
-  title: String
-  includeTypes: [String!]
-  excludeTypes: [String!]
-  description: String
-  includeSiteNames: [String!]
-  excludeSiteNames: [String!]
-  includeLocales: [String!]
-  excludeLocales: [String!]
-  publishedTimeBefore: DateTime
-  publishedTimeAfter: DateTime
-  modifiedTimeBefore: DateTime
-  modifiedTimeAfter: DateTime
-  expirationTimeBefore: DateTime
-  expirationTimeAfter: DateTime
-  # Each inner array represents a set of authors where at least one author must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
-  includeAuthors: [[String!]]
-  # Each inner array represents a set of authors where at least one author must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
-  excludeAuthors: [[String!]]
-  includeSections: [String!]
-  excludeSections: [String!]
-  # Each inner array represents a set of tags where at least one tag must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
-  includeTags: [[String!]]
-  # Each inner array represents a set of tags where at least one tag must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
-  excludeTags: [[String!]]
-}
+  input ArticleFilterInput {
+    includeUrls: [String!]
+    excludeUrls: [String!]
+    title: String
+    includeTypes: [String!]
+    excludeTypes: [String!]
+    description: String
+    includeSiteNames: [String!]
+    excludeSiteNames: [String!]
+    includeLocales: [String!]
+    excludeLocales: [String!]
+    publishedTimeBefore: DateTime
+    publishedTimeAfter: DateTime
+    modifiedTimeBefore: DateTime
+    modifiedTimeAfter: DateTime
+    expirationTimeBefore: DateTime
+    expirationTimeAfter: DateTime
+    # Each inner array represents a set of authors where at least one author must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
+    includeAuthors: [[String!]]
+    # Each inner array represents a set of authors where at least one author must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
+    excludeAuthors: [[String!]]
+    includeSections: [String!]
+    excludeSections: [String!]
+    # Each inner array represents a set of tags where at least one tag must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
+    includeTags: [[String!]]
+    # Each inner array represents a set of tags where at least one tag must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
+    excludeTags: [[String!]]
+  }
 
-type ArticleFilter {
-  includeUrls: [String!]
-  excludeUrls: [String!]
-  title: String
-  includeTypes: [String!]
-  excludeTypes: [String!]
-  description: String
-  includeSiteNames: [String!]
-  excludeSiteNames: [String!]
-  includeLocales: [String!]
-  excludeLocales: [String!]
-  publishedTimeBefore: DateTime
-  publishedTimeAfter: DateTime
-  modifiedTimeBefore: DateTime
-  modifiedTimeAfter: DateTime
-  expirationTimeBefore: DateTime
-  expirationTimeAfter: DateTime
-  # Each inner array represents a set of authors where at least one author must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
-  includeAuthors: [[String!]]
-  # Each inner array represents a set of authors where at least one author must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
-  excludeAuthors: [[String!]]
-  includeSections: [String!]
-  excludeSections: [String!]
-  # Each inner array represents a set of tags where at least one tag must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
-  includeTags: [[String!]]
-  # Each inner array represents a set of tags where at least one tag must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
-  excludeTags: [[String!]]
-}
-
+  type ArticleFilter {
+    includeUrls: [String!]
+    excludeUrls: [String!]
+    title: String
+    includeTypes: [String!]
+    excludeTypes: [String!]
+    description: String
+    includeSiteNames: [String!]
+    excludeSiteNames: [String!]
+    includeLocales: [String!]
+    excludeLocales: [String!]
+    publishedTimeBefore: DateTime
+    publishedTimeAfter: DateTime
+    modifiedTimeBefore: DateTime
+    modifiedTimeAfter: DateTime
+    expirationTimeBefore: DateTime
+    expirationTimeAfter: DateTime
+    # Each inner array represents a set of authors where at least one author must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
+    includeAuthors: [[String!]]
+    # Each inner array represents a set of authors where at least one author must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
+    excludeAuthors: [[String!]]
+    includeSections: [String!]
+    excludeSections: [String!]
+    # Each inner array represents a set of tags where at least one tag must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
+    includeTags: [[String!]]
+    # Each inner array represents a set of tags where at least one tag must be present (logical OR) while outer array represents sets that must all be satisfied (logical AND).
+    excludeTags: [[String!]]
+  }
 `;

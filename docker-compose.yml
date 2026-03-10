@@ -89,7 +89,7 @@ services:
     ports:
       - '8080:80'
     volumes:
-      - ./packages/e2e/fixtures:/usr/share/nginx/html
+      - ./packages/mock-site:/usr/share/nginx/html
       - ./packages/tracker/dist:/usr/share/nginx/html/dist
     depends_on:
       api:

@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
 import { geo } from '@/helpers/context';
 import { PayloadSchema, type Payload } from '@/types';
-import { createArticle, createPV } from './processEvent';
-import trackerAuthMiddleware from '../trackerAuth';
+import trackerAuthMiddleware from '@/trackerAuth';
 import createDestinationProvider from '@/destination/factory';
+import { createArticle, createPV } from './processEvent';
 
 const router = new Hono<{ Variables: { tenant_id: number } }>();
 const destinationProvider = createDestinationProvider();

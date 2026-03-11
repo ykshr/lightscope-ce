@@ -22,9 +22,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check --cache --cache-location .prettier-cache .",
     "ci": "pnpm run format:check && pnpm run lint && pnpm run build && pnpm run test && pnpm run test:e2e",
-    "test:e2e": "pnpm run docker:up -d && node utils/wait-for-services.js && pnpm --filter lightscope-e2e run test",
+    "test:e2e": "pnpm run docker:up -d && node utils/wait-for-services.js && pnpm --filter lightscope-e2e run test:e2e && pnpm run docker:down",
     "docker:up": "pnpm build && docker compose up --build",
-    "docker:down": "docker compose down"
+    "docker:down": "docker compose down -v"
   },
   "pnpm": {}
 }

@@ -1,13 +1,13 @@
-import {
+import { clickhouse } from '@/helpers/context';
+import { type PV, type Article } from '@/types';
+import DestinationProvider from './provider';
+
+const {
   clickhouseClient,
   CLICKHOUSE_INSERT_BATCH_SIZE,
   CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
-  CLICKHOUSE_ARTICLE_TABLE_NAME,
-  CLICKHOUSE_PV_TABLE_NAME,
   CLICKHOUSE_INSERT_MAX_TRY,
-} from '@/helpers/context';
-import { type PV, type Article } from '@/types';
-import DestinationProvider from './provider';
+} = clickhouse;
 
 export class ClickHouseDestination implements DestinationProvider {
   private articleBuffers: Record<string, Article> = {};
@@ -42,14 +42,14 @@ export class ClickHouseDestination implements DestinationProvider {
     if (flush || Object.keys(this.articleBuffers).length >= CLICKHOUSE_INSERT_BATCH_SIZE) {
       const articlesToInsert = Object.values(this.articleBuffers);
       Object.keys(this.articleBuffers).forEach((key) => delete this.articleBuffers[key]);
-      await this.insert(CLICKHOUSE_ARTICLE_TABLE_NAME, articlesToInsert);
+      await this.insert('lightscope.article', articlesToInsert);
     }
 
     // PV
     if (flush || this.pvBuffers.length >= CLICKHOUSE_INSERT_BATCH_SIZE) {
       const pvsToInsert = [...this.pvBuffers];
       this.pvBuffers.length = 0;
-      await this.insert(CLICKHOUSE_PV_TABLE_NAME, pvsToInsert);
+      await this.insert('lightscope.pv_raw', pvsToInsert);
     }
   }
 

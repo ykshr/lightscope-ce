@@ -15,7 +15,7 @@ const maxmindReader = dbExists ? await maxmind.open<CityResponse>(MAXMIND_DB_PAT
 
 const geo = {
   getGeoData: (c: Context) => {
-    const ip = c.req.header('cf-connecting-ip') || c.req.header('x-forwarded-for') || '';
+    const ip = c.req.header('x-forwarded-for') || '';
     if (!maxmindReader || !ip) return undefined;
     const maxmindInfo = maxmindReader.get(ip);
     if (!maxmindInfo) return undefined;

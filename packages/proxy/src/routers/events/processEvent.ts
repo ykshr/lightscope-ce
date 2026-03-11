@@ -30,7 +30,15 @@ export function createArticle(payload: Payload, tenant_id: number): Article {
 
 export function createPV(
   payload: Payload,
-  geoInfo: CityResponse | null | undefined,
+  geoData:
+    | {
+        continent?: string;
+        country?: string;
+        subdivision?: string;
+        city?: string;
+      }
+    | null
+    | undefined,
   tenant_id: number
 ): PV {
   const url = payload['og:url'] || payload.url;
@@ -69,13 +77,10 @@ export function createPV(
     app_version: payload.app_version ?? undefined,
     age: payload.age ?? undefined,
     gender: payload.gender ?? undefined,
-    geo_continent: geoInfo?.continent?.code,
-    geo_country: geoInfo?.country?.iso_code,
-    geo_subdivision:
-      geoInfo?.subdivisions && geoInfo.subdivisions.length > 0
-        ? geoInfo.subdivisions[0].iso_code
-        : undefined,
-    geo_city: geoInfo?.city?.names?.en,
+    geo_continent: geoData?.continent,
+    geo_country: geoData?.country,
+    geo_subdivision: geoData?.subdivision,
+    geo_city: geoData?.city,
     query_params,
     utm_source: query_params.utm_source,
     utm_medium: query_params.utm_medium,

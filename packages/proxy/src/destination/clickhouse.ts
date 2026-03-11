@@ -1,9 +1,12 @@
+import { createClient } from '@clickhouse/client';
 import { clickhouse } from '@/helpers/context';
 import { type PV, type Article } from '@/types';
 import DestinationProvider from './provider';
 
 const {
-  clickhouseClient,
+  CLICKHOUSE_HOST,
+  CLICKHOUSE_USERNAME,
+  CLICKHOUSE_PASSWORD,
   CLICKHOUSE_INSERT_BATCH_SIZE,
   CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
   CLICKHOUSE_INSERT_MAX_TRY,
@@ -12,8 +15,15 @@ const {
 export class ClickHouseDestination implements DestinationProvider {
   private articleBuffers: Record<string, Article> = {};
   private pvBuffers: PV[] = [];
+  private clickhouseClient: ReturnType<typeof createClient>;
 
   constructor() {
+    this.clickhouseClient = createClient({
+      url: CLICKHOUSE_HOST,
+      username: CLICKHOUSE_USERNAME,
+      password: CLICKHOUSE_PASSWORD,
+    });
+
     setInterval(async () => {
       await this.flushBuffer(true);
     }, CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS);
@@ -24,7 +34,7 @@ export class ClickHouseDestination implements DestinationProvider {
     let tryCount = 0;
     while (tryCount < CLICKHOUSE_INSERT_MAX_TRY) {
       try {
-        await clickhouseClient.insert({
+        await this.clickhouseClient.insert({
           table: table,
           values: buffers,
           format: 'JSONEachRow',

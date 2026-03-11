@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createArticle, createPV } from './processEvent';
 import { type Payload } from '@/types';
-import { type CityResponse } from 'maxmind';
 
 // Mock Payload data
 const mockPayload: Payload = {
@@ -83,20 +82,12 @@ describe('processEvent', () => {
 
   describe('createPV', () => {
     it('should create a PV object from payload with full geo info', () => {
-      const mockGeo: CityResponse = {
-        continent: {
-          code: 'NA',
-          geoname_id: 1,
-          names: { en: 'North America' },
-        },
-        country: {
-          iso_code: 'US',
-          geoname_id: 1,
-          names: { en: 'United States' },
-        },
-        subdivisions: [{ iso_code: 'CA', geoname_id: 1, names: { en: 'California' } }],
-        city: { names: { en: 'San Francisco' }, geoname_id: 1 },
-      } as any;
+      const mockGeo = {
+        continent: 'NA',
+        country: 'US',
+        subdivision: 'CA',
+        city: 'San Francisco',
+      };
 
       const pv = createPV(mockPayload, mockGeo, 1);
 

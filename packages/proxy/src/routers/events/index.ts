@@ -33,30 +33,7 @@ router.post('/', async (c) => {
     const article = createArticle(payload, tenant_id);
     destinationProvider.insertArticle(article);
 
-    const ip = c.req.header('cf-connecting-ip') || c.req.header('x-forwarded-for') || '';
-    let geoData: { continent?: string, country?: string, subdivision?: string, city?: string } | undefined;
-    const rawCf = (c.req.raw as any)?.cf;
-
-    if (rawCf && rawCf.country) {
-      geoData = {
-        continent: rawCf.continent,
-        country: rawCf.country,
-        subdivision: rawCf.regionCode || rawCf.region,
-        city: rawCf.city,
-      };
-    } else if (geo && ip) {
-      const maxmindInfo = geo.get(ip);
-      if (maxmindInfo) {
-        geoData = {
-          continent: maxmindInfo.continent?.code,
-          country: maxmindInfo.country?.iso_code,
-          subdivision: maxmindInfo.subdivisions && maxmindInfo.subdivisions.length > 0
-            ? maxmindInfo.subdivisions[0].iso_code
-            : undefined,
-          city: maxmindInfo.city?.names?.en,
-        };
-      }
-    }
+    const geoData = geo.getGeoData(c);
 
     const pv = createPV(payload, geoData, tenant_id);
     destinationProvider.insertPV(pv);

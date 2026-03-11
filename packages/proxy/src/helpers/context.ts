@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import maxmind, { type CityResponse } from 'maxmind';
 import { createClient } from '@clickhouse/client';
+import { type Context } from 'hono';
 
 dotenv.config();
 
@@ -10,7 +11,26 @@ dotenv.config();
 // --------------------
 const MAXMIND_DB_PATH = process.env.MAXMIND_DB_PATH || 'data/GeoLite2-City.mmdb';
 const dbExists = fs.existsSync(MAXMIND_DB_PATH);
-const geo = dbExists ? await maxmind.open<CityResponse>(MAXMIND_DB_PATH) : null;
+const maxmindReader = dbExists ? await maxmind.open<CityResponse>(MAXMIND_DB_PATH) : null;
+
+const geo = {
+  getGeoData: (c: Context) => {
+    const ip = c.req.header('cf-connecting-ip') || c.req.header('x-forwarded-for') || '';
+    if (!maxmindReader || !ip) return undefined;
+    const maxmindInfo = maxmindReader.get(ip);
+    if (!maxmindInfo) return undefined;
+
+    return {
+      continent: maxmindInfo.continent?.code,
+      country: maxmindInfo.country?.iso_code,
+      subdivision:
+        maxmindInfo.subdivisions && maxmindInfo.subdivisions.length > 0
+          ? maxmindInfo.subdivisions[0].iso_code
+          : undefined,
+      city: maxmindInfo.city?.names?.en,
+    };
+  },
+};
 export { geo };
 
 // --------------------

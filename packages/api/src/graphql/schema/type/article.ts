@@ -1,0 +1,109 @@
+export default /* GraphQL */ `
+  type Article {
+    url: String!
+    title: String
+    type: String
+    image: String
+    description: String
+    siteName: String!
+    locale: String
+    publishedTime: DateTime
+    modifiedTime: DateTime
+    expirationTime: DateTime
+    authors: [String!]!
+    section: String
+    tags: [String!]!
+    analytics(
+      startDate: DateTime!
+      endDate: DateTime!
+      aggregation: AggregationInput = { unit: AUTO }
+      limit: Int = 100
+      page: Int = 1
+      metric: Metric = VISITS_VIEWS
+    ): ArticleAnalytics
+  }
+
+  type ArticleAnalyticsParameters {
+    startDate: DateTime!
+    endDate: DateTime!
+    aggregation: Aggregation!
+    limit: Int!
+    page: Int!
+    siteName: String!
+    url: String!
+    metric: Metric!
+  }
+
+  type ArticleAnalytics {
+    parameters: ArticleAnalyticsParameters!
+    analytics: [Analytics!]
+    analyticsAge: [AnalyticsAge!]
+    analyticsApp: [AnalyticsApp!]
+    analyticsDevice: [AnalyticsDevice!]
+    analyticsGender: [AnalyticsGender!]
+    analyticsGeo: [AnalyticsGeo!]
+    analyticsReferrer: [AnalyticsReferrer!]
+    analyticsUtm: [AnalyticsUtm!]
+  }
+
+  interface AnalyticsBase {
+    date: DateTime!
+    value: Int!
+  }
+
+  type Analytics implements AnalyticsBase {
+    date: DateTime!
+    value: Int!
+  }
+
+  type AnalyticsAge implements AnalyticsBase {
+    date: DateTime!
+    value: Int!
+    age: String
+  }
+
+  type AnalyticsApp implements AnalyticsBase {
+    date: DateTime!
+    value: Int!
+    appType: String
+    app: String
+  }
+
+  type AnalyticsDevice implements AnalyticsBase {
+    date: DateTime!
+    value: Int!
+    deviceType: String
+    deviceVendor: String
+    device: String
+  }
+
+  type AnalyticsGender implements AnalyticsBase {
+    date: DateTime!
+    value: Int!
+    gender: String
+  }
+
+  type AnalyticsGeo implements AnalyticsBase {
+    date: DateTime!
+    value: Int!
+    continent: String
+    subdivision: String
+    country: String
+    city: String
+  }
+
+  type AnalyticsReferrer implements AnalyticsBase {
+    date: DateTime!
+    value: Int!
+    domain: String
+    referrer: String
+  }
+
+  type AnalyticsUtm implements AnalyticsBase {
+    date: DateTime!
+    value: Int!
+    source: String
+    medium: String
+    campaign: String
+  }
+`;

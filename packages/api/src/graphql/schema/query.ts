@@ -1,0 +1,23 @@
+export default /* GraphQL */ `
+  type Query {
+    article(url: String!): Article
+    rank(
+      startDate: DateTime!
+      endDate: DateTime!
+      articleFilter: ArticleFilterInput
+      order: Order = DESC
+      limit: Int = 100
+      page: Int = 1
+      metric: Metric = VISITS_VIEWS
+    ): Rank
+    trend(
+      startDate: DateTime!
+      endDate: DateTime!
+      articleFilter: ArticleFilterInput
+      aggregation: AggregationInput = { unit: AUTO }
+      limit: Int = 100
+      page: Int = 1
+      metric: Metric = VISITS_VIEWS
+    ): Trend
+  }
+`;

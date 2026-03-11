@@ -30,12 +30,15 @@ export function createArticle(payload: Payload, tenant_id: number): Article {
 
 export function createPV(
   payload: Payload,
-  geoData: {
-    continent?: string;
-    country?: string;
-    subdivision?: string;
-    city?: string;
-  } | null | undefined,
+  geoData:
+    | {
+        continent?: string;
+        country?: string;
+        subdivision?: string;
+        city?: string;
+      }
+    | null
+    | undefined,
   tenant_id: number
 ): PV {
   const url = payload['og:url'] || payload.url;

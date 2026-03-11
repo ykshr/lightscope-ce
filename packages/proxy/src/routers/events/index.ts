@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
-import { geo } from '@/helpers/context';
 import { PayloadSchema, type Payload } from '@/types';
 import trackerAuthMiddleware from '@/trackerAuth';
 import createDestinationProvider from '@/destination/factory';
+import { getGeoData } from '@/helpers/geo';
 import { createArticle, createPV } from './processEvent';
 
 const router = new Hono<{ Variables: { tenant_id: number } }>();
@@ -33,7 +33,7 @@ router.post('/', async (c) => {
     const article = createArticle(payload, tenant_id);
     destinationProvider.insertArticle(article);
 
-    const geoData = geo.getGeoData(c);
+    const geoData = getGeoData(c);
 
     const pv = createPV(payload, geoData, tenant_id);
     destinationProvider.insertPV(pv);

@@ -1,40 +1,17 @@
 import dotenv from 'dotenv';
-import fs from 'fs';
-import maxmind, { type CityResponse } from 'maxmind';
-import { createClient } from '@clickhouse/client';
-import { type Context } from 'hono';
 
 dotenv.config();
 
 // --------------------
-// Geo provider
+// MAXMIND (geo)
 // --------------------
 const MAXMIND_DB_PATH = process.env.MAXMIND_DB_PATH || 'data/GeoLite2-City.mmdb';
-const dbExists = fs.existsSync(MAXMIND_DB_PATH);
-const maxmindReader = dbExists ? await maxmind.open<CityResponse>(MAXMIND_DB_PATH) : null;
+const geo = { MAXMIND_DB_PATH };
 
-const geo = {
-  getGeoData: (c: Context) => {
-    const ip = c.req.header('x-forwarded-for') || '';
-    if (!maxmindReader || !ip) return undefined;
-    const maxmindInfo = maxmindReader.get(ip);
-    if (!maxmindInfo) return undefined;
-
-    return {
-      continent: maxmindInfo.continent?.code,
-      country: maxmindInfo.country?.iso_code,
-      subdivision:
-        maxmindInfo.subdivisions && maxmindInfo.subdivisions.length > 0
-          ? maxmindInfo.subdivisions[0].iso_code
-          : undefined,
-      city: maxmindInfo.city?.names?.en,
-    };
-  },
-};
 export { geo };
 
 // --------------------
-// ClickHouse client setup
+// ClickHouse
 // --------------------
 const CLICKHOUSE_HOST = process.env.CLICKHOUSE_HOST;
 const CLICKHOUSE_USERNAME = process.env.CLICKHOUSE_USERNAME;
@@ -43,14 +20,11 @@ const CLICKHOUSE_INSERT_BATCH_SIZE = Number(process.env.BATCH_SIZE) || 1000;
 const CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS =
   Number(process.env.CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS) || 200;
 const CLICKHOUSE_INSERT_MAX_TRY = Number(process.env.INSERT_MAX_TRY) || 3;
-const clickhouseClient = createClient({
-  url: CLICKHOUSE_HOST,
-  username: CLICKHOUSE_USERNAME,
-  password: CLICKHOUSE_PASSWORD,
-});
 
 const clickhouse = {
-  clickhouseClient,
+  CLICKHOUSE_HOST,
+  CLICKHOUSE_USERNAME,
+  CLICKHOUSE_PASSWORD,
   CLICKHOUSE_INSERT_BATCH_SIZE,
   CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
   CLICKHOUSE_INSERT_MAX_TRY,

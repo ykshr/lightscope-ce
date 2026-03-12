@@ -13,9 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "tsc",
-    "build:notypecheck": "esbuild src/serve.ts --platform=node --bundle --outfile=dist/bundle.js",
+    "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
     "start": "node dist/bundle.js",
-    "dev": "tsx src/serve.ts",
+    "dev": "tsx src/index.ts",
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {

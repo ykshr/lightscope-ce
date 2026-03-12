@@ -12,11 +12,11 @@ import {
   TrendAnalyticsReferrer,
   TrendAnalyticsUtm,
   TrendAnalyticsArticle,
-} from '@/graphql/__generated__/graphql-resolvers';
-import getTrendLoader from '@/graphql/loaders/trend';
-import { getArticle } from '@/graphql/resolvers/articleResolver';
-import { resolveRequestedAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
-import { Context } from '@/graphql';
+} from '@/__generated__/graphql-resolvers';
+import getTrendLoader from '@/loaders/trend';
+import { getArticle } from '@/resolvers/articleResolver';
+import { resolveRequestedAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
+import { Context } from '@/middlewares/loaders';
 
 const createCategoryResolver =
   <T extends TrendAnalyticsBase>(tableName: string) =>

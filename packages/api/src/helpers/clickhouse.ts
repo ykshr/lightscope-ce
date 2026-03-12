@@ -1,7 +1,5 @@
 import { createClient } from '@clickhouse/client';
-import { clickhouse } from '@/helpers/context';
-
-const { CLICKHOUSE_HOST, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } = clickhouse;
+import { CLICKHOUSE_HOST, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } from '@/helpers/env';
 
 const clickhouseClient = createClient({
   url: CLICKHOUSE_HOST,

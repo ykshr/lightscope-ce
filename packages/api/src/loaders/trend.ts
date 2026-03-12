@@ -8,16 +8,16 @@ import {
   TrendCategoryGeoArgs,
   TrendCategoryReferrerArgs,
   TrendCategoryUtmArgs,
-} from '@/graphql/__generated__/graphql-resolvers';
+} from '@/__generated__/graphql-resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
   getAggregationUnit,
   getTableUnitWithDates,
-} from '@/graphql/loaders/helpers/getCollectionUnitWithDates';
-import { Context } from '@/graphql';
-import processArticleFilter from '@/graphql/loaders/helpers/articleFilter';
-import processCategoryFilter from '@/graphql/loaders/helpers/categoryFilter';
-import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
+} from '@/loaders/helpers/getCollectionUnitWithDates';
+import processArticleFilter from '@/loaders/helpers/articleFilter';
+import processCategoryFilter from '@/loaders/helpers/categoryFilter';
+import { RequestAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
+import type { Context } from '@/types';
 
 interface LoaderParams {
   tableName: string;
@@ -35,8 +35,8 @@ interface LoaderParams {
 
 export default function getLoader(ctx: Context, loaderParams: LoaderParams) {
   return {
-    total: <T>() => Trend<T>(ctx.tenantId, loaderParams),
-    load: <T>() => Trend<T>(ctx.tenantId, loaderParams),
+    total: <T>() => Trend<T>(ctx.user.tenantId, loaderParams),
+    load: <T>() => Trend<T>(ctx.user.tenantId, loaderParams),
   };
 }
 

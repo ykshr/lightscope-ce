@@ -1,13 +1,13 @@
 import DataLoader from 'dataloader';
-import { AnalyticsBase } from '@/graphql/__generated__/graphql-resolvers';
-import { Aggregation, AggregationUnit, Metric } from '@/graphql/__generated__/graphql-resolvers';
-import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
+import { AnalyticsBase } from '@/__generated__/graphql-resolvers';
+import { Aggregation, AggregationUnit, Metric } from '@/__generated__/graphql-resolvers';
+import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
   getAggregationUnit,
   getTableUnitWithDates,
-} from '@/graphql/loaders/helpers/getCollectionUnitWithDates';
-import { Context } from '@/graphql';
+} from '@/loaders/helpers/getCollectionUnitWithDates';
+import type { Context } from '@/types';
 
 type QueryParams = {
   startDate: string;
@@ -41,7 +41,7 @@ export default function getLoader<T extends AnalyticsBase>(
 
   const loader = new DataLoader<string, T[] | null>(
     async (urls: readonly string[]) => {
-      const analytics = await fetchArticleAnalyticsByUrls<T>(ctx.tenantId, loaderParams, urls);
+      const analytics = await fetchArticleAnalyticsByUrls<T>(ctx.user.tenantId, loaderParams, urls);
 
       const analyticsMap = new Map<string, T[]>();
       for (const a of analytics) {

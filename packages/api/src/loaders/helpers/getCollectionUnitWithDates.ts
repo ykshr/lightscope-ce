@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import dayjsPluginUTC from 'dayjs/plugin/utc';
-import { Aggregation, AggregationUnit } from '@/graphql/__generated__/graphql-resolvers';
+import { Aggregation, AggregationUnit } from '@/__generated__/graphql-resolvers';
 
 dayjs.extend(dayjsPluginUTC);
 

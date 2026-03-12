@@ -1,8 +1,8 @@
 import DataLoader from 'dataloader';
-import { Article } from '@/graphql/__generated__/graphql-resolvers';
+import { Article } from '@/__generated__/graphql-resolvers';
 import query from '@/helpers/clickhouse';
 import { renameKeySnakeToCamel } from '@/helpers/rename';
-import { Context } from '@/graphql';
+import type { Context } from '@/types';
 
 export default function getLoader(ctx: Context): DataLoader<string, Article | null> {
   if (ctx.loaders.has('articleLoader')) {
@@ -10,7 +10,7 @@ export default function getLoader(ctx: Context): DataLoader<string, Article | nu
   }
   const loader = new DataLoader<string, Article | null>(
     async (urls: readonly string[]) => {
-      const articles = await fetchArticleByUrls(ctx.tenantId, urls);
+      const articles = await fetchArticleByUrls(ctx.user.tenantId, urls);
 
       const articleMap = new Map<string, Article>();
       for (const article of articles) {

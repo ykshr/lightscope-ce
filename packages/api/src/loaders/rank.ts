@@ -9,13 +9,13 @@ import {
   type RankCategoryGeoArgs,
   type RankCategoryReferrerArgs,
   type RankCategoryUtmArgs,
-} from '@/graphql/__generated__/graphql-resolvers';
-import { Context } from '@/graphql';
+} from '@/__generated__/graphql-resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
-import { getTableUnitWithDates } from '@/graphql/loaders/helpers/getCollectionUnitWithDates';
-import processArticleFilter from '@/graphql/loaders/helpers/articleFilter';
-import processCategoryFilter from '@/graphql/loaders/helpers/categoryFilter';
-import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
+import { getTableUnitWithDates } from '@/loaders/helpers/getCollectionUnitWithDates';
+import processArticleFilter from '@/loaders/helpers/articleFilter';
+import processCategoryFilter from '@/loaders/helpers/categoryFilter';
+import { RequestAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
+import type { Context } from '@/types';
 
 interface LoaderParams {
   tableName: string;
@@ -33,8 +33,8 @@ interface LoaderParams {
 
 export default function getLoader(ctx: Context, loaderParams: LoaderParams) {
   return {
-    total: () => rank(ctx.tenantId, loaderParams),
-    load: () => rank(ctx.tenantId, loaderParams),
+    total: () => rank(ctx.user.tenantId, loaderParams),
+    load: () => rank(ctx.user.tenantId, loaderParams),
   };
 }
 

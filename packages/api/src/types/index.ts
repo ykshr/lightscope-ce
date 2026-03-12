@@ -1,4 +1,8 @@
 import { z } from 'zod';
+import type { User } from '@/middlewares/auth';
+import type { Loaders } from '@/middlewares/loaders';
+
+export type Context = { user: User; loaders: Loaders };
 
 // --------------------
 // Zod schema for incoming payload

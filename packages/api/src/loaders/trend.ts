@@ -35,8 +35,8 @@ interface LoaderParams {
 
 export default function getLoader(ctx: Context, loaderParams: LoaderParams) {
   return {
-    total: <T>() => Trend<T>(ctx.user.tenantId, loaderParams),
-    load: <T>() => Trend<T>(ctx.user.tenantId, loaderParams),
+    total: <T>() => Trend<T>(ctx.var.user.tenantId, loaderParams),
+    load: <T>() => Trend<T>(ctx.var.user.tenantId, loaderParams),
   };
 }
 

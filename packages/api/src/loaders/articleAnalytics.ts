@@ -29,11 +29,11 @@ export default function getLoader<T extends AnalyticsBase>(
   ctx: Context,
   loaderParams: LoaderParams
 ): DataLoader<string, T[] | null> {
-  if (!ctx.loaders.has('articleAnalyticsLoader')) {
-    ctx.loaders.set('articleAnalyticsLoader', new Map());
+  if (!ctx.var.loaders.has('articleAnalyticsLoader')) {
+    ctx.var.loaders.set('articleAnalyticsLoader', new Map());
   }
 
-  const loaders = ctx.loaders.get('articleAnalyticsLoader');
+  const loaders = ctx.var.loaders.get('articleAnalyticsLoader');
   const loaderKey = createLoaderKey(ctx, loaderParams);
   if (loaders.has(loaderKey)) {
     return loaders.get(loaderKey) as DataLoader<string, T[] | null>;
@@ -41,7 +41,11 @@ export default function getLoader<T extends AnalyticsBase>(
 
   const loader = new DataLoader<string, T[] | null>(
     async (urls: readonly string[]) => {
-      const analytics = await fetchArticleAnalyticsByUrls<T>(ctx.user.tenantId, loaderParams, urls);
+      const analytics = await fetchArticleAnalyticsByUrls<T>(
+        ctx.var.user.tenantId,
+        loaderParams,
+        urls
+      );
 
       const analyticsMap = new Map<string, T[]>();
       for (const a of analytics) {
@@ -64,7 +68,7 @@ export default function getLoader<T extends AnalyticsBase>(
 
 function createLoaderKey(ctx: Context, params: LoaderParams): string {
   return JSON.stringify({
-    tenantId: ctx.user.tenantId,
+    tenantId: ctx.var.user.tenantId,
     tableName: params.tableName,
     queryParams: {
       startDate: params.queryParams.startDate,

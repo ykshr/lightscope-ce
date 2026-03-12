@@ -33,8 +33,8 @@ interface LoaderParams {
 
 export default function getLoader(ctx: Context, loaderParams: LoaderParams) {
   return {
-    total: () => rank(ctx.user.tenantId, loaderParams),
-    load: () => rank(ctx.user.tenantId, loaderParams),
+    total: () => rank(ctx.var.user.tenantId, loaderParams),
+    load: () => rank(ctx.var.user.tenantId, loaderParams),
   };
 }
 

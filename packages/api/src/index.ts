@@ -9,9 +9,8 @@ import resolvers from '@/resolvers';
 import createAuthMiddleware from '@/middlewares/auth';
 import NoAuthProvider from '@/middlewares/auth/noAuth';
 import createLoadersMiddleware from '@/middlewares/loaders';
-import type { Context } from '@/types';
 
-const app = new Hono<{ Variables: Context }>();
+const app = new Hono();
 
 app.use('*', cors());
 

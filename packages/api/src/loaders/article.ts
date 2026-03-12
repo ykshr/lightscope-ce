@@ -5,12 +5,12 @@ import { renameKeySnakeToCamel } from '@/helpers/rename';
 import type { Context } from '@/types';
 
 export default function getLoader(ctx: Context): DataLoader<string, Article | null> {
-  if (ctx.loaders.has('articleLoader')) {
-    return ctx.loaders.get('articleLoader') as DataLoader<string, Article | null>;
+  if (ctx.var.loaders.has('articleLoader')) {
+    return ctx.var.loaders.get('articleLoader') as DataLoader<string, Article | null>;
   }
   const loader = new DataLoader<string, Article | null>(
     async (urls: readonly string[]) => {
-      const articles = await fetchArticleByUrls(ctx.user.tenantId, urls);
+      const articles = await fetchArticleByUrls(ctx.var.user.tenantId, urls);
 
       const articleMap = new Map<string, Article>();
       for (const article of articles) {
@@ -23,7 +23,7 @@ export default function getLoader(ctx: Context): DataLoader<string, Article | nu
       cacheKeyFn: (key) => key,
     }
   );
-  ctx.loaders.set('articleLoader', loader);
+  ctx.var.loaders.set('articleLoader', loader);
 
   return loader;
 }

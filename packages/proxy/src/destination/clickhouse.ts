@@ -1,16 +1,14 @@
 import { createClient } from '@clickhouse/client';
-import { clickhouse } from '@/helpers/context';
-import { type PV, type Article } from '@/types';
-import DestinationProvider from './provider';
-
-const {
+import {
   CLICKHOUSE_HOST,
   CLICKHOUSE_USERNAME,
   CLICKHOUSE_PASSWORD,
   CLICKHOUSE_INSERT_BATCH_SIZE,
   CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
   CLICKHOUSE_INSERT_MAX_TRY,
-} = clickhouse;
+} from '@/helpers/env';
+import { type PV, type Article } from '@/types';
+import DestinationProvider from './provider';
 
 export class ClickHouseDestination implements DestinationProvider {
   private articleBuffers: Record<string, Article> = {};

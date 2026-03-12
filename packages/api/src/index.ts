@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
 import { serve } from '@hono/node-server';
 import { graphqlServer } from '@hono/graphql-server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
@@ -12,6 +13,7 @@ import createLoadersMiddleware from '@/middlewares/loaders';
 
 const app = new Hono();
 
+app.use('*', logger());
 app.use('*', cors());
 
 app.get('/health', (c) => c.json({ ok: true }));

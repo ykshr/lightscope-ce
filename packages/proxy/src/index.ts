@@ -2,12 +2,11 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { serve } from '@hono/node-server';
+import { PORT } from '@/helpers/env';
 import indexRouter from '@/routers/index';
 import eventsRouter from '@/routers/events';
 import createAuthMiddleware from '@/middlewares/auth';
 import NoAuthProvider from '@/middlewares/auth/noAuth';
-
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 const app = new Hono();
 

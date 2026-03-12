@@ -3,12 +3,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // --------------------
+// Server
+// --------------------
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
+export { PORT };
+
+// --------------------
 // MAXMIND (geo)
 // --------------------
 const MAXMIND_DB_PATH = process.env.MAXMIND_DB_PATH || 'data/GeoLite2-City.mmdb';
-const geo = { MAXMIND_DB_PATH };
-
-export { geo };
+export { MAXMIND_DB_PATH };
 
 // --------------------
 // ClickHouse
@@ -21,7 +25,7 @@ const CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS =
   Number(process.env.CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS) || 200;
 const CLICKHOUSE_INSERT_MAX_TRY = Number(process.env.INSERT_MAX_TRY) || 3;
 
-const clickhouse = {
+export {
   CLICKHOUSE_HOST,
   CLICKHOUSE_USERNAME,
   CLICKHOUSE_PASSWORD,
@@ -29,5 +33,3 @@ const clickhouse = {
   CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
   CLICKHOUSE_INSERT_MAX_TRY,
 };
-
-export { clickhouse };

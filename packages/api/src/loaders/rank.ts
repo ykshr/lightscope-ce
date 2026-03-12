@@ -31,10 +31,10 @@ interface LoaderParams {
     | RankCategoryUtmArgs;
 }
 
-export default function getLoader(ctx: Context, loaderParams: LoaderParams) {
+export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: () => rank(ctx.var.user.tenantId, loaderParams),
-    load: () => rank(ctx.var.user.tenantId, loaderParams),
+    total: () => rank(c.var.user.tenantId, loaderParams),
+    load: () => rank(c.var.user.tenantId, loaderParams),
   };
 }
 

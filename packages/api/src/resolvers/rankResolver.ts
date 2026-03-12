@@ -10,12 +10,12 @@ const createCategoryResolver =
   async (
     parent: { parameters: RankParameters },
     args: any,
-    ctx: Context,
+    c: Context,
     info: GraphQLResolveInfo
   ) => {
     const attributes = resolveRequestedAttributesWithArticle(info);
 
-    const loader = getRankLoader(ctx, {
+    const loader = getRankLoader(c, {
       tableName,
       queryParams: { ...parent.parameters },
       attributes,
@@ -27,12 +27,12 @@ const createCategoryResolver =
 
 const resolvers: Resolvers = {
   Query: {
-    rank: async (_parent, args, ctx) => {
+    rank: async (_parent, args, c) => {
       const loaderParams = {
         tableName: 'pv',
         queryParams: args,
       };
-      const loader = getRankLoader(ctx, loaderParams);
+      const loader = getRankLoader(c, loaderParams);
       const data = await loader.total();
       return {
         total: data[0].value,

@@ -33,10 +33,10 @@ interface LoaderParams {
     | TrendCategoryUtmArgs;
 }
 
-export default function getLoader(ctx: Context, loaderParams: LoaderParams) {
+export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: <T>() => Trend<T>(ctx.var.user.tenantId, loaderParams),
-    load: <T>() => Trend<T>(ctx.var.user.tenantId, loaderParams),
+    total: <T>() => Trend<T>(c.var.user.tenantId, loaderParams),
+    load: <T>() => Trend<T>(c.var.user.tenantId, loaderParams),
   };
 }
 

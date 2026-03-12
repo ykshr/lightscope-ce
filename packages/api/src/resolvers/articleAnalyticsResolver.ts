@@ -9,13 +9,13 @@ const createArticleAnalyticsResolver =
   async (
     parent: ArticleAnalytics,
     _args: any,
-    ctx: Context,
+    c: Context,
     info: GraphQLResolveInfo
   ): Promise<T[] | null> => {
     const { startDate, endDate, aggregation, limit, page, siteName, url, metric } =
       parent.parameters;
     const attributes = resolveRequestedAttributes(info);
-    const loader = getArticleAnalyticsLoader<T>(ctx, {
+    const loader = getArticleAnalyticsLoader<T>(c, {
       tableName,
       queryParams: {
         startDate,

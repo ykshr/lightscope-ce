@@ -5,11 +5,11 @@ import { Context } from '@/types';
 export const getArticle = async (
   parent: { url?: string },
   args: { url?: string },
-  ctx: Context
+  c: Context
 ): Promise<Article | null> => {
   const url = args.url ?? parent.url;
   if (!url) return null;
-  const loader = getArticleLoader(ctx);
+  const loader = getArticleLoader(c);
   const article = await loader.load(url);
   return article;
 };

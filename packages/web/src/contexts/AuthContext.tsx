@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import createAuthProvider from '@/auth';
+import createAuthProvider from '@/auth/factory';
 import { AuthUser } from '@/auth/provider';
 
 type AuthState = {

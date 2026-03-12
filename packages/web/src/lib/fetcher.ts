@@ -1,4 +1,4 @@
-import createAuthProvider from '@/auth';
+import createAuthProvider from '@/auth/factory';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 

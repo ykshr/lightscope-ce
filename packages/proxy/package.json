@@ -21,7 +21,8 @@
     "hono": "^4.12.5",
     "ioredis": "^5.8.2",
     "maxmind": "^5.0.1",
-    "tldts": "^7.0.23"
+    "tldts": "^7.0.23",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

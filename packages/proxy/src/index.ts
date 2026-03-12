@@ -7,6 +7,8 @@ import indexRouter from '@/routers/index';
 import eventsRouter from '@/routers/events';
 import createAuthMiddleware from '@/middlewares/auth';
 import NoAuthProvider from '@/middlewares/auth/noAuth';
+import createEgressMiddleware from '@/middlewares/egress';
+import ClickHouseEgress from '@/middlewares/egress/clickhouse';
 
 const app = new Hono();
 
@@ -18,7 +20,11 @@ app.route('/', indexRouter);
 app.get('/health', (c) => c.json({ ok: true }));
 
 // Events endpoint has its own tracker token authentication
-app.use('/events/*', createAuthMiddleware(new NoAuthProvider()));
+app.use(
+  '/events/*',
+  createAuthMiddleware(new NoAuthProvider()),
+  createEgressMiddleware(new ClickHouseEgress())
+);
 app.route('/events', eventsRouter);
 
 app.onError((err, c) => {

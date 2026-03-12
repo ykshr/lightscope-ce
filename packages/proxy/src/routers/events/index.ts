@@ -20,15 +20,16 @@ eventsRouter.post('/', async (c: Context) => {
       );
     }
     const payload: Payload = parseResult.data;
+    const egress = c.var.egress;
 
     const tenantId = c.var.tracker.tenantId;
     const article = createArticle(payload, tenantId);
-    // destinationProvider.insertArticle(article);
+    await egress.insertArticle(article);
 
     const geoData = getGeoData(c);
 
     const pv = createPV(payload, geoData, tenantId);
-    // destinationProvider.insertPV(pv);
+    await egress.insertPV(pv);
 
     return c.json({ ok: true }, 201);
   } catch (e: any) {

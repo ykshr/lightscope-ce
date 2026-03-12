@@ -1,7 +1,10 @@
 import type { Context as HonoContext } from 'hono';
 import { z } from 'zod';
+import { EgressProvider } from '@/middlewares/egress';
 
-export type Context = HonoContext<{ Variables: { tracker: { tenantId: string } } }>;
+export type Context = HonoContext<{
+  Variables: { tracker: { tenantId: string }; egress: EgressProvider };
+}>;
 
 // --------------------
 // Zod schema for incoming payload

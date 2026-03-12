@@ -50,9 +50,6 @@ importers:
       ioredis:
         specifier: ^5.8.2
         version: 5.10.0
-      zod:
-        specifier: ^3.21.4
-        version: 3.25.76
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 6.1.0
@@ -142,6 +139,9 @@ importers:
       tldts:
         specifier: ^7.0.23
         version: 7.0.25
+      zod:
+        specifier: ^3.21.4
+        version: 3.25.76
     devDependencies:
       '@types/cors':
         specifier: ^2.8.19

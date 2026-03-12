@@ -7,10 +7,10 @@ import {
   CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
   CLICKHOUSE_INSERT_MAX_TRY,
 } from '@/helpers/env';
-import { type PV, type Article } from '@/types';
-import DestinationProvider from './provider';
+import { EgressProvider } from './index';
+import type { PV, Article } from '@/types';
 
-export class ClickHouseDestination implements DestinationProvider {
+export default class ClickHouseEgress implements EgressProvider {
   private articleBuffers: Record<string, Article> = {};
   private pvBuffers: PV[] = [];
   private clickhouseClient: ReturnType<typeof createClient>;
@@ -61,13 +61,13 @@ export class ClickHouseDestination implements DestinationProvider {
     }
   }
 
-  insertArticle(article: Article): void {
+  async insertArticle(article: Article): Promise<void> {
     const articleKey = `${article.tenant_id}:${article.url}`;
     this.articleBuffers[articleKey] = article;
     this.flushBuffer();
   }
 
-  insertPV(pv: PV): void {
+  async insertPV(pv: PV): Promise<void> {
     this.pvBuffers.push(pv);
     this.flushBuffer();
   }

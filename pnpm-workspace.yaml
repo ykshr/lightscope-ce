@@ -4,6 +4,5 @@ packages:
   - packages/clickhouse
   - packages/e2e
   - packages/mock-site
-  - packages/sandbox/*
   - packages/tracker
   - packages/web

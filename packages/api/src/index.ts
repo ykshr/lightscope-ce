@@ -1,25 +1,31 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { graphqlHandler } from '@/graphql';
-import authMiddleware from '@/auth';
+import { logger } from 'hono/logger';
+import { serve } from '@hono/node-server';
+import { graphqlServer } from '@hono/graphql-server';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { PORT } from '@/helpers/env';
+import typeDefs from '@/schema';
+import resolvers from '@/resolvers';
+import createAuthMiddleware from '@/middlewares/auth';
+import NoAuthProvider from '@/middlewares/auth/noAuth';
+import createLoadersMiddleware from '@/middlewares/loaders';
 
-const app = new Hono<{ Variables: { user: any } }>();
+const app = new Hono();
 
+app.use('*', logger());
 app.use('*', cors());
 
 app.get('/health', (c) => c.json({ ok: true }));
-
-// Auth middleware - all routes below this require authentication for dashboard users
-app.use('/gql/*', authMiddleware());
-
-app.use('/gql', async (c, next) => {
-  const user = c.get('user');
-  (c as any).tenantId = user?.tenant_id ? String(user.tenant_id) : '1';
-  (c as any).loaders = new Map();
-  await next();
-});
-
-app.all('/gql', graphqlHandler);
+app.all(
+  '/gql',
+  createAuthMiddleware(new NoAuthProvider()),
+  createLoadersMiddleware(),
+  graphqlServer({
+    schema: makeExecutableSchema({ typeDefs, resolvers }),
+    pretty: true,
+  })
+);
 
 app.onError((err, c) => {
   if (err instanceof SyntaxError) {
@@ -28,4 +34,12 @@ app.onError((err, c) => {
   return c.json({ error: 'Internal Server Error' }, 500);
 });
 
-export default app;
+serve(
+  {
+    fetch: app.fetch,
+    port: PORT,
+  },
+  (info) => {
+    console.log(`api server listening on ${info.port}`);
+  }
+);

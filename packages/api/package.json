@@ -13,9 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "tsc",
-    "build:notypecheck": "esbuild src/serve.ts --platform=node --bundle --outfile=dist/bundle.js",
+    "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
     "start": "node dist/bundle.js",
-    "dev": "tsx src/serve.ts",
+    "dev": "tsx src/index.ts",
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
@@ -30,8 +30,7 @@
     "graphql": "^16.12.0",
     "graphql-scalars": "^1.25.0",
     "hono": "^4.12.5",
-    "ioredis": "^5.8.2",
-    "zod": "^3.21.4"
+    "ioredis": "^5.8.2"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "6.1.0",

@@ -64,7 +64,7 @@ export default function getLoader<T extends AnalyticsBase>(
 
 function createLoaderKey(ctx: Context, params: LoaderParams): string {
   return JSON.stringify({
-    tenantId: ctx.tenantId,
+    tenantId: ctx.user.tenantId,
     tableName: params.tableName,
     queryParams: {
       startDate: params.queryParams.startDate,

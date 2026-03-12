@@ -1,6 +1,6 @@
 import { Article, Resolvers } from '@/__generated__/graphql-resolvers';
 import getArticleLoader from '@/loaders/article';
-import { Context } from '@/middlewares/loaders';
+import { Context } from '@/types';
 
 export const getArticle = async (
   parent: { url?: string },

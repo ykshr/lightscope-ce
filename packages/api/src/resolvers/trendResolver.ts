@@ -16,7 +16,7 @@ import {
 import getTrendLoader from '@/loaders/trend';
 import { getArticle } from '@/resolvers/articleResolver';
 import { resolveRequestedAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
-import { Context } from '@/middlewares/loaders';
+import { Context } from '@/types';
 
 const createCategoryResolver =
   <T extends TrendAnalyticsBase>(tableName: string) =>

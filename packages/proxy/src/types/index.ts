@@ -1,4 +1,7 @@
+import type { Context as HonoContext } from 'hono';
 import { z } from 'zod';
+
+export type Context = HonoContext<{ Variables: { tracker: { tenantId: string } } }>;
 
 // --------------------
 // Zod schema for incoming payload
@@ -49,7 +52,7 @@ export type Payload = z.infer<typeof PayloadSchema>;
 // PV type definition
 // --------------------
 export interface PV {
-  tenant_id: number;
+  tenant_id: string;
   site_name: string;
   url: string;
   event_id: string;
@@ -85,7 +88,7 @@ export interface PV {
 // Article type definition
 // --------------------
 export interface Article {
-  tenant_id: number;
+  tenant_id: string;
   url: string;
   title?: string;
   type?: string;

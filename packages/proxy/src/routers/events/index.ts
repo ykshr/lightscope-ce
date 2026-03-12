@@ -1,16 +1,12 @@
 import { Hono } from 'hono';
 import { PayloadSchema, type Payload } from '@/types';
-import trackerAuthMiddleware from '@/trackerAuth';
-import createDestinationProvider from '@/destination/factory';
 import { getGeoData } from '@/helpers/geo';
 import { createArticle, createPV } from './processEvent';
+import type { Context } from '@/types';
 
-const router = new Hono<{ Variables: { tenant_id: number } }>();
-const destinationProvider = createDestinationProvider();
+const eventsRouter = new Hono();
 
-router.use('/*', trackerAuthMiddleware());
-
-router.post('/', async (c) => {
+eventsRouter.post('/', async (c: Context) => {
   try {
     const body = await c.req.json();
     const parseResult = PayloadSchema.safeParse(body);
@@ -25,18 +21,14 @@ router.post('/', async (c) => {
     }
     const payload: Payload = parseResult.data;
 
-    const tenant_id = c.get('tenant_id');
-    if (tenant_id === undefined || isNaN(tenant_id)) {
-      return c.json({ error: 'Missing or invalid tenant_id' }, 400);
-    }
-
-    const article = createArticle(payload, tenant_id);
-    destinationProvider.insertArticle(article);
+    const tenantId = c.var.tracker.tenantId;
+    const article = createArticle(payload, tenantId);
+    // destinationProvider.insertArticle(article);
 
     const geoData = getGeoData(c);
 
-    const pv = createPV(payload, geoData, tenant_id);
-    destinationProvider.insertPV(pv);
+    const pv = createPV(payload, geoData, tenantId);
+    // destinationProvider.insertPV(pv);
 
     return c.json({ ok: true }, 201);
   } catch (e: any) {
@@ -47,4 +39,4 @@ router.post('/', async (c) => {
   }
 });
 
-export default router;
+export default eventsRouter;

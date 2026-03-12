@@ -1,25 +1,23 @@
 import { Context } from 'hono';
 import { createMiddleware } from 'hono/factory';
 
-export type User = {
-  id: string;
-  role: string;
+export type Tracker = {
   tenantId: string;
 };
 
 export interface AuthProvider {
-  getUser(c: Context): Promise<User | null>;
+  getTracker(c: Context): Promise<Tracker | null>;
 }
 
 export default function createAuthMiddleware(authProvider: AuthProvider) {
   return createMiddleware(async (c, next) => {
-    const user = await authProvider.getUser(c);
+    const tracker = await authProvider.getTracker(c);
 
-    if (!user) {
+    if (!tracker) {
       return c.json({ error: 'unauthorized' }, 401);
     }
 
-    c.set('user', user);
+    c.set('tracker', tracker);
     return await next();
   });
 }

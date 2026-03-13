@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { GraphQLResolveInfo, FieldNode, FragmentDefinitionNode, Kind } from 'graphql';
-import {
-  resolveRequestedAttributes,
-} from './processAttributes';
+import { resolveRequestedAttributes } from './processAttributes';
 
 function createMockInfo(
   fieldNodes: FieldNode[],
@@ -14,12 +12,16 @@ function createMockInfo(
     fieldName: 'dummy',
     returnType: {} as any,
     parentType: {} as any,
-    path: {} as any,
+    path: { key: 'dummy', prev: undefined },
     schema: {} as any,
     rootValue: undefined,
-    operation: {} as any,
+    operation: {
+      kind: Kind.OPERATION_DEFINITION,
+      operation: 'query',
+      selectionSet: { kind: Kind.SELECTION_SET, selections: [] },
+    },
     variableValues: {},
-  } as GraphQLResolveInfo;
+  } as unknown as GraphQLResolveInfo;
 }
 
 describe('processAttributes', () => {

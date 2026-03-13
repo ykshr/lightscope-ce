@@ -17,7 +17,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     const response = await request.post(`${INSERT_URL}/events`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer test-token',
+        Authorization: 'Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==',
       },
       data: {
         event_name: 'page_view',
@@ -47,6 +47,9 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     `;
 
     const res = await request.post(`${API_URL}/gql`, {
+      headers: {
+        Authorization: 'Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==',
+      },
       data: { query },
     });
     const json = await res.json();
@@ -76,6 +79,9 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     `;
 
     const res = await request.post(`${API_URL}/gql`, {
+      headers: {
+        Authorization: 'Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==',
+      },
       data: { query },
     });
     const json = await res.json();
@@ -112,6 +118,9 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     `;
 
     const res = await request.post(`${API_URL}/gql`, {
+      headers: {
+        Authorization: 'Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==',
+      },
       data: { query },
     });
     const json = await res.json();

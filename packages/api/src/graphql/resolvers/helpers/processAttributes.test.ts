@@ -10,10 +10,10 @@ function createMockInfo(
     fieldNodes,
     fragments,
     fieldName: 'dummy',
-    returnType: {} as any,
-    parentType: {} as any,
+    returnType: { name: 'DummyType' } as any,
+    parentType: { name: 'DummyParentType' } as any,
     path: { key: 'dummy', prev: undefined },
-    schema: {} as any,
+    schema: { getType: () => null } as any,
     rootValue: undefined,
     operation: {
       kind: Kind.OPERATION_DEFINITION,

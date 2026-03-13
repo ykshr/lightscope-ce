@@ -48,6 +48,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
 
     const res = await request.post(`${API_URL}/gql`, {
       data: { query },
+      headers: { Authorization: 'Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==' },
     });
     const json = await res.json();
     if (!res.ok()) {
@@ -77,6 +78,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
 
     const res = await request.post(`${API_URL}/gql`, {
       data: { query },
+      headers: { Authorization: 'Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==' },
     });
     const json = await res.json();
     expect(res.ok()).toBeTruthy();
@@ -113,6 +115,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
 
     const res = await request.post(`${API_URL}/gql`, {
       data: { query },
+      headers: { Authorization: 'Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==' },
     });
     const json = await res.json();
     expect(res.ok()).toBeTruthy();

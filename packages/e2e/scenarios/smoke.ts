@@ -55,7 +55,10 @@ async function main() {
   console.log('Querying GraphQL...');
   const gqlRes = await fetch(`${API_URL}/gql`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==',
+    },
     body: JSON.stringify({ query }),
   });
 

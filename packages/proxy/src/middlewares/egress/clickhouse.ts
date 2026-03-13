@@ -49,7 +49,7 @@ export default class ClickHouseEgress implements EgressProvider {
     // Article
     if (flush || Object.keys(this.articleBuffers).length >= CLICKHOUSE_INSERT_BATCH_SIZE) {
       const articlesToInsert = Object.values(this.articleBuffers);
-      Object.keys(this.articleBuffers).forEach((key) => delete this.articleBuffers[key]);
+      this.articleBuffers = {};
       await this.insert('lightscope.article', articlesToInsert);
     }
 

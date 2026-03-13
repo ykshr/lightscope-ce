@@ -7,7 +7,7 @@ export function renameKeySnakeToCamel(obj: any): any {
     return obj.map((item) => renameKeySnakeToCamel(item));
   } else if (obj !== null && typeof obj === 'object') {
     const newObj: any = {};
-    for (const key in obj) {
+    for (const key of Object.keys(obj)) {
       const camelKey = snakeToCamel(key);
       newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
     }

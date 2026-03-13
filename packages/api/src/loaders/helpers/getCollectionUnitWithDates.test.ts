@@ -44,6 +44,41 @@ describe('getCollectionUnitWithDates', () => {
       });
     });
 
+    it('returns Minute with interval 5 for identical dates', () => {
+      const start = new Date('2023-01-01T00:00:00.000Z');
+      const end = new Date('2023-01-01T00:00:00.000Z');
+      const result = getAggregationUnit(start, end, { unit: AggregationUnit.Auto });
+      expect(result).toEqual({ unit: AggregationUnit.Minute, interval: 5 });
+    });
+
+    it('returns Minute with interval 5 for negative date range', () => {
+      const start = new Date('2023-01-02T00:00:00.000Z');
+      const end = new Date('2023-01-01T00:00:00.000Z');
+      const result = getAggregationUnit(start, end, { unit: AggregationUnit.Auto });
+      expect(result).toEqual({ unit: AggregationUnit.Minute, interval: 5 });
+    });
+
+    it('returns Minute with interval 5 for exactly 1 day minus 1 ms', () => {
+      const start = new Date('2023-01-01T00:00:00.000Z');
+      const end = new Date('2023-01-01T23:59:59.999Z');
+      const result = getAggregationUnit(start, end, { unit: AggregationUnit.Auto });
+      expect(result).toEqual({ unit: AggregationUnit.Minute, interval: 5 });
+    });
+
+    it('returns Hour with interval 1 for exactly 7 days minus 1 ms', () => {
+      const start = new Date('2023-01-01T00:00:00.000Z');
+      const end = new Date('2023-01-07T23:59:59.999Z');
+      const result = getAggregationUnit(start, end, { unit: AggregationUnit.Auto });
+      expect(result).toEqual({ unit: AggregationUnit.Hour, interval: 1 });
+    });
+
+    it('returns Day with interval 1 for exactly 365 days minus 1 ms', () => {
+      const start = new Date('2023-01-01T00:00:00.000Z');
+      const end = new Date('2023-12-31T23:59:59.999Z');
+      const result = getAggregationUnit(start, end, { unit: AggregationUnit.Auto });
+      expect(result).toEqual({ unit: AggregationUnit.Day, interval: 1 });
+    });
+
     describe('Explicit Units without interval', () => {
       it('defaults Minute interval to 5', () => {
         const result = getAggregationUnit(new Date(), new Date(), { unit: AggregationUnit.Minute });
@@ -139,6 +174,20 @@ describe('getCollectionUnitWithDates', () => {
           unit: 'min',
           startDate: new Date('2023-01-01T02:00:00.000Z'),
           endDate: new Date('2023-01-01T02:30:00.000Z'),
+        },
+      ]);
+    });
+
+    it('splits correctly with aggregation unit Minute', () => {
+      const start = new Date('2023-01-01T00:00:00.000Z');
+      const end = new Date('2023-01-01T00:15:00.000Z');
+      const result = getTableUnitWithDates(start, end, AggregationUnit.Minute);
+
+      expect(result).toEqual([
+        {
+          unit: 'min',
+          startDate: new Date('2023-01-01T00:00:00.000Z'),
+          endDate: new Date('2023-01-01T00:15:00.000Z'),
         },
       ]);
     });

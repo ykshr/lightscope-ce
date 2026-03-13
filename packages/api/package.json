@@ -38,6 +38,7 @@
     "@graphql-codegen/typescript-resolvers": "5.1.4",
     "@types/cors": "^2.8.19",
     "@types/node": "^22.15.29",
+    "@vitest/coverage-v8": "^4.0.18",
     "tsx": "^4.21.0",
     "typescript": "^5.8.3",
     "vitest": "^4.0.18"

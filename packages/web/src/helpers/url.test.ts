@@ -67,6 +67,12 @@ describe('url helpers', () => {
       expect(result.articleFilter?.includeUrls).toEqual(['a', 'b']);
     });
 
+    it('should decode array params at the root', () => {
+      const search = '?iag=20-30&iag=30-40';
+      const result = decodeUrlParams(search);
+      expect(result.includeAges).toEqual(['20-30', '30-40']);
+    });
+
     it('should decode nested array params', () => {
       const search = '?ia=a%2Cb&ia=c';
       const result = decodeUrlParams(search);
@@ -76,9 +82,31 @@ describe('url helpers', () => {
     });
 
     it('should handle date params', () => {
-      // Mock convertDateString for deterministic test if needed, or rely on implementation
-      // decodeUrlParams uses convertDateString
-      // Let's assume convertDateString works (tested in date.test.ts)
+      const search = '?ptb=2023-01-01&mta=2023-02-01';
+      const result = decodeUrlParams(search);
+      expect(result.articleFilter?.publishedTimeBefore).toBeInstanceOf(Date);
+      expect(result.articleFilter?.modifiedTimeAfter).toBeInstanceOf(Date);
+      expect(result.articleFilter?.publishedTimeBefore?.getTime()).toBe(
+        new Date('2023-01-01').getTime()
+      );
+      expect(result.articleFilter?.modifiedTimeAfter?.getTime()).toBe(
+        new Date('2023-02-01').getTime()
+      );
+    });
+
+    it('should decode number params', () => {
+      const search = '?lm=20&pg=2';
+      const result = decodeUrlParams(search);
+      expect(result.limit).toBe(20);
+      expect(result.page).toBe(2);
+    });
+
+
+    it('should handle unrecognized params gracefully', () => {
+      const search = '?unknown=val&cat=known';
+      const result = decodeUrlParams(search);
+      expect((result as any).unknown).toBeUndefined();
+      expect(result.category).toBe('known');
     });
   });
 });

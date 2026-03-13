@@ -47,6 +47,9 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     `;
 
     const res = await request.post(`${API_URL}/gql`, {
+      headers: {
+        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
+      },
       data: { query },
     });
     const json = await res.json();
@@ -76,6 +79,9 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     `;
 
     const res = await request.post(`${API_URL}/gql`, {
+      headers: {
+        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
+      },
       data: { query },
     });
     const json = await res.json();
@@ -112,6 +118,9 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     `;
 
     const res = await request.post(`${API_URL}/gql`, {
+      headers: {
+        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
+      },
       data: { query },
     });
     const json = await res.json();

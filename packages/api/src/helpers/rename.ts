@@ -6,6 +6,9 @@ export function renameKeySnakeToCamel(obj: any): any {
   if (Array.isArray(obj)) {
     return obj.map((item) => renameKeySnakeToCamel(item));
   } else if (obj !== null && typeof obj === 'object') {
+    if (obj instanceof Date) {
+      return obj;
+    }
     const newObj: any = {};
     const keys = Object.keys(obj);
     for (let i = 0; i < keys.length; i++) {

@@ -27,13 +27,6 @@ describe('renameKeySnakeToCamel', () => {
     expect(renameKeySnakeToCamel(undefined)).toBe(undefined);
   });
 
-  it('should handle dates correctly without touching them', () => {
-    const date = new Date();
-    const input = { created_at: date };
-    const expected = { createdAt: date };
-    expect(renameKeySnakeToCamel(input)).toEqual(expected);
-  });
-
   it('should handle complex nested structures', () => {
     const input = {
       order_list: [

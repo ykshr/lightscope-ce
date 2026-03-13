@@ -10,7 +10,7 @@ describe('cn utility function', () => {
     const isTrue = true;
     const isFalse = false;
 
-    expect(cn('class1', isTrue && 'class2', isFalse && 'class3')).toBe('class1 class2');
+    expect(cn('class1', isTrue ? 'class2' : '', isFalse ? 'class3' : '')).toBe('class1 class2');
   });
 
   it('handles arrays of classes', () => {

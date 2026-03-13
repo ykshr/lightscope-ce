@@ -9,6 +9,14 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 export { PORT };
 
 // --------------------
+// CORS
+// --------------------
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map((s) => s.trim())
+  : [];
+export { ALLOWED_ORIGINS };
+
+// --------------------
 // MAXMIND (geo)
 // --------------------
 const MAXMIND_DB_PATH = process.env.MAXMIND_DB_PATH || 'data/GeoLite2-City.mmdb';

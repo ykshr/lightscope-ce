@@ -9,6 +9,14 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 export { PORT };
 
 // --------------------
+// CORS
+// --------------------
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map((s) => s.trim())
+  : [];
+export { ALLOWED_ORIGINS };
+
+// --------------------
 // Auth
 // --------------------
 const NO_AUTH_TOKEN = process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==';

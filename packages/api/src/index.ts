@@ -4,7 +4,7 @@ import { logger } from 'hono/logger';
 import { serve } from '@hono/node-server';
 import { graphqlServer } from '@hono/graphql-server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { PORT } from '@/helpers/env';
+import { PORT, ALLOWED_ORIGINS } from '@/helpers/env';
 import typeDefs from '@/schema';
 import resolvers from '@/resolvers';
 import createAuthMiddleware from '@/middlewares/auth';
@@ -14,7 +14,7 @@ import createLoadersMiddleware from '@/middlewares/loaders';
 const app = new Hono();
 
 app.use('*', logger());
-app.use('*', cors());
+app.use('*', cors({ origin: ALLOWED_ORIGINS }));
 
 app.get('/health', (c) => c.json({ ok: true }));
 app.all(

@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { serve } from '@hono/node-server';
-import { PORT } from '@/helpers/env';
+import { PORT, ALLOWED_ORIGINS } from '@/helpers/env';
 import indexRouter from '@/routers/index';
 import eventsRouter from '@/routers/events';
 import createAuthMiddleware from '@/middlewares/auth';
@@ -13,7 +13,7 @@ import ClickHouseEgress from '@/middlewares/egress/clickhouse';
 const app = new Hono();
 
 app.use('*', logger());
-app.use('*', cors());
+app.use('*', cors({ origin: ALLOWED_ORIGINS }));
 
 // Public routes that don't require authentication
 app.route('/', indexRouter);

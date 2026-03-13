@@ -1,115 +1,88 @@
-# LightScope
+# LightScope CE
 
-LightScope is a web analytics platform built as a TypeScript monorepo. It features a high-performance analytics engine powered by ClickHouse and a modern React-based dashboard.
+LightScope CE (Community Edition) は、ClickHouseを活用した高性能なWebアナリティクスプラットフォームです。TypeScriptを用いたモノレポ構成で開発されており、リアルタイムなデータ集計とモダンなダッシュボードを提供します。
 
-## Project Structure
+## プロジェクト構成
 
-This project uses **pnpm workspaces** to manage the following packages:
+本プロジェクトは **pnpm workspaces** を使用して以下のパッケージを管理しています。
 
-- **packages/web**: Frontend application (React, Vite, TailwindCSS, Recharts).
-- **packages/api**: GraphQL API backend (Node.js, Express, Apollo Server, ClickHouse).
-- **packages/clickhouse**: ClickHouse database configuration and SQL migrations.
-- **packages/tracker**: Utility scripts.
+- **packages/web**: フロントエンドアプリケーション (React, Vite, TailwindCSS, Recharts)
+- **packages/api**: GraphQL API バックエンド (Node.js, Hono `@hono/graphql-server`, ClickHouse)
+- **packages/proxy**: トラッカーイベント収集用のREST API (Node.js, Hono, ClickHouse)
+- **packages/clickhouse**: ClickHouseデータベースの設定とSQLマイグレーション
+- **packages/tracker**: トラッカーユーティリティスクリプト
+- **packages/mock-site**: Nginxで配信される動作確認用のモックサイト
+- **packages/e2e**: Playwrightとtsxを使用したエンドツーエンド（E2E）テスト
 
-## Tech Stack
+## 技術スタック
 
-- **Frontend**: React, TypeScript, Vite, Tailwind CSS, Radix UI, TanStack Query.
-- **Backend**: Node.js, Express, Apollo Server (GraphQL).
-- **Database**: ClickHouse (for high-speed analytics queries).
+- **フロントエンド**: React, TypeScript, Vite, Tailwind CSS, Radix UI, TanStack Query
+- **バックエンド**: Node.js, TypeScript, Hono, GraphQL API (apiパッケージ), REST API (proxyパッケージ)
+- **データベース**: ClickHouse (高速な分析クエリ向け)
+- **インフラ**: Docker, Docker Compose, Nginx
 
-## Getting Started
+## はじめに (Getting Started)
 
-### Prerequisites
+### 前提条件 (Prerequisites)
 
-- Node.js (v20+ recommended)
-- pnpm (v9+ recommended)
-- Docker & Docker Compose (for running ClickHouse and the full stack)
+- Node.js (v20以上を推奨)
+- pnpm (v9以上を推奨)
+- Docker および Docker Compose (フルスタック環境の実行に必要)
 
-### Installation
+### インストール (Installation)
 
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/your-username/lightscope.git
-    cd lightscope
-    ```
+1. リポジトリをクローンします。
+   ```bash
+   git clone https://github.com/ykshr/lightscope-ce.git
+   cd lightscope-ce
+   ```
 
-2.  Install dependencies:
-    ```bash
-    pnpm install
-    ```
+2. 依存関係をインストールします。
+   ```bash
+   pnpm install
+   ```
 
-3.  Configure environment variables:
-    ```bash
-    cp .env.example .env
-    ```
-    Review and update `.env` with your settings.
+3. 環境変数を設定します。
+   ```bash
+   cp .env.example .env
+   ```
+   必要に応じて `.env` ファイルの内容を確認・更新してください。
+   *注意:* `api` および `proxy` パッケージのCORSオリジンは `ALLOWED_ORIGINS` 環境変数で制限されています（デフォルトは `[]` です）。
 
-### Running Locally (Docker Compose)
+### ローカルでの実行方法 (Running Locally)
 
-The easiest way to run the full stack is with Docker Compose from the root directory:
-
-```bash
-docker-compose up --build
-```
-
-This will start:
--   ClickHouse (http://localhost:8123)
--   API (http://localhost:3000)
--   Web Dashboard (http://localhost:5173)
-
-### Running Manually
-
-1.  **Start ClickHouse:**
-    Ensure a ClickHouse instance is running. You can use the Docker image provided in `packages/clickhouse`.
-
-2.  **Start the API:**
-    ```bash
-    cd packages/api
-    pnpm dev
-    ```
-
-3.  **Start the Frontend:**
-    ```bash
-    cd packages/web
-    pnpm dev
-    ```
-
-## Configuration Options
-
-Configuration is managed via environment variables. See `.env.example` for a complete list.
-
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `PORT` | API Port | `3000` |
-| `CLICKHOUSE_HOST` | ClickHouse connection URL | `http://localhost:8123` |
-| `CLICKHOUSE_USERNAME` | ClickHouse username | `lightscope` |
-| `CLICKHOUSE_PASSWORD` | ClickHouse password | `lightscope` |
-| `VITE_API_ENDPOINT` | API URL for the frontend | `http://localhost:3000` |
-
-## Architecture Overview
-
-LightScope consists of three main components:
-
-1.  **Ingestion & API**: A Node.js service that receives analytics events and serves data via GraphQL.
-2.  **Storage**: ClickHouse is used for storing high-volume event data and performing real-time aggregations.
-3.  **Dashboard**: A React application for visualizing the data.
-
-## Deployment Guide
-
-### Docker
-
-Build the images using the provided Dockerfiles in each package.
+Docker Compose を使用して、すべてのサービスを一度に起動することができます。
 
 ```bash
-# Build API
-docker build -t lightscope-api ./packages/api
-
-# Build Web
-docker build -t lightscope-web ./packages/web
+docker compose up -d --build
 ```
 
-Deploy using your preferred container orchestrator (Kubernetes, Docker Swarm, etc.). Ensure the environment variables are correctly set.
+これにより、以下のサービスが起動します。
+- **ClickHouse**: `http://localhost:8123`
+- **API**: `http://localhost:3000`
+- **Proxy**: `http://localhost:3001`
+- **Web (ダッシュボード)**: `http://localhost:5173`
+- **Mock Site**: `http://localhost:8080`
 
-## License
+*注意:* Docker Hubの未認証でのプル制限により、ClickHouseイメージの取得に失敗する場合があります。その場合はログインするか時間を置いて再試行してください。
 
-MIT
+### 開発・運用に関するコマンド (Available Scripts)
+
+リポジトリのルートディレクトリから以下のコマンドを実行できます。
+
+- `pnpm run format` : Prettierを使用してコードのフォーマットを自動修正します。
+- `pnpm run ci` : すべてのパッケージに対して、静的解析(Lint)、型チェック、フォーマット確認、ユニットテスト、ビルドを実行します。プルリクエストを作成する前などに必ず実行し、エラーがないことを確認してください。
+- `pnpm run test:e2e` : E2Eテストを実行します。
+
+## アーキテクチャの概要 (Architecture Overview)
+
+LightScopeは主に以下のコンポーネントで構成されています。
+
+1. **データ収集 (Proxy)**: トラッカーからの分析イベントを受信するREST API。
+2. **API (API)**: ダッシュボード向けにデータを提供するGraphQL API。
+3. **データ保存 (Storage)**: 大量のイベントデータの保存とリアルタイムな集計を行うための ClickHouse。
+4. **ダッシュボード (Web)**: データを可視化するためのReactアプリケーション。
+
+## ライセンス (License)
+
+MIT License

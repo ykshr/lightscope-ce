@@ -2,7 +2,7 @@ import { GraphQLResolveInfo } from 'graphql';
 import type { Resolvers, RankParameters } from '@/__generated__/graphql-resolvers';
 import getRankLoader from '@/loaders/rank';
 import { getArticle } from '@/resolvers/articleResolver';
-import { resolveRequestedAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
+import { resolveRequestedAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
 import { Context } from '@/types';
 
 const createCategoryResolver =

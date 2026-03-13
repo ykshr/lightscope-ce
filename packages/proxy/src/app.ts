@@ -5,14 +5,14 @@ import indexRouter from '@/routers/index';
 import createEventsRouter from '@/routers/events';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
 import NoAuthProvider from '@/middlewares/auth/noAuth';
-import createEgressMiddleware, { Egress } from '@/middlewares/egress';
+import createEgressMiddleware, { EgressProvider } from '@/middlewares/egress';
 import ClickHouseEgress from '@/middlewares/egress/clickhouse';
 import { getGeoData as defaultGetGeoData } from '@/helpers/geo';
 import { Context } from 'hono';
 
 export interface AppDependencies {
   authProvider?: AuthProvider;
-  egress?: Egress;
+  egress?: EgressProvider;
   getGeoData?: (c: Context) => any;
 }
 

@@ -75,6 +75,7 @@ services:
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev --host"
     environment:
       - VITE_API_ENDPOINT=${VITE_API_ENDPOINT:-http://localhost:3000}
+      - VITE_NO_AUTH_TOKEN=test-token
     ports:
       - '5173:5173'
     depends_on:

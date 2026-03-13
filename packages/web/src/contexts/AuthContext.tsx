@@ -1,29 +1,35 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import createAuthProvider from '@/auth/factory';
-import { AuthUser } from '@/auth/provider';
+import { AuthProvider as AuthProviderType, AuthUser } from '@/contexts/auth';
 
 type AuthState = {
   user: AuthUser | null;
+  auth: AuthProviderType | null;
   loading: boolean;
 };
 
 const AuthContext = createContext<AuthState>({
   user: null,
+  auth: null,
   loading: true,
 });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({
+  auth,
+  children,
+}: {
+  auth: AuthProviderType;
+  children: React.ReactNode;
+}) => {
   const [state, setState] = useState<AuthState>({
     user: null,
+    auth,
     loading: true,
   });
 
   useEffect(() => {
     const bootstrap = async () => {
-      const auth = createAuthProvider();
-      await auth.initialize();
       const user = await auth.getUser();
-      setState({ user, loading: false });
+      setState({ user, auth, loading: false });
     };
 
     bootstrap();

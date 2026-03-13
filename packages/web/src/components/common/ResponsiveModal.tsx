@@ -15,7 +15,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 
 interface ResponsiveModalProps {
   dialogClassName?: string;

@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { fetchData } from '@/lib/fetcher';
+import { useFetchData } from '@/hooks/useFetchData';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1008,12 +1008,10 @@ export const useTotalEngagementTimeQuery = <
     return useQuery<TotalEngagementTimeQuery, TError, TData>(
       {
     queryKey: ['TotalEngagementTime', variables],
-    queryFn: fetchData<TotalEngagementTimeQuery, TotalEngagementTimeQueryVariables>(TotalEngagementTimeDocument, variables),
+    queryFn: useFetchData<TotalEngagementTimeQuery, TotalEngagementTimeQueryVariables>(TotalEngagementTimeDocument).bind(null, variables),
     ...options
   }
     )};
-
-useTotalEngagementTimeQuery.getKey = (variables: TotalEngagementTimeQueryVariables) => ['TotalEngagementTime', variables];
 
 export const TotalViewsDocument = `
     query TotalViews($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1042,12 +1040,10 @@ export const useTotalViewsQuery = <
     return useQuery<TotalViewsQuery, TError, TData>(
       {
     queryKey: ['TotalViews', variables],
-    queryFn: fetchData<TotalViewsQuery, TotalViewsQueryVariables>(TotalViewsDocument, variables),
+    queryFn: useFetchData<TotalViewsQuery, TotalViewsQueryVariables>(TotalViewsDocument).bind(null, variables),
     ...options
   }
     )};
-
-useTotalViewsQuery.getKey = (variables: TotalViewsQueryVariables) => ['TotalViews', variables];
 
 export const TotalUniqueUsersDocument = `
     query TotalUniqueUsers($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1076,12 +1072,10 @@ export const useTotalUniqueUsersQuery = <
     return useQuery<TotalUniqueUsersQuery, TError, TData>(
       {
     queryKey: ['TotalUniqueUsers', variables],
-    queryFn: fetchData<TotalUniqueUsersQuery, TotalUniqueUsersQueryVariables>(TotalUniqueUsersDocument, variables),
+    queryFn: useFetchData<TotalUniqueUsersQuery, TotalUniqueUsersQueryVariables>(TotalUniqueUsersDocument).bind(null, variables),
     ...options
   }
     )};
-
-useTotalUniqueUsersQuery.getKey = (variables: TotalUniqueUsersQueryVariables) => ['TotalUniqueUsers', variables];
 
 export const ArticleTrendDocument = `
     query ArticleTrend($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput, $limit: Int, $page: Int, $metric: Metric, $isArticles: Boolean = false, $isCategoryAge: Boolean = false, $isCategoryAgeAge: Boolean = false, $isCategoryApp: Boolean = false, $isCategoryAppAppType: Boolean = false, $isCategoryAppApp: Boolean = false, $isCategoryDevice: Boolean = false, $isCategoryDeviceDeviceType: Boolean = false, $isCategoryDeviceDevice: Boolean = false, $isCategoryGender: Boolean = false, $isCategoryGenderGender: Boolean = false, $isCategoryGeo: Boolean = false, $isCategoryGeoContinent: Boolean = false, $isCategoryGeoCountry: Boolean = false, $isCategoryGeoSubdivision: Boolean = false, $isCategoryReferrer: Boolean = false, $isCategoryReferrerDomain: Boolean = false, $isCategoryReferrerReferrer: Boolean = false, $isCategoryUtm: Boolean = false, $isCategoryUtmSource: Boolean = false, $isCategoryUtmMedium: Boolean = false, $isCategoryUtmCampaign: Boolean = false, $includeAges: [String!], $excludeAges: [String!], $includeAppTypes: [String!], $excludeAppTypes: [String!], $includeApps: [String!], $excludeApps: [String!], $includeDeviceTypes: [String!], $excludeDeviceTypes: [String!], $includeDeviceVendors: [String!], $excludeDeviceVendors: [String!], $includeDevices: [String!], $excludeDevices: [String!], $includeGenders: [String!], $excludeGenders: [String!], $includeContinents: [String!], $excludeContinents: [String!], $includeSubdivisions: [String!], $excludeSubdivisions: [String!], $includeCountries: [String!], $excludeCountries: [String!], $includeCities: [String!], $excludeCities: [String!], $includeDomains: [String!], $excludeDomains: [String!], $includeReferrers: [String!], $excludeReferrers: [String!], $includeSources: [String!], $excludeSources: [String!], $includeMediums: [String!], $excludeMediums: [String!], $includeCampaigns: [String!], $excludeCampaigns: [String!]) {
@@ -1121,12 +1115,10 @@ export const useArticleTrendQuery = <
     return useQuery<ArticleTrendQuery, TError, TData>(
       {
     queryKey: ['ArticleTrend', variables],
-    queryFn: fetchData<ArticleTrendQuery, ArticleTrendQueryVariables>(ArticleTrendDocument, variables),
+    queryFn: useFetchData<ArticleTrendQuery, ArticleTrendQueryVariables>(ArticleTrendDocument).bind(null, variables),
     ...options
   }
     )};
-
-useArticleTrendQuery.getKey = (variables: ArticleTrendQueryVariables) => ['ArticleTrend', variables];
 
 export const TotalCountryDocument = `
     query TotalCountry($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1156,12 +1148,10 @@ export const useTotalCountryQuery = <
     return useQuery<TotalCountryQuery, TError, TData>(
       {
     queryKey: ['TotalCountry', variables],
-    queryFn: fetchData<TotalCountryQuery, TotalCountryQueryVariables>(TotalCountryDocument, variables),
+    queryFn: useFetchData<TotalCountryQuery, TotalCountryQueryVariables>(TotalCountryDocument).bind(null, variables),
     ...options
   }
     )};
-
-useTotalCountryQuery.getKey = (variables: TotalCountryQueryVariables) => ['TotalCountry', variables];
 
 export const TotalCityDocument = `
     query TotalCity($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput, $country: String!) {
@@ -1191,12 +1181,10 @@ export const useTotalCityQuery = <
     return useQuery<TotalCityQuery, TError, TData>(
       {
     queryKey: ['TotalCity', variables],
-    queryFn: fetchData<TotalCityQuery, TotalCityQueryVariables>(TotalCityDocument, variables),
+    queryFn: useFetchData<TotalCityQuery, TotalCityQueryVariables>(TotalCityDocument).bind(null, variables),
     ...options
   }
     )};
-
-useTotalCityQuery.getKey = (variables: TotalCityQueryVariables) => ['TotalCity', variables];
 
 export const TotalReferrerDomainDocument = `
     query TotalReferrerDomain($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1226,12 +1214,10 @@ export const useTotalReferrerDomainQuery = <
     return useQuery<TotalReferrerDomainQuery, TError, TData>(
       {
     queryKey: ['TotalReferrerDomain', variables],
-    queryFn: fetchData<TotalReferrerDomainQuery, TotalReferrerDomainQueryVariables>(TotalReferrerDomainDocument, variables),
+    queryFn: useFetchData<TotalReferrerDomainQuery, TotalReferrerDomainQueryVariables>(TotalReferrerDomainDocument).bind(null, variables),
     ...options
   }
     )};
-
-useTotalReferrerDomainQuery.getKey = (variables: TotalReferrerDomainQueryVariables) => ['TotalReferrerDomain', variables];
 
 export const TotalUtmCampaignDocument = `
     query TotalUtmCampaign($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput) {
@@ -1261,12 +1247,10 @@ export const useTotalUtmCampaignQuery = <
     return useQuery<TotalUtmCampaignQuery, TError, TData>(
       {
     queryKey: ['TotalUtmCampaign', variables],
-    queryFn: fetchData<TotalUtmCampaignQuery, TotalUtmCampaignQueryVariables>(TotalUtmCampaignDocument, variables),
+    queryFn: useFetchData<TotalUtmCampaignQuery, TotalUtmCampaignQueryVariables>(TotalUtmCampaignDocument).bind(null, variables),
     ...options
   }
     )};
-
-useTotalUtmCampaignQuery.getKey = (variables: TotalUtmCampaignQueryVariables) => ['TotalUtmCampaign', variables];
 
 export const ArticleRankDocument = `
     query ArticleRank($startDate: DateTime!, $endDate: DateTime!, $articleFilter: ArticleFilterInput, $limit: Int, $page: Int, $order: Order, $metric: Metric, $isArticles: Boolean = false, $isCategoryAge: Boolean = false, $isCategoryApp: Boolean = false, $isCategoryDevice: Boolean = false, $isCategoryGender: Boolean = false, $isCategoryGeo: Boolean = false, $isCategoryReferrer: Boolean = false, $isCategoryUtm: Boolean = false, $includeAges: [String!], $excludeAges: [String!], $includeAppTypes: [String!], $excludeAppTypes: [String!], $includeApps: [String!], $excludeApps: [String!], $includeDeviceTypes: [String!], $excludeDeviceTypes: [String!], $includeDeviceVendors: [String!], $excludeDeviceVendors: [String!], $includeDevices: [String!], $excludeDevices: [String!], $includeGenders: [String!], $excludeGenders: [String!], $includeContinents: [String!], $excludeContinents: [String!], $includeSubdivisions: [String!], $excludeSubdivisions: [String!], $includeCountries: [String!], $excludeCountries: [String!], $includeCities: [String!], $excludeCities: [String!], $includeDomains: [String!], $excludeDomains: [String!], $includeReferrers: [String!], $excludeReferrers: [String!], $includeSources: [String!], $excludeSources: [String!], $includeMediums: [String!], $excludeMediums: [String!], $includeCampaigns: [String!], $excludeCampaigns: [String!]) {
@@ -1296,9 +1280,7 @@ export const useArticleRankQuery = <
     return useQuery<ArticleRankQuery, TError, TData>(
       {
     queryKey: ['ArticleRank', variables],
-    queryFn: fetchData<ArticleRankQuery, ArticleRankQueryVariables>(ArticleRankDocument, variables),
+    queryFn: useFetchData<ArticleRankQuery, ArticleRankQueryVariables>(ArticleRankDocument).bind(null, variables),
     ...options
   }
     )};
-
-useArticleRankQuery.getKey = (variables: ArticleRankQueryVariables) => ['ArticleRank', variables];

@@ -6,7 +6,6 @@ import Overview from '@/contents/overview';
 import Footer from '@/components/Footer';
 import Ranking from '@/contents/ranking';
 import Article from '@/contents/article';
-import getUnauthenticatedApp from '@/auth/unauthenticatedApp';
 
 function AppLayout() {
   return (
@@ -58,11 +57,7 @@ function App() {
   const { user, loading } = useAuth();
 
   if (loading) return null;
-
-  if (!user) {
-    const UnauthenticatedApp = getUnauthenticatedApp();
-    return UnauthenticatedApp ? <UnauthenticatedApp /> : null;
-  }
+  if (!user) return null;
 
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">

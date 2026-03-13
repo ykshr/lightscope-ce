@@ -51,6 +51,44 @@ describe('url helpers', () => {
       const urlParams = encodeUrlParams(params, false);
       expect(urlParams.has('cat')).toBe(false);
     });
+
+    it('should handle unknown config keys', () => {
+      const params = { unknownKey: 'value' };
+      const urlParams = encodeUrlParams(params as any, false);
+      expect(urlParams.get('unknownKey')).toBe('value');
+    });
+
+    it('should encode date as string correctly', () => {
+      const params = { startDate: '2023-01-01' };
+      const urlParams = encodeUrlParams(params, false);
+      expect(urlParams.get('sd')).toBe('2023-01-01');
+    });
+
+    it('should encode number types correctly', () => {
+      const params = { limit: 10 };
+      const urlParams = encodeUrlParams(params, false);
+      expect(urlParams.get('lm')).toBe('10');
+    });
+
+    it('should merge with existing window.location.search when isMerge is true', () => {
+      // Mock window.location in JSDOM
+      const originalLocation = window.location;
+
+      // We will cast window to any to override location
+      const win = window as any;
+      win.location = {
+        ...originalLocation,
+        search: '?existing=true&cat=old',
+      };
+
+      const params = { category: 'new' };
+      const urlParams = encodeUrlParams(params, true);
+
+      expect(urlParams.get('existing')).toBe('true');
+      expect(urlParams.get('cat')).toBe('new');
+
+      win.location = originalLocation;
+    });
   });
 
   describe('decodeUrlParams', () => {
@@ -78,7 +116,11 @@ describe('url helpers', () => {
     it('should handle date params', () => {
       // Mock convertDateString for deterministic test if needed, or rely on implementation
       // decodeUrlParams uses convertDateString
-      // Let's assume convertDateString works (tested in date.test.ts)
+      const search = '?sd=2023-01-01&ed=2023-12-31';
+      const result = decodeUrlParams(search);
+      // Assuming convertDateString turns string into a Date object or string based on logic
+      expect(result.startDate).toBeDefined();
+      expect(result.endDate).toBeDefined();
     });
   });
 });

@@ -1,23 +1,21 @@
-import createAuthProvider from '@/auth';
+import { useAuth } from '@/contexts/AuthContext';
+import { API_URL } from '@/helpers/env';
 
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-
-export const fetchData = <TData, TVariables>(
+export const useFetchData = <TData, TVariables>(
   query: string,
-  variables?: TVariables,
   options?: RequestInit['headers']
-): (() => Promise<TData>) => {
-  return async () => {
-    const auth = createAuthProvider();
-    await auth.initialize();
-    const user = await auth.getUser();
-    const token = await auth.getToken();
+): ((variables?: TVariables) => Promise<TData>) => {
+  const { auth } = useAuth();
 
-    // if (!user?.id) throw new Error('User not authenticated');
+  return async (variables?: TVariables) => {
+    if (!auth) throw new Error('Auth provider is not ready');
+
+    const token = await auth.getToken();
+    if (!token) throw new Error('User not authenticated');
 
     const serializedVariables = variables ? serializeDates(variables) : undefined;
 
-    const res = await fetch(`${API_ENDPOINT}/gql`, {
+    const res = await fetch(`${API_URL}/gql`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,7 +25,6 @@ export const fetchData = <TData, TVariables>(
       body: JSON.stringify({
         query,
         variables: serializedVariables,
-        userId: user?.id,
       }),
     });
 

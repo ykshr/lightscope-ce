@@ -1,11 +1,10 @@
-export interface AuthUser {
+export type AuthUser = {
   id: string;
-  role?: string;
-  tenant_id?: string;
-}
+  role: string;
+  tenantId: string;
+};
 
-export default interface AuthProvider {
-  initialize(): Promise<void>;
+export interface AuthProvider {
   getUser(): Promise<AuthUser | null>;
   getToken(): Promise<string | null>;
   login?(): Promise<void>;

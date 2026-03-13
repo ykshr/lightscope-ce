@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import * as Tabs from '@radix-ui/react-tabs';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';

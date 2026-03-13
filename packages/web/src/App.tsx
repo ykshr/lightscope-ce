@@ -54,9 +54,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const { loading } = useAuth();
+  const { user, loading } = useAuth();
 
   if (loading) return null;
+  if (!user) return null;
 
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">

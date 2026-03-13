@@ -31,6 +31,7 @@ services:
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
       - PORT=3000
+      - NO_AUTH_TOKEN=test-token
     ports:
       - '3000:3000'
     depends_on:
@@ -54,6 +55,7 @@ services:
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
       - PORT=3001
+      - NO_AUTH_TOKEN=test-token
     ports:
       - '3001:3001'
     depends_on:

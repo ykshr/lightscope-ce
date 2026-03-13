@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono, Context } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { graphqlServer } from '@hono/graphql-server';
@@ -9,11 +9,24 @@ import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
 import NoAuthProvider from '@/middlewares/auth/noAuth';
 import createLoadersMiddleware from '@/middlewares/loaders';
 
-export function createApp(authProvider: AuthProvider = new NoAuthProvider()) {
+export interface AppDependencies {
+  authProvider?: AuthProvider;
+  getGeoData?: (c: Context) => any;
+}
+
+export function createApp(deps: AppDependencies = {}) {
+  const { authProvider = new NoAuthProvider(), getGeoData } = deps;
   const app = new Hono();
 
   app.use('*', logger());
   app.use('*', cors());
+
+  app.use('*', async (c, next) => {
+    if (getGeoData) {
+      (c as any).geo = getGeoData(c);
+    }
+    await next();
+  });
 
   app.get('/health', (c) => c.json({ ok: true }));
   app.all(

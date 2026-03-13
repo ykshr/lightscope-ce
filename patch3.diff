@@ -1,0 +1,15 @@
+--- packages/api/src/helpers/rename.ts
++++ packages/api/src/helpers/rename.ts
+@@ -8,9 +8,11 @@
+   } else if (obj !== null && typeof obj === 'object') {
+     const newObj: any = {};
+     for (const key in obj) {
+-      const camelKey = snakeToCamel(key);
+-      newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
++      if (Object.prototype.hasOwnProperty.call(obj, key)) {
++        const camelKey = snakeToCamel(key);
++        newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
++      }
+     }
+     return newObj;
+   }

@@ -1,3 +1,4 @@
+import DataLoader from 'dataloader';
 import {
   QueryTrendArgs,
   AggregationUnit,
@@ -34,9 +35,24 @@ interface LoaderParams {
 }
 
 export default function getLoader(ctx: Context, loaderParams: LoaderParams) {
+  if (!ctx.loaders.has('trendLoader')) {
+    ctx.loaders.set(
+      'trendLoader',
+      new DataLoader<LoaderParams, any[]>(
+        async (paramsList) => {
+          return Promise.all(paramsList.map((params) => Trend(ctx.tenantId, params)));
+        },
+        {
+          cacheKeyFn: (params) => JSON.stringify(params),
+        }
+      )
+    );
+  }
+  const loader = ctx.loaders.get('trendLoader') as DataLoader<LoaderParams, any[]>;
+
   return {
-    total: <T>() => Trend<T>(ctx.tenantId, loaderParams),
-    load: <T>() => Trend<T>(ctx.tenantId, loaderParams),
+    total: <T>() => loader.load(loaderParams) as Promise<T[]>,
+    load: <T>() => loader.load(loaderParams) as Promise<T[]>,
   };
 }
 

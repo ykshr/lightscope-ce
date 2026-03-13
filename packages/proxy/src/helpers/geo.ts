@@ -2,9 +2,7 @@ import fs from 'fs';
 import maxmind, { type CityResponse } from 'maxmind';
 import { type Context } from 'hono';
 import { getConnInfo } from '@hono/node-server/conninfo';
-import { geo } from '@/helpers/context';
-
-const { MAXMIND_DB_PATH } = geo;
+import { MAXMIND_DB_PATH } from '@/helpers/env';
 
 const dbExists = fs.existsSync(MAXMIND_DB_PATH);
 const maxmindReader = dbExists ? await maxmind.open<CityResponse>(MAXMIND_DB_PATH) : null;

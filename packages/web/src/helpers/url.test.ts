@@ -101,7 +101,6 @@ describe('url helpers', () => {
       expect(result.page).toBe(2);
     });
 
-
     it('should handle unrecognized params gracefully', () => {
       const search = '?unknown=val&cat=known';
       const result = decodeUrlParams(search);

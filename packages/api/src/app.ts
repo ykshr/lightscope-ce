@@ -6,15 +6,14 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import typeDefs from '@/schema';
 import resolvers from '@/resolvers';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
-import NoAuthProvider from '@/middlewares/auth/noAuth';
 import createLoadersMiddleware from '@/middlewares/loaders';
 
 export interface AppDependencies {
-  authProvider?: AuthProvider;
+  authProvider: AuthProvider;
 }
 
-export function createApp(deps: AppDependencies = {}) {
-  const { authProvider = new NoAuthProvider() } = deps;
+export function createApp(deps: AppDependencies) {
+  const { authProvider } = deps;
   const app = new Hono();
 
   app.use('*', logger());

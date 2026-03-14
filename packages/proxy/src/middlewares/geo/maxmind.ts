@@ -8,7 +8,7 @@ import { GeoProvider, Geo } from './index';
 const dbExists = fs.existsSync(MAXMIND_DB_PATH);
 const maxmindReader = dbExists ? await maxmind.open<CityResponse>(MAXMIND_DB_PATH) : null;
 
-export default class MaxmindProvider implements GeoProvider {
+export default class MaxmindGeo implements GeoProvider {
   async getGeoData(c: Context) {
     const geo: Geo = {
       continent: undefined,

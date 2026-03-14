@@ -2,7 +2,7 @@ import { Context } from 'hono';
 import { NO_AUTH_TOKEN } from '@/helpers/env';
 import { AuthProvider } from './index';
 
-export default class NoAuthProvider implements AuthProvider {
+export default class NoAuth implements AuthProvider {
   async getUser(c: Context) {
     const authHeader = c.req.header('Authorization');
     const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;

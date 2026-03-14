@@ -4,24 +4,17 @@ import { logger } from 'hono/logger';
 import indexRouter from '@/routers/index';
 import eventsRouter from '@/routers/events';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
-import NoAuthProvider from '@/middlewares/auth/noAuth';
 import createEgressMiddleware, { EgressProvider } from '@/middlewares/egress';
-import ClickHouseEgress from '@/middlewares/egress/clickhouse';
 import createGeoMiddleware, { GeoProvider } from '@/middlewares/geo';
-import MaxmindProvider from '@/middlewares/geo/maxmind';
 
 export interface AppDependencies {
-  authProvider?: AuthProvider;
-  egressProvider?: EgressProvider;
-  geoProvider?: GeoProvider;
+  authProvider: AuthProvider;
+  egressProvider: EgressProvider;
+  geoProvider: GeoProvider;
 }
 
-export function createApp(deps: AppDependencies = {}) {
-  const {
-    authProvider = new NoAuthProvider(),
-    egressProvider = new ClickHouseEgress(),
-    geoProvider = new MaxmindProvider(),
-  } = deps;
+export function createApp(deps: AppDependencies) {
+  const { authProvider, egressProvider, geoProvider } = deps;
 
   const app = new Hono();
 

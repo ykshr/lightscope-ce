@@ -7,16 +7,39 @@ const start = Date.now();
 
 const checkPort = (port) =>
   new Promise((resolve) => {
-    const socket = new net.Socket();
-    socket.on('connect', () => {
-      socket.destroy();
-      resolve(true);
+    let path = '/';
+    if (port === 3000 || port === 3001) path = '/health';
+
+    if (port === 8123) {
+      const socket = new net.Socket();
+      socket.on('connect', () => {
+        socket.destroy();
+        resolve(true);
+      });
+      socket.on('error', () => {
+        socket.destroy();
+        resolve(false);
+      });
+      socket.connect(port, '127.0.0.1');
+      return;
+    }
+
+    const req = http.get({ hostname: '127.0.0.1', port, path, timeout: 2000 }, (res) => {
+      // Consume response data to free up memory
+      res.on('data', () => {});
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
     });
-    socket.on('error', () => {
-      socket.destroy();
+    req.on('timeout', () => {
+      req.destroy();
       resolve(false);
     });
-    socket.connect(port, '127.0.0.1');
+    req.on('error', () => resolve(false));
   });
 
 const checkClickHouseReady = () =>

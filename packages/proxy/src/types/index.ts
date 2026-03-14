@@ -1,9 +1,14 @@
 import type { Context as HonoContext } from 'hono';
 import { z } from 'zod';
 import { EgressProvider } from '@/middlewares/egress';
+import { GeoProvider } from '@/middlewares/geo';
 
 export type Context = HonoContext<{
-  Variables: { tracker: { tenantId: string }; egress: EgressProvider };
+  Variables: {
+    tracker: { tenantId: string };
+    egress: EgressProvider;
+    geo: GeoProvider;
+  };
 }>;
 
 // --------------------

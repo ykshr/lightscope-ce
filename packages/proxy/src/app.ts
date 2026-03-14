@@ -2,25 +2,25 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import indexRouter from '@/routers/index';
-import createEventsRouter from '@/routers/events';
+import eventsRouter from '@/routers/events';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
 import NoAuthProvider from '@/middlewares/auth/noAuth';
 import createEgressMiddleware, { EgressProvider } from '@/middlewares/egress';
 import ClickHouseEgress from '@/middlewares/egress/clickhouse';
-import { getGeoData as defaultGetGeoData } from '@/helpers/geo';
-import { Context } from 'hono';
+import createGeoMiddleware, { GeoProvider } from '@/middlewares/geo';
+import MaxmindProvider from '@/middlewares/geo/maxmind';
 
 export interface AppDependencies {
   authProvider?: AuthProvider;
-  egress?: EgressProvider;
-  getGeoData?: (c: Context) => any;
+  egressProvider?: EgressProvider;
+  geoProvider?: GeoProvider;
 }
 
 export function createApp(deps: AppDependencies = {}) {
   const {
     authProvider = new NoAuthProvider(),
-    egress = new ClickHouseEgress(),
-    getGeoData = defaultGetGeoData,
+    egressProvider = new ClickHouseEgress(),
+    geoProvider = new MaxmindProvider(),
   } = deps;
 
   const app = new Hono();
@@ -36,9 +36,10 @@ export function createApp(deps: AppDependencies = {}) {
   app.use(
     '/events/*',
     createAuthMiddleware(authProvider),
-    createEgressMiddleware(egress)
+    createEgressMiddleware(egressProvider),
+    createGeoMiddleware(geoProvider)
   );
-  app.route('/events', createEventsRouter(getGeoData));
+  app.route('/events', eventsRouter);
 
   app.onError((err, c) => {
     if (err instanceof SyntaxError) {

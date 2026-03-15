@@ -5,7 +5,7 @@ import { GeoProvider } from '@/middlewares/geo';
 
 export type Bindings = {
   NO_AUTH_TOKEN: string;
-  CLICKHOUSE_HOST: string;
+  CLICKHOUSE_URL: string;
   CLICKHOUSE_USERNAME: string;
   CLICKHOUSE_PASSWORD: string;
 };

@@ -5,7 +5,7 @@ import type { Loaders } from '@/middlewares/loaders';
 
 export type Bindings = {
   NO_AUTH_TOKEN: string;
-  CLICKHOUSE_HOST: string;
+  CLICKHOUSE_URL: string;
   CLICKHOUSE_USERNAME: string;
   CLICKHOUSE_PASSWORD: string;
 };

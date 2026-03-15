@@ -81,7 +81,7 @@ Configuration is managed via environment variables. See `.env.example` for a com
 | Variable | Description | Default |
 | :--- | :--- | :--- |
 | `PORT` | API Port | `3000` |
-| `CLICKHOUSE_HOST` | ClickHouse connection URL | `http://localhost:8123` |
+| `CLICKHOUSE_URL` | ClickHouse connection URL | `http://localhost:8123` |
 | `CLICKHOUSE_USERNAME` | ClickHouse username | `lightscope` |
 | `CLICKHOUSE_PASSWORD` | ClickHouse password | `lightscope` |
 | `VITE_API_ENDPOINT` | API URL for the frontend | `http://localhost:3000` |

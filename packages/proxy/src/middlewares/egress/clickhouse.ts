@@ -6,7 +6,7 @@ import type { PV, Article } from '@/types';
 
 let client: ClickHouseClient | null;
 
-export class ClickHouseEgress implements EgressProvider {
+export default class ClickHouseEgress implements EgressProvider {
   private insertBatchSize: number = 1000;
   private insertFlushIntervalMs: number = 200;
   private insertMaxTry: number = 3;

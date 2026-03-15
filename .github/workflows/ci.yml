@@ -18,8 +18,21 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: 22
           cache: 'pnpm'
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Cache eslint
         uses: actions/cache@v4
@@ -56,6 +69,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Run format:check
+        run: pnpm run format:check
+
+      - name: Run lint
+        run: pnpm run lint
+
+      - name: Run build
+        run: pnpm run build
+
+      - name: Run test
+        run: pnpm run test
+
       - name: Get Playwright version
         id: playwright-version
         run: echo "VERSION=$(pnpm --filter lightscope-e2e exec playwright --version | awk '{print $2}')" >> $GITHUB_ENV
@@ -74,18 +99,6 @@ jobs:
       - name: Install Playwright OS Dependencies
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm --filter lightscope-e2e exec playwright install-deps
-
-      - name: Run format:check
-        run: pnpm run format:check
-
-      - name: Run lint
-        run: pnpm run lint
-
-      - name: Run build
-        run: pnpm run build
-
-      - name: Run test
-        run: pnpm run test
 
       - name: Run E2E tests
         run: pnpm run test:e2e

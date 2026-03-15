@@ -51,6 +51,7 @@ describe('url helpers', () => {
       const urlParams = encodeUrlParams(params, false);
       expect(urlParams.has('cat')).toBe(false);
     });
+
     it('should handle string dates', () => {
       const params = { startDate: '2023-01-01' };
       const urlParams = encodeUrlParams(params, false);

@@ -76,7 +76,6 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer test-token`,
       },
       body: JSON.stringify({ query }),
     });

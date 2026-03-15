@@ -11,7 +11,7 @@ import {
 } from '@/__generated__/graphql-resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
-  getAggregationUnit,
+  getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
 import processArticleFilter from '@/loaders/helpers/articleFilter';
@@ -47,7 +47,7 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
   const startDate = new Date(s);
   const endDate = new Date(e);
 
-  const { unit, interval } = getAggregationUnit(startDate, endDate, aggregation);
+  const { unit, interval } = getAggregationUnitWithInterval(startDate, endDate, aggregation);
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {

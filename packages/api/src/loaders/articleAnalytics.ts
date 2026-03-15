@@ -101,7 +101,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {
-    if (unit === AggregationUnit.Total) return "'total' as date,";
+    if (unit === AggregationUnit.Total) return 'now() as date,';
     return `toStartOfInterval(date, INTERVAL ${interval} ${unit.toUpperCase()}) as date,`;
   })();
 
@@ -179,6 +179,6 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   const data = await query<any>(client, sql);
   return data.map((row: any) => ({
     ...row,
-    ...(row.date && row.date !== 'total' ? { date: row.date.replace(' ', 'T') + 'Z' } : {}),
+    date: row.date.replace(' ', 'T') + 'Z',
   })) as (T & { url: string })[];
 }

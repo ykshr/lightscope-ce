@@ -3,11 +3,11 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { graphqlServer } from '@hono/graphql-server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import typeDefs from '@/schema';
-import resolvers from '@/resolvers';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
 import createLoadersMiddleware from '@/middlewares/loaders';
 import createClickhouseMiddleware from '@/middlewares/clickhouse';
+import typeDefs from '@/__generated__/schema.generated.graphql';
+import resolvers from '@/resolvers';
 
 export interface AppDependencies {
   authProvider: AuthProvider;

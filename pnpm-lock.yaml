@@ -54,6 +54,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: 6.1.0
         version: 6.1.0(@types/node@22.19.15)(graphql@16.13.1)(typescript@5.8.3)
+      '@graphql-codegen/schema-ast':
+        specifier: ^5.0.1
+        version: 5.0.1(graphql@16.13.1)
       '@graphql-codegen/typescript':
         specifier: 5.0.6
         version: 5.0.6(graphql@16.13.1)

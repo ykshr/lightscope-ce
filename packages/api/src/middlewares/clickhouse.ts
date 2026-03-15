@@ -5,6 +5,7 @@ import { createClient, ClickHouseClient } from '@clickhouse/client';
 export type Clickhouse = ClickHouseClient;
 
 let client: ClickHouseClient | null;
+
 export default function createClickhouseMiddleware() {
   return createMiddleware(async (c, next) => {
     if (!client) {

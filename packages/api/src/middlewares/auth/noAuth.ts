@@ -1,14 +1,16 @@
 import { Context } from 'hono';
-import { NO_AUTH_TOKEN } from '@/helpers/env';
+import { env } from 'hono/adapter';
 import { AuthProvider } from './index';
 
 export default class NoAuth implements AuthProvider {
   async getUser(c: Context) {
+    const { NO_AUTH_TOKEN = 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==' } = env(c);
+
     const authHeader = c.req.header('Authorization');
     const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
 
     // This is an anonymous user for no auth
-    if (token === NO_AUTH_TOKEN) return { id: 'anonymous', role: 'admin', tenantId: String(1) };
+    if (NO_AUTH_TOKEN === token) return { id: 'anonymous', role: 'admin', tenantId: String(1) };
 
     return null;
   }

@@ -1,19 +1,19 @@
-import { createClient } from '@clickhouse/client';
-import {
-  CLICKHOUSE_HOST,
-  CLICKHOUSE_USERNAME,
-  CLICKHOUSE_PASSWORD,
-  CLICKHOUSE_INSERT_BATCH_SIZE,
-  CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
-  CLICKHOUSE_INSERT_MAX_TRY,
-} from '@/helpers/env';
+import { createClient, ClickHouseClient } from '@clickhouse/client';
 import { EgressProvider } from './index';
 import type { PV, Article } from '@/types';
 
-export default class ClickHouseEgress implements EgressProvider {
+const CLICKHOUSE_HOST = process.env.CLICKHOUSE_HOST;
+const CLICKHOUSE_USERNAME = process.env.CLICKHOUSE_USERNAME;
+const CLICKHOUSE_PASSWORD = process.env.CLICKHOUSE_PASSWORD;
+const CLICKHOUSE_INSERT_BATCH_SIZE = Number(process.env.BATCH_SIZE) || 1000;
+const CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS =
+  Number(process.env.CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS) || 200;
+const CLICKHOUSE_INSERT_MAX_TRY = Number(process.env.INSERT_MAX_TRY) || 3;
+
+export class ClickHouseEgress implements EgressProvider {
   private articleBuffers: Record<string, Article> = {};
   private pvBuffers: PV[] = [];
-  private clickhouseClient: ReturnType<typeof createClient>;
+  private clickhouseClient: ClickHouseClient;
 
   constructor() {
     this.clickhouseClient = createClient({

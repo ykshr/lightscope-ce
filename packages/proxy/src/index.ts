@@ -1,9 +1,10 @@
 import { serve } from '@hono/node-server';
-import { PORT } from '@/helpers/env';
 import NoAuth from '@/middlewares/auth/noAuth';
 import ClickHouseEgress from '@/middlewares/egress/clickhouse';
 import MaxmindGeo from '@/middlewares/geo/maxmind';
 import { createApp } from './app';
+
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 const app = createApp({
   authProvider: new NoAuth(),

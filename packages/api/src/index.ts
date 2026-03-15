@@ -14,16 +14,7 @@ import createLoadersMiddleware from '@/middlewares/loaders';
 const app = new Hono();
 
 app.use('*', logger());
-app.use(
-  '*',
-  cors({
-    origin: (origin) => {
-      if (!origin) return '';
-      if (ALLOWED_ORIGINS.includes(origin)) return origin;
-      return null;
-    },
-  })
-);
+app.use('*', cors({ origin: ALLOWED_ORIGINS }));
 
 app.get('/health', (c) => c.json({ ok: true }));
 app.all(

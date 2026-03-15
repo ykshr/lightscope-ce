@@ -13,16 +13,7 @@ import ClickHouseEgress from '@/middlewares/egress/clickhouse';
 const app = new Hono();
 
 app.use('*', logger());
-app.use(
-  '*',
-  cors({
-    origin: (origin) => {
-      if (!origin) return '';
-      if (ALLOWED_ORIGINS.includes(origin)) return origin;
-      return null;
-    },
-  })
-);
+app.use('*', cors({ origin: ALLOWED_ORIGINS }));
 
 // Public routes that don't require authentication
 app.route('/', indexRouter);

@@ -1,3 +1,4 @@
+import { ClickHouseClient } from '@clickhouse/client';
 import {
   AggregationUnit,
   type QueryRankArgs,
@@ -33,12 +34,12 @@ interface LoaderParams {
 
 export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: () => rank(c.var.user.tenantId, loaderParams),
-    load: () => rank(c.var.user.tenantId, loaderParams),
+    total: () => rank(c.var.clickhouse, c.var.user.tenantId, loaderParams),
+    load: () => rank(c.var.clickhouse, c.var.user.tenantId, loaderParams),
   };
 }
 
-async function rank(tenantId: string, loaderParams: LoaderParams) {
+async function rank(client: ClickHouseClient, tenantId: string, loaderParams: LoaderParams) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
   const { startDate: s, endDate: e, articleFilter, metric, order, limit, page } = queryParams;
   const startDate = new Date(s);
@@ -112,6 +113,6 @@ async function rank(tenantId: string, loaderParams: LoaderParams) {
     ${limitAndOffset}
   `;
 
-  const data = await query<RankAnalytics>(sql);
+  const data = await query<RankAnalytics>(client, sql);
   return data;
 }

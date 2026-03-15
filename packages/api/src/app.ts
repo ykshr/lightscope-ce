@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono, Env as HonoEnv } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { graphqlServer } from '@hono/graphql-server';
@@ -7,14 +7,15 @@ import typeDefs from '@/schema';
 import resolvers from '@/resolvers';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
 import createLoadersMiddleware from '@/middlewares/loaders';
+import createClickhouseMiddleware from '@/middlewares/clickhouse';
 
 export interface AppDependencies {
   authProvider: AuthProvider;
 }
 
-export function createApp(deps: AppDependencies) {
+export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
   const { authProvider } = deps;
-  const app = new Hono();
+  const app = new Hono<Env>();
 
   app.use('*', logger());
   app.use('*', cors());
@@ -23,6 +24,7 @@ export function createApp(deps: AppDependencies) {
   app.all(
     '/gql',
     createAuthMiddleware(authProvider),
+    createClickhouseMiddleware(),
     createLoadersMiddleware(),
     graphqlServer({
       schema: makeExecutableSchema({ typeDefs, resolvers }),

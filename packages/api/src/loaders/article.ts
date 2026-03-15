@@ -1,4 +1,5 @@
 import DataLoader from 'dataloader';
+import { ClickHouseClient } from '@clickhouse/client';
 import { Article } from '@/__generated__/graphql-resolvers';
 import query from '@/helpers/clickhouse';
 import { renameKeySnakeToCamel } from '@/helpers/rename';
@@ -8,9 +9,10 @@ export default function getLoader(c: Context): DataLoader<string, Article | null
   if (c.var.loaders.has('articleLoader')) {
     return c.var.loaders.get('articleLoader') as DataLoader<string, Article | null>;
   }
+
   const loader = new DataLoader<string, Article | null>(
     async (urls: readonly string[]) => {
-      const articles = await fetchArticleByUrls(c.var.user.tenantId, urls);
+      const articles = await fetchArticleByUrls(c.var.clickhouse, c.var.user.tenantId, urls);
 
       const articleMap = new Map<string, Article>();
       for (const article of articles) {
@@ -28,7 +30,11 @@ export default function getLoader(c: Context): DataLoader<string, Article | null
   return loader;
 }
 
-async function fetchArticleByUrls(tenantId: string, urls: readonly string[]): Promise<Article[]> {
+async function fetchArticleByUrls(
+  client: ClickHouseClient,
+  tenantId: string,
+  urls: readonly string[]
+): Promise<Article[]> {
   if (urls.length === 0) return [];
 
   const url_hashes = urls.map((url) => `cityHash64('${url}')`).join(', ');
@@ -55,7 +61,7 @@ async function fetchArticleByUrls(tenantId: string, urls: readonly string[]): Pr
         AND url_hash IN (${url_hashes})
     `;
 
-  const data = await query<Article>(sql);
+  const data = await query<Article>(client, sql);
   const renamedData = data.map((row) => renameKeySnakeToCamel(row));
 
   return renamedData;

@@ -1,3 +1,4 @@
+import { ClickHouseClient } from '@clickhouse/client';
 import {
   QueryTrendArgs,
   AggregationUnit,
@@ -35,12 +36,12 @@ interface LoaderParams {
 
 export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: <T>() => Trend<T>(c.var.user.tenantId, loaderParams),
-    load: <T>() => Trend<T>(c.var.user.tenantId, loaderParams),
+    total: <T>() => Trend<T>(c.var.clickhouse, c.var.user.tenantId, loaderParams),
+    load: <T>() => Trend<T>(c.var.clickhouse, c.var.user.tenantId, loaderParams),
   };
 }
 
-async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
+async function Trend<T>(client: ClickHouseClient, tenantId: string, loaderParams: LoaderParams) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
   const { startDate: s, endDate: e, articleFilter, metric, aggregation, limit, page } = queryParams;
   const { top = 10 } = categoryFilter || {};
@@ -121,7 +122,7 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
     ${limitAndOffset}
   `;
 
-  const data = await query<any>(sql);
+  const data = await query<any>(client, sql);
   return data.map((row: any) => ({
     ...row,
     ...(row.date && row.date !== 'total' ? { date: row.date.replace(' ', 'T') + 'Z' } : {}),

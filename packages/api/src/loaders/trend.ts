@@ -9,6 +9,7 @@ import {
   TrendCategoryGeoArgs,
   TrendCategoryReferrerArgs,
   TrendCategoryUtmArgs,
+  Metric,
 } from '@/__generated__/graphql-resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
@@ -70,6 +71,11 @@ async function Trend<T>(client: ClickHouseClient, tenantId: string, loaderParams
         .join(', ')},`
     : '';
 
+  const metricStr =
+    metric === Metric.EngagementTime
+      ? `sum(${metric.toLowerCase()})`
+      : `uniqCombined64Merge(${metric?.toLowerCase()})`;
+
   const orderStr = `ORDER BY date ASC, value DESC`;
 
   const groupStr = attributesRenamed?.length
@@ -96,7 +102,7 @@ async function Trend<T>(client: ClickHouseClient, tenantId: string, loaderParams
     SELECT
       ${dateStr}
       ${attStr}
-      uniqCombined64Merge(${metric?.toLowerCase()}) as value
+      ${metricStr} as value
     FROM (${units
       .map(
         ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `

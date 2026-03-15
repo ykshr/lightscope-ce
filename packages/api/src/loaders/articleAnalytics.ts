@@ -116,6 +116,11 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
           })
           .join(', ')},`;
 
+  const metricStr =
+    metric === Metric.EngagementTime
+      ? `sum(${metric.toLowerCase()})`
+      : `uniqCombined64Merge(${metric.toLowerCase()})`;
+
   const groupStr = attributes.length
     ? `GROUP BY date, url_hash, ${attributes
         .map((attr) => {
@@ -147,7 +152,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
       ${dateStr}
       ${aggStr}
       any(url) as url,
-      uniqCombined64Merge(${metric.toLowerCase()}) as value
+      ${metricStr} as value
     FROM (${units
       .map(
         ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `

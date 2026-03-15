@@ -10,6 +10,7 @@ import {
   type RankCategoryGeoArgs,
   type RankCategoryReferrerArgs,
   type RankCategoryUtmArgs,
+  Metric,
 } from '@/__generated__/graphql-resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import { getTableUnitWithDates } from '@/loaders/helpers/getCollectionUnitWithDates';
@@ -62,6 +63,11 @@ async function rank(client: ClickHouseClient, tenantId: string, loaderParams: Lo
         .join(', ')},`
     : '';
 
+  const metricStr =
+    metric === Metric.EngagementTime
+      ? `sum(${metric.toLowerCase()})`
+      : `uniqCombined64Merge(${metric?.toLowerCase()})`;
+
   const groupStr = attributesRenamed?.length
     ? `GROUP BY ${attributesRenamed
         .map((attr) => {
@@ -87,7 +93,7 @@ async function rank(client: ClickHouseClient, tenantId: string, loaderParams: Lo
     FROM (
       SELECT
         ${attStr}
-        uniqCombined64Merge(${metric?.toLowerCase()}) as value
+        ${metricStr} as value
       FROM (${units
         .map(
           ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `

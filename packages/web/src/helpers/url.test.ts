@@ -51,6 +51,41 @@ describe('url helpers', () => {
       const urlParams = encodeUrlParams(params, false);
       expect(urlParams.has('cat')).toBe(false);
     });
+
+    it('should handle string dates', () => {
+      const params = { startDate: '2023-01-01' };
+      const urlParams = encodeUrlParams(params, false);
+      expect(urlParams.get('sd')).toBe('2023-01-01');
+    });
+
+    it('should handle number types', () => {
+      const params = { limit: 20 };
+      const urlParams = encodeUrlParams(params, false);
+      expect(urlParams.get('lm')).toBe('20');
+    });
+
+    it('should handle unknown keys by falling back to string', () => {
+      const params = { unknownKey: 'someValue' };
+      const urlParams = encodeUrlParams(params, false);
+      expect(urlParams.get('unknownKey')).toBe('someValue');
+    });
+
+    it('should handle isMerge parameter true', () => {
+      const originalLocation = window.location;
+      Object.defineProperty(window, 'location', {
+        value: { search: '?cat=old&other=value' },
+        writable: true,
+      });
+
+      const params = { limit: 10, other: '' };
+      const urlParams = encodeUrlParams(params, true);
+
+      expect(urlParams.get('cat')).toBe('old');
+      expect(urlParams.get('lm')).toBe('10');
+      expect(urlParams.has('other')).toBe(false);
+
+      Object.defineProperty(window, 'location', { value: originalLocation, writable: true });
+    });
   });
 
   describe('decodeUrlParams', () => {

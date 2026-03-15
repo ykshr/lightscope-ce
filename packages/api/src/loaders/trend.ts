@@ -16,7 +16,7 @@ import {
 } from '@/loaders/helpers/getCollectionUnitWithDates';
 import processArticleFilter from '@/loaders/helpers/articleFilter';
 import processCategoryFilter from '@/loaders/helpers/categoryFilter';
-import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
+import { RequestAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
 
 interface LoaderParams {

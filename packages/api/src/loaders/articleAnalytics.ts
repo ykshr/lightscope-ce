@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader';
 import { AnalyticsBase } from '@/__generated__/graphql-resolvers';
 import { Aggregation, AggregationUnit, Metric } from '@/__generated__/graphql-resolvers';
-import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
+import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
   getAggregationUnit,

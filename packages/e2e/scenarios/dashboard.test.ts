@@ -1,24 +1,10 @@
-import { test, expect, Page } from '@playwright/test';
-
-// Helper function to robustly navigate, dealing with Vite cold start in CI
-async function safeGoto(page: Page, url: string) {
-  for (let i = 0; i < 5; i++) {
-    try {
-      await page.goto(url, { waitUntil: 'load', timeout: 15000 });
-      return;
-    } catch (e) {
-      if (i === 4) throw e;
-      console.log(`Navigation to ${url} failed. Retrying... (${i + 1}/5)`);
-      await page.waitForTimeout(2000);
-    }
-  }
-}
+import { test, expect } from '@playwright/test';
 
 const WEB_URL = process.env.WEB_URL || 'http://127.0.0.1:5173';
 
 test.describe('Web Dashboard Verification', () => {
   test('should load the overview page and display key metrics', async ({ page }) => {
-    await safeGoto(page, `${WEB_URL}/`);
+    await page.goto(`${WEB_URL}/`);
 
     // Check that the sidebar title is visible
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
@@ -34,7 +20,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should navigate to the ranking page', async ({ page }) => {
-    await safeGoto(page, `${WEB_URL}/`);
+    await page.goto(`${WEB_URL}/`);
 
     // Find link to ranking and click it
     await page.click('a[href="/ranking"]');
@@ -47,7 +33,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should navigate to the article page', async ({ page }) => {
-    await safeGoto(page, `${WEB_URL}/`);
+    await page.goto(`${WEB_URL}/`);
 
     // Find link to article and click it
     await page.click('a[href="/article"]');
@@ -60,7 +46,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should interact with date range picker and filtering', async ({ page }) => {
-    await safeGoto(page, `${WEB_URL}/`);
+    await page.goto(`${WEB_URL}/`);
 
     // The DateFilter has a quick access button "This week" on desktop
     const thisWeekBtn = page.locator('button', { hasText: 'This week' }).first();
@@ -72,7 +58,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should interact with the advanced article filter', async ({ page }) => {
-    await safeGoto(page, `${WEB_URL}/`);
+    await page.goto(`${WEB_URL}/`);
 
     // Click the filter button (has the lucide-filter icon)
     await page.locator('button:has(.lucide-filter)').click();
@@ -94,7 +80,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should collapse and expand the sidebar', async ({ page }) => {
-    await safeGoto(page, `${WEB_URL}/`);
+    await page.goto(`${WEB_URL}/`);
 
     // On desktop, sidebar should be open and title visible
     const title = page.locator('h1', { hasText: 'LittleScope' });
@@ -114,7 +100,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should interact with the custom date range picker modal', async ({ page }) => {
-    await safeGoto(page, `${WEB_URL}/`);
+    await page.goto(`${WEB_URL}/`);
 
     // Open the Date Filter modal
     await page.locator('button:has(.lucide-calendar)').first().click();
@@ -138,7 +124,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test.skip('should interact with the search bar', async ({ page }) => {
-    await safeGoto(page, `${WEB_URL}/`);
+    await page.goto(`${WEB_URL}/`);
 
     const searchInput = page.locator('input[placeholder="Type a command or search..."]');
     await expect(searchInput).toBeVisible();
@@ -150,7 +136,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should verify pagination elements in the Ranking page', async ({ page }) => {
-    await safeGoto(page, `${WEB_URL}/ranking`);
+    await page.goto(`${WEB_URL}/ranking`);
 
     // Wait for the table to load
     await expect(page.locator('h2', { hasText: 'Ranking' }).first()).toBeVisible();

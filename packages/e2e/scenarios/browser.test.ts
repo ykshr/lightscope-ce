@@ -76,7 +76,6 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==',
       },
       body: JSON.stringify({ query }),
     });

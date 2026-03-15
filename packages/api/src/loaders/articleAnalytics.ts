@@ -5,7 +5,7 @@ import { Aggregation, AggregationUnit, Metric } from '@/__generated__/graphql-re
 import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
-  getAggregationUnit,
+  getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
 import type { Context } from '@/types';
@@ -97,7 +97,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   const startDate = new Date(s);
   const endDate = new Date(e);
 
-  const { unit, interval } = getAggregationUnit(startDate, endDate, aggregation);
+  const { unit, interval } = getAggregationUnitWithInterval(startDate, endDate, aggregation);
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {

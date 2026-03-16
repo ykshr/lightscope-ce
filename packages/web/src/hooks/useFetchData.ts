@@ -31,16 +31,12 @@ export const useFetchData = <TData, TVariables>(
     const json = await res.json();
 
     if (!res.ok) {
-      if (json.errors) {
-        const { message } = json.errors[0] || {};
-        throw new Error(message || 'Error..');
-      }
       throw new Error(json.message || 'Network response was not ok');
     }
 
     if (json.errors) {
       const { message } = json.errors[0] || {};
-      throw new Error(message || 'GraphQL Error');
+      throw new Error(message || 'Response Error');
     }
 
     return json.data;

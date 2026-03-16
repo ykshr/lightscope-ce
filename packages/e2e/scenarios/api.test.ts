@@ -16,8 +16,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
   test('POST /events should handle missing required fields', async ({ request }) => {
     const response = await request.post(`${INSERT_URL}/events`, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer test-token',
+        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
       },
       data: {
         event_name: 'page_view',

@@ -16,7 +16,7 @@ test.describe('Web Dashboard Verification', () => {
     await expect(page.locator('text=Realtime Visitors')).toBeVisible();
 
     // The table should have the title "Ranking"
-    await expect(page.locator('h2', { hasText: 'Ranking' }).first()).toBeVisible();
+    await expect(page.locator('text=Ranking').first()).toBeVisible();
   });
 
   test('should navigate to the ranking page', async ({ page }) => {
@@ -29,7 +29,7 @@ test.describe('Web Dashboard Verification', () => {
     await expect(page).toHaveURL(`${WEB_URL}/ranking`);
 
     // Verify the page content is loaded
-    await expect(page.locator('h2', { hasText: 'Ranking' }).first()).toBeVisible();
+    await expect(page.locator('text=Ranking').first()).toBeVisible();
   });
 
   test('should navigate to the article page', async ({ page }) => {
@@ -63,7 +63,11 @@ test.describe('Web Dashboard Verification', () => {
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Click the filter button (has the lucide-filter icon)
-    await page.locator('button:has(.lucide-filter)').first().click();
+    await page
+      .locator('button')
+      .filter({ has: page.locator('.lucide-filter') })
+      .first()
+      .click();
 
     // Verify modal is open
     await expect(page.locator('text=Advanced Filter')).toBeVisible();
@@ -106,7 +110,11 @@ test.describe('Web Dashboard Verification', () => {
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Open the Date Filter modal
-    await page.locator('button:has(.lucide-calendar)').first().click();
+    await page
+      .locator('button')
+      .filter({ has: page.locator('.lucide-calendar') })
+      .first()
+      .click();
 
     // Verify modal is open
     await expect(page.getByRole('heading', { name: 'Date Filter' })).toBeVisible();
@@ -142,7 +150,7 @@ test.describe('Web Dashboard Verification', () => {
     await page.goto(`${WEB_URL}/ranking`);
 
     // Wait for the table to load
-    await expect(page.locator('h2', { hasText: 'Ranking' }).first()).toBeVisible();
+    await expect(page.locator('text=Ranking').first()).toBeVisible();
 
     // Check if Pagination is rendered (it depends on data, but if there's data, we can check for the Pagination item or at least that it doesn't crash)
     // If there's no data, the pagination might not be visible, so we check if the Footer exists

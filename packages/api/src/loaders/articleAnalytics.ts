@@ -145,7 +145,11 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   const pageToUse = page ?? 1;
   const limitAndOffset = `LIMIT ${limitToUse} OFFSET ${(pageToUse - 1) * limitToUse}`;
 
-  const urlHashStr = urls.map((url) => `cityHash64('${url}')`).join(', ');
+  const queryParamsObj: Record<string, unknown> = {
+    tenantId,
+    siteName,
+    urls,
+  };
 
   const sql = `
     SELECT
@@ -154,29 +158,34 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
       any(url) as url,
       ${metricStr} as value
     FROM (${units
-      .map(
-        ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `
+      .map(({ unit, startDate: unitStartDate, endDate: unitEndDate }, index) => {
+        const startParam = `unitStartDate_${index}`;
+        const endParam = `unitEndDate_${index}`;
+        queryParamsObj[startParam] = formatToDateTime(unitStartDate);
+        queryParamsObj[endParam] = formatToDateTime(unitEndDate);
+
+        return `
         SELECT
           *
         FROM
           lightscope.${tableName}_${unit}
         WHERE
-          tenant_id = ${tenantId}
-          AND site_name = '${siteName}'
-          AND url_hash IN (${urlHashStr})
+          tenant_id = {tenantId:UInt64}
+          AND site_name = {siteName:String}
+          AND url_hash IN (arrayMap(x -> cityHash64(x), {urls:Array(String)}))
           AND (
-            toDateTime('${formatToDateTime(unitStartDate)}') <= date
-            AND date < toDateTime('${formatToDateTime(unitEndDate)}')
+            toDateTime({${startParam}:String}) <= date
+            AND date < toDateTime({${endParam}:String})
           )
-      `
-      )
+      `;
+      })
       .join(' UNION ALL ')})
     ${groupStr}
     ${orderStr}
     ${limitAndOffset}
   `;
 
-  const data = await query<any>(client, sql);
+  const data = await query<any>(client, sql, queryParamsObj);
   return data.map((row: any) => ({
     ...row,
     date: row.date.replace(' ', 'T') + 'Z',

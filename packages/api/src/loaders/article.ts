@@ -37,7 +37,6 @@ async function fetchArticleByUrls(
 ): Promise<Article[]> {
   if (urls.length === 0) return [];
 
-  const url_hashes = urls.map((url) => `cityHash64('${url}')`).join(', ');
   const sql = `
       SELECT
         url,
@@ -57,11 +56,11 @@ async function fetchArticleByUrls(
         created_at
       FROM lightscope.article
       WHERE
-        tenant_id = ${tenantId}
-        AND url_hash IN (${url_hashes})
+        tenant_id = {tenantId:UInt64}
+        AND url_hash IN (arrayMap(x -> cityHash64(x), {urls:Array(String)}))
     `;
 
-  const data = await query<Article>(client, sql);
+  const data = await query<Article>(client, sql, { tenantId, urls });
   const renamedData = data.map((row) => renameKeySnakeToCamel(row));
 
   return renamedData;

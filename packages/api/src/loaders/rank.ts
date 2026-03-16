@@ -79,8 +79,17 @@ async function rank(client: ClickHouseClient, tenantId: string, loaderParams: Lo
         .join(', ')}`
     : '';
 
-  const where = processArticleFilter(articleFilter);
-  const categoryWhere = processCategoryFilter(categoryFilter);
+  const processedArticleFilter = processArticleFilter(articleFilter);
+  const processedCategoryFilter = processCategoryFilter(categoryFilter);
+
+  const where = processedArticleFilter?.query;
+  const categoryWhere = processedCategoryFilter?.query;
+
+  const queryParamsObj: Record<string, unknown> = {
+    tenantId,
+    ...processedArticleFilter?.params,
+    ...processedCategoryFilter?.params,
+  };
 
   const limitToUse = limit ?? 100;
   const pageToUse = page ?? 1;
@@ -95,23 +104,28 @@ async function rank(client: ClickHouseClient, tenantId: string, loaderParams: Lo
         ${attStr}
         ${metricStr} as value
       FROM (${units
-        .map(
-          ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `
+        .map(({ unit, startDate: unitStartDate, endDate: unitEndDate }, index) => {
+          const startParam = `unitStartDate_${index}`;
+          const endParam = `unitEndDate_${index}`;
+          queryParamsObj[startParam] = formatToDateTime(unitStartDate);
+          queryParamsObj[endParam] = formatToDateTime(unitEndDate);
+
+          return `
           SELECT
             *
           FROM
             lightscope.${tableName}_${unit} t
             ${where ? `INNER JOIN lightscope.article a ON t.url_hash = a.url_hash` : ''}
           WHERE
-            t.tenant_id = ${tenantId}
+            t.tenant_id = toUInt32({tenantId:String})
             AND (
-              toDateTime('${formatToDateTime(unitStartDate)}') <= t.date
-              AND t.date < toDateTime('${formatToDateTime(unitEndDate)}')
+              toDateTime({${startParam}:String}) <= t.date
+              AND t.date < toDateTime({${endParam}:String})
             )
             ${where ? `AND ${where}` : ''}
             ${categoryWhere ? `AND ${categoryWhere}` : ''}
-        `
-        )
+        `;
+        })
         .join(' UNION ALL ')})
       ${groupStr}
       ORDER BY value ${order === 'ASC' ? 'ASC' : 'DESC'}
@@ -119,6 +133,6 @@ async function rank(client: ClickHouseClient, tenantId: string, loaderParams: Lo
     ${limitAndOffset}
   `;
 
-  const data = await query<RankAnalytics>(client, sql);
+  const data = await query<RankAnalytics>(client, sql, queryParamsObj);
   return data;
 }

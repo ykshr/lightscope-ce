@@ -1,16 +1,13 @@
 import dayjs from 'dayjs';
 import dayjsPluginUTC from 'dayjs/plugin/utc';
-import { Aggregation, AggregationUnit } from '@/__generated__/graphql-resolvers';
+import { Aggregation, AggregationUnit } from '@/__generated__/resolvers';
 
 dayjs.extend(dayjsPluginUTC);
 
 const ClickhouseTableUnits = ['day', 'hour', 'min'] as const;
 type ClickhouseTableUnit = (typeof ClickhouseTableUnits)[number];
 
-export function getAggregationUnit(
-  startDate: Date,
-  endDate: Date,
-): AggregationUnit {
+export function getAggregationUnit(startDate: Date, endDate: Date): AggregationUnit {
   const timeDiff = endDate.getTime() - startDate.getTime();
   const daysDiff = timeDiff / (1000 * 3600 * 24);
 

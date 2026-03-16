@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import { env } from 'hono/adapter';
 import indexRouter from '@/routers/index';
 import eventsRouter from '@/routers/events';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
@@ -19,7 +20,13 @@ export function createApp(deps: AppDependencies) {
   const app = new Hono();
 
   app.use('*', logger());
-  app.use('*', cors());
+  app.use('*', async (c, next) => {
+    const { ALLOWED_ORIGIN = '*' } = env<{ ALLOWED_ORIGIN: string }>(c);
+    const corsMiddlewareHandler = cors({
+      origin: ALLOWED_ORIGIN,
+    });
+    return corsMiddlewareHandler(c, next);
+  });
 
   // Public routes that don't require authentication
   app.route('/', indexRouter);

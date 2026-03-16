@@ -1,6 +1,7 @@
 import { Hono, Env as HonoEnv } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import { env } from 'hono/adapter';
 import { graphqlServer } from '@hono/graphql-server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
@@ -18,7 +19,13 @@ export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
   const app = new Hono<Env>();
 
   app.use('*', logger());
-  app.use('*', cors());
+  app.use('*', async (c, next) => {
+    const { ALLOWED_ORIGIN = '*' } = env<{ ALLOWED_ORIGIN: string }>(c);
+    const corsMiddlewareHandler = cors({
+      origin: ALLOWED_ORIGIN,
+    });
+    return corsMiddlewareHandler(c, next);
+  });
 
   app.get('/health', (c) => c.json({ ok: true }));
   app.all(

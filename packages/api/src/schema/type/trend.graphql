@@ -1,0 +1,150 @@
+type Trend {
+  total: [TrendAnalytics!]!
+  categoryAge(top: Int = 10, includeAges: [String!], excludeAges: [String!]): [TrendAnalyticsAge!]
+  categoryApp(
+    top: Int = 10
+    includeAppTypes: [String!]
+    excludeAppTypes: [String!]
+    includeApps: [String!]
+    excludeApps: [String!]
+  ): [TrendAnalyticsApp!]
+  categoryDevice(
+    top: Int = 10
+    includeDeviceTypes: [String!]
+    excludeDeviceTypes: [String!]
+    includeDeviceVendors: [String!]
+    excludeDeviceVendors: [String!]
+    includeDevices: [String!]
+    excludeDevices: [String!]
+  ): [TrendAnalyticsDevice!]
+  categoryGender(
+    top: Int = 10
+    includeGenders: [String!]
+    excludeGenders: [String!]
+  ): [TrendAnalyticsGender!]
+  categoryGeo(
+    top: Int = 10
+    includeContinents: [String!]
+    excludeContinents: [String!]
+    includeSubdivisions: [String!]
+    excludeSubdivisions: [String!]
+    includeCountries: [String!]
+    excludeCountries: [String!]
+    includeCities: [String!]
+    excludeCities: [String!]
+  ): [TrendAnalyticsGeo!]
+  categoryReferrer(
+    top: Int = 10
+    includeDomains: [String!]
+    excludeDomains: [String!]
+    includeReferrers: [String!]
+    excludeReferrers: [String!]
+  ): [TrendAnalyticsReferrer!]
+  categoryUtm(
+    top: Int = 10
+    includeSources: [String!]
+    excludeSources: [String!]
+    includeMediums: [String!]
+    excludeMediums: [String!]
+    includeCampaigns: [String!]
+    excludeCampaigns: [String!]
+  ): [TrendAnalyticsUtm!]
+  articles(top: Int = 10): [TrendAnalyticsArticle!]
+  parameters: TrendParameters!
+}
+
+type TrendParameters {
+  startDate: DateTime!
+  endDate: DateTime!
+  articleFilter: ArticleFilter
+  aggregation: Aggregation!
+  limit: Int!
+  page: Int!
+  metric: Metric!
+}
+
+interface TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  url: String
+  article: Article
+}
+
+type TrendAnalytics implements TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  url: String
+  article: Article
+}
+
+type TrendAnalyticsAge implements TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  age: String
+  url: String!
+  article: Article
+}
+
+type TrendAnalyticsApp implements TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  appType: String
+  app: String
+  url: String!
+  article: Article
+}
+
+type TrendAnalyticsDevice implements TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  deviceType: String
+  deviceVendor: String
+  device: String
+  url: String!
+  article: Article
+}
+
+type TrendAnalyticsGender implements TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  gender: String
+  url: String!
+  article: Article
+}
+
+type TrendAnalyticsReferrer implements TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  domain: String
+  referrer: String
+  url: String!
+  article: Article
+}
+
+type TrendAnalyticsGeo implements TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  continent: String
+  subdivision: String
+  country: String
+  city: String
+  url: String!
+  article: Article
+}
+
+type TrendAnalyticsArticle implements TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  url: String!
+  article: Article
+}
+
+type TrendAnalyticsUtm implements TrendAnalyticsBase {
+  date: DateTime!
+  value: Int!
+  source: String
+  medium: String
+  campaign: String
+  url: String!
+  article: Article
+}

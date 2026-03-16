@@ -1,10 +1,11 @@
 import DataLoader from 'dataloader';
+import { ClickHouseClient } from '@clickhouse/client';
 import { AnalyticsBase } from '@/__generated__/graphql-resolvers';
 import { Aggregation, AggregationUnit, Metric } from '@/__generated__/graphql-resolvers';
 import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
-  getAggregationUnit,
+  getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
 import type { Context } from '@/types';
@@ -42,6 +43,7 @@ export default function getLoader<T extends AnalyticsBase>(
   const loader = new DataLoader<string, T[] | null>(
     async (urls: readonly string[]) => {
       const analytics = await fetchArticleAnalyticsByUrls<T>(
+        c.var.clickhouse,
         c.var.user.tenantId,
         loaderParams,
         urls
@@ -84,6 +86,7 @@ function createLoaderKey(c: Context, params: LoaderParams): string {
 }
 
 async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
+  client: ClickHouseClient,
   tenantId: string,
   { tableName, queryParams, attributes }: LoaderParams,
   urls: readonly string[]
@@ -94,11 +97,11 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   const startDate = new Date(s);
   const endDate = new Date(e);
 
-  const { unit, interval } = getAggregationUnit(startDate, endDate, aggregation);
+  const { unit, interval } = getAggregationUnitWithInterval(startDate, endDate, aggregation);
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {
-    if (unit === AggregationUnit.Total) return "'total' as date,";
+    if (unit === AggregationUnit.Total) return 'now() as date,';
     return `toStartOfInterval(date, INTERVAL ${interval} ${unit.toUpperCase()}) as date,`;
   })();
 
@@ -112,6 +115,11 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
             return attr;
           })
           .join(', ')},`;
+
+  const metricStr =
+    metric === Metric.EngagementTime
+      ? `sum(${metric.toLowerCase()})`
+      : `uniqCombined64Merge(${metric.toLowerCase()})`;
 
   const groupStr = attributes.length
     ? `GROUP BY date, url_hash, ${attributes
@@ -144,7 +152,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
       ${dateStr}
       ${aggStr}
       any(url) as url,
-      uniqCombined64Merge(${metric.toLowerCase()}) as value
+      ${metricStr} as value
     FROM (${units
       .map(
         ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `
@@ -168,9 +176,9 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
     ${limitAndOffset}
   `;
 
-  const data = await query<any>(sql);
+  const data = await query<any>(client, sql);
   return data.map((row: any) => ({
     ...row,
-    ...(row.date && row.date !== 'total' ? { date: row.date.replace(' ', 'T') + 'Z' } : {}),
+    date: row.date.replace(' ', 'T') + 'Z',
   })) as (T & { url: string })[];
 }

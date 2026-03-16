@@ -1,14 +1,11 @@
-import { createClient } from '@clickhouse/client';
-import { CLICKHOUSE_HOST, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } from '@/helpers/env';
+import { ClickHouseClient } from '@clickhouse/client';
 
-const clickhouseClient = createClient({
-  url: CLICKHOUSE_HOST,
-  username: CLICKHOUSE_USERNAME,
-  password: CLICKHOUSE_PASSWORD,
-});
-
-export default async function <T>(query: string, query_params: any = undefined): Promise<T[]> {
-  const rows = await clickhouseClient.query({
+export default async function <T>(
+  client: ClickHouseClient,
+  query: string,
+  query_params: any = undefined
+): Promise<T[]> {
+  const rows = await client.query({
     query,
     query_params,
     format: 'JSONEachRow',

@@ -26,7 +26,7 @@ services:
       - ./packages/api:/app
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     environment:
-      - CLICKHOUSE_HOST=http://clickhouse:8123
+      - CLICKHOUSE_URL=http://clickhouse:8123
       - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
@@ -49,7 +49,7 @@ services:
       - ./packages/proxy:/app
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     environment:
-      - CLICKHOUSE_HOST=http://clickhouse:8123
+      - CLICKHOUSE_URL=http://clickhouse:8123
       - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}

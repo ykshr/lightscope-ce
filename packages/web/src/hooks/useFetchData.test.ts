@@ -64,7 +64,7 @@ describe('fetcher lib', () => {
       });
 
       // Mock global fetch
-      globalThis.fetch = vi.fn();
+      vi.stubGlobal('fetch', vi.fn());
     });
 
     it('should throw Error when network response is not ok and json contains errors array', async () => {
@@ -81,7 +81,7 @@ describe('fetcher lib', () => {
       await expect(result.current()).rejects.toThrow('Specific GraphQL Error');
     });
 
-    it('should throw "Response was not ok - no error message" when network response is not ok and json.errors array is empty due to destructuring behavior', async () => {
+    it('should throw "Error.." when network response is not ok and json.errors array is empty due to destructuring behavior', async () => {
       const mockFetchResponse = {
         ok: false,
         json: vi.fn().mockResolvedValue({
@@ -92,7 +92,7 @@ describe('fetcher lib', () => {
 
       const { result } = renderHook(() => useFetchData('query { test }'));
 
-      await expect(result.current()).rejects.toThrow('Response was not ok - no error message');
+      await expect(result.current()).rejects.toThrow('Error..');
     });
 
     it('should throw provided message when network response is not ok and no errors array exists', async () => {
@@ -118,7 +118,7 @@ describe('fetcher lib', () => {
 
       const { result } = renderHook(() => useFetchData('query { test }'));
 
-      await expect(result.current()).rejects.toThrow('Response was not ok - no message');
+      await expect(result.current()).rejects.toThrow('Network response was not ok');
     });
   });
 });

@@ -5,7 +5,7 @@ function formatDate(date: Date | string): string {
   return new Date(date).toISOString().substring(0, 19);
 }
 
-export function createArticle(payload: Payload, tenant_id: string): Article {
+export function createArticle(payload: Payload, tenant_id: number): Article {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';
 
@@ -38,7 +38,7 @@ export function createPV(
       }
     | null
     | undefined,
-  tenant_id: string
+  tenant_id: number
 ): PV {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';

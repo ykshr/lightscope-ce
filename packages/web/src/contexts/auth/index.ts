@@ -1,7 +1,7 @@
 export type AuthUser = {
   id: string;
   role: string;
-  tenantId: string;
+  tenantId: number;
 };
 
 export interface AuthProvider {

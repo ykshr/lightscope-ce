@@ -10,7 +10,7 @@ export default class NoAuth implements AuthProvider {
     const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
 
     // This is an anonymous user for no auth
-    if (NO_AUTH_TOKEN === token) return { tenantId: '1' };
+    if (NO_AUTH_TOKEN === token) return { tenantId: 1 };
 
     return null;
   }

@@ -2,7 +2,7 @@ import { Context } from 'hono';
 import { createMiddleware } from 'hono/factory';
 
 export type Tracker = {
-  tenantId: string;
+  tenantId: number;
 };
 
 export interface AuthProvider {

@@ -4,7 +4,7 @@ import { createMiddleware } from 'hono/factory';
 export type User = {
   id: string;
   role: string;
-  tenantId: string;
+  tenantId: number;
 };
 
 export interface AuthProvider {

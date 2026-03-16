@@ -32,7 +32,7 @@ export default function getLoader(c: Context): DataLoader<string, Article | null
 
 async function fetchArticleByUrls(
   client: ClickHouseClient,
-  tenantId: string,
+  tenantId: number,
   urls: readonly string[]
 ): Promise<Article[]> {
   if (urls.length === 0) return [];

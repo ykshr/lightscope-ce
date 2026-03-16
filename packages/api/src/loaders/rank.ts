@@ -40,7 +40,7 @@ export default function getLoader(c: Context, loaderParams: LoaderParams) {
   };
 }
 
-async function rank(client: ClickHouseClient, tenantId: string, loaderParams: LoaderParams) {
+async function rank(client: ClickHouseClient, tenantId: number, loaderParams: LoaderParams) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
   const { startDate: s, endDate: e, articleFilter, metric, order, limit, page } = queryParams;
   const startDate = new Date(s);
@@ -117,7 +117,7 @@ async function rank(client: ClickHouseClient, tenantId: string, loaderParams: Lo
             lightscope.${tableName}_${unit} t
             ${where ? `INNER JOIN lightscope.article a ON t.url_hash = a.url_hash` : ''}
           WHERE
-            t.tenant_id = toUInt32({tenantId:String})
+            t.tenant_id = {tenantId:UInt64}
             AND (
               toDateTime({${startParam}:String}) <= t.date
               AND t.date < toDateTime({${endParam}:String})

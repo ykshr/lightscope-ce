@@ -42,7 +42,7 @@ export default function getLoader(c: Context, loaderParams: LoaderParams) {
   };
 }
 
-async function Trend<T>(client: ClickHouseClient, tenantId: string, loaderParams: LoaderParams) {
+async function Trend<T>(client: ClickHouseClient, tenantId: number, loaderParams: LoaderParams) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
   const { startDate: s, endDate: e, articleFilter, metric, aggregation, limit, page } = queryParams;
   const { top = 10 } = categoryFilter || {};
@@ -126,7 +126,7 @@ async function Trend<T>(client: ClickHouseClient, tenantId: string, loaderParams
           lightscope.${tableName}_${unit} t
           ${where ? `INNER JOIN lightscope.article a ON t.url_hash = a.url_hash` : ''}
         WHERE
-          t.tenant_id = toUInt32({tenantId:String})
+          t.tenant_id = {tenantId:UInt64}
           AND (
             toDateTime({${startParam}:String}) <= t.date
             AND t.date < toDateTime({${endParam}:String})

@@ -87,7 +87,7 @@ function createLoaderKey(c: Context, params: LoaderParams): string {
 
 async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   client: ClickHouseClient,
-  tenantId: string,
+  tenantId: number,
   { tableName, queryParams, attributes }: LoaderParams,
   urls: readonly string[]
 ): Promise<(T & { url: string })[]> {

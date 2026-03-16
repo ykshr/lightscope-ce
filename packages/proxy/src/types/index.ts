@@ -10,7 +10,7 @@ export type Bindings = {
   CLICKHOUSE_PASSWORD: string;
 };
 
-export type Variables = { tracker: { tenantId: string }; egress: EgressProvider; geo: GeoProvider };
+export type Variables = { tracker: { tenantId: number }; egress: EgressProvider; geo: GeoProvider };
 
 export type Env = {
   Bindings: Bindings;
@@ -68,7 +68,7 @@ export type Payload = z.infer<typeof PayloadSchema>;
 // PV type definition
 // --------------------
 export interface PV {
-  tenant_id: string;
+  tenant_id: number;
   site_name: string;
   url: string;
   event_id: string;
@@ -104,7 +104,7 @@ export interface PV {
 // Article type definition
 // --------------------
 export interface Article {
-  tenant_id: string;
+  tenant_id: number;
   url: string;
   title?: string;
   type?: string;

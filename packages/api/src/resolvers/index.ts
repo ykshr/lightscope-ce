@@ -1,5 +1,5 @@
 import { DateTimeResolver } from 'graphql-scalars';
-import { Resolvers } from '@/__generated__/graphql-resolvers';
+import { Resolvers } from '@/__generated__/resolvers';
 import articleResolvers from '@/resolvers/articleResolver';
 import articleAnalyticsResolvers from '@/resolvers/articleAnalyticsResolver';
 import rankResolvers from '@/resolvers/rankResolver';

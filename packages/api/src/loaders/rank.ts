@@ -11,7 +11,7 @@ import {
   type RankCategoryReferrerArgs,
   type RankCategoryUtmArgs,
   Metric,
-} from '@/__generated__/graphql-resolvers';
+} from '@/__generated__/resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import { getTableUnitWithDates } from '@/loaders/helpers/getCollectionUnitWithDates';
 import processArticleFilter from '@/loaders/helpers/articleFilter';

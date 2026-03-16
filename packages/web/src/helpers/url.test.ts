@@ -17,6 +17,12 @@ describe('url helpers', () => {
       expect(urlParams.get('sd')).toContain('2023-01-01');
     });
 
+    it('should encode date as string correctly', () => {
+      const params = { startDate: '2023-01-01' };
+      const urlParams = encodeUrlParams(params, false);
+      expect(urlParams.get('sd')).toBe('2023-01-01');
+    });
+
     it('should encode array params', () => {
       const params = { includeUrls: ['a', 'b'] };
       const urlParams = encodeUrlParams(params, false);
@@ -117,15 +123,29 @@ describe('url helpers', () => {
     });
 
     it('should handle date params', () => {
-      const search = '?ptb=2023-01-01&mta=2023-02-01';
+      // Mock convertDateString for deterministic test if needed, or rely on implementation
+      // decodeUrlParams uses convertDateString
+      const search = '?sd=2023-01-01&ed=2023-12-31';
       const result = decodeUrlParams(search);
+      // Assuming convertDateString turns string into a Date object or string based on logic
+      expect(result.startDate).toBeDefined();
+      expect(result.endDate).toBeDefined();
+    });
+
+    it('should handle date params', () => {
+      const search = '?sd=2023-01-01&ed=2023-12-31&ptb=2023-02-01&mta=2023-02-02';
+      const result = decodeUrlParams(search);
+      expect(result.startDate).toBeInstanceOf(Date);
+      expect(result.endDate).toBeInstanceOf(Date);
       expect(result.articleFilter?.publishedTimeBefore).toBeInstanceOf(Date);
       expect(result.articleFilter?.modifiedTimeAfter).toBeInstanceOf(Date);
+      expect(result.startDate?.getTime()).toBe(new Date('2023-01-01').getTime());
+      expect(result.endDate?.getTime()).toBe(new Date('2023-12-31').getTime());
       expect(result.articleFilter?.publishedTimeBefore?.getTime()).toBe(
-        new Date('2023-01-01').getTime()
+        new Date('2023-02-01').getTime()
       );
       expect(result.articleFilter?.modifiedTimeAfter?.getTime()).toBe(
-        new Date('2023-02-01').getTime()
+        new Date('2023-02-02').getTime()
       );
     });
 

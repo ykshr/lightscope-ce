@@ -1,7 +1,14 @@
-import { describe, it, expect } from 'vitest';
-import { serializeDates } from '../hooks/useFetchData';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { renderHook } from '@testing-library/react';
+import { useFetchData, serializeDates } from '../hooks/useFetchData';
+import { useAuth } from '@/contexts/AuthContext';
 
-describe.skip('fetcher lib', () => {
+// Mock the AuthContext hook
+vi.mock('@/contexts/AuthContext', () => ({
+  useAuth: vi.fn(),
+}));
+
+describe('fetcher lib', () => {
   describe('serializeDates', () => {
     it('should return null/undefined/primitives as is', () => {
       expect(serializeDates(null)).toBe(null);
@@ -40,6 +47,78 @@ describe.skip('fetcher lib', () => {
       const output = serializeDates(input);
       expect(output.list[0].created_at).toBe('2023-01-01T12:00:00.000Z');
       expect(output.list[1].updated_at).toBe(null);
+    });
+  });
+
+  describe('useFetchData error handling', () => {
+    const mockGetToken = vi.fn();
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+
+      // Default auth mock setup
+      (useAuth as any).mockReturnValue({
+        auth: {
+          getToken: mockGetToken.mockResolvedValue('mock-token'),
+        },
+      });
+
+      // Mock global fetch
+      globalThis.fetch = vi.fn();
+    });
+
+    it('should throw Error when network response is not ok and json contains errors array', async () => {
+      const mockFetchResponse = {
+        ok: false,
+        json: vi.fn().mockResolvedValue({
+          errors: [{ message: 'Specific GraphQL Error' }],
+        }),
+      };
+      (globalThis.fetch as any).mockResolvedValue(mockFetchResponse);
+
+      const { result } = renderHook(() => useFetchData('query { test }'));
+
+      await expect(result.current()).rejects.toThrow('Specific GraphQL Error');
+    });
+
+    it('should throw "Error.." when network response is not ok and json.errors array is empty due to destructuring behavior', async () => {
+      const mockFetchResponse = {
+        ok: false,
+        json: vi.fn().mockResolvedValue({
+          errors: [],
+        }),
+      };
+      (globalThis.fetch as any).mockResolvedValue(mockFetchResponse);
+
+      const { result } = renderHook(() => useFetchData('query { test }'));
+
+      await expect(result.current()).rejects.toThrow('Error..');
+    });
+
+    it('should throw provided message when network response is not ok and no errors array exists', async () => {
+      const mockFetchResponse = {
+        ok: false,
+        json: vi.fn().mockResolvedValue({
+          message: 'Custom server error message',
+        }),
+      };
+      (globalThis.fetch as any).mockResolvedValue(mockFetchResponse);
+
+      const { result } = renderHook(() => useFetchData('query { test }'));
+
+      await expect(result.current()).rejects.toThrow('Custom server error message');
+    });
+
+    it('should throw default message when network response is not ok and no error information is provided', async () => {
+      const mockFetchResponse = {
+        ok: false,
+        json: vi.fn().mockResolvedValue({}),
+      };
+      (globalThis.fetch as any).mockResolvedValue(mockFetchResponse);
+
+      const { result } = renderHook(() => useFetchData('query { test }'));
+
+      await expect(result.current()).rejects.toThrow('Network response was not ok');
     });
   });
 });

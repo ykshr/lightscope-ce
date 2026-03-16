@@ -6,7 +6,7 @@ const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3001';
 test.describe('API Error Handling and GraphQL Tests', () => {
   test('POST /events should handle malformed JSON', async ({ request }) => {
     const response = await request.post(`${INSERT_URL}/events`, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}` },
       data: '{"bad json"',
     });
     // Should return 400 Bad Request

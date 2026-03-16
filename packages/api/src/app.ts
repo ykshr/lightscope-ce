@@ -9,6 +9,7 @@ import createLoadersMiddleware from '@/middlewares/loaders';
 import createClickhouseMiddleware from '@/middlewares/clickhouse';
 import typeDefs from '@/__generated__/typeDefs';
 import resolvers from '@/resolvers';
+import { auth } from '@/lib/auth';
 
 export interface AppDependencies {
   authProvider: AuthProvider;
@@ -25,6 +26,10 @@ export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
       origin: ALLOWED_ORIGIN,
     });
     return corsMiddlewareHandler(c, next);
+  });
+
+  app.all('/api/auth/*', (c) => {
+    return auth.handler(c.req.raw);
   });
 
   app.get('/health', (c) => c.json({ ok: true }));

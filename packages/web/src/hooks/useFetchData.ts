@@ -36,7 +36,7 @@ export const useFetchData = <TData, TVariables>(
 
     if (json.errors) {
       const { message } = json.errors[0] || {};
-      throw new Error(message || 'Response Error');
+      throw new Error(message || 'GraphQL Error');
     }
 
     return json.data;

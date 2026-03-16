@@ -1,38 +1,15 @@
-import { Hono } from 'hono';
-import { cors } from 'hono/cors';
-import { logger } from 'hono/logger';
 import { serve } from '@hono/node-server';
-import { PORT } from '@/helpers/env';
-import indexRouter from '@/routers/index';
-import eventsRouter from '@/routers/events';
-import createAuthMiddleware from '@/middlewares/auth';
-import NoAuthProvider from '@/middlewares/auth/noAuth';
-import createEgressMiddleware from '@/middlewares/egress';
+import NoAuth from '@/middlewares/auth/noAuth';
 import ClickHouseEgress from '@/middlewares/egress/clickhouse';
+import MaxmindGeo from '@/middlewares/geo/maxmind';
+import { createApp } from './app';
 
-const app = new Hono();
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
-app.use('*', logger());
-app.use('*', cors());
-
-// Public routes that don't require authentication
-app.route('/', indexRouter);
-app.get('/health', (c) => c.json({ ok: true }));
-
-// Events endpoint has its own tracker token authentication
-app.use(
-  '/events/*',
-  createAuthMiddleware(new NoAuthProvider()),
-  createEgressMiddleware(new ClickHouseEgress())
-);
-app.route('/events', eventsRouter);
-
-app.onError((err, c) => {
-  if (err instanceof SyntaxError) {
-    return c.json({ error: 'Bad request: Invalid JSON' }, 400);
-  }
-  console.error(err);
-  return c.json({ error: 'Internal Server Error' }, 500);
+const app = createApp({
+  authProvider: new NoAuth(),
+  egressProvider: new ClickHouseEgress(),
+  geoProvider: new MaxmindGeo(),
 });
 
 serve(

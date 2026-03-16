@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { generatePayload } from '../utils/generator';
 
-const API_URL = 'http://localhost:3000';
-const MOCK_SITE_URL = 'http://localhost:8080';
+const API_URL = 'http://127.0.0.1:3000';
+const MOCK_SITE_URL = 'http://127.0.0.1:8080';
 
 test('Browser Tracking Script Verification', async ({ browser }) => {
   const generated = generatePayload();
@@ -76,6 +76,7 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
       },
       body: JSON.stringify({ query }),
     });

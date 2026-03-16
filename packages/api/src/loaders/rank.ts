@@ -1,3 +1,4 @@
+import { ClickHouseClient } from '@clickhouse/client';
 import {
   AggregationUnit,
   type QueryRankArgs,
@@ -9,6 +10,7 @@ import {
   type RankCategoryGeoArgs,
   type RankCategoryReferrerArgs,
   type RankCategoryUtmArgs,
+  Metric,
 } from '@/__generated__/graphql-resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import { getTableUnitWithDates } from '@/loaders/helpers/getCollectionUnitWithDates';
@@ -33,12 +35,12 @@ interface LoaderParams {
 
 export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: () => rank(c.var.user.tenantId, loaderParams),
-    load: () => rank(c.var.user.tenantId, loaderParams),
+    total: () => rank(c.var.clickhouse, c.var.user.tenantId, loaderParams),
+    load: () => rank(c.var.clickhouse, c.var.user.tenantId, loaderParams),
   };
 }
 
-async function rank(tenantId: string, loaderParams: LoaderParams) {
+async function rank(client: ClickHouseClient, tenantId: string, loaderParams: LoaderParams) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
   const { startDate: s, endDate: e, articleFilter, metric, order, limit, page } = queryParams;
   const startDate = new Date(s);
@@ -60,6 +62,11 @@ async function rank(tenantId: string, loaderParams: LoaderParams) {
         })
         .join(', ')},`
     : '';
+
+  const metricStr =
+    metric === Metric.EngagementTime
+      ? `sum(${metric.toLowerCase()})`
+      : `uniqCombined64Merge(${metric?.toLowerCase()})`;
 
   const groupStr = attributesRenamed?.length
     ? `GROUP BY ${attributesRenamed
@@ -86,7 +93,7 @@ async function rank(tenantId: string, loaderParams: LoaderParams) {
     FROM (
       SELECT
         ${attStr}
-        uniqCombined64Merge(${metric?.toLowerCase()}) as value
+        ${metricStr} as value
       FROM (${units
         .map(
           ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `
@@ -112,6 +119,6 @@ async function rank(tenantId: string, loaderParams: LoaderParams) {
     ${limitAndOffset}
   `;
 
-  const data = await query<RankAnalytics>(sql);
+  const data = await query<RankAnalytics>(client, sql);
   return data;
 }

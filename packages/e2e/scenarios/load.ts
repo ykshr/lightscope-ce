@@ -1,7 +1,7 @@
 import { generatePayload } from '../utils/generator';
 
-const API_URL = process.env.API_URL || 'http://localhost:3000';
-const INSERT_URL = process.env.INSERT_URL || 'http://localhost:3001';
+const API_URL = process.env.API_URL || 'http://127.0.0.1:3000';
+const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3001';
 const CONCURRENCY = 100;
 const DURATION_SECONDS = 5;
 
@@ -9,7 +9,7 @@ async function sendEvent() {
   const eventPayload = generatePayload({
     event_name: 'load_test_event',
     site_name: 'load-test',
-    url: 'http://localhost:5173/load-test',
+    url: 'http://127.0.0.1:5173/load-test',
     user_agent: 'Load Test Agent',
   });
 

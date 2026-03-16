@@ -1,38 +1,54 @@
-import { createClient } from '@clickhouse/client';
-import {
-  CLICKHOUSE_HOST,
-  CLICKHOUSE_USERNAME,
-  CLICKHOUSE_PASSWORD,
-  CLICKHOUSE_INSERT_BATCH_SIZE,
-  CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
-  CLICKHOUSE_INSERT_MAX_TRY,
-} from '@/helpers/env';
+import { Context } from 'hono';
+import { env } from 'hono/adapter';
+import { createClient, ClickHouseClient } from '@clickhouse/client';
 import { EgressProvider } from './index';
 import type { PV, Article } from '@/types';
 
+let client: ClickHouseClient | null;
+
 export default class ClickHouseEgress implements EgressProvider {
+  private insertBatchSize: number = 1000;
+  private insertFlushIntervalMs: number = 200;
+  private insertMaxTry: number = 3;
   private articleBuffers: Record<string, Article> = {};
   private pvBuffers: PV[] = [];
-  private clickhouseClient: ReturnType<typeof createClient>;
 
   constructor() {
-    this.clickhouseClient = createClient({
-      url: CLICKHOUSE_HOST,
-      username: CLICKHOUSE_USERNAME,
-      password: CLICKHOUSE_PASSWORD,
-    });
-
     setInterval(async () => {
       await this.flushBuffer(true);
-    }, CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS);
+    }, this.insertFlushIntervalMs);
+  }
+
+  async setup(c: Context) {
+    const {
+      CLICKHOUSE_INSERT_BATCH_SIZE,
+      CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
+      CLICKHOUSE_INSERT_MAX_TRY,
+    } = env(c);
+    if (!isNaN(Number(CLICKHOUSE_INSERT_BATCH_SIZE)))
+      this.insertBatchSize = Number(CLICKHOUSE_INSERT_BATCH_SIZE);
+    if (!isNaN(Number(CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS)))
+      this.insertFlushIntervalMs = Number(CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS);
+    if (!isNaN(Number(CLICKHOUSE_INSERT_MAX_TRY)))
+      this.insertMaxTry = Number(CLICKHOUSE_INSERT_MAX_TRY);
+
+    if (!client) {
+      const { CLICKHOUSE_URL, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } = env(c);
+      client = createClient({
+        url: CLICKHOUSE_URL,
+        username: CLICKHOUSE_USERNAME,
+        password: CLICKHOUSE_PASSWORD,
+      });
+    }
   }
 
   private async insert(table: string, buffers: any[]) {
+    if (!client) return;
     if (!buffers || buffers.length === 0) return;
     let tryCount = 0;
-    while (tryCount < CLICKHOUSE_INSERT_MAX_TRY) {
+    while (tryCount < this.insertMaxTry) {
       try {
-        await this.clickhouseClient.insert({
+        await client.insert({
           table: table,
           values: buffers,
           format: 'JSONEachRow',
@@ -47,14 +63,14 @@ export default class ClickHouseEgress implements EgressProvider {
 
   private async flushBuffer(flush = false) {
     // Article
-    if (flush || Object.keys(this.articleBuffers).length >= CLICKHOUSE_INSERT_BATCH_SIZE) {
+    if (flush || Object.keys(this.articleBuffers).length >= this.insertBatchSize) {
       const articlesToInsert = Object.values(this.articleBuffers);
-      Object.keys(this.articleBuffers).forEach((key) => delete this.articleBuffers[key]);
+      this.articleBuffers = {};
       await this.insert('lightscope.article', articlesToInsert);
     }
 
     // PV
-    if (flush || this.pvBuffers.length >= CLICKHOUSE_INSERT_BATCH_SIZE) {
+    if (flush || this.pvBuffers.length >= this.insertBatchSize) {
       const pvsToInsert = [...this.pvBuffers];
       this.pvBuffers.length = 0;
       await this.insert('lightscope.pv_raw', pvsToInsert);

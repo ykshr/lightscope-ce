@@ -49,6 +49,16 @@ This project uses **pnpm workspaces** to manage the following packages:
    Review and update the `.env` file with your settings if necessary.
    *Note:* CORS origins for the `api` and `proxy` packages are restricted via the `ALLOWED_ORIGINS` environment variable (defaults to `[]`).
 
+| Variable | Description | Default |
+| :--- | :--- | :--- |
+| `PORT` | API Port | `3000` |
+| `CLICKHOUSE_URL` | ClickHouse connection URL | `http://localhost:8123` |
+| `CLICKHOUSE_USERNAME` | ClickHouse username | `lightscope` |
+| `CLICKHOUSE_PASSWORD` | ClickHouse password | `lightscope` |
+| `VITE_API_ENDPOINT` | API URL for the frontend | `http://localhost:3000` |
+
+See `.env.example` for a complete list.
+
 ### Running Locally (Docker Compose)
 
 The easiest way to run the full stack is with Docker Compose from the root directory:

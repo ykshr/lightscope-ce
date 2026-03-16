@@ -1,0 +1,37 @@
+enum AggregationUnit {
+  TOTAL
+  AUTO
+  MINUTE
+  HOUR
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+enum Metric {
+  VISITS_VIEWS
+  VISITORS_VIEWS
+  USERS_VIEWS
+  ENGAGEMENT_TIME
+}
+
+enum CategoryName {
+  AGE
+  APP_TYPE
+  APP
+  DEVICE_TYPE
+  DEVICE_VENDOR
+  DEVICE
+  GENDER
+  REFERRER
+  GEO_CONTINENT
+  GEO_SUBDIVISION
+  GEO_COUNTRY
+  GEO_CITY
+}
+
+enum Order {
+  ASC
+  DESC
+}

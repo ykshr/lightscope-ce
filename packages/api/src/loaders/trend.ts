@@ -1,3 +1,4 @@
+import { ClickHouseClient } from '@clickhouse/client';
 import {
   QueryTrendArgs,
   AggregationUnit,
@@ -8,10 +9,11 @@ import {
   TrendCategoryGeoArgs,
   TrendCategoryReferrerArgs,
   TrendCategoryUtmArgs,
+  Metric,
 } from '@/__generated__/graphql-resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
-  getAggregationUnit,
+  getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
 import processArticleFilter from '@/loaders/helpers/articleFilter';
@@ -35,23 +37,23 @@ interface LoaderParams {
 
 export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: <T>() => Trend<T>(c.var.user.tenantId, loaderParams),
-    load: <T>() => Trend<T>(c.var.user.tenantId, loaderParams),
+    total: <T>() => Trend<T>(c.var.clickhouse, c.var.user.tenantId, loaderParams),
+    load: <T>() => Trend<T>(c.var.clickhouse, c.var.user.tenantId, loaderParams),
   };
 }
 
-async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
+async function Trend<T>(client: ClickHouseClient, tenantId: string, loaderParams: LoaderParams) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
   const { startDate: s, endDate: e, articleFilter, metric, aggregation, limit, page } = queryParams;
   const { top = 10 } = categoryFilter || {};
   const startDate = new Date(s);
   const endDate = new Date(e);
 
-  const { unit, interval } = getAggregationUnit(startDate, endDate, aggregation);
+  const { unit, interval } = getAggregationUnitWithInterval(startDate, endDate, aggregation);
   const units = getTableUnitWithDates(startDate, endDate, unit);
 
   const dateStr = (() => {
-    if (unit === AggregationUnit.Total) return "'total' as date,";
+    if (unit === AggregationUnit.Total) return 'now() as date,';
     return `toStartOfInterval(date, INTERVAL ${interval} ${unit.toUpperCase()}) as date,`;
   })();
 
@@ -68,6 +70,11 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
         })
         .join(', ')},`
     : '';
+
+  const metricStr =
+    metric === Metric.EngagementTime
+      ? `sum(${metric.toLowerCase()})`
+      : `uniqCombined64Merge(${metric?.toLowerCase()})`;
 
   const orderStr = `ORDER BY date ASC, value DESC`;
 
@@ -95,7 +102,7 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
     SELECT
       ${dateStr}
       ${attStr}
-      uniqCombined64Merge(${metric?.toLowerCase()}) as value
+      ${metricStr} as value
     FROM (${units
       .map(
         ({ unit, startDate: unitStartDate, endDate: unitEndDate }) => `
@@ -121,9 +128,9 @@ async function Trend<T>(tenantId: string, loaderParams: LoaderParams) {
     ${limitAndOffset}
   `;
 
-  const data = await query<any>(sql);
+  const data = await query<any>(client, sql);
   return data.map((row: any) => ({
     ...row,
-    ...(row.date && row.date !== 'total' ? { date: row.date.replace(' ', 'T') + 'Z' } : {}),
+    date: row.date.replace(' ', 'T') + 'Z',
   })) as T[];
 }

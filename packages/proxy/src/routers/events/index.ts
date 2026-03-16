@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { PayloadSchema, type Payload } from '@/types';
-import { getGeoData } from '@/helpers/geo';
 import { createArticle, createPV } from './processEvent';
 import type { Context } from '@/types';
 
@@ -26,7 +25,8 @@ eventsRouter.post('/', async (c: Context) => {
     const article = createArticle(payload, tenantId);
     await egress.insertArticle(article);
 
-    const geoData = getGeoData(c);
+    const geo = c.var.geo;
+    const geoData = await geo.getGeoData(c);
 
     const pv = createPV(payload, geoData, tenantId);
     await egress.insertPV(pv);

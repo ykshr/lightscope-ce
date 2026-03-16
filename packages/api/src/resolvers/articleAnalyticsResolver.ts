@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { Resolvers, AnalyticsBase, ArticleAnalytics } from '@/__generated__/graphql-resolvers';
+import { Resolvers, AnalyticsBase, ArticleAnalytics } from '@/__generated__/resolvers';
 import getArticleAnalyticsLoader from '@/loaders/articleAnalytics';
 import { resolveRequestedAttributes } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';

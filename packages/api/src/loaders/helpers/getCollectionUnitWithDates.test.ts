@@ -4,7 +4,7 @@ import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from './getCollectionUnitWithDates';
-import { AggregationUnit } from '@/__generated__/graphql-resolvers';
+import { AggregationUnit } from '@/__generated__/resolvers';
 
 describe('getCollectionUnitWithDates', () => {
   describe('getAggregationUnitWithInterval', () => {

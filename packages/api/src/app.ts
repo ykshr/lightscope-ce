@@ -7,7 +7,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
 import createLoadersMiddleware from '@/middlewares/loaders';
 import createClickhouseMiddleware from '@/middlewares/clickhouse';
-import typeDefs from '@/__generated__/schema.generated.graphql';
+import typeDefs from '@/__generated__/typeDefs';
 import resolvers from '@/resolvers';
 
 export interface AppDependencies {

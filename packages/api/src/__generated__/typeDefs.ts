@@ -1,3 +1,4 @@
+export default `
 type Aggregation {
   """If unit is not AUTO or Total, specifies the interval for aggregation."""
   interval: Int
@@ -372,3 +373,4 @@ type TrendParameters {
   page: Int!
   startDate: DateTime!
 }
+`;

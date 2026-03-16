@@ -4,11 +4,24 @@ const config: CodegenConfig = {
   overwrite: true,
   schema: 'src/schema/**/*.graphql',
   generates: {
-    'src/__generated__/graphql-resolvers.ts': {
+    'src/__generated__/resolvers.ts': {
       plugins: ['typescript', 'typescript-resolvers'],
     },
-    'src/__generated__/schema.generated.graphql': {
-      plugins: ['schema-ast'],
+    'src/__generated__/typeDefs.ts': {
+      plugins: [
+        {
+          add: {
+            content: 'export default `',
+          },
+        },
+        'schema-ast',
+        {
+          add: {
+            placement: 'append',
+            content: '`;',
+          },
+        },
+      ],
     },
   },
   config: {

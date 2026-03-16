@@ -6,6 +6,7 @@ import Overview from '@/contents/overview';
 import Footer from '@/components/Footer';
 import Ranking from '@/contents/ranking';
 import Article from '@/contents/article';
+import Signup from '@/contents/signup';
 
 function AppLayout() {
   return (
@@ -22,6 +23,10 @@ function AppLayout() {
 }
 
 const router = createBrowserRouter([
+  {
+    path: '/signup',
+    element: <Signup />,
+  },
   {
     element: <AppLayout />,
     errorElement: <></>,
@@ -57,12 +62,23 @@ function App() {
   const { user, loading } = useAuth();
 
   if (loading) return null;
-  if (!user) return null;
 
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">
-      <Sidebar />
-      <RouterProvider router={router} />
+      {!user && window.location.pathname !== '/signup' ? (
+        <div className="flex w-full items-center justify-center">
+          <a href="/signup" className="text-blue-500 hover:underline">
+            Please sign up to continue
+          </a>
+        </div>
+      ) : window.location.pathname === '/signup' ? (
+        <RouterProvider router={router} />
+      ) : (
+        <>
+          <Sidebar />
+          <RouterProvider router={router} />
+        </>
+      )}
     </div>
   );
 }

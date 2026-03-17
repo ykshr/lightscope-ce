@@ -10,6 +10,7 @@ import createClickhouseMiddleware from '@/middlewares/clickhouse';
 import typeDefs from '@/__generated__/typeDefs';
 import resolvers from '@/resolvers';
 import { auth } from '@/lib/auth';
+import tokenRouter from '@/routers/token';
 
 export interface AppDependencies {
   authProvider: AuthProvider;
@@ -31,6 +32,9 @@ export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
   app.all('/api/auth/*', (c) => {
     return auth.handler(c.req.raw);
   });
+
+  // JWT Token Generation for Tracker
+  app.route('/api/token', tokenRouter);
 
   app.get('/health', (c) => c.json({ ok: true }));
   app.all(

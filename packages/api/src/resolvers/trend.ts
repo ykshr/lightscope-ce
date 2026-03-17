@@ -1,22 +1,22 @@
-import { GraphQLResolveInfo } from 'graphql';
 import {
   Resolvers,
-  TrendParameters,
-  TrendAnalyticsBase,
   TrendAnalytics,
   TrendAnalyticsAge,
   TrendAnalyticsApp,
+  TrendAnalyticsArticle,
+  TrendAnalyticsBase,
   TrendAnalyticsDevice,
   TrendAnalyticsGender,
   TrendAnalyticsGeo,
   TrendAnalyticsReferrer,
   TrendAnalyticsUtm,
-  TrendAnalyticsArticle,
+  TrendParameters,
 } from '@/__generated__/resolvers';
 import getTrendLoader from '@/loaders/trend';
-import { getArticle } from '@/resolvers/articleResolver';
+import { getArticle } from '@/resolvers/article';
 import { resolveRequestedAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
 import { Context } from '@/types';
+import { GraphQLResolveInfo } from 'graphql';
 
 const createCategoryResolver =
   <T extends TrendAnalyticsBase>(tableName: string) =>

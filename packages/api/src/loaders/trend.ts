@@ -1,7 +1,7 @@
-import { ClickHouseClient } from '@clickhouse/client';
 import {
-  QueryTrendArgs,
   AggregationUnit,
+  Metric,
+  QueryTrendArgs,
   TrendCategoryAgeArgs,
   TrendCategoryAppArgs,
   TrendCategoryDeviceArgs,
@@ -9,17 +9,17 @@ import {
   TrendCategoryGeoArgs,
   TrendCategoryReferrerArgs,
   TrendCategoryUtmArgs,
-  Metric,
 } from '@/__generated__/resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
+import processArticleFilter from '@/loaders/helpers/articleFilter';
+import processCategoryFilter from '@/loaders/helpers/categoryFilter';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
-import processArticleFilter from '@/loaders/helpers/articleFilter';
-import processCategoryFilter from '@/loaders/helpers/categoryFilter';
 import { RequestAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
+import { ClickHouseClient } from '@clickhouse/client';
 
 interface LoaderParams {
   tableName: string;

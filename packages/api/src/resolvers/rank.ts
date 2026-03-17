@@ -1,9 +1,9 @@
-import { GraphQLResolveInfo } from 'graphql';
-import type { Resolvers, RankParameters } from '@/__generated__/resolvers';
+import type { RankParameters, Resolvers } from '@/__generated__/resolvers';
 import getRankLoader from '@/loaders/rank';
-import { getArticle } from '@/resolvers/articleResolver';
+import { getArticle } from '@/resolvers/article';
 import { resolveRequestedAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
 import { Context } from '@/types';
+import { GraphQLResolveInfo } from 'graphql';
 
 const createCategoryResolver =
   (tableName: string) =>

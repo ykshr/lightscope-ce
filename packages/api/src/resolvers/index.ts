@@ -1,17 +1,19 @@
-import { DateTimeResolver } from 'graphql-scalars';
 import { Resolvers } from '@/__generated__/resolvers';
-import articleResolvers from '@/resolvers/articleResolver';
-import articleAnalyticsResolvers from '@/resolvers/articleAnalyticsResolver';
-import rankResolvers from '@/resolvers/rankResolver';
-import trendResolvers from '@/resolvers/trendResolver';
 import deepMerge from '@/helpers/deepMerge';
+import articleResolvers from '@/resolvers/article';
+import articleAnalyticsResolvers from '@/resolvers/articleAnalytics';
+import rankResolvers from '@/resolvers/rank';
+import tokenResolvers from '@/resolvers/token';
+import trendResolvers from '@/resolvers/trend';
+import { DateTimeResolver } from 'graphql-scalars';
 
 const resolvers: Resolvers = deepMerge(
   { DateTime: DateTimeResolver },
   articleResolvers,
   articleAnalyticsResolvers,
   rankResolvers,
-  trendResolvers
+  trendResolvers,
+  tokenResolvers
 );
 
 export default resolvers;

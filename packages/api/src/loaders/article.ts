@@ -1,9 +1,9 @@
-import DataLoader from 'dataloader';
-import { ClickHouseClient } from '@clickhouse/client';
 import { Article } from '@/__generated__/resolvers';
 import query from '@/helpers/clickhouse';
 import { renameKeySnakeToCamel } from '@/helpers/rename';
 import type { Context } from '@/types';
+import { ClickHouseClient } from '@clickhouse/client';
+import DataLoader from 'dataloader';
 
 export default function getLoader(c: Context): DataLoader<string, Article | null> {
   if (c.var.loaders.has('articleLoader')) {

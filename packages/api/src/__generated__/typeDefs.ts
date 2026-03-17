@@ -207,6 +207,10 @@ enum Metric {
   VISITS_VIEWS
 }
 
+type Mutation {
+  createToken(availableMinutes: Int, origin: String!): [Token]!
+}
+
 enum Order {
   ASC
   DESC
@@ -263,6 +267,12 @@ type Sort {
 input SortInput {
   category: CategoryInput
   order: Order!
+}
+
+type Token {
+  expirationTime: DateTime
+  origin: String!
+  token: String!
 }
 
 type Trend {

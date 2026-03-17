@@ -1,16 +1,15 @@
+import typeDefs from '@/__generated__/typeDefs';
+import { auth } from '@/lib/auth';
+import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
+import createClickhouseMiddleware from '@/middlewares/clickhouse';
+import createLoadersMiddleware from '@/middlewares/loaders';
+import resolvers from '@/resolvers';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { graphqlServer } from '@hono/graphql-server';
 import { Hono, Env as HonoEnv } from 'hono';
+import { env } from 'hono/adapter';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
-import { env } from 'hono/adapter';
-import { graphqlServer } from '@hono/graphql-server';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
-import createLoadersMiddleware from '@/middlewares/loaders';
-import createClickhouseMiddleware from '@/middlewares/clickhouse';
-import typeDefs from '@/__generated__/typeDefs';
-import resolvers from '@/resolvers';
-import { auth } from '@/lib/auth';
-import tokenRouter from '@/routers/token';
 
 export interface AppDependencies {
   authProvider: AuthProvider;
@@ -32,9 +31,6 @@ export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
   app.all('/api/auth/*', (c) => {
     return auth.handler(c.req.raw);
   });
-
-  // JWT Token Generation for Tracker
-  app.route('/api/token', tokenRouter);
 
   app.get('/health', (c) => c.json({ ok: true }));
   app.all(

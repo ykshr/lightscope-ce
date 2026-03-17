@@ -1,14 +1,13 @@
-import DataLoader from 'dataloader';
-import { ClickHouseClient } from '@clickhouse/client';
-import { AnalyticsBase } from '@/__generated__/resolvers';
-import { Aggregation, AggregationUnit, Metric } from '@/__generated__/resolvers';
-import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
+import { Aggregation, AggregationUnit, AnalyticsBase, Metric } from '@/__generated__/resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
+import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
+import { ClickHouseClient } from '@clickhouse/client';
+import DataLoader from 'dataloader';
 
 type QueryParams = {
   startDate: string;

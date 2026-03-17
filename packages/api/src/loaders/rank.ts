@@ -1,6 +1,6 @@
-import { ClickHouseClient } from '@clickhouse/client';
 import {
   AggregationUnit,
+  Metric,
   type QueryRankArgs,
   type RankAnalytics,
   type RankCategoryAgeArgs,
@@ -10,14 +10,14 @@ import {
   type RankCategoryGeoArgs,
   type RankCategoryReferrerArgs,
   type RankCategoryUtmArgs,
-  Metric,
 } from '@/__generated__/resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
-import { getTableUnitWithDates } from '@/loaders/helpers/getCollectionUnitWithDates';
 import processArticleFilter from '@/loaders/helpers/articleFilter';
 import processCategoryFilter from '@/loaders/helpers/categoryFilter';
+import { getTableUnitWithDates } from '@/loaders/helpers/getCollectionUnitWithDates';
 import { RequestAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
+import { ClickHouseClient } from '@clickhouse/client';
 
 interface LoaderParams {
   tableName: string;

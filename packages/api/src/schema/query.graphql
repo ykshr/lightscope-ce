@@ -18,4 +18,5 @@ type Query {
     page: Int = 1
     metric: Metric = VISITS_VIEWS
   ): Trend
+  tracker: [Tracker]!
 }

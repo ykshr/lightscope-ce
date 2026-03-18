@@ -1,6 +1,8 @@
+import { prisma } from '@/helpers/prisma';
+import { betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { Context } from 'hono';
 import { AuthProvider, User } from './index';
-import { auth } from '../../lib/auth';
 
 export default class BasicAuth implements AuthProvider {
   async getUser(c: Context): Promise<User | null> {
@@ -19,3 +21,12 @@ export default class BasicAuth implements AuthProvider {
     };
   }
 }
+
+export const auth = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: 'sqlite',
+  }),
+  emailAndPassword: {
+    enabled: true,
+  },
+});

@@ -1,7 +1,7 @@
-import { Hono, Context } from 'hono';
-import { z } from 'zod';
+import { auth } from '@/helpers/prisma'; // Ensure this exists and works
+import { Context, Hono } from 'hono';
 import { sign } from 'hono/jwt';
-import { auth } from '@/lib/auth'; // Ensure this exists and works
+import { z } from 'zod';
 
 const tokenApp = new Hono();
 
@@ -15,9 +15,9 @@ tokenApp.post('/generate', async (c: Context) => {
   const header = c.req.header('Authorization');
   let userContextCookie = null;
   if (!header && c.req.header('Cookie')) {
-       // if from web client, fallback to headers which better-auth processes
+    // if from web client, fallback to headers which better-auth processes
   }
-  
+
   // We can just use the internal better-auth context using c.req.raw mapping
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
 

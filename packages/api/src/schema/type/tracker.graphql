@@ -1,0 +1,5 @@
+type Tracker {
+  origin: String!
+  token: String!
+  expiresAt: DateTime
+}

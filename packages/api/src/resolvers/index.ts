@@ -3,7 +3,7 @@ import deepMerge from '@/helpers/deepMerge';
 import articleResolvers from '@/resolvers/article';
 import articleAnalyticsResolvers from '@/resolvers/articleAnalytics';
 import rankResolvers from '@/resolvers/rank';
-import tokenResolvers from '@/resolvers/token';
+import tokenResolvers from '@/resolvers/tracker';
 import trendResolvers from '@/resolvers/trend';
 import { DateTimeResolver } from 'graphql-scalars';
 

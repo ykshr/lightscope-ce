@@ -1,6 +1,6 @@
 import typeDefs from '@/__generated__/typeDefs';
-import { auth } from '@/lib/auth';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
+import { auth } from '@/middlewares/auth/basicAuth';
 import createClickhouseMiddleware from '@/middlewares/clickhouse';
 import createLoadersMiddleware from '@/middlewares/loaders';
 import resolvers from '@/resolvers';

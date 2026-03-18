@@ -18,7 +18,7 @@
     "dev": "tsx src/index.ts",
     "codegen": "graphql-codegen --config codegen.ts",
     "db:push": "prisma db push",
-    "db:generate": "prisma generate"
+    "db:update": "prisma migrate dev && prisma generate"
   },
   "dependencies": {
     "@clickhouse/client": "^1.14.0",

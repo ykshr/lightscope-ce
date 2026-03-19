@@ -271,7 +271,9 @@ input SortInput {
 }
 
 type Tracker {
+  createdAt: DateTime
   expiresAt: DateTime
+  id: String!
   origin: String!
   token: String!
 }

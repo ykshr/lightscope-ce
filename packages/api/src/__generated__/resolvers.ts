@@ -412,7 +412,9 @@ export type SortInput = {
 
 export type Tracker = {
   __typename?: 'Tracker';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
   origin: Scalars['String']['output'];
   token: Scalars['String']['output'];
 };
@@ -1002,7 +1004,9 @@ export type SortResolvers<ContextType = Context, ParentType extends ResolversPar
 };
 
 export type TrackerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Tracker'] = ResolversParentTypes['Tracker']> = {
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   expiresAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   origin?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };

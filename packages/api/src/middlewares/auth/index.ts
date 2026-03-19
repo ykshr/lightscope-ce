@@ -9,6 +9,7 @@ export type User = {
 
 export interface AuthProvider {
   getUser(c: Context): Promise<User | null>;
+  handler(c: Context): Promise<Response>;
 }
 
 export default function createAuthMiddleware(authProvider: AuthProvider) {

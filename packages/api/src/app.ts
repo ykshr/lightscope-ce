@@ -1,6 +1,5 @@
 import typeDefs from '@/__generated__/typeDefs';
 import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
-import { auth } from '@/middlewares/auth/basicAuth';
 import createClickhouseMiddleware from '@/middlewares/clickhouse';
 import createLoadersMiddleware from '@/middlewares/loaders';
 import resolvers from '@/resolvers';
@@ -28,11 +27,10 @@ export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
     return corsMiddlewareHandler(c, next);
   });
 
-  app.all('/api/auth/*', (c) => {
-    return auth.handler(c.req.raw);
-  });
-
   app.get('/health', (c) => c.json({ ok: true }));
+
+  app.all('/api/auth/*', authProvider.handler);
+
   app.all(
     '/gql',
     createAuthMiddleware(authProvider),

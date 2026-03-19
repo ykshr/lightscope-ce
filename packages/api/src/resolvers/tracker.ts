@@ -1,28 +1,12 @@
 import { MutationTrackerArgs, Resolvers, Tracker } from '@/__generated__/resolvers';
 import { prisma } from '@/helpers/prisma';
+import getLoader from '@/loaders/tracker';
 import { Context } from '@/types';
 import { sign } from 'hono/jwt';
 
 export const query = async (_parent: any, _args: any, c: Context): Promise<Tracker[]> => {
-  const { tenantId } = c.var.user;
-
-  const trackers = await prisma.tracker.findMany({
-    where: {
-      tenantId,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-
-  const trackersTransformed = trackers.map((t) => ({
-    ...t,
-    expiresAt: t.expiresAt ? t.expiresAt.toISOString() : null,
-    createdAt: t.createdAt.toISOString(),
-    updatedAt: t.updatedAt.toISOString(),
-  })) as Tracker[];
-
-  return trackersTransformed;
+  const trackers = await getLoader(c);
+  return trackers;
 };
 
 export const mutation = async (
@@ -53,7 +37,8 @@ export const mutation = async (
 
   await prisma.tracker.create({ data });
 
-  return [];
+  const trackers = await getLoader(c);
+  return trackers;
 };
 
 const resolvers: Resolvers = {

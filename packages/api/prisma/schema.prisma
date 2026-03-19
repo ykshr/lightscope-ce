@@ -8,7 +8,7 @@ datasource db {
 
 model User {
   id        String   @id @default(uuid())
-  tenantId  Int      @default(1)
+  tenantId  Int
   email     String   @unique
   role      String?  @default("user")
   createdAt DateTime @default(now())
@@ -19,7 +19,7 @@ model User {
 
 model Tracker {
   id        String   @id @default(uuid())
-  tenantId  Int      @default(1)
+  tenantId  Int
   origin    String
   token     String   @unique
   expiresAt DateTime?

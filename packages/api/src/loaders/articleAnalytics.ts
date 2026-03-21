@@ -29,11 +29,11 @@ export default function getLoader<T extends AnalyticsBase>(
   c: Context,
   loaderParams: LoaderParams
 ): DataLoader<string, T[] | null> {
-  if (!c.var.loaders.has('articleAnalyticsLoader')) {
-    c.var.loaders.set('articleAnalyticsLoader', new Map());
+  if (!c.var.$.loaders.has('articleAnalyticsLoader')) {
+    c.var.$.loaders.set('articleAnalyticsLoader', new Map());
   }
 
-  const loaders = c.var.loaders.get('articleAnalyticsLoader');
+  const loaders = c.var.$.loaders.get('articleAnalyticsLoader');
   const loaderKey = createLoaderKey(c, loaderParams);
   if (loaders.has(loaderKey)) {
     return loaders.get(loaderKey) as DataLoader<string, T[] | null>;
@@ -42,7 +42,7 @@ export default function getLoader<T extends AnalyticsBase>(
   const loader = new DataLoader<string, T[] | null>(
     async (urls: readonly string[]) => {
       const analytics = await fetchArticleAnalyticsByUrls<T>(
-        c.var.clickhouse,
+        c.var.$.clickhouse,
         c.var.user.tenantId,
         loaderParams,
         urls

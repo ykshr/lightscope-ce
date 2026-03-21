@@ -1,22 +1,10 @@
-import { prisma } from '@/helpers/prisma';
-import BetterAuth from '@/middlewares/auth/betterAuth';
+import { createApp } from '@/app';
+import createContext from '@/createContext';
 import { serve } from '@hono/node-server';
-import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { createApp } from './app';
-import type { Env } from './types';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-const authProvider = new BetterAuth({
-  database: prismaAdapter(prisma, {
-    provider: 'sqlite',
-  }),
-  emailAndPassword: {
-    enabled: true,
-  },
-});
-
-const app = createApp<Env>({ authProvider });
+const app = createApp(createContext);
 
 serve(
   {

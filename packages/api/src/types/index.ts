@@ -1,7 +1,8 @@
-import type { Context as HonoContext } from 'hono';
-import { ClickHouseClient } from '@clickhouse/client';
-import type { User } from '@/middlewares/auth';
+import type { AuthProvider, User } from '@/helpers/auth';
 import type { Loaders } from '@/middlewares/loaders';
+import { ClickHouseClient } from '@clickhouse/client';
+import { PrismaClient } from '@prisma/client';
+import type { Context as HonoContext } from 'hono';
 
 export type Bindings = {
   NO_AUTH_TOKEN: string;
@@ -10,7 +11,14 @@ export type Bindings = {
   CLICKHOUSE_PASSWORD: string;
 };
 
-export type Variables = { user: User; loaders: Loaders; clickhouse: ClickHouseClient };
+export type $ = {
+  auth: AuthProvider;
+  clickhouse: ClickHouseClient;
+  loaders: Loaders;
+  prisma: PrismaClient;
+};
+
+export type Variables = { user: User; $: $ };
 
 export type Env = {
   Bindings: Bindings;

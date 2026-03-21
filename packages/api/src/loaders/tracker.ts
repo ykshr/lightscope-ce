@@ -1,11 +1,10 @@
 import { Tracker } from '@/__generated__/resolvers';
-import { prisma } from '@/helpers/prisma';
 import { Context } from '@/types';
 
 export default async function getLoader(c: Context) {
   const { tenantId } = c.var.user;
 
-  const trackers = await prisma.tracker.findMany({
+  const trackers = await c.var.$.prisma.tracker.findMany({
     where: {
       tenantId,
     },

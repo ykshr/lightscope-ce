@@ -1,5 +1,4 @@
 import { MutationTrackerArgs, Resolvers, Tracker } from '@/__generated__/resolvers';
-import { prisma } from '@/helpers/prisma';
 import getLoader from '@/loaders/tracker';
 import { Context } from '@/types';
 import { sign } from 'hono/jwt';
@@ -35,7 +34,7 @@ export const mutation = async (
     expiresAt,
   };
 
-  await prisma.tracker.create({ data });
+  await c.var.$.prisma.tracker.create({ data });
 
   const trackers = await getLoader(c);
   return trackers;

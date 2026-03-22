@@ -14,9 +14,6 @@ export default async function createContext(c: Context): Promise<$> {
     database: prismaAdapter(prisma, {
       provider: 'sqlite',
     }),
-    emailAndPassword: {
-      enabled: true,
-    },
   });
 
   const clickhouse = createClickHouseClient({

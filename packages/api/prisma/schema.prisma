@@ -7,24 +7,71 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  tenantId  Int
-  email     String   @unique
-  role      String?  @default("user")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id
+  tenantId      Int
+  name          String
+  email         String   @unique
+  emailVerified Boolean
+  image         String?
+  role          String?  @default("user")
+  createdAt     DateTime @db.Timestampz(3) @default(now())
+  updatedAt     DateTime @db.Timestampz(3) @updatedAt
 
   @@map("user")
 }
 
+model Session {
+  id        String   @id
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  token     String   @unique
+  expiresAt DateTime @db.Timestampz(3)
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @db.Timestampz(3) @default(now())
+  updatedAt DateTime @db.Timestampz(3) @updatedAt
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  user                  User      @relation(fields: [userId], references: [id])
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime? @db.Timestampz(3)
+  refreshTokenExpiresAt DateTime? @db.Timestampz(3)
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @db.Timestampz(3) @default(now())
+  updatedAt             DateTime  @db.Timestampz(3) @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestampz(3)
+  createdAt  DateTime @db.Timestampz(3) @default(now())
+  updatedAt  DateTime @db.Timestampz(3) @updatedAt
+
+  @@map("verification")
+}
+
 model Tracker {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   tenantId  Int
   origin    String
-  token     String   @unique
+  token     String    @unique
   expiresAt DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("tracker")
 }

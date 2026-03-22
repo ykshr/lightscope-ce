@@ -6,7 +6,29 @@ export default class BetterAuth implements AuthProvider {
   private auth: Auth;
 
   constructor(options: BetterAuthOptions) {
-    this.auth = betterAuth(options);
+    // @ts-ignore
+    this.auth = betterAuth({
+      emailAndPassword: {
+        enabled: true,
+      },
+      user: {
+        additionalFields: {
+          role: {
+            type: ['user', 'admin'],
+            required: false,
+            defaultValue: 'user',
+            input: false,
+          },
+          tenantId: {
+            type: 'number',
+            required: false,
+            defaultValue: 1,
+            input: false,
+          },
+        },
+      },
+      ...options,
+    });
   }
 
   async getUser(c: Context): Promise<User | null> {

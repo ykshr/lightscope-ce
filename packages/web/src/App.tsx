@@ -8,7 +8,7 @@ import Ranking from '@/pages/ranking';
 import Settings from '@/pages/Settings';
 import SingIn from '@/pages/SingIn';
 import SingUp from '@/pages/SingUp';
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 
 function AppLayout() {
   return (
@@ -60,6 +60,10 @@ const router = createBrowserRouter([
           description: 'Manage tracking configuration',
         },
       },
+      {
+        path: '*',
+        element: <Navigate to="/" replace />,
+      },
     ],
   },
 ]);
@@ -75,7 +79,7 @@ const unauthenticatedRouter = createBrowserRouter([
   },
   {
     path: '*',
-    element: <SingIn />,
+    element: <Navigate to="/singin" replace />,
   },
 ]);
 

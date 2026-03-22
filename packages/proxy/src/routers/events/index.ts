@@ -1,7 +1,7 @@
-import { Hono } from 'hono';
-import { PayloadSchema, type Payload } from '@/types';
-import { createArticle, createPV } from './processEvent';
 import type { Context } from '@/types';
+import { PayloadSchema, type Payload } from '@/types';
+import { Hono } from 'hono';
+import { createArticle, createPV } from './processEvent';
 
 const eventsRouter = new Hono();
 
@@ -19,13 +19,13 @@ eventsRouter.post('/', async (c: Context) => {
       );
     }
     const payload: Payload = parseResult.data;
-    const egress = c.var.egress;
+    const egress = c.var.$.egress;
 
     const tenantId = c.var.tracker.tenantId;
     const article = createArticle(payload, tenantId);
     await egress.insertArticle(article);
 
-    const geo = c.var.geo;
+    const geo = c.var.$.geo;
     const geoData = await geo.getGeoData(c);
 
     const pv = createPV(payload, geoData, tenantId);

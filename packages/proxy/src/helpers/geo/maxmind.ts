@@ -1,14 +1,26 @@
-import fs from 'fs';
-import maxmind, { type CityResponse } from 'maxmind';
-import { Context } from 'hono';
 import { getConnInfo } from '@hono/node-server/conninfo';
-import { GeoProvider, Geo } from './index';
-
-const MAXMIND_DB_PATH = process.env.MAXMIND_DB_PATH || 'data/GeoLite2-City.mmdb';
-const dbExists = fs.existsSync(MAXMIND_DB_PATH);
-const maxmindReader = dbExists ? await maxmind.open<CityResponse>(MAXMIND_DB_PATH) : null;
+import fs from 'fs';
+import { Context } from 'hono';
+import maxmind, { type CityResponse, type Reader } from 'maxmind';
+import { Geo, GeoProvider } from './index';
 
 export default class MaxmindGeo implements GeoProvider {
+  maxmindDbPath: string;
+  maxmindReader: Reader<CityResponse> | undefined;
+
+  constructor(maxmindDbPath?: string) {
+    this.maxmindDbPath = maxmindDbPath || 'data/GeoLite2-City.mmdb';
+  }
+
+  async init() {
+    const dbExists = fs.existsSync(this.maxmindDbPath);
+    if (!dbExists) {
+      console.warn(`Maxmind DB not found at ${this.maxmindDbPath}. Geo lookup will be disabled.`);
+      return;
+    }
+    this.maxmindReader = await maxmind.open<CityResponse>(this.maxmindDbPath);
+  }
+
   async getGeoData(c: Context) {
     const geo: Geo = {
       continent: undefined,
@@ -26,9 +38,9 @@ export default class MaxmindGeo implements GeoProvider {
       return info.remote.address;
     })();
 
-    if (!maxmindReader || !ip) return geo;
+    if (!this.maxmindReader || !ip) return geo;
 
-    const maxmindInfo = maxmindReader.get(ip);
+    const maxmindInfo = this.maxmindReader.get(ip);
     geo.continent = maxmindInfo?.continent?.code;
     geo.country = maxmindInfo?.country?.iso_code;
     geo.subdivision =

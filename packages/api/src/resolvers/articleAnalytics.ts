@@ -1,8 +1,8 @@
-import { GraphQLResolveInfo } from 'graphql';
-import { Resolvers, AnalyticsBase, ArticleAnalytics } from '@/__generated__/resolvers';
+import { AnalyticsBase, ArticleAnalytics, Resolvers } from '@/__generated__/resolvers';
 import getArticleAnalyticsLoader from '@/loaders/articleAnalytics';
 import { resolveRequestedAttributes } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
+import { GraphQLResolveInfo } from 'graphql';
 
 const createArticleAnalyticsResolver =
   <T extends AnalyticsBase>(tableName: string) =>

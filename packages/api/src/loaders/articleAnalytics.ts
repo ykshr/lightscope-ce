@@ -1,14 +1,13 @@
-import DataLoader from 'dataloader';
-import { ClickHouseClient } from '@clickhouse/client';
-import { AnalyticsBase } from '@/__generated__/resolvers';
-import { Aggregation, AggregationUnit, Metric } from '@/__generated__/resolvers';
-import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
+import { Aggregation, AggregationUnit, AnalyticsBase, Metric } from '@/__generated__/resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
+import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
+import { ClickHouseClient } from '@clickhouse/client';
+import DataLoader from 'dataloader';
 
 type QueryParams = {
   startDate: string;
@@ -30,11 +29,11 @@ export default function getLoader<T extends AnalyticsBase>(
   c: Context,
   loaderParams: LoaderParams
 ): DataLoader<string, T[] | null> {
-  if (!c.var.loaders.has('articleAnalyticsLoader')) {
-    c.var.loaders.set('articleAnalyticsLoader', new Map());
+  if (!c.var.$.loaders.has('articleAnalyticsLoader')) {
+    c.var.$.loaders.set('articleAnalyticsLoader', new Map());
   }
 
-  const loaders = c.var.loaders.get('articleAnalyticsLoader');
+  const loaders = c.var.$.loaders.get('articleAnalyticsLoader');
   const loaderKey = createLoaderKey(c, loaderParams);
   if (loaders.has(loaderKey)) {
     return loaders.get(loaderKey) as DataLoader<string, T[] | null>;
@@ -43,7 +42,7 @@ export default function getLoader<T extends AnalyticsBase>(
   const loader = new DataLoader<string, T[] | null>(
     async (urls: readonly string[]) => {
       const analytics = await fetchArticleAnalyticsByUrls<T>(
-        c.var.clickhouse,
+        c.var.$.clickhouse,
         c.var.user.tenantId,
         loaderParams,
         urls

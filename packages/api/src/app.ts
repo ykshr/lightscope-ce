@@ -1,21 +1,16 @@
-import { Hono, Env as HonoEnv } from 'hono';
+import typeDefs from '@/__generated__/typeDefs';
+import createContextMiddleware from '@/middlewares/context';
+import createUserMiddleware from '@/middlewares/user';
+import resolvers from '@/resolvers';
+import { $, Env } from '@/types';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { graphqlServer } from '@hono/graphql-server';
+import { Context, Hono } from 'hono';
+import { env } from 'hono/adapter';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
-import { env } from 'hono/adapter';
-import { graphqlServer } from '@hono/graphql-server';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
-import createLoadersMiddleware from '@/middlewares/loaders';
-import createClickhouseMiddleware from '@/middlewares/clickhouse';
-import typeDefs from '@/__generated__/typeDefs';
-import resolvers from '@/resolvers';
 
-export interface AppDependencies {
-  authProvider: AuthProvider;
-}
-
-export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
-  const { authProvider } = deps;
+export function createApp(createContext: (c: Context) => Promise<$>) {
   const app = new Hono<Env>();
 
   app.use('*', logger());
@@ -28,11 +23,14 @@ export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
   });
 
   app.get('/health', (c) => c.json({ ok: true }));
+
+  app.use('*', createContextMiddleware(createContext));
+
+  app.all('/api/auth/*', (c) => c.var.$.auth.handler(c));
+
   app.all(
     '/gql',
-    createAuthMiddleware(authProvider),
-    createClickhouseMiddleware(),
-    createLoadersMiddleware(),
+    createUserMiddleware(),
     graphqlServer({
       schema: makeExecutableSchema({ typeDefs, resolvers }),
       pretty: true,

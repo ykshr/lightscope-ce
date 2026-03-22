@@ -6,6 +6,9 @@ import Overview from '@/contents/overview';
 import Footer from '@/components/Footer';
 import Ranking from '@/contents/ranking';
 import Article from '@/contents/article';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import Settings from '@/pages/Settings';
 
 function AppLayout() {
   return (
@@ -49,7 +52,30 @@ const router = createBrowserRouter([
           type: 'article',
         },
       },
+      {
+        path: '/settings',
+        element: <Settings />,
+        handle: {
+          title: 'Settings',
+          description: 'Manage tracking configuration',
+        },
+      },
     ],
+  },
+]);
+
+const unauthenticatedRouter = createBrowserRouter([
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/register',
+    element: <Register />,
+  },
+  {
+    path: '*',
+    element: <Login />,
   },
 ]);
 
@@ -57,7 +83,10 @@ function App() {
   const { user, loading } = useAuth();
 
   if (loading) return null;
-  if (!user) return null;
+
+  if (!user) {
+    return <RouterProvider router={unauthenticatedRouter} />;
+  }
 
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">

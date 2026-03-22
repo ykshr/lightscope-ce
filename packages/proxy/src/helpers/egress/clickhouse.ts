@@ -1,54 +1,55 @@
-import { Context } from 'hono';
-import { env } from 'hono/adapter';
-import { createClient, ClickHouseClient } from '@clickhouse/client';
+import type { Article, PV } from '@/types';
+import { ClickHouseClient, createClient } from '@clickhouse/client';
 import { EgressProvider } from './index';
-import type { PV, Article } from '@/types';
 
-let client: ClickHouseClient | null;
+type ClickHouseEgressConfig = {
+  insertBatchSize?: string;
+  insertFlushIntervalMs?: string;
+  insertMaxTry?: string;
+  clickhouseUrl?: string;
+  clickhouseUsername?: string;
+  clickhousePassword?: string;
+};
 
 export default class ClickHouseEgress implements EgressProvider {
+  private client: ClickHouseClient;
   private insertBatchSize: number = 1000;
   private insertFlushIntervalMs: number = 200;
   private insertMaxTry: number = 3;
   private articleBuffers: Record<string, Article> = {};
   private pvBuffers: PV[] = [];
 
-  constructor() {
+  constructor(config: ClickHouseEgressConfig) {
+    const {
+      insertBatchSize,
+      insertFlushIntervalMs,
+      insertMaxTry,
+      clickhouseUrl,
+      clickhouseUsername,
+      clickhousePassword,
+    } = config;
+    if (!isNaN(Number(insertBatchSize))) this.insertBatchSize = Number(insertBatchSize);
+    if (!isNaN(Number(insertFlushIntervalMs)))
+      this.insertFlushIntervalMs = Number(insertFlushIntervalMs);
+    if (!isNaN(Number(insertMaxTry))) this.insertMaxTry = Number(insertMaxTry);
+
+    this.client = createClient({
+      url: clickhouseUrl,
+      username: clickhouseUsername,
+      password: clickhousePassword,
+    });
+
     setInterval(async () => {
       await this.flushBuffer(true);
     }, this.insertFlushIntervalMs);
   }
 
-  async setup(c: Context) {
-    const {
-      CLICKHOUSE_INSERT_BATCH_SIZE,
-      CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
-      CLICKHOUSE_INSERT_MAX_TRY,
-    } = env(c);
-    if (!isNaN(Number(CLICKHOUSE_INSERT_BATCH_SIZE)))
-      this.insertBatchSize = Number(CLICKHOUSE_INSERT_BATCH_SIZE);
-    if (!isNaN(Number(CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS)))
-      this.insertFlushIntervalMs = Number(CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS);
-    if (!isNaN(Number(CLICKHOUSE_INSERT_MAX_TRY)))
-      this.insertMaxTry = Number(CLICKHOUSE_INSERT_MAX_TRY);
-
-    if (!client) {
-      const { CLICKHOUSE_URL, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } = env(c);
-      client = createClient({
-        url: CLICKHOUSE_URL,
-        username: CLICKHOUSE_USERNAME,
-        password: CLICKHOUSE_PASSWORD,
-      });
-    }
-  }
-
   private async insert(table: string, buffers: any[]) {
-    if (!client) return;
     if (!buffers || buffers.length === 0) return;
     let tryCount = 0;
     while (tryCount < this.insertMaxTry) {
       try {
-        await client.insert({
+        await this.client.insert({
           table: table,
           values: buffers,
           format: 'JSONEachRow',

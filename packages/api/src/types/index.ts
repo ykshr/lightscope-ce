@@ -1,16 +1,29 @@
-import type { Context as HonoContext } from 'hono';
+import type { AuthProvider, User } from '@/helpers/auth';
 import { ClickHouseClient } from '@clickhouse/client';
-import type { User } from '@/middlewares/auth';
-import type { Loaders } from '@/middlewares/loaders';
+import { PrismaClient } from '@prisma/client';
+import type { Context as HonoContext } from 'hono';
+import { AlgorithmTypes } from 'hono/jwt';
 
 export type Bindings = {
-  NO_AUTH_TOKEN: string;
   CLICKHOUSE_URL: string;
   CLICKHOUSE_USERNAME: string;
   CLICKHOUSE_PASSWORD: string;
+  JWT_SECRET: string;
+  JWT_ALGORITHM: AlgorithmTypes;
 };
 
-export type Variables = { user: User; loaders: Loaders; clickhouse: ClickHouseClient };
+export type $ = {
+  auth: AuthProvider;
+  clickhouse: ClickHouseClient;
+  loaders: Map<string, any>;
+  prisma: PrismaClient;
+  jwt: {
+    secret: string;
+    algorithm: AlgorithmTypes;
+  };
+};
+
+export type Variables = { user: User; $: $ };
 
 export type Env = {
   Bindings: Bindings;

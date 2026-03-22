@@ -16,18 +16,26 @@
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
     "start": "node dist/bundle.js",
     "dev": "tsx src/index.ts",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "db:push": "prisma db push",
+    "db:update": "prisma migrate dev && prisma generate"
   },
   "dependencies": {
     "@clickhouse/client": "^1.14.0",
     "@graphql-tools/schema": "^10.0.31",
     "@hono/graphql-server": "^0.7.0",
     "@hono/node-server": "^1.19.11",
+    "@libsql/client": "^0.17.0",
+    "@prisma/adapter-libsql": "^7.5.0",
+    "@prisma/client": "^7.5.0",
+    "better-auth": "^1.5.5",
     "dataloader": "^2.2.3",
     "dayjs": "^1.11.19",
     "graphql": "^16.12.0",
     "graphql-scalars": "^1.25.0",
-    "hono": "^4.12.5"
+    "hono": "^4.12.5",
+    "prisma": "^7.5.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^6.0.0",
@@ -35,6 +43,7 @@
     "@graphql-codegen/schema-ast": "^5.0.1",
     "@graphql-codegen/typescript": "5.0.6",
     "@graphql-codegen/typescript-resolvers": "5.1.4",
+    "@prisma/config": "^7.5.0",
     "@types/node": "^22.15.29",
     "tsx": "^4.21.0",
     "typescript": "^5.8.3",

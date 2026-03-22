@@ -248,6 +248,17 @@ export enum Metric {
   VisitsViews = 'VISITS_VIEWS'
 }
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  tracker: Array<Maybe<Tracker>>;
+};
+
+
+export type MutationTrackerArgs = {
+  availableMinutes?: InputMaybe<Scalars['Int']['input']>;
+  origin: Scalars['String']['input'];
+};
+
 export enum Order {
   Asc = 'ASC',
   Desc = 'DESC'
@@ -257,6 +268,7 @@ export type Query = {
   __typename?: 'Query';
   article?: Maybe<Article>;
   rank?: Maybe<Rank>;
+  tracker: Array<Maybe<Tracker>>;
   trend?: Maybe<Trend>;
 };
 
@@ -396,6 +408,15 @@ export type Sort = {
 export type SortInput = {
   category?: InputMaybe<CategoryInput>;
   order: Order;
+};
+
+export type Tracker = {
+  __typename?: 'Tracker';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  origin: Scalars['String']['output'];
+  token: Scalars['String']['output'];
 };
 
 export type Trend = {
@@ -712,6 +733,7 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Metric: Metric;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Order: Order;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Rank: ResolverTypeWrapper<Rank>;
@@ -721,6 +743,7 @@ export type ResolversTypes = {
   Sort: ResolverTypeWrapper<Sort>;
   SortInput: SortInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Tracker: ResolverTypeWrapper<Tracker>;
   Trend: ResolverTypeWrapper<Trend>;
   TrendAnalytics: ResolverTypeWrapper<TrendAnalytics>;
   TrendAnalyticsAge: ResolverTypeWrapper<TrendAnalyticsAge>;
@@ -758,6 +781,7 @@ export type ResolversParentTypes = {
   CategoryInput: CategoryInput;
   DateTime: Scalars['DateTime']['output'];
   Int: Scalars['Int']['output'];
+  Mutation: Record<PropertyKey, never>;
   Query: Record<PropertyKey, never>;
   Rank: Rank;
   RankAnalytics: RankAnalytics;
@@ -766,6 +790,7 @@ export type ResolversParentTypes = {
   Sort: Sort;
   SortInput: SortInput;
   String: Scalars['String']['output'];
+  Tracker: Tracker;
   Trend: Trend;
   TrendAnalytics: TrendAnalytics;
   TrendAnalyticsAge: TrendAnalyticsAge;
@@ -927,9 +952,14 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
+export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  tracker?: Resolver<Array<Maybe<ResolversTypes['Tracker']>>, ParentType, ContextType, RequireFields<MutationTrackerArgs, 'origin'>>;
+};
+
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<QueryArticleArgs, 'url'>>;
   rank?: Resolver<Maybe<ResolversTypes['Rank']>, ParentType, ContextType, RequireFields<QueryRankArgs, 'endDate' | 'limit' | 'metric' | 'order' | 'page' | 'startDate'>>;
+  tracker?: Resolver<Array<Maybe<ResolversTypes['Tracker']>>, ParentType, ContextType>;
   trend?: Resolver<Maybe<ResolversTypes['Trend']>, ParentType, ContextType, RequireFields<QueryTrendArgs, 'aggregation' | 'endDate' | 'limit' | 'metric' | 'page' | 'startDate'>>;
 };
 
@@ -971,6 +1001,14 @@ export type RankParametersResolvers<ContextType = Context, ParentType extends Re
 export type SortResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Sort'] = ResolversParentTypes['Sort']> = {
   category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
   order?: Resolver<ResolversTypes['Order'], ParentType, ContextType>;
+};
+
+export type TrackerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Tracker'] = ResolversParentTypes['Tracker']> = {
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  expiresAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  origin?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type TrendResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Trend'] = ResolversParentTypes['Trend']> = {
@@ -1105,12 +1143,14 @@ export type Resolvers<ContextType = Context> = {
   ArticleFilter?: ArticleFilterResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Rank?: RankResolvers<ContextType>;
   RankAnalytics?: RankAnalyticsResolvers<ContextType>;
   RankAnalyticsBase?: RankAnalyticsBaseResolvers<ContextType>;
   RankParameters?: RankParametersResolvers<ContextType>;
   Sort?: SortResolvers<ContextType>;
+  Tracker?: TrackerResolvers<ContextType>;
   Trend?: TrendResolvers<ContextType>;
   TrendAnalytics?: TrendAnalyticsResolvers<ContextType>;
   TrendAnalyticsAge?: TrendAnalyticsAgeResolvers<ContextType>;

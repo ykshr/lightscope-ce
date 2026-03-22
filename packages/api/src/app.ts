@@ -1,6 +1,6 @@
 import typeDefs from '@/__generated__/typeDefs';
-import createAuthMiddleware from '@/middlewares/auth';
 import createContextMiddleware from '@/middlewares/context';
+import createUserMiddleware from '@/middlewares/user';
 import resolvers from '@/resolvers';
 import { $, Env } from '@/types';
 import { makeExecutableSchema } from '@graphql-tools/schema';
@@ -30,7 +30,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.all(
     '/gql',
-    createAuthMiddleware(),
+    createUserMiddleware(),
     graphqlServer({
       schema: makeExecutableSchema({ typeDefs, resolvers }),
       pretty: true,

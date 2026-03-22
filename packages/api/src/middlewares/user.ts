@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 
-export default function createAuthMiddleware() {
+export default function createUserMiddleware() {
   return createMiddleware(async (c, next) => {
     const user = await c.var.$.auth.getUser(c);
 

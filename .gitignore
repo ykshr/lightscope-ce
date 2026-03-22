@@ -34,3 +34,7 @@ server.log*
 .prettier-cache
 test-results
 .pnpm-store
+
+# Prisma
+prisma/migrations/
+prisma/dev.db

@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -30,7 +37,7 @@ export default function Settings() {
       }
 
       const { token } = await response.json();
-      
+
       const snippet = `<script defer src="http://localhost:3001/static/tracker.js" data-host="http://localhost:3001" data-token="${token}"></script>`;
       setGeneratedSnippet(snippet);
     } catch (err: any) {
@@ -48,14 +55,17 @@ export default function Settings() {
     <div className="flex flex-col gap-6 w-full max-w-2xl mx-auto h-full overflow-y-auto">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">Manage your website configuration and tracking snippets.</p>
+        <p className="text-muted-foreground">
+          Manage your website configuration and tracking snippets.
+        </p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle>Generate Tracker Snippet</CardTitle>
           <CardDescription>
-            Enter the exact origin (e.g., https://yourdomain.com) where your tracker will be installed. The generated token will only be valid for requests coming from this origin.
+            Enter the exact origin (e.g., https://yourdomain.com) where your tracker will be
+            installed. The generated token will only be valid for requests coming from this origin.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -86,9 +96,7 @@ export default function Settings() {
             Clear
           </Button>
           {generatedSnippet ? (
-            <Button onClick={copyToClipboard}>
-              Copy Snippet
-            </Button>
+            <Button onClick={copyToClipboard}>Copy Snippet</Button>
           ) : (
             <Button onClick={generateToken} disabled={!origin || isLoading}>
               {isLoading ? 'Generating...' : 'Generate JWT Snippet'}

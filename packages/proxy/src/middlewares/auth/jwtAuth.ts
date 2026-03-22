@@ -14,12 +14,16 @@ export default class JwtAuth implements AuthProvider {
 
     try {
       const secret = process.env.JWT_SECRET || 'fallback-secret-for-dev-only-do-not-use-in-prod';
-      
+
       // Verify JWT signature and expiration
       const decodedPayload = await verify(token, secret);
-      
+
       // Expected tokens have { tenantId, origin, iat }
-      if (!decodedPayload || typeof decodedPayload.tenantId !== 'number' || typeof decodedPayload.origin !== 'string') {
+      if (
+        !decodedPayload ||
+        typeof decodedPayload.tenantId !== 'number' ||
+        typeof decodedPayload.origin !== 'string'
+      ) {
         console.error('JwtAuth: Missing tenantId or origin in token payload');
         return null;
       }
@@ -27,25 +31,29 @@ export default class JwtAuth implements AuthProvider {
       // Check origin. In browsers, Origin header is sent for cross-origin POSTs.
       // If the Origin header is absent, we might check Referer, though Origin is more strict.
       const requestOrigin = c.req.header('Origin') || c.req.header('Referer');
-      
+
       if (requestOrigin) {
-         // Some rudimentary origin comparison. 
-         // A tracker embedded in https://mysite.com might send Origin: https://mysite.com
-         // or Referer: https://mysite.com/some/path
-         try {
-             const tokenOriginUrl = new URL(decodedPayload.origin);
-             const requestUrl = new URL(requestOrigin);
-             
-             if (tokenOriginUrl.hostname !== requestUrl.hostname) {
-                 console.error(`JwtAuth: Origin mismatch. Token allows ${tokenOriginUrl.hostname}, but request came from ${requestUrl.hostname}`);
-                 return null;
-             }
-         } catch(e) {
-             console.error('JwtAuth: Failed to parse origins for comparison', e);
-             return null;
-         }
+        // Some rudimentary origin comparison.
+        // A tracker embedded in https://mysite.com might send Origin: https://mysite.com
+        // or Referer: https://mysite.com/some/path
+        try {
+          const tokenOriginUrl = new URL(decodedPayload.origin);
+          const requestUrl = new URL(requestOrigin);
+
+          if (tokenOriginUrl.hostname !== requestUrl.hostname) {
+            console.error(
+              `JwtAuth: Origin mismatch. Token allows ${tokenOriginUrl.hostname}, but request came from ${requestUrl.hostname}`
+            );
+            return null;
+          }
+        } catch (e) {
+          console.error('JwtAuth: Failed to parse origins for comparison', e);
+          return null;
+        }
       } else {
-         console.log('JwtAuth: Request lacks Origin/Referer header, tracking conditionally allowed but warned');
+        console.log(
+          'JwtAuth: Request lacks Origin/Referer header, tracking conditionally allowed but warned'
+        );
       }
 
       return {

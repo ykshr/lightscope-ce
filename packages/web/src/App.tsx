@@ -1,14 +1,14 @@
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import Footer from '@/components/Footer';
 import Header from '@/components/header';
 import Sidebar from '@/components/Sidebar';
-import Overview from '@/contents/overview';
-import Footer from '@/components/Footer';
-import Ranking from '@/contents/ranking';
-import Article from '@/contents/article';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
+import { useAuth } from '@/contexts/AuthContext';
+import Article from '@/pages/article';
+import Overview from '@/pages/overview';
+import Ranking from '@/pages/ranking';
 import Settings from '@/pages/Settings';
+import SingIn from '@/pages/SingIn';
+import SingUp from '@/pages/SingUp';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 function AppLayout() {
   return (
@@ -66,16 +66,16 @@ const router = createBrowserRouter([
 
 const unauthenticatedRouter = createBrowserRouter([
   {
-    path: '/login',
-    element: <Login />,
+    path: '/singin',
+    element: <SingIn />,
   },
   {
-    path: '/register',
-    element: <Register />,
+    path: '/signup',
+    element: <SingUp />,
   },
   {
     path: '*',
-    element: <Login />,
+    element: <SingIn />,
   },
 ]);
 

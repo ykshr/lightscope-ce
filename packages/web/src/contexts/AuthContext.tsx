@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { AuthProvider as AuthProviderType, AuthUser } from '@/contexts/auth';
+import { AuthProvider as AuthProviderType, AuthUser } from '@/helpers/auth';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type AuthState = {
   user: AuthUser | null;

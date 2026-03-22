@@ -6,7 +6,6 @@ export type AuthUser = {
 
 export interface AuthProvider {
   getUser(): Promise<AuthUser | null>;
-  getToken(): Promise<string | null>;
   login?(): Promise<void>;
   logout?(): Promise<void>;
 }

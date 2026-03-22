@@ -2,12 +2,14 @@ import type { AuthProvider, User } from '@/helpers/auth';
 import { ClickHouseClient } from '@clickhouse/client';
 import { PrismaClient } from '@prisma/client';
 import type { Context as HonoContext } from 'hono';
+import { AlgorithmTypes } from 'hono/jwt';
 
 export type Bindings = {
-  NO_AUTH_TOKEN: string;
   CLICKHOUSE_URL: string;
   CLICKHOUSE_USERNAME: string;
   CLICKHOUSE_PASSWORD: string;
+  JWT_SECRET: string;
+  JWT_ALGORITHM: AlgorithmTypes;
 };
 
 export type $ = {
@@ -15,6 +17,10 @@ export type $ = {
   clickhouse: ClickHouseClient;
   loaders: Map<string, any>;
   prisma: PrismaClient;
+  jwt: {
+    secret: string;
+    algorithm: AlgorithmTypes;
+  };
 };
 
 export type Variables = { user: User; $: $ };

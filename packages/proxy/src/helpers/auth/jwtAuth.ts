@@ -1,8 +1,16 @@
 import { Context } from 'hono';
+import { AlgorithmTypes, verify } from 'hono/jwt';
 import { AuthProvider, Tracker } from './index';
-import { verify } from 'hono/jwt';
 
 export default class JwtAuth implements AuthProvider {
+  secret: string;
+  algorithm: AlgorithmTypes;
+
+  constructor(secret: string, algorithm: AlgorithmTypes) {
+    this.secret = secret;
+    this.algorithm = algorithm;
+  }
+
   async getTracker(c: Context): Promise<Tracker | null> {
     const authHeader = c.req.header('Authorization');
     const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
@@ -13,10 +21,8 @@ export default class JwtAuth implements AuthProvider {
     }
 
     try {
-      const secret = process.env.JWT_SECRET || 'fallback-secret-for-dev-only-do-not-use-in-prod';
-
       // Verify JWT signature and expiration
-      const decodedPayload = await verify(token, secret);
+      const decodedPayload = await verify(token, this.secret, this.algorithm);
 
       // Expected tokens have { tenantId, origin, iat }
       if (

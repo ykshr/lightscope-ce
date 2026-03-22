@@ -15,7 +15,6 @@ export const mutation = async (
 ): Promise<Tracker[]> => {
   const { tenantId } = c.var.user;
   const { origin, availableMinutes } = args;
-  const secret = process.env.JWT_SECRET || 'fallback-secret-for-dev-only-do-not-use-in-prod';
 
   const iat = availableMinutes ? Math.floor(Date.now() / 1000) + 60 * availableMinutes : undefined;
   const payload = {
@@ -24,7 +23,8 @@ export const mutation = async (
     iat,
   };
 
-  const token = await sign(payload, secret);
+  const { secret, algorithm } = c.var.$.jwt;
+  const token = await sign(payload, secret, algorithm);
   const expiresAt = iat ? new Date(iat * 1000) : undefined;
 
   const data = {

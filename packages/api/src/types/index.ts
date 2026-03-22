@@ -1,5 +1,4 @@
 import type { AuthProvider, User } from '@/helpers/auth';
-import type { Loaders } from '@/middlewares/loaders';
 import { ClickHouseClient } from '@clickhouse/client';
 import { PrismaClient } from '@prisma/client';
 import type { Context as HonoContext } from 'hono';
@@ -14,7 +13,7 @@ export type Bindings = {
 export type $ = {
   auth: AuthProvider;
   clickhouse: ClickHouseClient;
-  loaders: Loaders;
+  loaders: Map<string, any>;
   prisma: PrismaClient;
 };
 

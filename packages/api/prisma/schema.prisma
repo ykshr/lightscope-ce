@@ -7,15 +7,17 @@ datasource db {
 }
 
 model User {
-  id            String   @id
+  id            String    @id
   tenantId      Int
   name          String
-  email         String   @unique
+  email         String    @unique
   emailVerified Boolean
   image         String?
-  role          String?  @default("user")
-  createdAt     DateTime @db.Timestampz(3) @default(now())
-  updatedAt     DateTime @db.Timestampz(3) @updatedAt
+  role          String?   @default("user")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
 
   @@map("user")
 }
@@ -25,11 +27,11 @@ model Session {
   user      User     @relation(fields: [userId], references: [id])
   userId    String
   token     String   @unique
-  expiresAt DateTime @db.Timestampz(3)
+  expiresAt DateTime
   ipAddress String?
   userAgent String?
-  createdAt DateTime @db.Timestampz(3) @default(now())
-  updatedAt DateTime @db.Timestampz(3) @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("session")
 }
@@ -42,13 +44,13 @@ model Account {
   providerId            String
   accessToken           String?
   refreshToken          String?
-  accessTokenExpiresAt  DateTime? @db.Timestampz(3)
-  refreshTokenExpiresAt DateTime? @db.Timestampz(3)
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
   scope                 String?
   idToken               String?
   password              String?
-  createdAt             DateTime  @db.Timestampz(3) @default(now())
-  updatedAt             DateTime  @db.Timestampz(3) @updatedAt
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   @@map("account")
 }
@@ -57,9 +59,9 @@ model Verification {
   id         String   @id
   identifier String
   value      String
-  expiresAt  DateTime @db.Timestampz(3)
-  createdAt  DateTime @db.Timestampz(3) @default(now())
-  updatedAt  DateTime @db.Timestampz(3) @updatedAt
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("verification")
 }

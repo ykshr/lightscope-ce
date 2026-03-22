@@ -36,5 +36,4 @@ test-results
 .pnpm-store
 
 # Prisma
-prisma/migrations/
-prisma/dev.db
+packages/api/prisma/dev.db

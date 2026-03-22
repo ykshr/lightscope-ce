@@ -17,8 +17,9 @@
     "start": "node dist/bundle.js",
     "dev": "tsx src/index.ts",
     "codegen": "graphql-codegen --config codegen.ts",
+    "db:generate": "prisma db generate",
     "db:push": "prisma db push",
-    "db:update": "prisma migrate dev && prisma generate"
+    "db:migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@clickhouse/client": "^1.14.0",

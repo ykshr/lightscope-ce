@@ -13,6 +13,31 @@ export default async function createContext(c: Context): Promise<$> {
     database: prismaAdapter(prisma, {
       provider: 'sqlite',
     }),
+    databaseHooks: {
+      user: {
+        create: {
+          before: async (user) => {
+            const userData = user as any;
+            const userCountInTenant = await prisma.user.count({
+              where: {
+                tenantId: userData.tenantId,
+              },
+            });
+
+            if (userCountInTenant === 0) {
+              return {
+                data: {
+                  ...userData,
+                  role: 'admin',
+                },
+              };
+            }
+
+            return { data: userData };
+          },
+        },
+      },
+    },
   });
 
   const { CLICKHOUSE_URL, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } = env(c);

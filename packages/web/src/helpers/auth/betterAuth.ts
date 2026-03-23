@@ -12,8 +12,8 @@ export default class BetterAuthProvider implements AuthProvider {
     if (!session || !session.user) return null;
     return {
       id: session.user.id,
-      role: (session.user as any).role || 'user',
-      tenantId: (session.user as any).tenantId || 1,
+      role: (session.user as any).role,
+      tenantId: (session.user as any).tenantId,
     };
   }
 

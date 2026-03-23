@@ -3,7 +3,7 @@ import { Context } from 'hono';
 export type User = {
   id: string;
   role: string;
-  tenantId: number;
+  tenantId: string;
 };
 
 export interface AuthProvider {

@@ -1,7 +1,7 @@
 CREATE MATERIALIZED VIEW IF NOT EXISTS lightscope.pv_utm_min_to_hour_mv
 TO lightscope.pv_utm_hour AS
 SELECT
-    tenant_id,
+    tenant_id_hash,
     toStartOfHour(date) AS date,
     site_name,
     any(url) as url,
@@ -16,4 +16,4 @@ SELECT
     now() AS created_at,
     now() AS updated_at
 FROM lightscope.pv_utm_min
-GROUP BY tenant_id, date, site_name, url_hash, utm_source, utm_medium, utm_campaign;
+GROUP BY tenant_id_hash, date, site_name, url_hash, utm_source, utm_medium, utm_campaign;

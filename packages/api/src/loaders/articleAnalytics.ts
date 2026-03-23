@@ -86,7 +86,7 @@ function createLoaderKey(c: Context, params: LoaderParams): string {
 
 async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   client: ClickHouseClient,
-  tenantId: number,
+  tenantId: string,
   { tableName, queryParams, attributes }: LoaderParams,
   urls: readonly string[]
 ): Promise<(T & { url: string })[]> {
@@ -169,7 +169,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
         FROM
           lightscope.${tableName}_${unit}
         WHERE
-          tenant_id = {tenantId:UInt64}
+          tenant_id_hash = cityHash64({tenantId:String})
           AND site_name = {siteName:String}
           AND url_hash IN (arrayMap(x -> cityHash64(x), {urls:Array(String)}))
           AND (

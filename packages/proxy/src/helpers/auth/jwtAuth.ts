@@ -27,7 +27,7 @@ export default class JwtAuth implements AuthProvider {
       // Expected tokens have { tenantId, origin, iat }
       if (
         !decodedPayload ||
-        typeof decodedPayload.tenantId !== 'number' ||
+        typeof decodedPayload.tenantId !== 'string' ||
         typeof decodedPayload.origin !== 'string'
       ) {
         console.error('JwtAuth: Missing tenantId or origin in token payload');

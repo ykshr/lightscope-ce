@@ -3,7 +3,7 @@ import { AuthProvider } from './index';
 
 export default class NoAuth implements AuthProvider {
   async getUser(_c: Context) {
-    return { id: 'anonymous', role: 'admin', tenantId: 1 };
+    return { id: 'anonymous', role: 'admin', tenantId: 'none' };
   }
 
   async handler(_c: Context): Promise<Response> {

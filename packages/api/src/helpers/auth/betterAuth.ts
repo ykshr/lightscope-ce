@@ -20,9 +20,8 @@ export default class BetterAuth implements AuthProvider {
             input: false,
           },
           tenantId: {
-            type: 'number',
-            required: false,
-            defaultValue: 1,
+            type: 'string',
+            required: true,
             input: false,
           },
         },
@@ -42,8 +41,8 @@ export default class BetterAuth implements AuthProvider {
 
     return {
       id: session.user.id,
-      role: (session.user as any).role || 'user',
-      tenantId: (session.user as any).tenantId || 1,
+      role: (session.user as any).role,
+      tenantId: (session.user as any).tenantId,
     };
   }
 

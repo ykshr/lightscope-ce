@@ -32,7 +32,7 @@ export default function getLoader(c: Context): DataLoader<string, Article | null
 
 async function fetchArticleByUrls(
   client: ClickHouseClient,
-  tenantId: number,
+  tenantId: string,
   urls: readonly string[]
 ): Promise<Article[]> {
   if (urls.length === 0) return [];
@@ -56,7 +56,7 @@ async function fetchArticleByUrls(
         created_at
       FROM lightscope.article
       WHERE
-        tenant_id = {tenantId:UInt64}
+        tenant_id_hash = cityHash64({tenantId:String})
         AND url_hash IN (arrayMap(x -> cityHash64(x), {urls:Array(String)}))
     `;
 

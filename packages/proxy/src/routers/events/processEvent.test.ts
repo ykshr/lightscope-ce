@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { createArticle, createPV } from './processEvent';
 import { type Payload } from '@/types';
+import { describe, expect, it } from 'vitest';
+import { createArticle, createPV } from './processEvent';
 
 // Mock Payload data
 const mockPayload: Payload = {
@@ -46,7 +46,7 @@ describe('processEvent', () => {
       const article = createArticle(mockPayload, 1);
 
       expect(article).toEqual({
-        tenant_id: 1,
+        tenant_id: 'none',
         url: 'https://example.com/article',
         title: 'Test Article',
         type: 'article',

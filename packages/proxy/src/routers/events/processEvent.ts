@@ -1,11 +1,11 @@
 import processReferrer from '@/helpers/referrer';
-import { type Payload, type Article, type PV } from '@/types';
+import { type Article, type Payload, type PV } from '@/types';
 
 function formatDate(date: Date | string): string {
   return new Date(date).toISOString().substring(0, 19);
 }
 
-export function createArticle(payload: Payload, tenant_id: number): Article {
+export function createArticle(payload: Payload, tenant_id: string): Article {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';
 
@@ -38,7 +38,7 @@ export function createPV(
       }
     | null
     | undefined,
-  tenant_id: number
+  tenant_id: string
 ): PV {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';

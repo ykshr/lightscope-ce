@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Article from '@/pages/article';
 import Overview from '@/pages/overview';
 import Ranking from '@/pages/ranking';
-import Settings from '@/pages/Settings';
+import Settings from '@/pages/settings';
 import SingIn from '@/pages/SingIn';
 import SingUp from '@/pages/SingUp';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';

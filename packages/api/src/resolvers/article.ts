@@ -1,4 +1,4 @@
-import { Article, Resolvers } from '@/__generated__/resolvers';
+import { Article, Resolvers } from '@/../generated/graphql/resolvers';
 import getArticleLoader from '@/loaders/article';
 import { Context } from '@/types';
 

@@ -1,4 +1,4 @@
-import { Aggregation, AggregationUnit } from '@/__generated__/resolvers';
+import { Aggregation, AggregationUnit } from '@/../generated/graphql/resolvers';
 import dayjs from 'dayjs';
 import dayjsPluginUTC from 'dayjs/plugin/utc';
 

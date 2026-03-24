@@ -1,4 +1,4 @@
-import { Article } from '@/__generated__/resolvers';
+import { Article } from '@/../generated/graphql/resolvers';
 import query from '@/helpers/clickhouse';
 import { renameKeySnakeToCamel } from '@/helpers/rename';
 import type { Context } from '@/types';

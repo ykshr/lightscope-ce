@@ -1,4 +1,4 @@
-import { Resolvers } from '@/__generated__/resolvers';
+import { Resolvers } from '@/../generated/graphql/resolvers';
 import deepMerge from '@/helpers/deepMerge';
 import articleResolvers from '@/resolvers/article';
 import articleAnalyticsResolvers from '@/resolvers/articleAnalytics';

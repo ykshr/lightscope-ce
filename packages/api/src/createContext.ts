@@ -1,15 +1,25 @@
-import createBetterAuth from '@/helpers/betterAuth';
 import { $ } from '@/types';
 import { createClient as createClickHouseClient } from '@clickhouse/client';
 import { PrismaClient } from '@prisma/client';
+import { betterAuth as createBetterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { organization } from 'better-auth/plugins';
 import { Context } from 'hono';
 import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
 
-export default async function createContext(c: Context): Promise<$> {
-  const prisma = new PrismaClient();
-  const betterAuth = createBetterAuth(prisma);
+const prisma = new PrismaClient();
+const betterAuth = createBetterAuth({
+  emailAndPassword: {
+    enabled: true,
+  },
+  database: prismaAdapter(prisma, {
+    provider: 'sqlite',
+  }),
+  plugins: [organization()],
+});
 
+export default async function createContext(c: Context): Promise<$> {
   const { CLICKHOUSE_URL, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } = env(c);
   const clickhouse = createClickHouseClient({
     url: CLICKHOUSE_URL,

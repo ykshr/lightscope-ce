@@ -1,4 +1,4 @@
-import { AggregationUnit } from '@/__generated__/resolvers';
+import { AggregationUnit } from '@/../generated/graphql/resolvers';
 import { describe, expect, it } from 'vitest';
 import {
   getAggregationUnit,

@@ -9,7 +9,7 @@ import {
   TrendCategoryGeoArgs,
   TrendCategoryReferrerArgs,
   TrendCategoryUtmArgs,
-} from '@/__generated__/resolvers';
+} from '@/../generated/graphql/resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import processArticleFilter from '@/loaders/helpers/articleFilter';
 import processCategoryFilter from '@/loaders/helpers/categoryFilter';

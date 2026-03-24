@@ -1,4 +1,9 @@
-import { Aggregation, AggregationUnit, AnalyticsBase, Metric } from '@/__generated__/resolvers';
+import {
+  Aggregation,
+  AggregationUnit,
+  AnalyticsBase,
+  Metric,
+} from '@/../generated/graphql/resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,

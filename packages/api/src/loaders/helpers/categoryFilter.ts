@@ -13,7 +13,7 @@ import {
   TrendCategoryGeoArgs,
   TrendCategoryReferrerArgs,
   TrendCategoryUtmArgs,
-} from '@/__generated__/resolvers';
+} from '@/../generated/graphql/resolvers';
 
 type Filter =
   | RankCategoryAgeArgs

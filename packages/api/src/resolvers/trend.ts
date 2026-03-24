@@ -11,7 +11,7 @@ import {
   TrendAnalyticsReferrer,
   TrendAnalyticsUtm,
   TrendParameters,
-} from '@/__generated__/resolvers';
+} from '@/../generated/graphql/resolvers';
 import getTrendLoader from '@/loaders/trend';
 import { getArticle } from '@/resolvers/article';
 import { resolveRequestedAttributesWithArticle } from '@/resolvers/helpers/processAttributes';

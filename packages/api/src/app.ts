@@ -1,4 +1,4 @@
-import typeDefs from '@/__generated__/typeDefs';
+import typeDefs from '@/../generated/graphql/typeDefs';
 import createContextMiddleware from '@/middlewares/context';
 import createUserMiddleware from '@/middlewares/user';
 import resolvers from '@/resolvers';

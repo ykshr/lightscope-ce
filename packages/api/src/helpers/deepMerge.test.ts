@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import deepMerge from './deepMerge';
 
 describe('deepMerge', () => {
@@ -33,11 +33,10 @@ describe('deepMerge', () => {
     // Check if it is a copy or reference? The code says { ...target }
   });
 
-  it('should not merge arrays (overwrites them)', () => {
-    // The isObject check excludes arrays: !Array.isArray(item)
+  it('should merge arrays by concatenating them', () => {
     const target = { a: [1, 2] };
     const source = { a: [3, 4] };
-    expect(deepMerge(target, source)).toEqual({ a: [3, 4] });
+    expect(deepMerge(target, source)).toEqual({ a: [1, 2, 3, 4] });
   });
 
   it('should ignore non-object sources', () => {

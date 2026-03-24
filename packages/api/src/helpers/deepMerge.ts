@@ -17,7 +17,9 @@ export default function deepMerge<T extends Record<string, any>>(target: T, ...s
         const targetValue = acc[key];
         const sourceValue = source[key];
 
-        if (isObject(targetValue) && isObject(sourceValue)) {
+        if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+          (acc as any)[key] = [...targetValue, ...sourceValue];
+        } else if (isObject(targetValue) && isObject(sourceValue)) {
           (acc as any)[key] = deepMerge(targetValue, sourceValue);
         } else {
           (acc as any)[key] = sourceValue;

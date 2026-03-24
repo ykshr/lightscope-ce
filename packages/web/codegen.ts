@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   schema: '../api/src/__generated__/typeDefs.ts',
   documents: 'src/**/*.graphql',
   generates: {
-    'src/__generated__/graphql.ts': {
+    'generated/graphql.ts': {
       plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
       config: {
         enumsAsConst: true,

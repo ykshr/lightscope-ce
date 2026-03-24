@@ -1,5 +1,5 @@
+import { useTotalReferrerDomainQuery } from '@/../generated/graphql';
 import PieDonutText, { type ChartDataItem } from '@/components/pies/templates/PieDonutText';
-import { useTotalReferrerDomainQuery } from '@/__generated__/graphql';
 import { useUrlParams } from '@/hooks/useUrl';
 
 export default function PieReferrerDomain() {

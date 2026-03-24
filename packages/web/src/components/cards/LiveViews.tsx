@@ -1,5 +1,5 @@
+import { useTotalViewsQuery } from '@/../generated/graphql';
 import StatCardLive from '@/components/cards/templates/StatCardLive';
-import { useTotalViewsQuery } from '@/__generated__/graphql';
 import { getStartOfMinute, getStartOfNextMinute } from '@/helpers/date';
 import { useUrlParams } from '@/hooks/useUrl';
 

@@ -1,8 +1,8 @@
-import { User } from 'lucide-react';
+import { useTotalUniqueUsersQuery } from '@/../generated/graphql';
 import StatCardTrend from '@/components/cards/templates/StatCardTrend';
-import { useTotalUniqueUsersQuery } from '@/__generated__/graphql';
 import { getPreviousDates } from '@/helpers/date';
 import { useUrlParams } from '@/hooks/useUrl';
+import { User } from 'lucide-react';
 
 export default function CardUniqueUsers() {
   const [urlParams] = useUrlParams();

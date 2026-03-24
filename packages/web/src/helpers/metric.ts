@@ -1,4 +1,4 @@
-import { Metric } from '@/__generated__/graphql';
+import { Metric } from '@/../generated/graphql';
 
 const returnMetric = (metric: string) => {
   switch (metric) {

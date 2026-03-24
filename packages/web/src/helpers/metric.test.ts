@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { Metric } from '@/../generated/graphql';
+import { describe, expect, it } from 'vitest';
 import { metricUrlParamsToVariables } from './metric';
-import { Metric } from '@/__generated__/graphql';
 
 describe('metric helpers', () => {
   describe('metricUrlParamsToVariables', () => {

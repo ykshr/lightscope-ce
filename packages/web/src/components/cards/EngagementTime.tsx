@@ -1,8 +1,8 @@
-import { Timer } from 'lucide-react';
+import { useTotalEngagementTimeQuery } from '@/../generated/graphql';
 import StatCardTrend from '@/components/cards/templates/StatCardTrend';
-import { useTotalEngagementTimeQuery } from '@/__generated__/graphql';
 import { getPreviousDates } from '@/helpers/date';
 import { useUrlParams } from '@/hooks/useUrl';
+import { Timer } from 'lucide-react';
 
 export default function CardEngagementTime() {
   const [urlParams] = useUrlParams();

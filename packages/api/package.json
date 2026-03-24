@@ -29,6 +29,7 @@
     "@libsql/client": "^0.17.0",
     "@prisma/adapter-libsql": "^7.5.0",
     "@prisma/client": "^7.5.0",
+    "@prisma/client-runtime-utils": "^7.5.0",
     "better-auth": "^1.5.5",
     "dataloader": "^2.2.3",
     "dayjs": "^1.11.19",

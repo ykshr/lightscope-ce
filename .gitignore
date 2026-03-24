@@ -37,3 +37,4 @@ test-results
 
 # Prisma
 packages/api/prisma/dev.db
+generated

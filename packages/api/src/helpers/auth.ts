@@ -5,10 +5,11 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { organization } from 'better-auth/plugins';
 
 const adapter = new PrismaLibSql({
-  url: '',
+  url: 'file:./prisma/dev.db',
 });
-const prisma = new PrismaClient({ adapter });
-export const betterAuth = createBetterAuth({
+
+export const prisma = new PrismaClient({ adapter });
+export default createBetterAuth({
   emailAndPassword: {
     enabled: true,
   },

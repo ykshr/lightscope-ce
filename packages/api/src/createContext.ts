@@ -8,18 +8,18 @@ import { Context } from 'hono';
 import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
 
-const prisma = new PrismaClient();
-const betterAuth = createBetterAuth({
-  emailAndPassword: {
-    enabled: true,
-  },
-  database: prismaAdapter(prisma, {
-    provider: 'sqlite',
-  }),
-  plugins: [organization()],
-});
-
 export default async function createContext(c: Context): Promise<$> {
+  const prisma = new PrismaClient();
+  const betterAuth = createBetterAuth({
+    emailAndPassword: {
+      enabled: true,
+    },
+    database: prismaAdapter(prisma, {
+      provider: 'sqlite',
+    }),
+    plugins: [organization()],
+  });
+
   const { CLICKHOUSE_URL, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } = env(c);
   const clickhouse = createClickHouseClient({
     url: CLICKHOUSE_URL,

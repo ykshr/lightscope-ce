@@ -5,6 +5,7 @@ node_modules/
 dist/
 build/
 *.tsbuildinfo
+generated/
 
 # IDE / Editor
 .vscode/
@@ -37,4 +38,3 @@ test-results
 
 # Prisma
 packages/api/prisma/dev.db
-generated

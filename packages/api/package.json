@@ -17,9 +17,9 @@
     "start": "node dist/bundle.js",
     "dev": "tsx src/index.ts",
     "codegen": "graphql-codegen --config codegen.ts",
-    "db:generate": "auth generate --config ./prisma/auth.ts --output ./prisma/schema/auth.prisma --yes && prisma db generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev"
+    "db:generate": "auth generate --config ./prisma/auth.ts --output ./prisma/schema/schema.prisma --yes && prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push"
   },
   "dependencies": {
     "@clickhouse/client": "^1.14.0",
@@ -47,6 +47,7 @@
     "@graphql-codegen/typescript-resolvers": "5.1.4",
     "@prisma/config": "^7.5.0",
     "@types/node": "^22.15.29",
+    "auth": "^1.5.6",
     "tsx": "^4.21.0",
     "typescript": "^5.8.3",
     "vitest": "^4.0.18"

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { formatToDateTime } from './clickhouse';
+import { formatToDateTime } from '@/graphql/loaders/helpers/clickhouse';
+import { describe, expect, it } from 'vitest';
 
 describe('formatToDateTime', () => {
   it('should format a regular date correctly', () => {

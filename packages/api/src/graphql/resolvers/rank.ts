@@ -1,7 +1,7 @@
 import type { RankParameters, Resolvers } from '@/__generated__/graphql/resolvers';
-import getRankLoader from '@/loaders/rank';
-import { getArticle } from '@/resolvers/article';
-import { resolveRequestedAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
+import getRankLoader from '@/graphql/loaders/rank';
+import { getArticle } from '@/graphql/resolvers/article';
+import { resolveRequestedAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
 import { Context } from '@/types';
 import { GraphQLResolveInfo } from 'graphql';
 

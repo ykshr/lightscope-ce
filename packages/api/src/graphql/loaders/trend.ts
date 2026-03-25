@@ -10,14 +10,14 @@ import {
   TrendCategoryReferrerArgs,
   TrendCategoryUtmArgs,
 } from '@/__generated__/graphql/resolvers';
-import query, { formatToDateTime } from '@/helpers/clickhouse';
-import processArticleFilter from '@/loaders/helpers/articleFilter';
-import processCategoryFilter from '@/loaders/helpers/categoryFilter';
+import processArticleFilter from '@/graphql/loaders/helpers/articleFilter';
+import processCategoryFilter from '@/graphql/loaders/helpers/categoryFilter';
+import query, { formatToDateTime } from '@/graphql/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
-} from '@/loaders/helpers/getCollectionUnitWithDates';
-import { RequestAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
+} from '@/graphql/loaders/helpers/getCollectionUnitWithDates';
+import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 

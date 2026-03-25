@@ -1,5 +1,5 @@
+import deepMerge from '@/graphql/resolvers/helpers/deepMerge';
 import { describe, expect, it } from 'vitest';
-import deepMerge from './deepMerge';
 
 describe('deepMerge', () => {
   it('should merge two simple objects', () => {

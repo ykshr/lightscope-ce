@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { GraphQLResolveInfo, FieldNode, FragmentDefinitionNode } from 'graphql';
 import {
   resolveRequestedAttributes,
   resolveRequestedAttributesWithArticle,
-} from './processAttributes';
+} from '@/graphql/resolvers/helpers/processAttributes';
+import { FieldNode, FragmentDefinitionNode, GraphQLResolveInfo } from 'graphql';
+import { describe, expect, it } from 'vitest';
 
 function createMockInfo(
   fieldNodes: any[],

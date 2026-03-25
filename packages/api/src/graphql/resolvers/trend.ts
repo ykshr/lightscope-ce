@@ -12,9 +12,9 @@ import {
   TrendAnalyticsUtm,
   TrendParameters,
 } from '@/__generated__/graphql/resolvers';
-import getTrendLoader from '@/loaders/trend';
-import { getArticle } from '@/resolvers/article';
-import { resolveRequestedAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
+import getTrendLoader from '@/graphql/loaders/trend';
+import { getArticle } from '@/graphql/resolvers/article';
+import { resolveRequestedAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
 import { Context } from '@/types';
 import { GraphQLResolveInfo } from 'graphql';
 

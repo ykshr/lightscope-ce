@@ -1,5 +1,5 @@
 import { MutationTrackerArgs, Resolvers, Tracker } from '@/__generated__/graphql/resolvers';
-import getLoader from '@/loaders/tracker';
+import getLoader from '@/graphql/loaders/tracker';
 import { Context } from '@/types';
 import { sign } from 'hono/jwt';
 

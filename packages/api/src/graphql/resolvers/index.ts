@@ -1,10 +1,10 @@
 import { Resolvers } from '@/__generated__/graphql/resolvers';
-import deepMerge from '@/helpers/deepMerge';
-import articleResolvers from '@/resolvers/article';
-import articleAnalyticsResolvers from '@/resolvers/articleAnalytics';
-import rankResolvers from '@/resolvers/rank';
-import trackerResolvers from '@/resolvers/tracker';
-import trendResolvers from '@/resolvers/trend';
+import articleResolvers from '@/graphql/resolvers/article';
+import articleAnalyticsResolvers from '@/graphql/resolvers/articleAnalytics';
+import deepMerge from '@/graphql/resolvers/helpers/deepMerge';
+import rankResolvers from '@/graphql/resolvers/rank';
+import trackerResolvers from '@/graphql/resolvers/tracker';
+import trendResolvers from '@/graphql/resolvers/trend';
 import { DateTimeResolver } from 'graphql-scalars';
 
 const resolvers: Resolvers = deepMerge(

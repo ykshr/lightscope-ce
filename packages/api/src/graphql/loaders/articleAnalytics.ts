@@ -4,12 +4,12 @@ import {
   AnalyticsBase,
   Metric,
 } from '@/__generated__/graphql/resolvers';
-import query, { formatToDateTime } from '@/helpers/clickhouse';
+import query, { formatToDateTime } from '@/graphql/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
-} from '@/loaders/helpers/getCollectionUnitWithDates';
-import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
+} from '@/graphql/loaders/helpers/getCollectionUnitWithDates';
+import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 import DataLoader from 'dataloader';

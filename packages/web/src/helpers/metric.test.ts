@@ -1,4 +1,4 @@
-import { Metric } from '@/../generated/graphql';
+import { Metric } from '@/__generated__/graphql';
 import { describe, expect, it } from 'vitest';
 import { metricUrlParamsToVariables } from './metric';
 

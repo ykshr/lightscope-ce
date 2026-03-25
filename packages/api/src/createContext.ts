@@ -1,6 +1,7 @@
+import { PrismaClient } from '@/__generated__/prisma/client';
 import { $ } from '@/types';
 import { createClient as createClickHouseClient } from '@clickhouse/client';
-import { PrismaClient } from '@prisma/client';
+import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { betterAuth as createBetterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { organization } from 'better-auth/plugins';
@@ -9,7 +10,10 @@ import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
 
 export default async function createContext(c: Context): Promise<$> {
-  const prisma = new PrismaClient();
+  const adapter = new PrismaLibSql({
+    url: 'file:./prisma/dev.db',
+  });
+  const prisma = new PrismaClient({ adapter });
   const betterAuth = createBetterAuth({
     emailAndPassword: {
       enabled: true,

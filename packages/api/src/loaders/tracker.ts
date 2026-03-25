@@ -1,4 +1,4 @@
-import { Tracker } from '@/../generated/graphql/resolvers';
+import { Tracker } from '@/__generated__/graphql/resolvers';
 import { Context } from '@/types';
 
 export default async function getLoader(c: Context) {

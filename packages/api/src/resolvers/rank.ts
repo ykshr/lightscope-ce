@@ -1,4 +1,4 @@
-import type { RankParameters, Resolvers } from '@/../generated/graphql/resolvers';
+import type { RankParameters, Resolvers } from '@/__generated__/graphql/resolvers';
 import getRankLoader from '@/loaders/rank';
 import { getArticle } from '@/resolvers/article';
 import { resolveRequestedAttributesWithArticle } from '@/resolvers/helpers/processAttributes';

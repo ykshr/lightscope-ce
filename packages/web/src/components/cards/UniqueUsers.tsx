@@ -1,4 +1,4 @@
-import { useTotalUniqueUsersQuery } from '@/../generated/graphql';
+import { useTotalUniqueUsersQuery } from '@/__generated__/graphql';
 import StatCardTrend from '@/components/cards/templates/StatCardTrend';
 import { getPreviousDates } from '@/helpers/date';
 import { useUrlParams } from '@/hooks/useUrl';

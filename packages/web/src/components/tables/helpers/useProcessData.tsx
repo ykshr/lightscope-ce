@@ -1,4 +1,4 @@
-import { ArticleRankQuery } from '@/../generated/graphql';
+import { ArticleRankQuery } from '@/__generated__/graphql';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useEffect, useState } from 'react';
 import { type Column } from '../templates/types';

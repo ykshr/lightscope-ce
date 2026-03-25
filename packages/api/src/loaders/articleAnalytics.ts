@@ -3,7 +3,7 @@ import {
   AggregationUnit,
   AnalyticsBase,
   Metric,
-} from '@/../generated/graphql/resolvers';
+} from '@/__generated__/graphql/resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,

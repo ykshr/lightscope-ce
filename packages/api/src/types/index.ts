@@ -1,5 +1,5 @@
+import { PrismaClient } from '@/__generated__/prisma/client';
 import { ClickHouseClient } from '@clickhouse/client';
-import { PrismaClient } from '@prisma/client';
 import { Auth } from 'better-auth';
 import type { Context as HonoContext } from 'hono';
 import { AlgorithmTypes } from 'hono/jwt';

@@ -1,4 +1,4 @@
-import { ArticleTrendQuery } from '@/../generated/graphql';
+import { ArticleTrendQuery } from '@/__generated__/graphql';
 import { AreaCategoryConfig, AreaChartDataItem } from '@/components/charts/templates/AreaStacked';
 import { useEffect, useState } from 'react';
 

@@ -17,7 +17,7 @@
     "start": "node dist/bundle.js",
     "dev": "tsx src/index.ts",
     "codegen": "graphql-codegen --config codegen.ts",
-    "db:generate": "prisma db generate",
+    "db:generate": "auth generate --config ./prisma/auth.ts --output ./prisma/schema/auth.prisma --yes && prisma db generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev"
   },

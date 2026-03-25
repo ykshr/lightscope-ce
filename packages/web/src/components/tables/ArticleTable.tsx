@@ -1,4 +1,4 @@
-import { useArticleRankQuery } from '@/../generated/graphql';
+import { useArticleRankQuery } from '@/__generated__/graphql';
 import { Button } from '@/components/ui/button';
 import {
   Card,

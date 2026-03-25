@@ -1,4 +1,4 @@
-import { useTotalUtmCampaignQuery } from '@/../generated/graphql';
+import { useTotalUtmCampaignQuery } from '@/__generated__/graphql';
 import PieDonutText, { type ChartDataItem } from '@/components/pies/templates/PieDonutText';
 import { useUrlParams } from '@/hooks/useUrl';
 

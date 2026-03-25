@@ -1,4 +1,4 @@
-import { ArticleFilterInput, InputMaybe } from '@/../generated/graphql/resolvers';
+import { ArticleFilterInput, InputMaybe } from '@/__generated__/graphql/resolvers';
 import { formatToDateTime } from '@/helpers/clickhouse';
 
 export default function processArticleFilter(

@@ -10,7 +10,7 @@ import {
   type RankCategoryGeoArgs,
   type RankCategoryReferrerArgs,
   type RankCategoryUtmArgs,
-} from '@/../generated/graphql/resolvers';
+} from '@/__generated__/graphql/resolvers';
 import query, { formatToDateTime } from '@/helpers/clickhouse';
 import processArticleFilter from '@/loaders/helpers/articleFilter';
 import processCategoryFilter from '@/loaders/helpers/categoryFilter';

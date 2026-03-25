@@ -1,4 +1,4 @@
-import { useTotalCityQuery, useTotalCountryQuery } from '@/../generated/graphql';
+import { useTotalCityQuery, useTotalCountryQuery } from '@/__generated__/graphql';
 import { Spinner } from '@/components/Loading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';

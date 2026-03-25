@@ -5,7 +5,6 @@ node_modules/
 dist/
 build/
 *.tsbuildinfo
-generated/
 
 # IDE / Editor
 .vscode/

@@ -13,12 +13,12 @@ export const mutation = async (
   args: MutationTrackerArgs,
   c: Context
 ): Promise<Tracker[]> => {
-  const { tenantId } = c.var.user;
+  const { organizationId } = c.var.user;
   const { origin, availableMinutes } = args;
 
   const iat = availableMinutes ? Math.floor(Date.now() / 1000) + 60 * availableMinutes : undefined;
   const payload = {
-    tenantId,
+    organizationId,
     origin,
     iat,
   };
@@ -28,7 +28,7 @@ export const mutation = async (
   const expiresAt = iat ? new Date(iat * 1000) : undefined;
 
   const data = {
-    tenantId,
+    organizationId,
     origin,
     token,
     expiresAt,

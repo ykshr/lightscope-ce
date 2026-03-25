@@ -14,7 +14,7 @@ export default function createUserMiddleware() {
     const user = {
       id: session.user.id,
       role: (session.user as any).role,
-      tenantId: (session.user as any).tenantId,
+      organizationId: (session.user as any).organizationId,
     };
 
     c.set('user', user);

@@ -37,12 +37,16 @@ interface LoaderParams {
 
 export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: <T>() => Trend<T>(c.var.$.clickhouse, c.var.user.tenantId, loaderParams),
-    load: <T>() => Trend<T>(c.var.$.clickhouse, c.var.user.tenantId, loaderParams),
+    total: <T>() => Trend<T>(c.var.$.clickhouse, c.var.user.organizationId, loaderParams),
+    load: <T>() => Trend<T>(c.var.$.clickhouse, c.var.user.organizationId, loaderParams),
   };
 }
 
-async function Trend<T>(client: ClickHouseClient, tenantId: string, loaderParams: LoaderParams) {
+async function Trend<T>(
+  client: ClickHouseClient,
+  organizationId: string,
+  loaderParams: LoaderParams
+) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
   const { startDate: s, endDate: e, articleFilter, metric, aggregation, limit, page } = queryParams;
   const { top = 10 } = categoryFilter || {};
@@ -96,7 +100,7 @@ async function Trend<T>(client: ClickHouseClient, tenantId: string, loaderParams
   const categoryWhere = processedCategoryFilter?.query;
 
   const queryParamsObj: Record<string, unknown> = {
-    tenantId,
+    organizationId,
     ...processedArticleFilter?.params,
     ...processedCategoryFilter?.params,
   };
@@ -126,7 +130,7 @@ async function Trend<T>(client: ClickHouseClient, tenantId: string, loaderParams
           lightscope.${tableName}_${unit} t
           ${where ? `INNER JOIN lightscope.article a ON t.url_hash = a.url_hash` : ''}
         WHERE
-          t.tenant_id_hash = cityHash64({tenantId:String})
+          t.organization_id_hash = cityHash64({organizationId:String})
           AND (
             toDateTime({${startParam}:String}) <= t.date
             AND t.date < toDateTime({${endParam}:String})

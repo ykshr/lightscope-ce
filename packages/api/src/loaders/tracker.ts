@@ -2,11 +2,11 @@ import { Tracker } from '@/__generated__/graphql/resolvers';
 import { Context } from '@/types';
 
 export default async function getLoader(c: Context) {
-  const { tenantId } = c.var.user;
+  const { organizationId } = c.var.user;
 
   const trackers = await c.var.$.prisma.tracker.findMany({
     where: {
-      tenantId,
+      organizationId,
     },
     orderBy: {
       createdAt: 'desc',

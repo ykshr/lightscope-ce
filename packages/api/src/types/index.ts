@@ -7,7 +7,7 @@ import { AlgorithmTypes } from 'hono/jwt';
 type User = {
   id: string;
   role: string;
-  tenantId: string;
+  organizationId: string;
 };
 
 export type Bindings = {

@@ -1,7 +1,7 @@
 import typeDefs from '@/__generated__/graphql/typeDefs';
+import resolvers from '@/graphql/resolvers';
 import createContextMiddleware from '@/middlewares/context';
 import createUserMiddleware from '@/middlewares/user';
-import resolvers from '@/resolvers';
 import { $, Env } from '@/types';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { graphqlServer } from '@hono/graphql-server';

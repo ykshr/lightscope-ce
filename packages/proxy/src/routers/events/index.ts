@@ -21,14 +21,14 @@ eventsRouter.post('/', async (c: Context) => {
     const payload: Payload = parseResult.data;
     const egress = c.var.$.egress;
 
-    const tenantId = c.var.tracker.tenantId;
-    const article = createArticle(payload, tenantId);
+    const organizationId = c.var.tracker.organizationId;
+    const article = createArticle(payload, organizationId);
     await egress.insertArticle(article);
 
     const geo = c.var.$.geo;
     const geoData = await geo.getGeoData(c);
 
-    const pv = createPV(payload, geoData, tenantId);
+    const pv = createPV(payload, geoData, organizationId);
     await egress.insertPV(pv);
 
     return c.json({ ok: true }, 201);

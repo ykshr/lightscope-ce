@@ -5,12 +5,12 @@ function formatDate(date: Date | string): string {
   return new Date(date).toISOString().substring(0, 19);
 }
 
-export function createArticle(payload: Payload, tenant_id: string): Article {
+export function createArticle(payload: Payload, organization_id: string): Article {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';
 
   return {
-    tenant_id,
+    organization_id,
     url,
     title: payload['og:title'] ?? undefined,
     type: payload['og:type'] ?? undefined,
@@ -38,7 +38,7 @@ export function createPV(
       }
     | null
     | undefined,
-  tenant_id: string
+  organization_id: string
 ): PV {
   const url = payload['og:url'] || payload.url;
   const site_name = payload['og:site_name'] || 'unknown';
@@ -56,7 +56,7 @@ export function createPV(
   const processedReferrer = processReferrer(payload.referrer ?? undefined);
 
   return {
-    tenant_id,
+    organization_id,
     site_name,
     event_id,
     url,

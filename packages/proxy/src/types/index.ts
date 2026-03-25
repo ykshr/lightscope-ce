@@ -81,7 +81,7 @@ export type Payload = z.infer<typeof PayloadSchema>;
 // PV type definition
 // --------------------
 export interface PV {
-  tenant_id: string;
+  organization_id: string;
   site_name: string;
   url: string;
   event_id: string;
@@ -117,7 +117,7 @@ export interface PV {
 // Article type definition
 // --------------------
 export interface Article {
-  tenant_id: string;
+  organization_id: string;
   url: string;
   title?: string;
   type?: string;

@@ -13,7 +13,7 @@ export default class BetterAuthProvider implements AuthProvider {
     return {
       id: session.user.id,
       role: (session.user as any).role,
-      tenantId: (session.user as any).tenantId,
+      organizationId: (session.user as any).organizationId,
     };
   }
 

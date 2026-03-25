@@ -1,7 +1,7 @@
 CREATE MATERIALIZED VIEW IF NOT EXISTS lightscope.pv_device_raw_to_min_mv
 TO lightscope.pv_device_min AS
 SELECT
-    tenant_id_hash,
+    organization_id_hash,
     toStartOfFiveMinutes(event_time) AS date,
     site_name,
     any(url) as url,
@@ -17,4 +17,4 @@ SELECT
     now() AS updated_at
 FROM lightscope.pv_raw
 WHERE device_type != '' OR device_vendor != '' OR device != ''
-GROUP BY tenant_id_hash, date, site_name, url_hash, device_type, device_vendor, device;
+GROUP BY organization_id_hash, date, site_name, url_hash, device_type, device_vendor, device;

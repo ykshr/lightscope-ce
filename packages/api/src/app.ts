@@ -26,7 +26,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.use('*', createContextMiddleware(createContext));
 
-  app.all('/api/auth/*', (c) => c.var.$.betterAuth.handler(c.req.raw));
+  app.all('/api/auth/*', (c) => c.var.$.auth.handler(c.req.raw));
 
   app.all(
     '/gql',

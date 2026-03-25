@@ -1,3 +1,6 @@
+// This file is for
+//   1) better-auth cli (auth generate --config ./src/helpers/auth.ts --output ./prisma/schema/schema.prisma --yes)
+//   2) type definition on types/index.ts
 import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { PrismaClient } from '@prisma/client';
 import { betterAuth as createBetterAuth } from 'better-auth';
@@ -9,6 +12,7 @@ const adapter = new PrismaLibSql({
 });
 
 const prisma = new PrismaClient({ adapter });
+
 export default createBetterAuth({
   emailAndPassword: {
     enabled: true,

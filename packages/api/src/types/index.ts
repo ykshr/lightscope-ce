@@ -1,6 +1,6 @@
 import { PrismaClient } from '@/__generated__/prisma/client';
+import Auth from '@/helpers/auth';
 import { ClickHouseClient } from '@clickhouse/client';
-import { Auth } from 'better-auth';
 import type { Context as HonoContext } from 'hono';
 import { AlgorithmTypes } from 'hono/jwt';
 
@@ -19,7 +19,7 @@ export type Bindings = {
 };
 
 export type $ = {
-  betterAuth: Auth<any>;
+  auth: typeof Auth;
   clickhouse: ClickHouseClient;
   loaders: Map<string, any>;
   prisma: PrismaClient;

@@ -14,7 +14,7 @@ export default async function createContext(c: Context): Promise<$> {
     url: 'file:./prisma/dev.db',
   });
   const prisma = new PrismaClient({ adapter });
-  const betterAuth = createBetterAuth({
+  const auth = createBetterAuth({
     emailAndPassword: {
       enabled: true,
     },
@@ -40,7 +40,7 @@ export default async function createContext(c: Context): Promise<$> {
   };
 
   return {
-    betterAuth,
+    auth,
     clickhouse,
     loaders,
     prisma,

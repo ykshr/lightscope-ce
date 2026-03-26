@@ -1,7 +1,6 @@
 import createContextMiddleware from '@/middlewares/context';
 import createTrackerMiddleware from '@/middlewares/tracker';
 import eventsRouter from '@/routers/events';
-import indexRouter from '@/routers/index';
 import { $, Env } from '@/types';
 import { Context, Hono } from 'hono';
 import { env } from 'hono/adapter';
@@ -21,7 +20,6 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
   });
 
   // Public routes that don't require authentication
-  app.route('/', indexRouter);
   app.get('/health', (c) => c.json({ ok: true }));
 
   // Events endpoint has its own tracker token authentication

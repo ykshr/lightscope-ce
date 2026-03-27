@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function SingIn() {
+  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -13,12 +14,20 @@ export default function SingIn() {
   const handleSingIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const { error } = await authClient.signIn.email({ email, password });
-    if (error) {
-      setError(error.message || 'SingIn failed');
+    if (isSignUp) {
+      const { error } = await authClient.signUp.email({ name: email, email, password });
+      if (error) {
+        setError(error.message || 'SingUp failed');
+      } else {
+        navigate('/');
+      }
     } else {
-      // Reload or navigate to dashboard after successful SingIn
-      window.location.href = '/';
+      const { error } = await authClient.signIn.email({ email, password });
+      if (error) {
+        setError(error.message || 'SingIn failed');
+      } else {
+        navigate('/');
+      }
     }
   };
 
@@ -26,8 +35,10 @@ export default function SingIn() {
     <div className="flex h-screen w-full items-center justify-center bg-background">
       <div className="w-full max-w-md p-8 space-y-6 bg-card rounded-xl shadow-lg border border-border">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">SingIn</h1>
-          <p className="text-muted-foreground text-sm">Welcome back to LightScope</p>
+          <h1 className="text-3xl font-bold tracking-tight">{isSignUp ? 'SingUp' : 'SignIn'}</h1>
+          <p className="text-muted-foreground text-sm">
+            {isSignUp ? 'Create an account for LightScope' : 'Welcome back to LightScope'}
+          </p>
         </div>
 
         <form onSubmit={handleSingIn} className="space-y-4">
@@ -66,16 +77,27 @@ export default function SingIn() {
           {error && <div className="text-sm text-destructive">{error}</div>}
 
           <Button type="submit" className="w-full">
-            Sign In
+            {isSignUp ? 'Create Account' : 'Sign In'}
           </Button>
         </form>
 
-        <div className="text-center text-sm">
-          Don't have an account?{' '}
-          <button onClick={() => navigate('/signup')} className="text-primary hover:underline">
-            SingUp
-          </button>
-        </div>
+        {isSignUp && (
+          <div className="text-center text-sm">
+            Already have an account?{' '}
+            <button onClick={() => setIsSignUp(false)} className="text-primary hover:underline">
+              Login
+            </button>
+          </div>
+        )}
+
+        {!isSignUp && (
+          <div className="text-center text-sm">
+            Don't have an account?
+            <button onClick={() => setIsSignUp(true)} className="text-primary hover:underline">
+              SingUp
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

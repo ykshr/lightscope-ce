@@ -7,7 +7,6 @@ import Overview from '@/pages/overview';
 import Ranking from '@/pages/ranking';
 import Settings from '@/pages/settings';
 import SingIn from '@/pages/SingIn';
-import SingUp from '@/pages/SingUp';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 
 function AppLayout() {
@@ -72,10 +71,6 @@ const unauthenticatedRouter = createBrowserRouter([
   {
     path: '/singin',
     element: <SingIn />,
-  },
-  {
-    path: '/signup',
-    element: <SingUp />,
   },
   {
     path: '*',

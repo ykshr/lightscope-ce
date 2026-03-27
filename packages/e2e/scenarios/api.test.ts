@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const API_URL = process.env.API_URL || 'http://127.0.0.1:3000';
 const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3001';
+const ONE_HOUR_MS = 3600000;
 
 test.describe('API Error Handling and GraphQL Tests', () => {
   test('POST /events should handle malformed JSON', async ({ request }) => {
@@ -36,8 +37,8 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     const query = `
       query {
         trend(
-          startDate: "${new Date(Date.now() - 3600000).toISOString()}"
-          endDate: "${new Date(Date.now() + 3600000).toISOString()}"
+          startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+          endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
           aggregation: { unit: DAY }
         ) {
           total {
@@ -67,8 +68,8 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     const query = `
       query {
         rank(
-          startDate: "${new Date(Date.now() - 3600000).toISOString()}"
-          endDate: "${new Date(Date.now() + 3600000).toISOString()}"
+          startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+          endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
           limit: 5
         ) {
           total
@@ -101,8 +102,8 @@ test.describe('API Error Handling and GraphQL Tests', () => {
           url
           siteName
           analytics(
-            startDate: "${new Date(Date.now() - 3600000).toISOString()}"
-            endDate: "${new Date(Date.now() + 3600000).toISOString()}"
+            startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+            endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
           ) {
             analytics {
               date

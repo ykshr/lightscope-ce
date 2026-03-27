@@ -18,11 +18,11 @@ This directory contains the E2E test suite with multiple scenarios.
    npx playwright install --with-deps chromium
    ```
 
-2. **Build the Script Package:**
-   Ensure the browser script is built so it can be served to the test page.
+2. **Build the Tracker Package:**
+   Ensure tracker package for browser tests is built so it can be served to the test page.
 
    ```bash
-   cd ../script
+   cd ../tracker
    npm install
    npm run build:browser
    ```

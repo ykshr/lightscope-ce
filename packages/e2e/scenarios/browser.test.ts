@@ -71,7 +71,12 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
     }
   `;
 
+  // Use a more efficient polling mechanism that overlaps fetch latency with wait time
+  // but avoids a mandatory 500ms delay on the first successful attempt.
   for (let i = 0; i < 20; i++) {
+    // Start the 500ms timer
+    const waitPromise = new Promise((resolve) => setTimeout(resolve, 500));
+
     const gqlRes = await fetch(`${API_URL}/gql`, {
       method: 'POST',
       headers: {
@@ -91,8 +96,10 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
       }
     }
 
-    // Wait 500ms before retrying
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // If not found, wait for the remaining time of the 500ms timer
+    if (i < 19) {
+      await waitPromise;
+    }
   }
 
   expect(found).toBeTruthy();

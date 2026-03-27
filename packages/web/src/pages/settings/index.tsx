@@ -77,9 +77,10 @@ export default function Settings() {
 
   // Organization hooks
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const triggerRefresh = () => setRefreshTrigger(prev => prev + 1);
+  const triggerRefresh = () => setRefreshTrigger((prev) => prev + 1);
 
-  const { data: organizations, isPending: isOrganizationsPending } = authClient.useListOrganizations();
+  const { data: organizations, isPending: isOrganizationsPending } =
+    authClient.useListOrganizations();
   const { data: activeOrganization } = authClient.useActiveOrganization();
   const [members, setMembers] = useState<any[]>([]);
   const [isMembersPending, setIsMembersPending] = useState(false);
@@ -94,7 +95,7 @@ export default function Settings() {
       const { data, error } = await authClient.organization.listMembers({
         query: {
           organizationId: activeOrganization.id,
-        }
+        },
       });
       if (data && !error) {
         setMembers(data.members || []);
@@ -103,8 +104,6 @@ export default function Settings() {
     }
     fetchMembers();
   }, [activeOrganization?.id, refreshTrigger]);
-
-
 
   // Update organization state
   const [showUpdateOrgDialog, setShowUpdateOrgDialog] = useState(false);
@@ -121,7 +120,7 @@ export default function Settings() {
       data: {
         name: updateOrgName,
         slug: updateOrgSlug || undefined,
-      }
+      },
     });
     if (error) {
       setOrgUpdateError(error.message || 'Failed to update organization');
@@ -132,7 +131,9 @@ export default function Settings() {
 
   const handleDeleteOrg = async () => {
     if (!activeOrganization) return;
-    if (confirm('Are you sure you want to delete this organization? This action cannot be undone.')) {
+    if (
+      confirm('Are you sure you want to delete this organization? This action cannot be undone.')
+    ) {
       const { error } = await authClient.organization.delete({
         organizationId: activeOrganization.id,
       });
@@ -143,8 +144,6 @@ export default function Settings() {
       }
     }
   };
-
-
 
   // Create organization state
   const [showCreateOrgDialog, setShowCreateOrgDialog] = useState(false);
@@ -187,7 +186,7 @@ export default function Settings() {
     setInviteError('');
     const { error } = await authClient.organization.inviteMember({
       email: inviteEmail,
-      role: inviteRole as "member" | "admin" | "owner",
+      role: inviteRole as 'member' | 'admin' | 'owner',
     });
     if (error) {
       setInviteError(error.message || 'Failed to invite member');
@@ -201,7 +200,7 @@ export default function Settings() {
 
   const handleRemoveMember = async (memberId: string) => {
     if (confirm('Are you sure you want to remove this member?')) {
-      const {error} = await authClient.organization.removeMember({
+      const { error } = await authClient.organization.removeMember({
         memberIdOrEmail: memberId,
       });
       if (!error) triggerRefresh();
@@ -209,7 +208,7 @@ export default function Settings() {
   };
 
   const handleUpdateRole = async (memberId: string, role: string) => {
-    const {error} = await authClient.organization.updateMemberRole({
+    const { error } = await authClient.organization.updateMemberRole({
       memberId,
       role,
     });
@@ -228,9 +227,7 @@ export default function Settings() {
       <Card>
         <CardHeader>
           <CardTitle>Organization Management</CardTitle>
-          <CardDescription>
-            Manage your organizations and active workspace.
-          </CardDescription>
+          <CardDescription>Manage your organizations and active workspace.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -238,10 +235,7 @@ export default function Settings() {
             {isOrganizationsPending ? (
               <div>Loading organizations...</div>
             ) : (
-              <Select
-                value={activeOrganization?.id || 'none'}
-                onValueChange={handleSetActiveOrg}
-              >
+              <Select value={activeOrganization?.id || 'none'} onValueChange={handleSetActiveOrg}>
                 <SelectTrigger className="w-full sm:w-[300px]">
                   <SelectValue placeholder="Select an organization" />
                 </SelectTrigger>
@@ -257,23 +251,22 @@ export default function Settings() {
             )}
           </div>
 
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setUpdateOrgName(activeOrganization?.name || '');
-                  setUpdateOrgSlug(activeOrganization?.slug || '');
-                  setShowUpdateOrgDialog(true);
-                }}
-              >
-                Edit Organization
-              </Button>
-              <Button variant="destructive" size="sm" onClick={handleDeleteOrg}>
-                Delete Organization
-              </Button>
-            </div>
-
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setUpdateOrgName(activeOrganization?.name || '');
+                setUpdateOrgSlug(activeOrganization?.slug || '');
+                setShowUpdateOrgDialog(true);
+              }}
+            >
+              Edit Organization
+            </Button>
+            <Button variant="destructive" size="sm" onClick={handleDeleteOrg}>
+              Delete Organization
+            </Button>
+          </div>
         </CardContent>
         <CardFooter>
           <Dialog open={showCreateOrgDialog} onOpenChange={setShowCreateOrgDialog}>
@@ -283,9 +276,7 @@ export default function Settings() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Create an Organization</DialogTitle>
-                <DialogDescription>
-                  Enter the details for your new organization.
-                </DialogDescription>
+                <DialogDescription>Enter the details for your new organization.</DialogDescription>
               </DialogHeader>
               <form onSubmit={handleCreateOrg} className="space-y-4">
                 <div className="space-y-2">
@@ -305,11 +296,13 @@ export default function Settings() {
                     onChange={(e) => setOrgSlug(e.target.value)}
                   />
                 </div>
-                {orgCreateError && (
-                  <div className="text-sm text-destructive">{orgCreateError}</div>
-                )}
+                {orgCreateError && <div className="text-sm text-destructive">{orgCreateError}</div>}
                 <div className="flex justify-end gap-2">
-                  <Button type="button" variant="outline" onClick={() => setShowCreateOrgDialog(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowCreateOrgDialog(false)}
+                  >
                     Cancel
                   </Button>
                   <Button type="submit">Create</Button>
@@ -320,14 +313,11 @@ export default function Settings() {
         </CardFooter>
       </Card>
 
-
       <Dialog open={showUpdateOrgDialog} onOpenChange={setShowUpdateOrgDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Update Organization</DialogTitle>
-            <DialogDescription>
-              Modify your organization details.
-            </DialogDescription>
+            <DialogDescription>Modify your organization details.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateOrg} className="space-y-4">
             <div className="space-y-2">
@@ -347,9 +337,7 @@ export default function Settings() {
                 onChange={(e) => setUpdateOrgSlug(e.target.value)}
               />
             </div>
-            {orgUpdateError && (
-              <div className="text-sm text-destructive">{orgUpdateError}</div>
-            )}
+            {orgUpdateError && <div className="text-sm text-destructive">{orgUpdateError}</div>}
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => setShowUpdateOrgDialog(false)}>
                 Cancel
@@ -365,13 +353,13 @@ export default function Settings() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Members</CardTitle>
-              <CardDescription>
-                Manage members for {activeOrganization.name}.
-              </CardDescription>
+              <CardDescription>Manage members for {activeOrganization.name}.</CardDescription>
             </div>
             <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm">Invite Member</Button>
+                <Button variant="outline" size="sm">
+                  Invite Member
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -404,11 +392,13 @@ export default function Settings() {
                       </SelectContent>
                     </Select>
                   </div>
-                  {inviteError && (
-                    <div className="text-sm text-destructive">{inviteError}</div>
-                  )}
+                  {inviteError && <div className="text-sm text-destructive">{inviteError}</div>}
                   <div className="flex justify-end gap-2">
-                    <Button type="button" variant="outline" onClick={() => setShowInviteDialog(false)}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowInviteDialog(false)}
+                    >
                       Cancel
                     </Button>
                     <Button type="submit">Invite</Button>

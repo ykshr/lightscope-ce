@@ -5,7 +5,11 @@ This is a TypeScript monorepo using pnpm workspaces.
 packages/
   api/
   clickhouse/
+  e2e/
+  mock-site/
+  proxy/
   script/
+  tracker/
   web/
 
 There is NO turborepo, nx, or build orchestrator.
@@ -33,7 +37,7 @@ This command runs linting, type checking, unit tests, and formatting checks acro
 
 ## 2. Do Not Change Architecture
 Never introduce:
-- ORM
+- ORM (Exceptions: Prisma and Better Auth for user management)
 - New framework
 - New build system
 - Global state libraries

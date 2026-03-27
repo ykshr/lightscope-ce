@@ -1,4 +1,4 @@
-# AGENTS.md (script)
+# AGENTS.md (tracker)
 
 This is the client-side analytics embed script.
 

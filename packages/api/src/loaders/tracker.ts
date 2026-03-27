@@ -10,9 +10,7 @@ type Tracker = {
 };
 
 export default async function getLoader(c: Context) {
-  const organizationId = c.var.organization?.id;
-
-  if (!organizationId) return [];
+  const { id: organizationId } = c.var.organization;
 
   const trackers = await c.var.$.prisma.tracker.findMany({
     where: {

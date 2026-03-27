@@ -1,6 +1,6 @@
 import { Article } from '@/__generated__/graphql/resolvers';
-import query from '@/graphql/loaders/helpers/clickhouse';
-import { renameKeySnakeToCamel } from '@/graphql/loaders/helpers/rename';
+import query from '@/loaders/helpers/clickhouse';
+import { renameKeySnakeToCamel } from '@/loaders/helpers/rename';
 import type { Context } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 import DataLoader from 'dataloader';

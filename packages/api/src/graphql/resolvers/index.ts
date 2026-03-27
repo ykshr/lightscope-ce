@@ -3,7 +3,6 @@ import articleResolvers from '@/graphql/resolvers/article';
 import articleAnalyticsResolvers from '@/graphql/resolvers/articleAnalytics';
 import deepMerge from '@/graphql/resolvers/helpers/deepMerge';
 import rankResolvers from '@/graphql/resolvers/rank';
-import trackerResolvers from '@/graphql/resolvers/tracker';
 import trendResolvers from '@/graphql/resolvers/trend';
 import { DateTimeResolver } from 'graphql-scalars';
 
@@ -12,8 +11,7 @@ const resolvers: Resolvers = deepMerge(
   articleResolvers,
   articleAnalyticsResolvers,
   rankResolvers,
-  trendResolvers,
-  trackerResolvers
+  trendResolvers
 );
 
 export default resolvers;

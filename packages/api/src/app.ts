@@ -2,6 +2,7 @@ import typeDefs from '@/__generated__/graphql/typeDefs';
 import resolvers from '@/graphql/resolvers';
 import createContextMiddleware from '@/middlewares/context';
 import createUserMiddleware from '@/middlewares/user';
+import trackerRouter from '@/rest/routers/tracker';
 import { $, Env } from '@/types';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { graphqlServer } from '@hono/graphql-server';
@@ -29,9 +30,12 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.all('/api/auth/*', (c) => c.var.$.auth.handler(c.req.raw));
 
+  app.use('*', createUserMiddleware());
+
+  app.route('/tracker', trackerRouter);
+
   app.all(
     '/gql',
-    createUserMiddleware(),
     graphqlServer({
       schema: makeExecutableSchema({ typeDefs, resolvers }),
       pretty: true,

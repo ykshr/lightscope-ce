@@ -1,5 +1,5 @@
 import { Article, Resolvers } from '@/__generated__/graphql/resolvers';
-import getArticleLoader from '@/graphql/loaders/article';
+import getArticleLoader from '@/loaders/article';
 import { Context } from '@/types';
 
 export const getArticle = async (

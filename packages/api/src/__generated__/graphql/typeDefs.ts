@@ -207,10 +207,6 @@ enum Metric {
   VISITS_VIEWS
 }
 
-type Mutation {
-  tracker(availableMinutes: Int, origin: String!): [Tracker]!
-}
-
 enum Order {
   ASC
   DESC
@@ -219,7 +215,6 @@ enum Order {
 type Query {
   article(url: String!): Article
   rank(articleFilter: ArticleFilterInput, endDate: DateTime!, limit: Int = 100, metric: Metric = VISITS_VIEWS, order: Order = DESC, page: Int = 1, startDate: DateTime!): Rank
-  tracker: [Tracker]!
   trend(aggregation: AggregationInput = {unit: AUTO}, articleFilter: ArticleFilterInput, endDate: DateTime!, limit: Int = 100, metric: Metric = VISITS_VIEWS, page: Int = 1, startDate: DateTime!): Trend
 }
 
@@ -268,14 +263,6 @@ type Sort {
 input SortInput {
   category: CategoryInput
   order: Order!
-}
-
-type Tracker {
-  createdAt: DateTime
-  expiresAt: DateTime
-  id: String!
-  origin: String!
-  token: String!
 }
 
 type Trend {

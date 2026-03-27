@@ -8,7 +8,6 @@ packages/
   e2e/
   mock-site/
   proxy/
-  script/
   tracker/
   web/
 

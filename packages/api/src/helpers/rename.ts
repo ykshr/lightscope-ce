@@ -1,5 +1,11 @@
+const cache = new Map<string, string>();
+
 const snakeToCamel = (str: string): string => {
-  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+  const cached = cache.get(str);
+  if (cached !== undefined) return cached;
+  const result = str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+  cache.set(str, result);
+  return result;
 };
 
 export function renameKeySnakeToCamel(obj: any): any {
@@ -10,10 +16,9 @@ export function renameKeySnakeToCamel(obj: any): any {
       return obj;
     }
     const newObj: any = {};
-    const keys = Object.keys(obj);
-    for (let i = 0; i < keys.length; i++) {
-      const camelKey = snakeToCamel(keys[i]);
-      newObj[camelKey] = renameKeySnakeToCamel(obj[keys[i]]);
+    for (const key of Object.keys(obj)) {
+      const camelKey = snakeToCamel(key);
+      newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
     }
     return newObj;
   }

@@ -8,18 +8,20 @@ export default function SingIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   const handleSingIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
     const { error } = await authClient.signIn.email({ email, password });
     if (error) {
       setError(error.message || 'SingIn failed');
-    } else {
-      // Reload or navigate to dashboard after successful SingIn
-      window.location.href = '/';
+      return;
     }
+
+    navigate('/');
   };
 
   return (

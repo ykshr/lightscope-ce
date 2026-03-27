@@ -21,9 +21,13 @@ export function createApp(deps: AppDependencies) {
 
   app.use('*', logger());
   app.use('*', async (c, next) => {
-    const { ALLOWED_ORIGIN = '*' } = env<{ ALLOWED_ORIGIN: string }>(c);
+    const { ALLOWED_ORIGIN } = env<{ ALLOWED_ORIGIN?: string }>(c);
+    if (!ALLOWED_ORIGIN) {
+      return next();
+    }
+    const origins = ALLOWED_ORIGIN.split(',').map((o) => o.trim());
     const corsMiddlewareHandler = cors({
-      origin: ALLOWED_ORIGIN,
+      origin: origins.length === 1 ? origins[0] : origins,
     });
     return corsMiddlewareHandler(c, next);
   });

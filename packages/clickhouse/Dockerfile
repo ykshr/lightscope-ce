@@ -1,4 +1,5 @@
-FROM clickhouse:25.5.3.75
+FROM clickhouse/clickhouse-server:25.5.3.75
+
 
 COPY ./config.xml /etc/clickhouse-server/config.xml
 COPY ./users.xml /etc/clickhouse-server/users.xml

@@ -16,16 +16,17 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.use('*', logger());
   app.use('*', async (c, next) => {
-    const { ALLOWED_ORIGIN } = env<{ ALLOWED_ORIGIN?: string }>(c);
-    if (!ALLOWED_ORIGIN) {
+    const { ALLOWED_ORIGINS } = env<{ ALLOWED_ORIGINS?: string }>(c);
+    if (!ALLOWED_ORIGINS) {
       return next();
     }
-    const origins = ALLOWED_ORIGIN.split(',').map((o) => o.trim());
-    const corsMiddlewareHandler = cors({
+    const origins = ALLOWED_ORIGINS.split(',').map((o) => o.trim());
+    const handler = cors({
       origin: origins.length === 1 ? origins[0] : origins,
       allowHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
     });
-    return corsMiddlewareHandler(c, next);
+    return handler(c, next);
   });
 
   app.get('/health', (c) => c.json({ ok: true }));
@@ -47,6 +48,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
   );
 
   app.onError((err, c) => {
+    console.error(err);
     if (err instanceof SyntaxError) {
       return c.json({ error: 'Bad request: Invalid JSON' }, 400);
     }

@@ -7,10 +7,10 @@ import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
 
 export default async function createContext(c: Context): Promise<$> {
-  const {
-    JWT_SECRET = 'fallback-secret-for-dev-only-do-not-use-in-prod',
-    JWT_ALGORITHM = AlgorithmTypes.HS256,
-  } = env(c);
+  const { JWT_SECRET, JWT_ALGORITHM = AlgorithmTypes.HS256 } = env(c);
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined in the environment.');
+  }
   const auth = new JwtAuth(JWT_SECRET, JWT_ALGORITHM);
 
   const {

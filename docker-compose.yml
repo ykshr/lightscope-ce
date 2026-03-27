@@ -32,6 +32,8 @@ services:
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
       - PORT=3001
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      - JWT_SECRET=${JWT_SECRET:-secret-for-dev-only-do-not-use-in-prod}
     ports:
       - '3001:3001'
     depends_on:
@@ -56,6 +58,7 @@ services:
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
       - PORT=3002
+      - JWT_SECRET=${JWT_SECRET:-secret-for-dev-only-do-not-use-in-prod}
     ports:
       - '3002:3002'
     depends_on:

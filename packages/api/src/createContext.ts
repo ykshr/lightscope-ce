@@ -33,15 +33,14 @@ export default async function createContext(c: Context): Promise<$> {
 
   const loaders = new Map();
 
-  const { JWT_SECRET, JWT_ALGORITHM } = env(c);
-
+  const { JWT_SECRET, JWT_ALGORITHM = AlgorithmTypes.HS256 } = env(c);
   if (!JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined in the environment.');
   }
 
   const jwt = {
     secret: JWT_SECRET,
-    algorithm: JWT_ALGORITHM || AlgorithmTypes.HS256,
+    algorithm: JWT_ALGORITHM,
   };
 
   return {

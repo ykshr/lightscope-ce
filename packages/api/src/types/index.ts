@@ -7,6 +7,7 @@ import { AlgorithmTypes } from 'hono/jwt';
 type User = {
   id: string;
   role: string;
+  organizationId?: string;
 };
 
 type Organization = {

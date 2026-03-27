@@ -5,7 +5,7 @@ export async function fetchGet(
   headers: RequestInit['headers'] = {},
   expectJson: boolean = true
 ) {
-  const urlToUse = new URL(API_URL, url);
+  const urlToUse = new URL(url, API_URL);
   const res = await fetch(urlToUse, {
     method: 'GET',
     credentials: 'include',
@@ -21,7 +21,7 @@ export async function fetchGet(
     if (res.status === 401) {
       throw new Error('Not authenticated');
     }
-    throw new Error(`${res.status}: ${text}`);
+    throw new Error(`Response was not ok - ${res.status}: ${text}`);
   }
 
   if (!expectJson) return text;
@@ -37,7 +37,7 @@ export async function fetchPost(
   headers: RequestInit['headers'] = {},
   expectJson: boolean = true
 ) {
-  const urlToUse = new URL(API_URL, url);
+  const urlToUse = new URL(url, API_URL);
   const res = await fetch(urlToUse, {
     method: 'POST',
     credentials: 'include',
@@ -54,7 +54,7 @@ export async function fetchPost(
     if (res.status === 401) {
       throw new Error('Not authenticated');
     }
-    throw new Error(`${res.status}: ${text}`);
+    throw new Error(`Response was not ok - ${res.status}: ${text}`);
   }
 
   if (!expectJson) return text;

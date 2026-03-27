@@ -64,9 +64,11 @@ describe('fetcher lib', () => {
     it('should throw Error when network response is not ok and json contains errors array', async () => {
       const mockFetchResponse = {
         ok: false,
-        json: vi.fn().mockResolvedValue({
-          errors: [{ message: 'Specific GraphQL Error' }],
-        }),
+        text: vi.fn().mockResolvedValue(
+          JSON.stringify({
+            errors: [{ message: 'Specific GraphQL Error' }],
+          })
+        ),
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
@@ -78,23 +80,28 @@ describe('fetcher lib', () => {
     it('should throw "Response was not ok - no error message" when network response is not ok and json.errors array is empty due to destructuring behavior', async () => {
       const mockFetchResponse = {
         ok: false,
-        json: vi.fn().mockResolvedValue({
-          errors: [],
-        }),
+        status: 500,
+        text: vi.fn().mockResolvedValue(
+          JSON.stringify({
+            errors: [],
+          })
+        ),
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
       const { result } = renderHook(() => useGraphql('query { test }'));
 
-      await expect(result.current()).rejects.toThrow('Response was not ok - no error message');
+      await expect(result.current()).rejects.toThrow('Response was not ok - 500: {"errors":[]}');
     });
 
     it('should throw provided message when network response is not ok and no errors array exists', async () => {
       const mockFetchResponse = {
         ok: false,
-        json: vi.fn().mockResolvedValue({
-          message: 'Custom server error message',
-        }),
+        text: vi.fn().mockResolvedValue(
+          JSON.stringify({
+            message: 'Custom server error message',
+          })
+        ),
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
@@ -106,13 +113,14 @@ describe('fetcher lib', () => {
     it('should throw default message when network response is not ok and no error information is provided', async () => {
       const mockFetchResponse = {
         ok: false,
-        json: vi.fn().mockResolvedValue({}),
+        status: 500,
+        text: vi.fn().mockResolvedValue(JSON.stringify({})),
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
       const { result } = renderHook(() => useGraphql('query { test }'));
 
-      await expect(result.current()).rejects.toThrow('Response was not ok - no message');
+      await expect(result.current()).rejects.toThrow('Response was not ok - 500: {}');
     });
   });
 });

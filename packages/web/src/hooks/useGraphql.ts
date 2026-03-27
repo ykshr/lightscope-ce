@@ -16,14 +16,14 @@ export const useGraphql = <TData, TVariables>(
       variables: serializedVariables,
     };
 
-    const json = await fetchPost('/gql', body, headers);
+    const { errors, data } = await fetchPost('/gql', body, headers);
 
-    if (json.errors) {
-      const { message } = json.errors[0] || {};
+    if (errors) {
+      const { message } = errors[0] || {};
       throw new Error(message || 'GraphQL Error');
     }
 
-    return json.data;
+    return data;
   };
 };
 

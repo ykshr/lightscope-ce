@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS lightscope.pv_gender_min (
-    organizationorganization_id_hash_id UInt64,
+    organization_id_hash UInt64,
     date DateTime CODEC(Delta(4), LZ4),
     site_name LowCardinality(String),
     url SimpleAggregateFunction(any, String),

@@ -1,7 +1,7 @@
 import authClient from '@/helpers/auth';
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { serializeDates, useGraphql } from './useGraphql';
+import { serializeDates, useFetchData } from '../hooks/useFetchData';
 
 vi.mock('@/helpers/auth', () => ({
   default: {
@@ -51,14 +51,14 @@ describe('fetcher lib', () => {
     });
   });
 
-  describe('useGraphql error handling', () => {
+  describe('useFetchData error handling', () => {
     beforeEach(() => {
       vi.clearAllMocks();
 
       (authClient.getSession as any).mockResolvedValue({ data: true });
 
       // Mock global fetch
-      vi.stubGlobal('fetch', vi.fn());
+      vi.spyOn(globalThis, 'fetch');
     });
 
     it('should throw Error when network response is not ok and json contains errors array', async () => {
@@ -68,9 +68,9 @@ describe('fetcher lib', () => {
           errors: [{ message: 'Specific GraphQL Error' }],
         }),
       };
-      (globalThis.fetch as any).mockResolvedValue(mockFetchResponse);
+      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
-      const { result } = renderHook(() => useGraphql('query { test }'));
+      const { result } = renderHook(() => useFetchData('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Specific GraphQL Error');
     });
@@ -82,9 +82,9 @@ describe('fetcher lib', () => {
           errors: [],
         }),
       };
-      (globalThis.fetch as any).mockResolvedValue(mockFetchResponse);
+      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
-      const { result } = renderHook(() => useGraphql('query { test }'));
+      const { result } = renderHook(() => useFetchData('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Response was not ok - no error message');
     });
@@ -96,9 +96,9 @@ describe('fetcher lib', () => {
           message: 'Custom server error message',
         }),
       };
-      (globalThis.fetch as any).mockResolvedValue(mockFetchResponse);
+      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
-      const { result } = renderHook(() => useGraphql('query { test }'));
+      const { result } = renderHook(() => useFetchData('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Custom server error message');
     });
@@ -108,9 +108,9 @@ describe('fetcher lib', () => {
         ok: false,
         json: vi.fn().mockResolvedValue({}),
       };
-      (globalThis.fetch as any).mockResolvedValue(mockFetchResponse);
+      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
-      const { result } = renderHook(() => useGraphql('query { test }'));
+      const { result } = renderHook(() => useFetchData('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Response was not ok - no message');
     });

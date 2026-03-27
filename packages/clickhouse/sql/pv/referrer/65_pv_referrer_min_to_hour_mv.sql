@@ -1,7 +1,7 @@
 CREATE MATERIALIZED VIEW IF NOT EXISTS lightscope.pv_referrer_min_to_hour_mv
 TO lightscope.pv_referrer_hour AS
 SELECT
-    tenant_id,
+    organization_id_hash,
     toStartOfHour(date) AS date,
     site_name,
     any(url) as url,
@@ -17,4 +17,4 @@ SELECT
     now() AS created_at,
     now() AS updated_at
 FROM lightscope.pv_referrer_min
-GROUP BY tenant_id, date, site_name, url_hash, domain_hash, referrer_hash;
+GROUP BY organization_id_hash, date, site_name, url_hash, domain_hash, referrer_hash;

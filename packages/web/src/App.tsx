@@ -1,11 +1,14 @@
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import Footer from '@/components/Footer';
 import Header from '@/components/header';
 import Sidebar from '@/components/Sidebar';
-import Overview from '@/contents/overview';
-import Footer from '@/components/Footer';
-import Ranking from '@/contents/ranking';
-import Article from '@/contents/article';
+import authClient from '@/helpers/auth';
+import Article from '@/pages/article';
+import Overview from '@/pages/overview';
+import Ranking from '@/pages/ranking';
+import Settings from '@/pages/settings';
+import SingIn from '@/pages/SingIn';
+import SingUp from '@/pages/SingUp';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 
 function AppLayout() {
   return (
@@ -49,15 +52,45 @@ const router = createBrowserRouter([
           type: 'article',
         },
       },
+      {
+        path: '/settings',
+        element: <Settings />,
+        handle: {
+          title: 'Settings',
+          description: 'Manage tracking configuration',
+        },
+      },
+      {
+        path: '*',
+        element: <Navigate to="/" replace />,
+      },
     ],
   },
 ]);
 
-function App() {
-  const { user, loading } = useAuth();
+const unauthenticatedRouter = createBrowserRouter([
+  {
+    path: '/singin',
+    element: <SingIn />,
+  },
+  {
+    path: '/signup',
+    element: <SingUp />,
+  },
+  {
+    path: '*',
+    element: <Navigate to="/singin" replace />,
+  },
+]);
 
-  if (loading) return null;
-  if (!user) return null;
+function App() {
+  const { data: session, isPending } = authClient.useSession();
+
+  if (isPending) return null;
+
+  if (!session) {
+    return <RouterProvider router={unauthenticatedRouter} />;
+  }
 
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">

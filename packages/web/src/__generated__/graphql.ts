@@ -250,6 +250,17 @@ export const Metric = {
 } as const;
 
 export type Metric = typeof Metric[keyof typeof Metric];
+export type Mutation = {
+  __typename?: 'Mutation';
+  tracker: Array<Maybe<Tracker>>;
+};
+
+
+export type MutationTrackerArgs = {
+  availableMinutes?: InputMaybe<Scalars['Int']['input']>;
+  origin: Scalars['String']['input'];
+};
+
 export const Order = {
   Asc: 'ASC',
   Desc: 'DESC'
@@ -260,6 +271,7 @@ export type Query = {
   __typename?: 'Query';
   article?: Maybe<Article>;
   rank?: Maybe<Rank>;
+  tracker: Array<Maybe<Tracker>>;
   trend?: Maybe<Trend>;
 };
 
@@ -399,6 +411,15 @@ export type Sort = {
 export type SortInput = {
   category?: InputMaybe<CategoryInput>;
   order: Order;
+};
+
+export type Tracker = {
+  __typename?: 'Tracker';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  origin: Scalars['String']['output'];
+  token: Scalars['String']['output'];
 };
 
 export type Trend = {

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS lightscope.pv_geo_hour (
-    tenant_id UInt64,
+    organization_id_hash UInt64,
     date DateTime CODEC(Delta(4), LZ4),
     site_name LowCardinality(String),
     url SimpleAggregateFunction(any, String),
@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS lightscope.pv_geo_hour (
     INDEX minmax_date date TYPE minmax GRANULARITY 1
 ) ENGINE = AggregatingMergeTree()
 PARTITION BY toYYYYMM(date)
-PRIMARY KEY (tenant_id, date, site_name, url_hash, geo_continent, geo_country, geo_subdivision, geo_city)
-ORDER BY (tenant_id, date, site_name, url_hash, geo_continent, geo_country, geo_subdivision, geo_city)
+PRIMARY KEY (organization_id_hash, date, site_name, url_hash, geo_continent, geo_country, geo_subdivision, geo_city)
+ORDER BY (organization_id_hash, date, site_name, url_hash, geo_continent, geo_country, geo_subdivision, geo_city)
 SETTINGS
     index_granularity = 8192,
     storage_policy = 'lightscope_storage_policy';

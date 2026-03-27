@@ -1,21 +1,17 @@
-import { Hono, Env as HonoEnv } from 'hono';
+import typeDefs from '@/__generated__/graphql/typeDefs';
+import resolvers from '@/graphql/resolvers';
+import createContextMiddleware from '@/middlewares/context';
+import createUserMiddleware from '@/middlewares/user';
+import trackerRouter from '@/rest/routers/tracker';
+import { $, Env } from '@/types';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { graphqlServer } from '@hono/graphql-server';
+import { Context, Hono } from 'hono';
+import { env } from 'hono/adapter';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
-import { env } from 'hono/adapter';
-import { graphqlServer } from '@hono/graphql-server';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
-import createLoadersMiddleware from '@/middlewares/loaders';
-import createClickhouseMiddleware from '@/middlewares/clickhouse';
-import typeDefs from '@/__generated__/typeDefs';
-import resolvers from '@/resolvers';
 
-export interface AppDependencies {
-  authProvider: AuthProvider;
-}
-
-export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
-  const { authProvider } = deps;
+export function createApp(createContext: (c: Context) => Promise<$>) {
   const app = new Hono<Env>();
 
   app.use('*', logger());
@@ -27,16 +23,23 @@ export function createApp<Env extends HonoEnv>(deps: AppDependencies) {
     const origins = ALLOWED_ORIGIN.split(',').map((o) => o.trim());
     const corsMiddlewareHandler = cors({
       origin: origins.length === 1 ? origins[0] : origins,
+      allowHeaders: ['Content-Type', 'Authorization'],
     });
     return corsMiddlewareHandler(c, next);
   });
 
   app.get('/health', (c) => c.json({ ok: true }));
+
+  app.use('*', createContextMiddleware(createContext));
+
+  app.all('/api/auth/*', (c) => c.var.$.auth.handler(c.req.raw));
+
+  app.use('*', createUserMiddleware());
+
+  app.route('/tracker', trackerRouter);
+
   app.all(
     '/gql',
-    createAuthMiddleware(authProvider),
-    createClickhouseMiddleware(),
-    createLoadersMiddleware(),
     graphqlServer({
       schema: makeExecutableSchema({ typeDefs, resolvers }),
       pretty: true,

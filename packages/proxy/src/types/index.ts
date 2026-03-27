@@ -1,16 +1,29 @@
+import { AuthProvider, Tracker } from '@/helpers/auth';
+import { EgressProvider } from '@/helpers/egress';
+import { GeoProvider } from '@/helpers/geo';
 import type { Context as HonoContext } from 'hono';
+import { AlgorithmTypes } from 'hono/jwt';
 import { z } from 'zod';
-import { EgressProvider } from '@/middlewares/egress';
-import { GeoProvider } from '@/middlewares/geo';
 
 export type Bindings = {
-  NO_AUTH_TOKEN: string;
+  JWT_SECRET: string;
+  JWT_ALGORITHM: AlgorithmTypes;
   CLICKHOUSE_URL: string;
   CLICKHOUSE_USERNAME: string;
   CLICKHOUSE_PASSWORD: string;
+  CLICKHOUSE_INSERT_BATCH_SIZE: number;
+  CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS: number;
+  CLICKHOUSE_INSERT_MAX_TRY: number;
+  MAXMIND_DB_PATH: string;
 };
 
-export type Variables = { tracker: { tenantId: number }; egress: EgressProvider; geo: GeoProvider };
+export type $ = {
+  auth: AuthProvider;
+  egress: EgressProvider;
+  geo: GeoProvider;
+};
+
+export type Variables = { tracker: Tracker; $: $ };
 
 export type Env = {
   Bindings: Bindings;
@@ -68,7 +81,7 @@ export type Payload = z.infer<typeof PayloadSchema>;
 // PV type definition
 // --------------------
 export interface PV {
-  tenant_id: number;
+  organization_id: string;
   site_name: string;
   url: string;
   event_id: string;
@@ -104,7 +117,7 @@ export interface PV {
 // Article type definition
 // --------------------
 export interface Article {
-  tenant_id: number;
+  organization_id: string;
   url: string;
   title?: string;
   type?: string;

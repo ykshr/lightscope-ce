@@ -1,18 +1,18 @@
-import DataLoader from 'dataloader';
-import { ClickHouseClient } from '@clickhouse/client';
-import { Article } from '@/__generated__/resolvers';
-import query from '@/helpers/clickhouse';
-import { renameKeySnakeToCamel } from '@/helpers/rename';
+import { Article } from '@/__generated__/graphql/resolvers';
+import query from '@/loaders/helpers/clickhouse';
+import { renameKeySnakeToCamel } from '@/loaders/helpers/rename';
 import type { Context } from '@/types';
+import { ClickHouseClient } from '@clickhouse/client';
+import DataLoader from 'dataloader';
 
 export default function getLoader(c: Context): DataLoader<string, Article | null> {
-  if (c.var.loaders.has('articleLoader')) {
-    return c.var.loaders.get('articleLoader') as DataLoader<string, Article | null>;
+  if (c.var.$.loaders.has('articleLoader')) {
+    return c.var.$.loaders.get('articleLoader') as DataLoader<string, Article | null>;
   }
 
   const loader = new DataLoader<string, Article | null>(
     async (urls: readonly string[]) => {
-      const articles = await fetchArticleByUrls(c.var.clickhouse, c.var.user.tenantId, urls);
+      const articles = await fetchArticleByUrls(c.var.$.clickhouse, c.var.organization.id, urls);
 
       const articleMap = new Map<string, Article>();
       for (const article of articles) {
@@ -25,14 +25,14 @@ export default function getLoader(c: Context): DataLoader<string, Article | null
       cacheKeyFn: (key) => key,
     }
   );
-  c.var.loaders.set('articleLoader', loader);
+  c.var.$.loaders.set('articleLoader', loader);
 
   return loader;
 }
 
 async function fetchArticleByUrls(
   client: ClickHouseClient,
-  tenantId: number,
+  organizationId: string,
   urls: readonly string[]
 ): Promise<Article[]> {
   if (urls.length === 0) return [];
@@ -56,11 +56,11 @@ async function fetchArticleByUrls(
         created_at
       FROM lightscope.article
       WHERE
-        tenant_id = {tenantId:UInt64}
+        organization_id_hash = cityHash64({organizationId:String})
         AND url_hash IN (arrayMap(x -> cityHash64(x), {urls:Array(String)}))
     `;
 
-  const data = await query<Article>(client, sql, { tenantId, urls });
+  const data = await query<Article>(client, sql, { organizationId, urls });
   const renamedData = data.map((row) => renameKeySnakeToCamel(row));
 
   return renamedData;

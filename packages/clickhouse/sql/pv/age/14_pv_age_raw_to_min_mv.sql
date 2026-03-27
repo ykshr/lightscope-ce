@@ -1,7 +1,7 @@
 CREATE MATERIALIZED VIEW IF NOT EXISTS lightscope.pv_age_raw_to_min_mv
 TO lightscope.pv_age_min AS
 SELECT
-    tenant_id,
+    organization_id_hash,
     toStartOfFiveMinutes(event_time) AS date,
     site_name,
     any(url) as url,
@@ -15,4 +15,4 @@ SELECT
     now() AS updated_at
 FROM lightscope.pv_raw
 WHERE age != ''
-GROUP BY tenant_id, date, site_name, url_hash, age;
+GROUP BY organization_id_hash, date, site_name, url_hash, age;

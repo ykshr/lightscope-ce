@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { AggregationUnit } from '@/__generated__/graphql/resolvers';
+import { describe, expect, it } from 'vitest';
 import {
   getAggregationUnit,
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from './getCollectionUnitWithDates';
-import { AggregationUnit } from '@/__generated__/resolvers';
 
 describe('getCollectionUnitWithDates', () => {
   describe('getAggregationUnitWithInterval', () => {

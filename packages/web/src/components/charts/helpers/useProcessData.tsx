@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
 import { ArticleTrendQuery } from '@/__generated__/graphql';
 import { AreaCategoryConfig, AreaChartDataItem } from '@/components/charts/templates/AreaStacked';
+import { useEffect, useState } from 'react';
 
 export default function useProcessData(data: ArticleTrendQuery | undefined) {
   const [chartData, setChartData] = useState<AreaChartDataItem[]>([]);

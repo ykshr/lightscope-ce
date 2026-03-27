@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS lightscope.pv_raw (
     event_id String,
-    tenant_id UInt64,
+    organization_id String,
+    organization_id_hash UInt64 MATERIALIZED cityHash64(organization_id),
     site_name LowCardinality(String),
     url String,
     url_hash UInt64 MATERIALIZED cityHash64(url),

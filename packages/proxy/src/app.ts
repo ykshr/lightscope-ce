@@ -1,44 +1,32 @@
-import { Hono } from 'hono';
+import createContextMiddleware from '@/middlewares/context';
+import createTrackerMiddleware from '@/middlewares/tracker';
+import eventsRouter from '@/routers/events';
+import { $, Env } from '@/types';
+import { Context, Hono } from 'hono';
+import { env } from 'hono/adapter';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
-import { env } from 'hono/adapter';
-import indexRouter from '@/routers/index';
-import eventsRouter from '@/routers/events';
-import createAuthMiddleware, { AuthProvider } from '@/middlewares/auth';
-import createEgressMiddleware, { EgressProvider } from '@/middlewares/egress';
-import createGeoMiddleware, { GeoProvider } from '@/middlewares/geo';
 
-export interface AppDependencies {
-  authProvider: AuthProvider;
-  egressProvider: EgressProvider;
-  geoProvider: GeoProvider;
-}
-
-export function createApp(deps: AppDependencies) {
-  const { authProvider, egressProvider, geoProvider } = deps;
-
-  const app = new Hono();
+export function createApp(createContext: (c: Context) => Promise<$>) {
+  const app = new Hono<Env>();
 
   app.use('*', logger());
   app.use('*', async (c, next) => {
     const { ALLOWED_ORIGIN = '*' } = env<{ ALLOWED_ORIGIN: string }>(c);
     const corsMiddlewareHandler = cors({
       origin: ALLOWED_ORIGIN,
+      allowHeaders: ['Content-Type', 'Authorization'],
     });
     return corsMiddlewareHandler(c, next);
   });
 
   // Public routes that don't require authentication
-  app.route('/', indexRouter);
   app.get('/health', (c) => c.json({ ok: true }));
 
   // Events endpoint has its own tracker token authentication
-  app.use(
-    '/events/*',
-    createAuthMiddleware(authProvider),
-    createEgressMiddleware(egressProvider),
-    createGeoMiddleware(geoProvider)
-  );
+  app.use('*', createContextMiddleware(createContext));
+
+  app.use('/events/*', createTrackerMiddleware());
   app.route('/events', eventsRouter);
 
   app.onError((err, c) => {

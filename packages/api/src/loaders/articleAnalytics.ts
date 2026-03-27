@@ -1,14 +1,18 @@
-import DataLoader from 'dataloader';
-import { ClickHouseClient } from '@clickhouse/client';
-import { AnalyticsBase } from '@/__generated__/resolvers';
-import { Aggregation, AggregationUnit, Metric } from '@/__generated__/resolvers';
-import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
-import query, { formatToDateTime } from '@/helpers/clickhouse';
+import {
+  Aggregation,
+  AggregationUnit,
+  AnalyticsBase,
+  Metric,
+} from '@/__generated__/graphql/resolvers';
+import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
+import query, { formatToDateTime } from '@/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
 import type { Context } from '@/types';
+import { ClickHouseClient } from '@clickhouse/client';
+import DataLoader from 'dataloader';
 
 type QueryParams = {
   startDate: string;
@@ -30,11 +34,11 @@ export default function getLoader<T extends AnalyticsBase>(
   c: Context,
   loaderParams: LoaderParams
 ): DataLoader<string, T[] | null> {
-  if (!c.var.loaders.has('articleAnalyticsLoader')) {
-    c.var.loaders.set('articleAnalyticsLoader', new Map());
+  if (!c.var.$.loaders.has('articleAnalyticsLoader')) {
+    c.var.$.loaders.set('articleAnalyticsLoader', new Map());
   }
 
-  const loaders = c.var.loaders.get('articleAnalyticsLoader');
+  const loaders = c.var.$.loaders.get('articleAnalyticsLoader');
   const loaderKey = createLoaderKey(c, loaderParams);
   if (loaders.has(loaderKey)) {
     return loaders.get(loaderKey) as DataLoader<string, T[] | null>;
@@ -43,8 +47,8 @@ export default function getLoader<T extends AnalyticsBase>(
   const loader = new DataLoader<string, T[] | null>(
     async (urls: readonly string[]) => {
       const analytics = await fetchArticleAnalyticsByUrls<T>(
-        c.var.clickhouse,
-        c.var.user.tenantId,
+        c.var.$.clickhouse,
+        c.var.organization.id,
         loaderParams,
         urls
       );
@@ -70,7 +74,7 @@ export default function getLoader<T extends AnalyticsBase>(
 
 function createLoaderKey(c: Context, params: LoaderParams): string {
   return JSON.stringify({
-    tenantId: c.var.user.tenantId,
+    organizationId: c.var.organization.id,
     tableName: params.tableName,
     queryParams: {
       startDate: params.queryParams.startDate,
@@ -87,7 +91,7 @@ function createLoaderKey(c: Context, params: LoaderParams): string {
 
 async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   client: ClickHouseClient,
-  tenantId: number,
+  organizationId: string,
   { tableName, queryParams, attributes }: LoaderParams,
   urls: readonly string[]
 ): Promise<(T & { url: string })[]> {
@@ -146,7 +150,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   const limitAndOffset = `LIMIT ${limitToUse} OFFSET ${(pageToUse - 1) * limitToUse}`;
 
   const queryParamsObj: Record<string, unknown> = {
-    tenantId,
+    organizationId,
     siteName,
     urls,
   };
@@ -170,7 +174,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
         FROM
           lightscope.${tableName}_${unit}
         WHERE
-          tenant_id = {tenantId:UInt64}
+          organization_id_hash = cityHash64({organizationId:String})
           AND site_name = {siteName:String}
           AND url_hash IN (arrayMap(x -> cityHash64(x), {urls:Array(String)}))
           AND (

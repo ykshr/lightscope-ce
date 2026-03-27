@@ -1,7 +1,7 @@
-import { ClickHouseClient } from '@clickhouse/client';
 import {
-  QueryTrendArgs,
   AggregationUnit,
+  Metric,
+  QueryTrendArgs,
   TrendCategoryAgeArgs,
   TrendCategoryAppArgs,
   TrendCategoryDeviceArgs,
@@ -9,17 +9,17 @@ import {
   TrendCategoryGeoArgs,
   TrendCategoryReferrerArgs,
   TrendCategoryUtmArgs,
-  Metric,
-} from '@/__generated__/resolvers';
-import query, { formatToDateTime } from '@/helpers/clickhouse';
+} from '@/__generated__/graphql/resolvers';
+import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
+import processArticleFilter from '@/loaders/helpers/articleFilter';
+import processCategoryFilter from '@/loaders/helpers/categoryFilter';
+import query, { formatToDateTime } from '@/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
-import processArticleFilter from '@/loaders/helpers/articleFilter';
-import processCategoryFilter from '@/loaders/helpers/categoryFilter';
-import { RequestAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
+import { ClickHouseClient } from '@clickhouse/client';
 
 interface LoaderParams {
   tableName: string;
@@ -37,12 +37,16 @@ interface LoaderParams {
 
 export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: <T>() => Trend<T>(c.var.clickhouse, c.var.user.tenantId, loaderParams),
-    load: <T>() => Trend<T>(c.var.clickhouse, c.var.user.tenantId, loaderParams),
+    total: <T>() => Trend<T>(c.var.$.clickhouse, c.var.organization.id, loaderParams),
+    load: <T>() => Trend<T>(c.var.$.clickhouse, c.var.organization.id, loaderParams),
   };
 }
 
-async function Trend<T>(client: ClickHouseClient, tenantId: number, loaderParams: LoaderParams) {
+async function Trend<T>(
+  client: ClickHouseClient,
+  organizationId: string,
+  loaderParams: LoaderParams
+) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
   const { startDate: s, endDate: e, articleFilter, metric, aggregation, limit, page } = queryParams;
   const { top = 10 } = categoryFilter || {};
@@ -96,7 +100,7 @@ async function Trend<T>(client: ClickHouseClient, tenantId: number, loaderParams
   const categoryWhere = processedCategoryFilter?.query;
 
   const queryParamsObj: Record<string, unknown> = {
-    tenantId,
+    organizationId,
     ...processedArticleFilter?.params,
     ...processedCategoryFilter?.params,
   };
@@ -126,7 +130,7 @@ async function Trend<T>(client: ClickHouseClient, tenantId: number, loaderParams
           lightscope.${tableName}_${unit} t
           ${where ? `INNER JOIN lightscope.article a ON t.url_hash = a.url_hash` : ''}
         WHERE
-          t.tenant_id = {tenantId:UInt64}
+          t.organization_id_hash = cityHash64({organizationId:String})
           AND (
             toDateTime({${startParam}:String}) <= t.date
             AND t.date < toDateTime({${endParam}:String})

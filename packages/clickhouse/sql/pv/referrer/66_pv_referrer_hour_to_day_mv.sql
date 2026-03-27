@@ -1,7 +1,7 @@
 CREATE MATERIALIZED VIEW IF NOT EXISTS lightscope.pv_referrer_hour_to_day_mv
 TO lightscope.pv_referrer_day AS
 SELECT
-    tenant_id,
+    organization_id_hash,
     toStartOfDay(date) AS date,
     site_name,
     any(url) as url,
@@ -17,4 +17,4 @@ SELECT
     now() AS created_at,
     now() AS updated_at
 FROM lightscope.pv_referrer_hour
-GROUP BY tenant_id, date, site_name, url_hash, domain_hash, referrer_hash;
+GROUP BY organization_id_hash, date, site_name, url_hash, domain_hash, referrer_hash;

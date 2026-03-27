@@ -1,18 +1,18 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
-import * as d3 from 'd3-geo';
-import * as d3Zoom from 'd3-zoom';
-import { select } from 'd3-selection';
-import { interpolateRgb } from 'd3-interpolate';
-import { feature } from 'topojson-client';
-import i18n from 'i18n-iso-countries';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { MapPin } from 'lucide-react';
 import { useTotalCityQuery, useTotalCountryQuery } from '@/__generated__/graphql';
-import { useUrlParams } from '@/hooks/useUrl';
 import { Spinner } from '@/components/Loading';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { useUrlParams } from '@/hooks/useUrl';
+import { useQuery } from '@tanstack/react-query';
+import * as d3 from 'd3-geo';
+import { interpolateRgb } from 'd3-interpolate';
+import { select } from 'd3-selection';
+import * as d3Zoom from 'd3-zoom';
+import i18n from 'i18n-iso-countries';
+import { MapPin } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { feature } from 'topojson-client';
 
 const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 

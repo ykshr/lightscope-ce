@@ -1,25 +1,21 @@
-import { useAuth } from '@/contexts/AuthContext';
+import authClient from '@/helpers/auth';
 import { API_URL } from '@/helpers/env';
 
 export const useFetchData = <TData, TVariables>(
   query: string,
   options?: RequestInit['headers']
 ): ((variables?: TVariables) => Promise<TData>) => {
-  const { auth } = useAuth();
-
   return async (variables?: TVariables) => {
-    if (!auth) throw new Error('Auth provider is not ready');
-
-    const token = await auth.getToken();
-    if (!token) throw new Error('User not authenticated');
+    const { data: session } = await authClient.getSession();
+    if (!session) throw new Error('Not authenticated');
 
     const serializedVariables = variables ? serializeDates(variables) : undefined;
 
     const res = await fetch(`${API_URL}/gql`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token ? `Bearer ${token}` : '',
         ...options,
       },
       body: JSON.stringify({
@@ -31,6 +27,9 @@ export const useFetchData = <TData, TVariables>(
     const json = await res.json();
 
     if (!res.ok) {
+      if (res.status === 401) {
+        throw new Error('Not authenticated');
+      }
       if (json.errors) {
         const { message } = json.errors[0] || {};
         throw new Error(message || 'Response was not ok - no error message');

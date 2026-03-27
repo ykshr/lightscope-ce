@@ -1,11 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import authClient from '@/helpers/auth';
 import { renderHook } from '@testing-library/react';
-import { useFetchData, serializeDates } from '../hooks/useFetchData';
-import { useAuth } from '@/contexts/AuthContext';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { serializeDates, useFetchData } from '../hooks/useFetchData';
 
-// Mock the AuthContext hook
-vi.mock('@/contexts/AuthContext', () => ({
-  useAuth: vi.fn(),
+vi.mock('@/helpers/auth', () => ({
+  default: {
+    getSession: vi.fn(),
+  },
 }));
 
 describe('fetcher lib', () => {
@@ -51,17 +52,10 @@ describe('fetcher lib', () => {
   });
 
   describe('useFetchData error handling', () => {
-    const mockGetToken = vi.fn();
-
     beforeEach(() => {
       vi.clearAllMocks();
 
-      // Default auth mock setup
-      (useAuth as any).mockReturnValue({
-        auth: {
-          getToken: mockGetToken.mockResolvedValue('mock-token'),
-        },
-      });
+      (authClient.getSession as any).mockResolvedValue({ data: true });
 
       // Mock global fetch
       vi.stubGlobal('fetch', vi.fn());

@@ -1,9 +1,9 @@
 import authClient from '@/helpers/auth';
-import { API_URL } from '@/helpers/env';
+import { fetchPost } from '@/helpers/fetch';
 
-export const useFetchData = <TData, TVariables>(
+export const useGraphql = <TData, TVariables>(
   query: string,
-  options?: RequestInit['headers']
+  headers?: RequestInit['headers']
 ): ((variables?: TVariables) => Promise<TData>) => {
   return async (variables?: TVariables) => {
     const { data: session } = await authClient.getSession();
@@ -11,38 +11,19 @@ export const useFetchData = <TData, TVariables>(
 
     const serializedVariables = variables ? serializeDates(variables) : undefined;
 
-    const res = await fetch(`${API_URL}/gql`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        ...options,
-      },
-      body: JSON.stringify({
-        query,
-        variables: serializedVariables,
-      }),
-    });
+    const body = {
+      query,
+      variables: serializedVariables,
+    };
 
-    const json = await res.json();
+    const { errors, data } = await fetchPost('/gql', body, headers);
 
-    if (!res.ok) {
-      if (res.status === 401) {
-        throw new Error('Not authenticated');
-      }
-      if (json.errors) {
-        const { message } = json.errors[0] || {};
-        throw new Error(message || 'Response was not ok - no error message');
-      }
-      throw new Error(json.message || 'Response was not ok - no message');
-    }
-
-    if (json.errors) {
-      const { message } = json.errors[0] || {};
+    if (errors) {
+      const { message } = errors[0] || {};
       throw new Error(message || 'GraphQL Error');
     }
 
-    return json.data;
+    return data;
   };
 };
 

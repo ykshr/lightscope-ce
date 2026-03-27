@@ -4,7 +4,5 @@ import { organizationClient } from 'better-auth/client/plugins';
 
 export default createAuthClient({
   baseURL: `${API_URL}/api/auth`,
-  plugins: [
-    organizationClient()
-  ]
+  plugins: [organizationClient()],
 });

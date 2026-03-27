@@ -24,6 +24,7 @@ services:
     working_dir: /app
     volumes:
       - ./packages/api:/app
+      - /app/node_modules
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     environment:
       - CLICKHOUSE_URL=http://clickhouse:8123
@@ -47,6 +48,7 @@ services:
     working_dir: /app
     volumes:
       - ./packages/proxy:/app
+      - /app/node_modules
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     environment:
       - CLICKHOUSE_URL=http://clickhouse:8123
@@ -70,6 +72,7 @@ services:
     working_dir: /app
     volumes:
       - ./packages/web:/app
+      - /app/node_modules
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev --host"
     environment:
       - VITE_API_ENDPOINT=${VITE_API_ENDPOINT:-http://localhost:3000}

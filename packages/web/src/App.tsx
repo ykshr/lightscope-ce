@@ -5,7 +5,6 @@ import authClient from '@/helpers/auth';
 import Article from '@/pages/article';
 import Overview from '@/pages/overview';
 import Ranking from '@/pages/ranking';
-import Settings from '@/pages/settings';
 import SingIn from '@/pages/SingIn';
 import SingUp from '@/pages/SingUp';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
@@ -50,14 +49,6 @@ const router = createBrowserRouter([
         element: <Article />,
         handle: {
           type: 'article',
-        },
-      },
-      {
-        path: '/settings',
-        element: <Settings />,
-        handle: {
-          title: 'Settings',
-          description: 'Manage tracking configuration',
         },
       },
       {

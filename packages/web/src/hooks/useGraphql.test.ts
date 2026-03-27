@@ -1,7 +1,7 @@
 import authClient from '@/helpers/auth';
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { serializeDates, useFetchData } from '../hooks/useFetchData';
+import { serializeDates, useGraphql } from './useGraphql';
 
 vi.mock('@/helpers/auth', () => ({
   default: {
@@ -51,7 +51,7 @@ describe('fetcher lib', () => {
     });
   });
 
-  describe('useFetchData error handling', () => {
+  describe('useGraphql error handling', () => {
     beforeEach(() => {
       vi.clearAllMocks();
 
@@ -70,7 +70,7 @@ describe('fetcher lib', () => {
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
-      const { result } = renderHook(() => useFetchData('query { test }'));
+      const { result } = renderHook(() => useGraphql('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Specific GraphQL Error');
     });
@@ -84,7 +84,7 @@ describe('fetcher lib', () => {
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
-      const { result } = renderHook(() => useFetchData('query { test }'));
+      const { result } = renderHook(() => useGraphql('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Response was not ok - no error message');
     });
@@ -98,7 +98,7 @@ describe('fetcher lib', () => {
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
-      const { result } = renderHook(() => useFetchData('query { test }'));
+      const { result } = renderHook(() => useGraphql('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Custom server error message');
     });
@@ -110,7 +110,7 @@ describe('fetcher lib', () => {
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
 
-      const { result } = renderHook(() => useFetchData('query { test }'));
+      const { result } = renderHook(() => useGraphql('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Response was not ok - no message');
     });

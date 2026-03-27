@@ -1,8 +1,8 @@
 // --------------------
 // API
 // --------------------
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 export { API_URL };
 
-const PROXY_URL = import.meta.env.VITE_PROXY_URL || 'http://localhost:3001';
+const PROXY_URL = import.meta.env.VITE_PROXY_URL || 'http://localhost:3002';
 export { PROXY_URL };

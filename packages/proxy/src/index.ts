@@ -2,7 +2,7 @@ import createContext from '@/createContext';
 import { serve } from '@hono/node-server';
 import { createApp } from './app';
 
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3002;
 
 const app = createApp(createContext);
 

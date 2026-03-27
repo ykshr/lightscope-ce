@@ -34,8 +34,13 @@ export default async function createContext(c: Context): Promise<$> {
   const loaders = new Map();
 
   const { JWT_SECRET, JWT_ALGORITHM } = env(c);
+
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined in the environment.');
+  }
+
   const jwt = {
-    secret: JWT_SECRET || 'fallback-secret-for-dev-only-do-not-use-in-prod',
+    secret: JWT_SECRET,
     algorithm: JWT_ALGORITHM || AlgorithmTypes.HS256,
   };
 

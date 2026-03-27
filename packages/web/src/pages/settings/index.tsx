@@ -165,14 +165,14 @@ export default function Settings() {
 
   const handleRemoveMember = async (memberId: string) => {
     if (confirm('Are you sure you want to remove this member?')) {
-      const { error } = await authClient.organization.removeMember({
+      const { error: _error } = await authClient.organization.removeMember({
         memberIdOrEmail: memberId,
       });
     }
   };
 
   const handleUpdateRole = async (memberId: string, role: string) => {
-    const { error } = await authClient.organization.updateMemberRole({
+    const { error: _error } = await authClient.organization.updateMemberRole({
       memberId,
       role,
     });

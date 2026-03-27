@@ -6,7 +6,7 @@ SELECT
     site_name,
     any(url) as url,
     url_hash,
-    geo_continent
+    geo_continent,
     geo_country,
     geo_subdivision,
     geo_city,

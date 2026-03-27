@@ -7,7 +7,10 @@ import { AlgorithmTypes } from 'hono/jwt';
 type User = {
   id: string;
   role: string;
-  organizationId: string;
+};
+
+type Organization = {
+  id: string;
 };
 
 export type Bindings = {
@@ -29,7 +32,7 @@ export type $ = {
   };
 };
 
-export type Variables = { user: User; $: $ };
+export type Variables = { user: User; organization: Organization; $: $ };
 
 export type Env = {
   Bindings: Bindings;

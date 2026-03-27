@@ -37,8 +37,8 @@ interface LoaderParams {
 
 export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: <T>() => Trend<T>(c.var.$.clickhouse, c.var.user.organizationId, loaderParams),
-    load: <T>() => Trend<T>(c.var.$.clickhouse, c.var.user.organizationId, loaderParams),
+    total: <T>() => Trend<T>(c.var.$.clickhouse, c.var.organization.id, loaderParams),
+    load: <T>() => Trend<T>(c.var.$.clickhouse, c.var.organization.id, loaderParams),
   };
 }
 

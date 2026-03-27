@@ -48,7 +48,7 @@ export default function getLoader<T extends AnalyticsBase>(
     async (urls: readonly string[]) => {
       const analytics = await fetchArticleAnalyticsByUrls<T>(
         c.var.$.clickhouse,
-        c.var.user.organizationId,
+        c.var.organization.id,
         loaderParams,
         urls
       );
@@ -74,7 +74,7 @@ export default function getLoader<T extends AnalyticsBase>(
 
 function createLoaderKey(c: Context, params: LoaderParams): string {
   return JSON.stringify({
-    organizationId: c.var.user.organizationId,
+    organizationId: c.var.organization.id,
     tableName: params.tableName,
     queryParams: {
       startDate: params.queryParams.startDate,

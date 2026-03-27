@@ -12,11 +12,7 @@ export default function getLoader(c: Context): DataLoader<string, Article | null
 
   const loader = new DataLoader<string, Article | null>(
     async (urls: readonly string[]) => {
-      const articles = await fetchArticleByUrls(
-        c.var.$.clickhouse,
-        c.var.user.organizationId,
-        urls
-      );
+      const articles = await fetchArticleByUrls(c.var.$.clickhouse, c.var.organization.id, urls);
 
       const articleMap = new Map<string, Article>();
       for (const article of articles) {

@@ -19,7 +19,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
     const { ALLOWED_ORIGIN = '*' } = env<{ ALLOWED_ORIGIN: string }>(c);
     const corsMiddlewareHandler = cors({
       origin: ALLOWED_ORIGIN,
-      allowHeaders: ['Content-Type', 'Authorization', 'x-organization-id'],
+      allowHeaders: ['Content-Type', 'Authorization'],
     });
     return corsMiddlewareHandler(c, next);
   });

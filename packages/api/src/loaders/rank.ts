@@ -35,8 +35,8 @@ interface LoaderParams {
 
 export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: () => rank(c.var.$.clickhouse, c.var.user.organizationId, loaderParams),
-    load: () => rank(c.var.$.clickhouse, c.var.user.organizationId, loaderParams),
+    total: () => rank(c.var.$.clickhouse, c.var.organization.id, loaderParams),
+    load: () => rank(c.var.$.clickhouse, c.var.organization.id, loaderParams),
   };
 }
 

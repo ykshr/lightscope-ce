@@ -33,8 +33,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import authClient from '@/helpers/auth';
-import { useEffect, useState } from 'react';
-import { fetchPost } from '../../helpers/fetch';
+import { fetchPost } from '@/helpers/fetch';
+import useFetchMembers from '@/pages/settings/useFetchMembers';
+import { useState } from 'react';
 
 export default function Settings() {
   const [origin, setOrigin] = useState('');
@@ -63,34 +64,10 @@ export default function Settings() {
   };
 
   // Organization hooks
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const triggerRefresh = () => setRefreshTrigger((prev) => prev + 1);
-
   const { data: organizations, isPending: isOrganizationsPending } =
     authClient.useListOrganizations();
   const { data: activeOrganization } = authClient.useActiveOrganization();
-  const [members, setMembers] = useState<any[]>([]);
-  const [isMembersPending, setIsMembersPending] = useState(false);
-
-  useEffect(() => {
-    async function fetchMembers() {
-      if (!activeOrganization) {
-        setMembers([]);
-        return;
-      }
-      setIsMembersPending(true);
-      const { data, error } = await authClient.organization.listMembers({
-        query: {
-          organizationId: activeOrganization.id,
-        },
-      });
-      if (data && !error) {
-        setMembers(data.members || []);
-      }
-      setIsMembersPending(false);
-    }
-    fetchMembers();
-  }, [activeOrganization?.id, refreshTrigger]);
+  const { members, isPending: isMembersPending } = useFetchMembers(activeOrganization?.id);
 
   // Update organization state
   const [showUpdateOrgDialog, setShowUpdateOrgDialog] = useState(false);
@@ -179,7 +156,6 @@ export default function Settings() {
       setInviteError(error.message || 'Failed to invite member');
     } else {
       setShowInviteDialog(false);
-      triggerRefresh();
       setInviteEmail('');
       setInviteRole('member');
     }
@@ -190,7 +166,6 @@ export default function Settings() {
       const { error } = await authClient.organization.removeMember({
         memberIdOrEmail: memberId,
       });
-      if (!error) triggerRefresh();
     }
   };
 
@@ -199,7 +174,6 @@ export default function Settings() {
       memberId,
       role,
     });
-    if (!error) triggerRefresh();
   };
 
   return (

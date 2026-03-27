@@ -1,4 +1,11 @@
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import authClient from '@/helpers/auth';
 import React, { useState } from 'react';
@@ -9,6 +16,12 @@ export default function SingIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+
+  const [showOrgDialog, setShowOrgDialog] = useState(false);
+  const [orgName, setOrgName] = useState('');
+  const [orgSlug, setOrgSlug] = useState('');
+  const [orgError, setOrgError] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   const handleSingIn = async (e: React.FormEvent) => {
@@ -19,7 +32,7 @@ export default function SingIn() {
       if (error) {
         setError(error.message || 'SingUp failed');
       } else {
-        navigate('/');
+        setShowOrgDialog(true);
       }
     } else {
       const { error } = await authClient.signIn.email({ email, password });
@@ -28,6 +41,22 @@ export default function SingIn() {
       } else {
         navigate('/');
       }
+    }
+  };
+
+  const handleCreateOrg = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setOrgError(null);
+    const { error } = await authClient.organization.create({
+      name: orgName,
+      slug: orgSlug || '',
+    });
+
+    if (error) {
+      setOrgError(error.message || 'Failed to create organization');
+    } else {
+      setShowOrgDialog(false);
+      navigate('/');
     }
   };
 
@@ -99,6 +128,57 @@ export default function SingIn() {
           </div>
         )}
       </div>
+
+      <Dialog open={showOrgDialog} onOpenChange={setShowOrgDialog}>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>Create an Organization</DialogTitle>
+            <DialogDescription>
+              Get started by creating your first organization. You can invite members later.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleCreateOrg} className="space-y-4">
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                htmlFor="orgName"
+              >
+                Organization Name
+              </label>
+              <Input
+                id="orgName"
+                placeholder="My Organization"
+                required
+                value={orgName}
+                onChange={(e) => setOrgName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                htmlFor="orgSlug"
+              >
+                Organization Slug (Optional)
+              </label>
+              <Input
+                id="orgSlug"
+                placeholder="my-organization"
+                value={orgSlug}
+                onChange={(e) => setOrgSlug(e.target.value)}
+              />
+            </div>
+
+            {orgError && <div className="text-sm text-destructive">{orgError}</div>}
+
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => navigate('/')}>
+                Skip for now
+              </Button>
+              <Button type="submit">Create</Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

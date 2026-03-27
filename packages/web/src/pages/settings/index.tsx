@@ -33,7 +33,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import authClient from '@/helpers/auth';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { fetchPost } from '../../helpers/fetch';
 
 export default function Settings() {
   const [origin, setOrigin] = useState('');
@@ -47,21 +48,7 @@ export default function Settings() {
     setGeneratedSnippet('');
 
     try {
-      const response = await fetch('/api/token/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ origin }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate token');
-      }
-
-      const { token } = await response.json();
-
+      const { token } = await fetchPost('/api/token/generate', { origin });
       const snippet = `<script defer src="http://localhost:3001/static/tracker.js" data-host="http://localhost:3001" data-token="${token}"></script>`;
       setGeneratedSnippet(snippet);
     } catch (err: any) {

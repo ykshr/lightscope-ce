@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useArticleTrendQuery } from '@/__generated__/graphql';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { categoryUrlParamsToVariables } from '@/helpers/category';
 import { metricUrlParamsToVariables } from '@/helpers/metric';
 import { useUrlParams } from '@/hooks/useUrl';
-import { useArticleTrendQuery } from '@/__generated__/graphql';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
 import LegendItems from '../common/Legend';
+import useProcessData from './helpers/useProcessData';
 import AreaStacked from './templates/AreaStacked';
 import Filter, { findCategoryOptionByValue } from './templates/Filter';
-import useProcessData from './helpers/useProcessData';
 
 // const data = [
 //   { date: '2024-04-01', desktop: 222, mobile: 150 },

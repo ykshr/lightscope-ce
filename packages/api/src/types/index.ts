@@ -1,8 +1,17 @@
-import type { AuthProvider, User } from '@/helpers/auth';
+import { PrismaClient } from '@/__generated__/prisma/client';
+import Auth from '@/helpers/auth';
 import { ClickHouseClient } from '@clickhouse/client';
-import { PrismaClient } from '@prisma/client';
 import type { Context as HonoContext } from 'hono';
 import { AlgorithmTypes } from 'hono/jwt';
+
+type User = {
+  id: string;
+  role: string;
+};
+
+type Organization = {
+  id: string;
+};
 
 export type Bindings = {
   CLICKHOUSE_URL: string;
@@ -13,7 +22,7 @@ export type Bindings = {
 };
 
 export type $ = {
-  auth: AuthProvider;
+  auth: typeof Auth;
   clickhouse: ClickHouseClient;
   loaders: Map<string, any>;
   prisma: PrismaClient;
@@ -23,7 +32,7 @@ export type $ = {
   };
 };
 
-export type Variables = { user: User; $: $ };
+export type Variables = { user: User; organization: Organization; $: $ };
 
 export type Env = {
   Bindings: Bindings;

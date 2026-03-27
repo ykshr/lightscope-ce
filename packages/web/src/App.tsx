@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/header';
 import Sidebar from '@/components/Sidebar';
-import { useAuth } from '@/contexts/AuthContext';
+import authClient from '@/helpers/auth';
 import Article from '@/pages/article';
 import Overview from '@/pages/overview';
 import Ranking from '@/pages/ranking';
@@ -84,11 +84,11 @@ const unauthenticatedRouter = createBrowserRouter([
 ]);
 
 function App() {
-  const { user, loading } = useAuth();
+  const { data: session, isPending } = authClient.useSession();
 
-  if (loading) return null;
+  if (isPending) return null;
 
-  if (!user) {
+  if (!session) {
     return <RouterProvider router={unauthenticatedRouter} />;
   }
 

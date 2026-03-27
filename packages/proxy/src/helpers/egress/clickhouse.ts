@@ -79,7 +79,7 @@ export default class ClickHouseEgress implements EgressProvider {
   }
 
   async insertArticle(article: Article): Promise<void> {
-    const articleKey = `${article.tenant_id}:${article.url}`;
+    const articleKey = `${article.organization_id}:${article.url}`;
     this.articleBuffers[articleKey] = article;
     this.flushBuffer();
   }

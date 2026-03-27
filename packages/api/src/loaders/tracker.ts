@@ -1,12 +1,20 @@
-import { Tracker } from '@/__generated__/resolvers';
 import { Context } from '@/types';
 
+type Tracker = {
+  id: string;
+  origin: string;
+  token: string;
+  expiresAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export default async function getLoader(c: Context) {
-  const { tenantId } = c.var.user;
+  const { organizationId } = c.var.user;
 
   const trackers = await c.var.$.prisma.tracker.findMany({
     where: {
-      tenantId,
+      organizationId,
     },
     orderBy: {
       createdAt: 'desc',
@@ -15,9 +23,9 @@ export default async function getLoader(c: Context) {
 
   const trackersTransformed = trackers.map((t) => ({
     ...t,
-    expiresAt: t.expiresAt ? t.expiresAt.toISOString() : null,
-    createdAt: t.createdAt.toISOString(),
-    updatedAt: t.updatedAt.toISOString(),
+    expiresAt: t.expiresAt ? new Date(t.expiresAt) : null,
+    createdAt: new Date(t.createdAt),
+    updatedAt: new Date(t.updatedAt),
   })) as Tracker[];
 
   return trackersTransformed;

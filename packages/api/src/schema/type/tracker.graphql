@@ -1,7 +1,0 @@
-type Tracker {
-  id: String!
-  origin: String!
-  token: String!
-  expiresAt: DateTime
-  createdAt: DateTime
-}

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS lightscope.article (
-    tenant_id String,
-    tenant_id_hash UInt64 MATERIALIZED cityHash64(tenant_id),
+    organization_id String,
+    organization_id_hash UInt64 MATERIALIZED cityHash64(organization_id),
     url String,
     url_hash UInt64 MATERIALIZED cityHash64(url),
     title String,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS lightscope.article (
     created_at DateTime DEFAULT now()
 ) ENGINE = ReplacingMergeTree(created_at)
 PARTITION BY toYYYYMM(created_at)
-ORDER BY (tenant_id_hash, url_hash)
+ORDER BY (organization_id_hash, url_hash)
 SETTINGS
     index_granularity = 8192,
     storage_policy = 'lightscope_storage_policy';

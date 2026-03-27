@@ -24,13 +24,13 @@ export default class JwtAuth implements AuthProvider {
       // Verify JWT signature and expiration
       const decodedPayload = await verify(token, this.secret, this.algorithm);
 
-      // Expected tokens have { tenantId, origin, iat }
+      // Expected tokens have { organizationId, origin, iat }
       if (
         !decodedPayload ||
-        typeof decodedPayload.tenantId !== 'string' ||
+        typeof decodedPayload.organizationId !== 'string' ||
         typeof decodedPayload.origin !== 'string'
       ) {
-        console.error('JwtAuth: Missing tenantId or origin in token payload');
+        console.error('JwtAuth: Missing organizationId or origin in token payload');
         return null;
       }
 
@@ -63,7 +63,7 @@ export default class JwtAuth implements AuthProvider {
       }
 
       return {
-        tenantId: decodedPayload.tenantId,
+        organizationId: decodedPayload.organizationId,
       };
     } catch (e) {
       console.error('JwtAuth: Error verifying JWT token:', e);

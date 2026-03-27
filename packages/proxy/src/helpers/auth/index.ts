@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 
 export type Tracker = {
-  tenantId: string;
+  organizationId: string;
 };
 
 export interface AuthProvider {

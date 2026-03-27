@@ -10,12 +10,12 @@ import {
   type RankCategoryGeoArgs,
   type RankCategoryReferrerArgs,
   type RankCategoryUtmArgs,
-} from '@/__generated__/resolvers';
-import query, { formatToDateTime } from '@/helpers/clickhouse';
+} from '@/__generated__/graphql/resolvers';
+import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
 import processArticleFilter from '@/loaders/helpers/articleFilter';
 import processCategoryFilter from '@/loaders/helpers/categoryFilter';
+import query, { formatToDateTime } from '@/loaders/helpers/clickhouse';
 import { getTableUnitWithDates } from '@/loaders/helpers/getCollectionUnitWithDates';
-import { RequestAttributesWithArticle } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 
@@ -35,12 +35,12 @@ interface LoaderParams {
 
 export default function getLoader(c: Context, loaderParams: LoaderParams) {
   return {
-    total: () => rank(c.var.$.clickhouse, c.var.user.tenantId, loaderParams),
-    load: () => rank(c.var.$.clickhouse, c.var.user.tenantId, loaderParams),
+    total: () => rank(c.var.$.clickhouse, c.var.organization.id, loaderParams),
+    load: () => rank(c.var.$.clickhouse, c.var.organization.id, loaderParams),
   };
 }
 
-async function rank(client: ClickHouseClient, tenantId: string, loaderParams: LoaderParams) {
+async function rank(client: ClickHouseClient, organizationId: string, loaderParams: LoaderParams) {
   const { tableName, queryParams, attributes, categoryFilter } = loaderParams;
   const { startDate: s, endDate: e, articleFilter, metric, order, limit, page } = queryParams;
   const startDate = new Date(s);
@@ -86,7 +86,7 @@ async function rank(client: ClickHouseClient, tenantId: string, loaderParams: Lo
   const categoryWhere = processedCategoryFilter?.query;
 
   const queryParamsObj: Record<string, unknown> = {
-    tenantId,
+    organizationId,
     ...processedArticleFilter?.params,
     ...processedCategoryFilter?.params,
   };
@@ -117,7 +117,7 @@ async function rank(client: ClickHouseClient, tenantId: string, loaderParams: Lo
             lightscope.${tableName}_${unit} t
             ${where ? `INNER JOIN lightscope.article a ON t.url_hash = a.url_hash` : ''}
           WHERE
-            t.tenant_id_hash = cityHash64({tenantId:String})
+            t.organization_id_hash = cityHash64({organizationId:String})
             AND (
               toDateTime({${startParam}:String}) <= t.date
               AND t.date < toDateTime({${endParam}:String})

@@ -1,10 +1,15 @@
-import { Aggregation, AggregationUnit, AnalyticsBase, Metric } from '@/__generated__/resolvers';
-import query, { formatToDateTime } from '@/helpers/clickhouse';
+import {
+  Aggregation,
+  AggregationUnit,
+  AnalyticsBase,
+  Metric,
+} from '@/__generated__/graphql/resolvers';
+import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
+import query, { formatToDateTime } from '@/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
 } from '@/loaders/helpers/getCollectionUnitWithDates';
-import { RequestAttribute } from '@/resolvers/helpers/processAttributes';
 import type { Context } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 import DataLoader from 'dataloader';
@@ -43,7 +48,7 @@ export default function getLoader<T extends AnalyticsBase>(
     async (urls: readonly string[]) => {
       const analytics = await fetchArticleAnalyticsByUrls<T>(
         c.var.$.clickhouse,
-        c.var.user.tenantId,
+        c.var.organization.id,
         loaderParams,
         urls
       );
@@ -69,7 +74,7 @@ export default function getLoader<T extends AnalyticsBase>(
 
 function createLoaderKey(c: Context, params: LoaderParams): string {
   return JSON.stringify({
-    tenantId: c.var.user.tenantId,
+    organizationId: c.var.organization.id,
     tableName: params.tableName,
     queryParams: {
       startDate: params.queryParams.startDate,
@@ -86,7 +91,7 @@ function createLoaderKey(c: Context, params: LoaderParams): string {
 
 async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   client: ClickHouseClient,
-  tenantId: string,
+  organizationId: string,
   { tableName, queryParams, attributes }: LoaderParams,
   urls: readonly string[]
 ): Promise<(T & { url: string })[]> {
@@ -145,7 +150,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
   const limitAndOffset = `LIMIT ${limitToUse} OFFSET ${(pageToUse - 1) * limitToUse}`;
 
   const queryParamsObj: Record<string, unknown> = {
-    tenantId,
+    organizationId,
     siteName,
     urls,
   };
@@ -169,7 +174,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
         FROM
           lightscope.${tableName}_${unit}
         WHERE
-          tenant_id_hash = cityHash64({tenantId:String})
+          organization_id_hash = cityHash64({organizationId:String})
           AND site_name = {siteName:String}
           AND url_hash IN (arrayMap(x -> cityHash64(x), {urls:Array(String)}))
           AND (

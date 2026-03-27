@@ -1,6 +1,5 @@
-import { ArrowRight } from 'lucide-react';
+import { useArticleRankQuery } from '@/__generated__/graphql';
 import { Button } from '@/components/ui/button';
-import { Table } from '@/components/ui/table';
 import {
   Card,
   CardContent,
@@ -9,16 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { useUrlParams } from '@/hooks/useUrl';
+import { Table } from '@/components/ui/table';
 import { categoryUrlParamsToVariables } from '@/helpers/category';
 import { metricUrlParamsToVariables } from '@/helpers/metric';
-import { useArticleRankQuery } from '@/__generated__/graphql';
-import TableHeader from './templates/TableHeader';
-import TableBody from './templates/TableBody';
-import TablePagination from './templates/TablePagination';
-import Sort, { findCategoryOptionByValue } from './templates/Sort';
-import useProcessData from './helpers/useProcessData';
+import { useUrlParams } from '@/hooks/useUrl';
+import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import useProcessData from './helpers/useProcessData';
+import Sort, { findCategoryOptionByValue } from './templates/Sort';
+import TableBody from './templates/TableBody';
+import TableHeader from './templates/TableHeader';
+import TablePagination from './templates/TablePagination';
 
 interface ArticleTableProps {
   title?: string;

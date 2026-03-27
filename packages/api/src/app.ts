@@ -1,5 +1,6 @@
 import typeDefs from '@/__generated__/graphql/typeDefs';
 import resolvers from '@/graphql/resolvers';
+import processAllowedOriginsString from '@/helpers/allowedOrigins';
 import createContextMiddleware from '@/middlewares/context';
 import createUserMiddleware from '@/middlewares/user';
 import trackerRouter from '@/rest/routers/tracker';
@@ -17,12 +18,11 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
   app.use('*', logger());
   app.use('*', async (c, next) => {
     const { ALLOWED_ORIGINS } = env<{ ALLOWED_ORIGINS?: string }>(c);
-    if (!ALLOWED_ORIGINS) {
-      return next();
-    }
-    const origins = ALLOWED_ORIGINS.split(',').map((o) => o.trim());
+    const origin = processAllowedOriginsString(ALLOWED_ORIGINS);
+    if (!origin) return next();
+
     const handler = cors({
-      origin: origins.length === 1 ? origins[0] : origins,
+      origin,
       allowHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
     });

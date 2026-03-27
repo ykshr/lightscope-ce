@@ -1,4 +1,5 @@
 import { PrismaClient } from '@/__generated__/prisma/client';
+import processAllowedOriginsString from '@/helpers/allowedOrigins';
 import { $ } from '@/types';
 import { createClient as createClickHouseClient } from '@clickhouse/client';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
@@ -14,7 +15,10 @@ export default async function createContext(c: Context): Promise<$> {
     url: 'file:./prisma/dev.db',
   });
   const prisma = new PrismaClient({ adapter });
+  const { ALLOWED_ORIGINS } = env<{ ALLOWED_ORIGINS?: string }>(c);
+  const trustedOrigins = processAllowedOriginsString(ALLOWED_ORIGINS);
   const auth = createBetterAuth({
+    trustedOrigins,
     emailAndPassword: {
       enabled: true,
     },

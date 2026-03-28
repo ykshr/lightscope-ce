@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import {
-  LayoutDashboard,
-  Settings,
-  LogOut,
-  List,
-  Newspaper,
-  ChevronRight,
-  ChevronLeft,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  ChevronLeft,
+  ChevronRight,
+  LayoutDashboard,
+  List,
+  LogOut,
+  Newspaper,
+  Settings,
+} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
+import { Field, FieldLabel } from '@/components/ui/field';
 import {
   Select,
   SelectContent,
@@ -73,21 +74,22 @@ const Sidebar = () => {
       <div className="flex flex-col gap-2">
         {isOpen ? (
           <div className="px-2">
-            {!isOrganizationsPending && organizations && organizations.length > 0 && (
+            <Field>
+              <FieldLabel>Organization</FieldLabel>
               <Select value={activeOrganization?.id || 'none'} onValueChange={handleSetActiveOrg}>
                 <SelectTrigger className="w-full h-8 text-xs border-none shadow-none focus:ring-0 text-muted-foreground hover:bg-muted hover:text-foreground">
                   <SelectValue placeholder="Organization" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">None</SelectItem>
-                  {organizations.map((org) => (
+                  {(organizations || []).map((org) => (
                     <SelectItem key={org.id} value={org.id}>
                       {org.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            )}
+            </Field>
           </div>
         ) : null}
 

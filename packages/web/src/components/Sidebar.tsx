@@ -48,7 +48,7 @@ const data = {
 function SidebarItem(item: { href: string; icon: React.ElementType; name: string }) {
   const isActive = window.location.pathname === item.href;
   return (
-    <SidebarMenuButton asChild isActive={isActive}>
+    <SidebarMenuButton asChild isActive={isActive} className="py-5">
       <a href={item.href}>
         <item.icon />
         <span>{item.name}</span>
@@ -57,9 +57,9 @@ function SidebarItem(item: { href: string; icon: React.ElementType; name: string
   );
 }
 
-export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export default function AppSidebar() {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>

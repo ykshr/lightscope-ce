@@ -1,11 +1,8 @@
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Calendar as CalendarIcon } from 'lucide-react';
-import * as Tabs from '@radix-ui/react-tabs';
-import { cn } from '@/utils';
+import ResponsiveModal from '@/components/common/ResponsiveModal';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -13,11 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
 import { convertDateString, getStartOfMinute, getStartOfNextMinute } from '@/helpers/date';
-import { useUrlParams } from '@/hooks/useUrl';
-import ResponsiveModal from '@/components/common/ResponsiveModal';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
+import { useUrlParams } from '@/hooks/useUrl';
+import { cn } from '@/utils';
+import * as Tabs from '@radix-ui/react-tabs';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const RELATIVE_OPTIONS_QUICK_ACCESS = [
   { label: 'Today', startDateString: 'So0D', endDateString: 'So1D' },
@@ -148,8 +148,8 @@ function CustomDateRangePicker({
   return (
     <ResponsiveModal
       trigger={
-        <Button variant={isActive ? 'default' : 'outline'} className="h-9 gap-2">
-          <CalendarIcon className="h-4 w-4" />
+        <Button variant={isActive ? 'default' : 'outline'}>
+          <CalendarIcon />
         </Button>
       }
       title="Date Filter"

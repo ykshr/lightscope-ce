@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/header';
 import Sidebar from '@/components/Sidebar';
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import authClient from '@/helpers/auth';
 import Article from '@/pages/article';
 import Overview from '@/pages/overview';
@@ -18,6 +18,7 @@ function AppLayout() {
       <main className="flex-1 overflow-y-auto p-10 scrollbar-hide w-full mx-auto flex flex-col gap-6">
         <Outlet />
       </main>
+      <Outlet />
 
       <Footer />
     </div>
@@ -32,25 +33,14 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Overview />,
-        handle: {
-          title: 'Overview',
-          description: 'Site-wide performance and trend analysis',
-        },
       },
       {
         path: '/ranking',
         element: <Ranking />,
-        handle: {
-          title: 'Ranking',
-          description: 'Article ranking and performance analysis',
-        },
       },
       {
         path: '/article',
         element: <Article />,
-        handle: {
-          type: 'article',
-        },
       },
       {
         path: '*',
@@ -88,7 +78,6 @@ function App() {
     <SidebarProvider>
       <Sidebar />
       <SidebarInset>
-        <SidebarTrigger />
         <RouterProvider router={router} />
       </SidebarInset>
     </SidebarProvider>

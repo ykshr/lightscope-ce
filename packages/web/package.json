@@ -21,7 +21,6 @@
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
-    "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-avatar": "^1.1.11",

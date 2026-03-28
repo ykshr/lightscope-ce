@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/header';
 import Sidebar from '@/components/Sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import authClient from '@/helpers/auth';
 import Article from '@/pages/article';
 import Overview from '@/pages/overview';
@@ -84,10 +85,13 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">
+    <SidebarProvider>
       <Sidebar />
-      <RouterProvider router={router} />
-    </div>
+      <SidebarInset>
+        <SidebarTrigger />
+        <RouterProvider router={router} />
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
 

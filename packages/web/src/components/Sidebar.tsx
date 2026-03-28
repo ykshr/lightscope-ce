@@ -1,4 +1,13 @@
-import { TeamSwitcher } from '@/components/OrganizationSwitcher';
+import {
+  AudioWaveform,
+  Command,
+  GalleryVerticalEnd,
+  LayoutDashboard,
+  List,
+  Newspaper,
+} from 'lucide-react';
+import * as React from 'react';
+
 import {
   Sidebar,
   SidebarContent,
@@ -9,15 +18,9 @@ import {
   SidebarMenuButton,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import {
-  AudioWaveform,
-  Command,
-  GalleryVerticalEnd,
-  LayoutDashboard,
-  List,
-  Newspaper,
-} from 'lucide-react';
-import * as React from 'react';
+
+import { TeamSwitcher } from '@/components/OrganizationSwitcher';
+import User from '@/components/user';
 
 // This is sample data.
 const data = {
@@ -72,7 +75,9 @@ export default function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>{/* <NavUser user={data.user} /> */}</SidebarFooter>
+      <SidebarFooter>
+        <User user={data.user} />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

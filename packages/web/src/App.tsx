@@ -18,7 +18,6 @@ function AppLayout() {
       <main className="flex-1 overflow-y-auto p-10 scrollbar-hide w-full mx-auto flex flex-col gap-6">
         <Outlet />
       </main>
-      <Outlet />
 
       <Footer />
     </div>

@@ -1,4 +1,3 @@
-import authClient from '@/helpers/auth';
 import { fetchPost } from '@/helpers/fetch';
 
 export const useGraphql = <TData, TVariables>(
@@ -6,9 +5,6 @@ export const useGraphql = <TData, TVariables>(
   headers?: RequestInit['headers']
 ): ((variables?: TVariables) => Promise<TData>) => {
   return async (variables?: TVariables) => {
-    const { data: session } = await authClient.getSession();
-    if (!session) throw new Error('Not authenticated');
-
     const serializedVariables = variables ? serializeDates(variables) : undefined;
 
     const body = {

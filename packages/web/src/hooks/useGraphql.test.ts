@@ -1,13 +1,6 @@
-import authClient from '@/helpers/auth';
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { serializeDates, useGraphql } from './useGraphql';
-
-vi.mock('@/helpers/auth', () => ({
-  default: {
-    getSession: vi.fn(),
-  },
-}));
 
 describe('fetcher lib', () => {
   describe('serializeDates', () => {
@@ -54,8 +47,6 @@ describe('fetcher lib', () => {
   describe('useGraphql error handling', () => {
     beforeEach(() => {
       vi.clearAllMocks();
-
-      (authClient.getSession as any).mockResolvedValue({ data: true });
 
       // Mock global fetch
       vi.spyOn(globalThis, 'fetch');

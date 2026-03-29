@@ -35,8 +35,87 @@ import {
 import authClient from '@/helpers/auth';
 import { fetchPost } from '@/helpers/fetch';
 import { useEffect, useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTheme } from '@/contexts/ThemeContext';
 
-export default function SettingsDialog() {
+
+function ProfileTab() {
+  const { theme, setTheme } = useTheme();
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    window.location.href = '/signin';
+  };
+
+  const handleDeleteAccount = async () => {
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      // Assuming a standard delete endpoint or method. If not present, this is a placeholder UI.
+      alert('Delete account logic to be implemented. (e.g., authClient.deleteUser())');
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>My Profile</CardTitle>
+          <CardDescription>Manage your personal settings.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="displayName">Display Name</Label>
+            <Input id="displayName" defaultValue={user?.name || ''} readOnly />
+            <p className="text-xs text-muted-foreground">Name change functionality requires backend support.</p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" defaultValue={user?.email || ''} readOnly />
+          </div>
+          <div className="space-y-2 pt-4">
+            <Label>Theme Preference</Label>
+            <Select value={theme} onValueChange={(val: any) => setTheme(val)}>
+              <SelectTrigger className="w-full sm:w-[300px]">
+                <SelectValue placeholder="Select a theme" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="system">System</SelectItem>
+                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-destructive">Danger Zone</CardTitle>
+          <CardDescription>Irreversible account actions.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between p-4 border rounded-md">
+            <div>
+              <p className="font-medium text-sm">Log out of account</p>
+              <p className="text-xs text-muted-foreground">Sign out of this browser.</p>
+            </div>
+            <Button variant="outline" onClick={handleLogout}>Log out</Button>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between p-4 border border-destructive/20 bg-destructive/5 rounded-md">
+            <div>
+              <p className="font-medium text-sm text-destructive">Delete account</p>
+              <p className="text-xs text-muted-foreground">Permanently delete your account and all data.</p>
+            </div>
+            <Button variant="destructive" onClick={handleDeleteAccount}>Delete Account</Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function SettingsDialog({}: { open?: boolean; onOpenChange?: (open: boolean) => void } = {}) {
   const [origin, setOrigin] = useState('');
   const [generatedSnippet, setGeneratedSnippet] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -203,7 +282,20 @@ export default function SettingsDialog() {
   };
 
   return (
-    <>
+    <div className="flex flex-col md:flex-row gap-6">
+      <Tabs defaultValue="profile" orientation="vertical" className="flex flex-col md:flex-row gap-6 w-full">
+        <TabsList className="flex-col h-auto items-start justify-start gap-2 w-full md:w-48 bg-transparent p-0">
+          <TabsTrigger value="profile" className="w-full justify-start text-left data-[state=active]:bg-muted">My Profile</TabsTrigger>
+          <TabsTrigger value="organization" className="w-full justify-start text-left data-[state=active]:bg-muted">Organization</TabsTrigger>
+          <TabsTrigger value="members" className="w-full justify-start text-left data-[state=active]:bg-muted">Members</TabsTrigger>
+          <TabsTrigger value="tracker" className="w-full justify-start text-left data-[state=active]:bg-muted">Tracker Snippet</TabsTrigger>
+        </TabsList>
+        <div className="flex-1 w-full min-w-0">
+          <TabsContent value="profile" className="m-0 border-0 p-0">
+            <ProfileTab />
+          </TabsContent>
+          <TabsContent value="organization" className="m-0 border-0 p-0">
+            {/* Organization Management Card Start */}
       <Card>
         <CardHeader>
           <CardTitle>Organization Management</CardTitle>
@@ -291,7 +383,6 @@ export default function SettingsDialog() {
           </Dialog>
         </CardFooter>
       </Card>
-
       <Dialog open={showUpdateOrgDialog} onOpenChange={setShowUpdateOrgDialog}>
         <DialogContent>
           <DialogHeader>
@@ -327,6 +418,9 @@ export default function SettingsDialog() {
         </DialogContent>
       </Dialog>
 
+
+          </TabsContent>
+          <TabsContent value="members" className="m-0 border-0 p-0">
       {activeOrganization && (
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
@@ -441,7 +535,8 @@ export default function SettingsDialog() {
           </CardContent>
         </Card>
       )}
-
+          </TabsContent>
+          <TabsContent value="tracker" className="m-0 border-0 p-0">
       <Card>
         <CardHeader>
           <CardTitle>Generate Tracker Snippet</CardTitle>
@@ -486,6 +581,10 @@ export default function SettingsDialog() {
           )}
         </CardFooter>
       </Card>
-    </>
+
+          </TabsContent>
+        </div>
+      </Tabs>
+    </div>
   );
 }

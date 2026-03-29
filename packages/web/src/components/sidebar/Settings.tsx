@@ -122,15 +122,12 @@ function ProfileTab() {
   );
 }
 
-export default function SettingsDialog({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  open,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onOpenChange,
-}: {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-} = {}) {
+export default function SettingsDialog(
+  _props: {
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+  } = {}
+) {
   const [origin, setOrigin] = useState('');
   const [generatedSnippet, setGeneratedSnippet] = useState('');
   const [isLoading, setIsLoading] = useState(false);

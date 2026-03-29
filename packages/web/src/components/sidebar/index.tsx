@@ -1,11 +1,4 @@
-import {
-  AudioWaveform,
-  Command,
-  GalleryVerticalEnd,
-  LayoutDashboard,
-  List,
-  Newspaper,
-} from 'lucide-react';
+import { LayoutDashboard, List, Newspaper } from 'lucide-react';
 import * as React from 'react';
 
 import {
@@ -21,27 +14,6 @@ import {
 
 import OrganizationSwitcher from '@/components/sidebar/OrganizationSwitcher';
 import User from '@/components/sidebar/User';
-
-// This is sample data.
-const data = {
-  teams: [
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
-    },
-    {
-      name: 'Evil Corp.',
-      logo: Command,
-      plan: 'Free',
-    },
-  ],
-};
 
 function SidebarItem(item: { href: string; icon: React.ElementType; name: string }) {
   const isActive = window.location.pathname === item.href;

@@ -50,7 +50,6 @@ export default function User() {
                 </SidebarMenuButton>
               }
               title="Settings"
-              description="Open settings menu"
               open={open}
               onOpenChange={setOpen}
             >

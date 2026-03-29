@@ -3,14 +3,14 @@ import { Context, Hono } from 'hono';
 import { sign } from 'hono/jwt';
 import { z } from 'zod';
 
-const tokenApp = new Hono();
+const trackerApp = new Hono();
 
 const generateSchema = z.object({
   origin: z.string().url('Must be a valid URL like https://example.com'),
   availableMinutes: z.number().int().nonnegative().optional().nullable(),
 });
 
-tokenApp.get('/', async (c: Context) => {
+trackerApp.get('/', async (c: Context) => {
   try {
     const trackers = await getLoader(c);
     return c.json({ trackers });
@@ -19,9 +19,9 @@ tokenApp.get('/', async (c: Context) => {
   }
 });
 
-tokenApp.post('/generate', async (c: Context) => {
+trackerApp.post('/generate', async (c: Context) => {
   try {
-    const { organizationId } = c.var.user;
+    const organizationId = c.var.organization.id;
     const body = await c.req.json();
     const parsed = generateSchema.safeParse(body);
 
@@ -61,4 +61,4 @@ tokenApp.post('/generate', async (c: Context) => {
   }
 });
 
-export default tokenApp;
+export default trackerApp;

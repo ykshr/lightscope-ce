@@ -33,6 +33,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import authClient from '@/helpers/auth';
+import { fetchPost } from '@/helpers/fetch';
 import { useEffect, useState } from 'react';
 
 export default function SettingsDialog() {
@@ -47,21 +48,7 @@ export default function SettingsDialog() {
     setGeneratedSnippet('');
 
     try {
-      const response = await fetch('/api/token/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ origin }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate token');
-      }
-
-      const { token } = await response.json();
-
+      const { token } = await fetchPost('/tracker/generate', { origin });
       const snippet = `<script defer src="http://localhost:3001/static/tracker.js" data-host="http://localhost:3001" data-token="${token}"></script>`;
       setGeneratedSnippet(snippet);
     } catch (err: any) {
@@ -217,13 +204,6 @@ export default function SettingsDialog() {
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your website configuration, tracking snippets, and organizations.
-        </p>
-      </div>
-
       <Card>
         <CardHeader>
           <CardTitle>Organization Management</CardTitle>
@@ -240,7 +220,6 @@ export default function SettingsDialog() {
                   <SelectValue placeholder="Select an organization" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
                   {organizations?.map((org) => (
                     <SelectItem key={org.id} value={org.id}>
                       {org.name}

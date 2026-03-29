@@ -5,7 +5,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui
 import { Skeleton } from '@/components/ui/skeleton';
 
 import ResponsiveModal from '@/components/common/ResponsiveModal';
-import Settings from '@/components/user/Settings';
+import Settings from '@/components/sidebar/Settings';
 import authClient from '@/helpers/auth';
 
 export default function User() {

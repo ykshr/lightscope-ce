@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/header';
-import Sidebar from '@/components/Sidebar';
+import Sidebar from '@/components/sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import authClient from '@/helpers/auth';
 import Article from '@/pages/article';

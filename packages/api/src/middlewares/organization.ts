@@ -1,7 +1,7 @@
 import { Env } from '@/types';
 import { createMiddleware } from 'hono/factory';
 
-export default function createUserMiddleware() {
+export default function createOrganizationMiddleware() {
   return createMiddleware<Env>(async (c, next) => {
     const session = await c.var.$.auth.api.getSession({
       headers: c.req.raw.headers,

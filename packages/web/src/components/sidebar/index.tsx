@@ -19,8 +19,8 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 
-import { TeamSwitcher } from '@/components/OrganizationSwitcher';
-import User from '@/components/user';
+import OrganizationSwitcher from '@/components/sidebar/OrganizationSwitcher';
+import User from '@/components/sidebar/User';
 
 // This is sample data.
 const data = {
@@ -59,7 +59,7 @@ export default function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <OrganizationSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

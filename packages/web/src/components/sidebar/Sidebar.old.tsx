@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import authClient from '@/helpers/auth';
-import SettingsDialog from './user/Settings';
+import SettingsDialog from './Settings';
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);

@@ -2,6 +2,7 @@ import typeDefs from '@/__generated__/graphql/typeDefs';
 import resolvers from '@/graphql/resolvers';
 import processAllowedOriginsString from '@/helpers/allowedOrigins';
 import createContextMiddleware from '@/middlewares/context';
+import createOrganizationMiddleware from '@/middlewares/organization';
 import createUserMiddleware from '@/middlewares/user';
 import trackerRouter from '@/rest/routers/tracker';
 import { $, Env } from '@/types';
@@ -35,7 +36,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.all('/api/auth/*', (c) => c.var.$.auth.handler(c.req.raw));
 
-  app.use('*', createUserMiddleware());
+  app.use('*', createUserMiddleware(), createOrganizationMiddleware());
 
   app.route('/tracker', trackerRouter);
 

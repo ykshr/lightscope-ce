@@ -122,7 +122,12 @@ function ProfileTab() {
   );
 }
 
-export default function SettingsDialog({}: {
+export default function SettingsDialog({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  open,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onOpenChange,
+}: {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 } = {}) {

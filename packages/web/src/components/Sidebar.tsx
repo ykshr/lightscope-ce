@@ -24,11 +24,6 @@ import User from '@/components/user';
 
 // This is sample data.
 const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
   teams: [
     {
       name: 'Acme Inc',
@@ -76,7 +71,7 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <User user={data.user} />
+        <User />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

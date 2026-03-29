@@ -1,30 +1,24 @@
 import { useState } from 'react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from '@/components/ui/sidebar';
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import SettingsDialog from '@/components/SettingsDialog';
+import ResponsiveModal from '@/components/common/ResponsiveModal';
+import Settings from '@/components/user/Settings';
 import authClient from '@/helpers/auth';
 
 export default function User() {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const { isMobile } = useSidebar();
+  const [open, setOpen] = useState(false);
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
   const fallbackString = !isPending && user?.email ? getAvatarFallback(user.email) : '';
 
-  const signOut = async () => {
-    await authClient.signOut();
-    window.location.href = '/singin';
-  };
+  // const signOut = async () => {
+  //   await authClient.signOut();
+  //   window.location.href = '/singin';
+  // };
 
   return (
     <>
@@ -39,12 +33,12 @@ export default function User() {
               </div>
             </SidebarMenuButton>
           ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            <ResponsiveModal
+              trigger={
                 <SidebarMenuButton
                   size="lg"
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                  onClick={() => setIsSettingsOpen(true)}
+                  onClick={() => setOpen(true)}
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarFallback className="rounded-lg">{fallbackString}</AvatarFallback>
@@ -54,12 +48,17 @@ export default function User() {
                     <span className="truncate text-xs">{user.email}</span>
                   </div>
                 </SidebarMenuButton>
-              </DropdownMenuTrigger>
-            </DropdownMenu>
+              }
+              title="Settings"
+              description="Open settings menu"
+              open={open}
+              onOpenChange={setOpen}
+            >
+              <Settings />
+            </ResponsiveModal>
           )}
         </SidebarMenuItem>
       </SidebarMenu>
-      <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
     </>
   );
 }

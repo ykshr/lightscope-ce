@@ -24,8 +24,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  const { data: organizations } =
-    authClient.useListOrganizations();
+  const { data: organizations } = authClient.useListOrganizations();
   const { data: activeOrganization } = authClient.useActiveOrganization();
 
   const handleSetActiveOrg = async (organizationId: string) => {

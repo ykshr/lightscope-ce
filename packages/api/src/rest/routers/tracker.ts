@@ -61,4 +61,23 @@ trackerApp.post('/generate', async (c: Context) => {
   }
 });
 
+trackerApp.delete('/:id', async (c: Context) => {
+  try {
+    const id = c.req.param('id');
+    const organizationId = c.var.organization.id;
+
+    // We should probably check if the tracker belongs to the org, but Prisma can do this.
+    await c.var.$.prisma.tracker.deleteMany({
+      where: {
+        id,
+        organizationId,
+      },
+    });
+
+    return c.json({ success: true });
+  } catch (error) {
+    return c.json({ error: 'Failed to delete tracker' }, 500);
+  }
+});
+
 export default trackerApp;

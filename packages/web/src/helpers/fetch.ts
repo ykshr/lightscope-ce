@@ -63,3 +63,36 @@ export async function fetchPost(
 
   return json;
 }
+
+export async function fetchDelete(
+  url: string,
+  headers: RequestInit['headers'] = {},
+  expectJson: boolean = true
+) {
+  const urlToUse = new URL(url, API_URL);
+  const res = await fetch(urlToUse, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      'Content-Type': expectJson ? 'application/json' : 'text/plain',
+      ...headers,
+    },
+  });
+
+  const text = await res.text();
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      throw new Error('Not authenticated');
+    }
+    throw new Error(`Response was not ok - ${res.status}: ${text}`);
+  }
+
+  if (!expectJson) return text;
+
+  if (!text) return {};
+
+  const json = JSON.parse(text);
+
+  return json;
+}

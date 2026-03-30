@@ -32,11 +32,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import authClient from '@/helpers/auth';
+import { fetchGet, fetchPost, fetchDelete } from '@/helpers/fetch';
+import { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTheme } from '@/contexts/ThemeContext';
-import authClient from '@/helpers/auth';
-import { fetchPost } from '@/helpers/fetch';
-import { useEffect, useState } from 'react';
 
 function ProfileTab() {
   const { theme, setTheme } = useTheme();
@@ -122,11 +122,31 @@ function ProfileTab() {
   );
 }
 
-export default function Settings() {
+function TrackerTab() {
+  const { data: activeOrganization } = authClient.useActiveOrganization();
+  const [trackers, setTrackers] = useState<any[]>([]);
+  const [isPending, setIsPending] = useState(false);
   const [origin, setOrigin] = useState('');
-  const [generatedSnippet, setGeneratedSnippet] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [generatedSnippet, setGeneratedSnippet] = useState('');
+
+  const fetchTrackers = async () => {
+    if (!activeOrganization) return;
+    setIsPending(true);
+    try {
+      const data = await fetchGet('/tracker');
+      setTrackers(data.trackers || []);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTrackers();
+  }, [activeOrganization?.id]);
 
   const generateToken = async () => {
     setIsLoading(true);
@@ -134,9 +154,10 @@ export default function Settings() {
     setGeneratedSnippet('');
 
     try {
-      const { token } = await fetchPost('/tracker/generate', { origin });
-      const snippet = `<script defer src="http://localhost:3001/static/tracker.js" data-host="http://localhost:3001" data-token="${token}"></script>`;
+      const data = await fetchPost('/tracker/generate', { origin });
+      const snippet = `<script defer src="http://localhost:3001/static/tracker.js" data-host="http://localhost:3001" data-token="${data.trackers.find((t: any) => t.origin === origin)?.token || 'ERROR_TOKEN_NOT_FOUND'}"></script>`;
       setGeneratedSnippet(snippet);
+      setTrackers(data.trackers || []);
     } catch (err: any) {
       setError(err.message || 'An error occurred');
     } finally {
@@ -144,10 +165,138 @@ export default function Settings() {
     }
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedSnippet);
+  const handleDeleteTracker = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this tracker?')) return;
+    try {
+      await fetchDelete(`/tracker/${id}`);
+      await fetchTrackers();
+    } catch (e) {
+      alert('Failed to delete tracker');
+    }
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  if (!activeOrganization) {
+    return <div>Please select an organization to view trackers.</div>;
+  }
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Trackers</CardTitle>
+          <CardDescription>Manage trackers for {activeOrganization.name}.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isPending ? (
+            <div>Loading trackers...</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Origin</TableHead>
+                  <TableHead>Created At</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {trackers?.map((tracker: any) => (
+                  <TableRow key={tracker.id}>
+                    <TableCell>{tracker.origin}</TableCell>
+                    <TableCell>{new Date(tracker.createdAt).toLocaleDateString()}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mr-2"
+                        onClick={() =>
+                          copyToClipboard(
+                            `<script defer src="http://localhost:3001/static/tracker.js" data-host="http://localhost:3001" data-token="${tracker.token}"></script>`
+                          )
+                        }
+                      >
+                        Copy Snippet
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteTracker(tracker.id)}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {trackers?.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-center text-muted-foreground">
+                      No trackers found.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Generate New Tracker Snippet</CardTitle>
+          <CardDescription>
+            Enter the exact origin (e.g., https://yourdomain.com) where your tracker will be
+            installed. The generated token will only be valid for requests coming from this origin.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="origin">Authorized Origin</Label>
+            <Input
+              id="origin"
+              placeholder="https://example.com"
+              value={origin}
+              onChange={(e) => setOrigin(e.target.value)}
+            />
+            {error && <p className="text-sm font-medium text-destructive">{error}</p>}
+          </div>
+
+          {generatedSnippet && (
+            <div className="space-y-2 pt-4">
+              <Label>Your Tracker Snippet</Label>
+              <div className="relative">
+                <pre className="p-4 bg-muted rounded-md text-sm overflow-x-auto">
+                  <code>{generatedSnippet}</code>
+                </pre>
+              </div>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button variant="outline" onClick={() => setOrigin('')} disabled={isLoading}>
+            Clear
+          </Button>
+          {generatedSnippet ? (
+            <Button onClick={() => copyToClipboard(generatedSnippet)}>Copy Snippet</Button>
+          ) : (
+            <Button onClick={generateToken} disabled={!origin || isLoading}>
+              {isLoading ? 'Generating...' : 'Generate JWT Snippet'}
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+    </div>
+  );
+}
+
+export default function SettingsDialog(
+  _props: {
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+  } = {}
+) {
   // Organization hooks
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const triggerRefresh = () => setRefreshTrigger((prev) => prev + 1);
@@ -581,51 +730,7 @@ export default function Settings() {
             )}
           </TabsContent>
           <TabsContent value="tracker" className="m-0 border-0 p-0">
-            <Card>
-              <CardHeader>
-                <CardTitle>Generate Tracker Snippet</CardTitle>
-                <CardDescription>
-                  Enter the exact origin (e.g., https://yourdomain.com) where your tracker will be
-                  installed. The generated token will only be valid for requests coming from this
-                  origin.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="origin">Authorized Origin</Label>
-                  <Input
-                    id="origin"
-                    placeholder="https://example.com"
-                    value={origin}
-                    onChange={(e) => setOrigin(e.target.value)}
-                  />
-                  {error && <p className="text-sm font-medium text-destructive">{error}</p>}
-                </div>
-
-                {generatedSnippet && (
-                  <div className="space-y-2 pt-4">
-                    <Label>Your Tracker Snippet</Label>
-                    <div className="relative">
-                      <pre className="p-4 bg-muted rounded-md text-sm overflow-x-auto">
-                        <code>{generatedSnippet}</code>
-                      </pre>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button variant="outline" onClick={() => setOrigin('')} disabled={isLoading}>
-                  Clear
-                </Button>
-                {generatedSnippet ? (
-                  <Button onClick={copyToClipboard}>Copy Snippet</Button>
-                ) : (
-                  <Button onClick={generateToken} disabled={!origin || isLoading}>
-                    {isLoading ? 'Generating...' : 'Generate JWT Snippet'}
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
+            <TrackerTab />
           </TabsContent>
         </div>
       </Tabs>

@@ -16,7 +16,7 @@ export default function CardLiveViews({ lastMins = 5 }: { lastMins?: number }) {
     articleFilter: urlParams.articleFilter,
   });
 
-  const value = data?.trend?.total?.[0]?.value;
+  const value = data?.trend?.total?.[0].value;
 
   return (
     <StatCardLive

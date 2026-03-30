@@ -32,11 +32,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTheme } from '@/contexts/ThemeContext';
 import authClient from '@/helpers/auth';
 import { fetchPost } from '@/helpers/fetch';
 import { useEffect, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useTheme } from '@/contexts/ThemeContext';
 
 function ProfileTab() {
   const { theme, setTheme } = useTheme();
@@ -122,12 +122,7 @@ function ProfileTab() {
   );
 }
 
-export default function SettingsDialog(
-  _props: {
-    open?: boolean;
-    onOpenChange?: (open: boolean) => void;
-  } = {}
-) {
+export default function Settings() {
   const [origin, setOrigin] = useState('');
   const [generatedSnippet, setGeneratedSnippet] = useState('');
   const [isLoading, setIsLoading] = useState(false);

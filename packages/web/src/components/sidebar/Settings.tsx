@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -32,11 +33,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import authClient from '@/helpers/auth';
-import { fetchPost } from '@/helpers/fetch';
-import { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTheme } from '@/contexts/ThemeContext';
+import authClient from '@/helpers/auth';
+import { PROXY_URL } from '@/helpers/env';
+import { fetchPost } from '@/helpers/fetch';
+import { useEffect, useState } from 'react';
 
 function ProfileTab() {
   const { theme, setTheme } = useTheme();
@@ -122,12 +124,7 @@ function ProfileTab() {
   );
 }
 
-export default function SettingsDialog(
-  _props: {
-    open?: boolean;
-    onOpenChange?: (open: boolean) => void;
-  } = {}
-) {
+export default function Settings() {
   const [origin, setOrigin] = useState('');
   const [generatedSnippet, setGeneratedSnippet] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -140,7 +137,7 @@ export default function SettingsDialog(
 
     try {
       const { token } = await fetchPost('/tracker/generate', { origin });
-      const snippet = `<script defer src="http://localhost:3001/static/tracker.js" data-host="http://localhost:3001" data-token="${token}"></script>`;
+      const snippet = `<script defer src="${PROXY_URL}/static/tracker.js" data-host="${PROXY_URL}" data-token="${token}"></script>`;
       setGeneratedSnippet(snippet);
     } catch (err: any) {
       setError(err.message || 'An error occurred');
@@ -313,20 +310,8 @@ export default function SettingsDialog(
           >
             Organization
           </TabsTrigger>
-          <TabsTrigger
-            value="members"
-            className="w-full justify-start text-left data-[state=active]:bg-muted"
-          >
-            Members
-          </TabsTrigger>
-          <TabsTrigger
-            value="tracker"
-            className="w-full justify-start text-left data-[state=active]:bg-muted"
-          >
-            Tracker Snippet
-          </TabsTrigger>
         </TabsList>
-        <div className="flex-1 w-full min-w-0">
+        <ScrollArea className="h-[60vh] px-5">
           <TabsContent value="profile" className="m-0 border-0 p-0">
             <ProfileTab />
           </TabsContent>
@@ -630,7 +615,7 @@ export default function SettingsDialog(
               </CardFooter>
             </Card>
           </TabsContent>
-        </div>
+        </ScrollArea>
       </Tabs>
     </div>
   );

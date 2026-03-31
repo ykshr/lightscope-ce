@@ -1,7 +1,7 @@
 import { strict as assert } from 'assert';
 import { generatePayload } from '../utils/generator';
 
-const API_URL = process.env.API_URL || 'http://127.0.0.1:3000';
+const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
 const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3001';
 
 async function main() {
@@ -11,7 +11,7 @@ async function main() {
   const eventPayload = generatePayload({
     event_name: 'page_view',
     site_name: 'localhost',
-    url: 'http://127.0.0.1:5173/test-page',
+    url: 'http://127.0.0.1:3000/test-page',
     user_agent: 'E2E Test Agent',
   });
 

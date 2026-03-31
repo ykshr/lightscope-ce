@@ -1,14 +1,14 @@
 const net = require('net');
 const http = require('http');
 
-const ports = [3000, 3001, 5173, 8123, 8080];
+const ports = [3000, 3001, 3002, 8123, 8080];
 const timeout = 60000;
 const start = Date.now();
 
 const checkPort = (port) =>
   new Promise((resolve) => {
     let path = '/';
-    if (port === 3001) path = '/health';
+    if (port === 3001 || port === 3002) path = '/health';
 
     if (port === 8123) {
       const socket = new net.Socket();
@@ -28,7 +28,7 @@ const checkPort = (port) =>
       // Consume response data to free up memory
       res.on('data', () => {});
       res.on('end', () => {
-        if (res.statusCode === 200 || res.statusCode === 404 || res.statusCode === 401) {
+        if (res.statusCode === 200 || res.statusCode === 401 || res.statusCode === 404) {
           resolve(true);
         } else {
           resolve(false);

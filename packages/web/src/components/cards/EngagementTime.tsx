@@ -22,8 +22,8 @@ export default function CardEngagementTime() {
     articleFilter,
   });
 
-  const value = data?.trend?.total?.[0].value;
-  const valuePrevious = dataPrevious?.trend?.total?.[0].value;
+  const value = data?.trend?.total?.[0]?.value;
+  const valuePrevious = dataPrevious?.trend?.total?.[0]?.value;
 
   return (
     <StatCardTrend

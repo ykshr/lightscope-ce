@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -32,11 +33,98 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTheme } from '@/contexts/ThemeContext';
 import authClient from '@/helpers/auth';
+import { PROXY_URL } from '@/helpers/env';
 import { fetchPost } from '@/helpers/fetch';
 import { useEffect, useState } from 'react';
 
-export default function SettingsDialog() {
+function ProfileTab() {
+  const { theme, setTheme } = useTheme();
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    window.location.href = '/signin';
+  };
+
+  const handleDeleteAccount = async () => {
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      // Assuming a standard delete endpoint or method. If not present, this is a placeholder UI.
+      alert('Delete account logic to be implemented. (e.g., authClient.deleteUser())');
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>My Profile</CardTitle>
+          <CardDescription>Manage your personal settings.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="displayName">Display Name</Label>
+            <Input id="displayName" defaultValue={user?.name || ''} readOnly />
+            <p className="text-xs text-muted-foreground">
+              Name change functionality requires backend support.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" defaultValue={user?.email || ''} readOnly />
+          </div>
+          <div className="space-y-2 pt-4">
+            <Label>Theme Preference</Label>
+            <Select value={theme} onValueChange={(val: any) => setTheme(val)}>
+              <SelectTrigger className="w-full sm:w-[300px]">
+                <SelectValue placeholder="Select a theme" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="system">System</SelectItem>
+                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-destructive">Danger Zone</CardTitle>
+          <CardDescription>Irreversible account actions.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between p-4 border rounded-md">
+            <div>
+              <p className="font-medium text-sm">Log out of account</p>
+              <p className="text-xs text-muted-foreground">Sign out of this browser.</p>
+            </div>
+            <Button variant="outline" onClick={handleLogout}>
+              Log out
+            </Button>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between p-4 border border-destructive/20 bg-destructive/5 rounded-md">
+            <div>
+              <p className="font-medium text-sm text-destructive">Delete account</p>
+              <p className="text-xs text-muted-foreground">
+                Permanently delete your account and all data.
+              </p>
+            </div>
+            <Button variant="destructive" onClick={handleDeleteAccount}>
+              Delete Account
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function Settings() {
   const [origin, setOrigin] = useState('');
   const [generatedSnippet, setGeneratedSnippet] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +137,7 @@ export default function SettingsDialog() {
 
     try {
       const { token } = await fetchPost('/tracker/generate', { origin });
-      const snippet = `<script defer src="http://localhost:3001/static/tracker.js" data-host="http://localhost:3001" data-token="${token}"></script>`;
+      const snippet = `<script defer src="${PROXY_URL}/static/tracker.js" data-host="${PROXY_URL}" data-token="${token}"></script>`;
       setGeneratedSnippet(snippet);
     } catch (err: any) {
       setError(err.message || 'An error occurred');
@@ -203,289 +291,332 @@ export default function SettingsDialog() {
   };
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Organization Management</CardTitle>
-          <CardDescription>Manage your organizations and active workspace.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Active Organization</Label>
-            {isOrganizationsPending ? (
-              <div>Loading organizations...</div>
-            ) : (
-              <Select value={activeOrganization?.id || 'none'} onValueChange={handleSetActiveOrg}>
-                <SelectTrigger className="w-full sm:w-[300px]">
-                  <SelectValue placeholder="Select an organization" />
-                </SelectTrigger>
-                <SelectContent>
-                  {organizations?.map((org) => (
-                    <SelectItem key={org.id} value={org.id}>
-                      {org.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
+    <div className="flex flex-col md:flex-row gap-6">
+      <Tabs
+        defaultValue="profile"
+        orientation="vertical"
+        className="flex flex-col md:flex-row gap-6 w-full"
+      >
+        <TabsList className="flex-col h-auto items-start justify-start gap-2 w-full md:w-48 bg-transparent p-0">
+          <TabsTrigger
+            value="profile"
+            className="w-full justify-start text-left data-[state=active]:bg-muted"
+          >
+            My Profile
+          </TabsTrigger>
+          <TabsTrigger
+            value="organization"
+            className="w-full justify-start text-left data-[state=active]:bg-muted"
+          >
+            Organization
+          </TabsTrigger>
+        </TabsList>
+        <ScrollArea className="h-[60vh] px-5">
+          <TabsContent value="profile" className="m-0 border-0 p-0">
+            <ProfileTab />
+          </TabsContent>
+          <TabsContent value="organization" className="m-0 border-0 p-0 space-y-6">
+            {/* Organization Management Card Start */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Organization Management</CardTitle>
+                <CardDescription>Manage your organizations and active workspace.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Active Organization</Label>
+                  {isOrganizationsPending ? (
+                    <div>Loading organizations...</div>
+                  ) : (
+                    <Select
+                      value={activeOrganization?.id || 'none'}
+                      onValueChange={handleSetActiveOrg}
+                    >
+                      <SelectTrigger className="w-full sm:w-[300px]">
+                        <SelectValue placeholder="Select an organization" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {organizations?.map((org) => (
+                          <SelectItem key={org.id} value={org.id}>
+                            {org.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
 
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setUpdateOrgName(activeOrganization?.name || '');
-                setUpdateOrgSlug(activeOrganization?.slug || '');
-                setShowUpdateOrgDialog(true);
-              }}
-            >
-              Edit Organization
-            </Button>
-            <Button variant="destructive" size="sm" onClick={handleDeleteOrg}>
-              Delete Organization
-            </Button>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Dialog open={showCreateOrgDialog} onOpenChange={setShowCreateOrgDialog}>
-            <DialogTrigger asChild>
-              <Button>Create Organization</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create an Organization</DialogTitle>
-                <DialogDescription>Enter the details for your new organization.</DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleCreateOrg} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="orgName">Name</Label>
-                  <Input
-                    id="orgName"
-                    required
-                    value={orgName}
-                    onChange={(e) => setOrgName(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="orgSlug">Slug (optional)</Label>
-                  <Input
-                    id="orgSlug"
-                    value={orgSlug}
-                    onChange={(e) => setOrgSlug(e.target.value)}
-                  />
-                </div>
-                {orgCreateError && <div className="text-sm text-destructive">{orgCreateError}</div>}
-                <div className="flex justify-end gap-2">
+                <div className="flex gap-2">
                   <Button
-                    type="button"
                     variant="outline"
-                    onClick={() => setShowCreateOrgDialog(false)}
+                    size="sm"
+                    onClick={() => {
+                      setUpdateOrgName(activeOrganization?.name || '');
+                      setUpdateOrgSlug(activeOrganization?.slug || '');
+                      setShowUpdateOrgDialog(true);
+                    }}
                   >
-                    Cancel
+                    Edit Organization
                   </Button>
-                  <Button type="submit">Create</Button>
+                  <Button variant="destructive" size="sm" onClick={handleDeleteOrg}>
+                    Delete Organization
+                  </Button>
                 </div>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </CardFooter>
-      </Card>
-
-      <Dialog open={showUpdateOrgDialog} onOpenChange={setShowUpdateOrgDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Update Organization</DialogTitle>
-            <DialogDescription>Modify your organization details.</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleUpdateOrg} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="updateOrgName">Name</Label>
-              <Input
-                id="updateOrgName"
-                required
-                value={updateOrgName}
-                onChange={(e) => setUpdateOrgName(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="updateOrgSlug">Slug (optional)</Label>
-              <Input
-                id="updateOrgSlug"
-                value={updateOrgSlug}
-                onChange={(e) => setUpdateOrgSlug(e.target.value)}
-              />
-            </div>
-            {orgUpdateError && <div className="text-sm text-destructive">{orgUpdateError}</div>}
-            <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => setShowUpdateOrgDialog(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">Update</Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {activeOrganization && (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Members</CardTitle>
-              <CardDescription>Manage members for {activeOrganization.name}.</CardDescription>
-            </div>
-            <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Invite Member
-                </Button>
-              </DialogTrigger>
+              </CardContent>
+              <CardFooter>
+                <Dialog open={showCreateOrgDialog} onOpenChange={setShowCreateOrgDialog}>
+                  <DialogTrigger asChild>
+                    <Button>Create Organization</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Create an Organization</DialogTitle>
+                      <DialogDescription>
+                        Enter the details for your new organization.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleCreateOrg} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="orgName">Name</Label>
+                        <Input
+                          id="orgName"
+                          required
+                          value={orgName}
+                          onChange={(e) => setOrgName(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="orgSlug">Slug (optional)</Label>
+                        <Input
+                          id="orgSlug"
+                          value={orgSlug}
+                          onChange={(e) => setOrgSlug(e.target.value)}
+                        />
+                      </div>
+                      {orgCreateError && (
+                        <div className="text-sm text-destructive">{orgCreateError}</div>
+                      )}
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setShowCreateOrgDialog(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button type="submit">Create</Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </CardFooter>
+            </Card>
+            <Dialog open={showUpdateOrgDialog} onOpenChange={setShowUpdateOrgDialog}>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Invite Member</DialogTitle>
-                  <DialogDescription>
-                    Invite a new member to {activeOrganization.name}.
-                  </DialogDescription>
+                  <DialogTitle>Update Organization</DialogTitle>
+                  <DialogDescription>Modify your organization details.</DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleInviteMember} className="space-y-4">
+                <form onSubmit={handleUpdateOrg} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="inviteEmail">Email</Label>
+                    <Label htmlFor="updateOrgName">Name</Label>
                     <Input
-                      id="inviteEmail"
-                      type="email"
+                      id="updateOrgName"
                       required
-                      value={inviteEmail}
-                      onChange={(e) => setInviteEmail(e.target.value)}
+                      value={updateOrgName}
+                      onChange={(e) => setUpdateOrgName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="inviteRole">Role</Label>
-                    <Select value={inviteRole} onValueChange={setInviteRole}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="member">Member</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
-                        <SelectItem value="owner">Owner</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="updateOrgSlug">Slug (optional)</Label>
+                    <Input
+                      id="updateOrgSlug"
+                      value={updateOrgSlug}
+                      onChange={(e) => setUpdateOrgSlug(e.target.value)}
+                    />
                   </div>
-                  {inviteError && <div className="text-sm text-destructive">{inviteError}</div>}
+                  {orgUpdateError && (
+                    <div className="text-sm text-destructive">{orgUpdateError}</div>
+                  )}
                   <div className="flex justify-end gap-2">
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => setShowInviteDialog(false)}
+                      onClick={() => setShowUpdateOrgDialog(false)}
                     >
                       Cancel
                     </Button>
-                    <Button type="submit">Invite</Button>
+                    <Button type="submit">Update</Button>
                   </div>
                 </form>
               </DialogContent>
             </Dialog>
-          </CardHeader>
-          <CardContent>
-            {isMembersPending ? (
-              <div>Loading members...</div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {members?.map((member: any) => (
-                    <TableRow key={member.id}>
-                      <TableCell>{member.user.email}</TableCell>
-                      <TableCell>
-                        <Select
-                          value={member.role}
-                          onValueChange={(val) => handleUpdateRole(member.id, val)}
-                        >
-                          <SelectTrigger className="w-32 h-8">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="member">Member</SelectItem>
-                            <SelectItem value="admin">Admin</SelectItem>
-                            <SelectItem value="owner">Owner</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleRemoveMember(member.id)}
-                        >
-                          Remove
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {members?.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={3} className="text-center text-muted-foreground">
-                        No members found.
-                      </TableCell>
-                    </TableRow>
+
+            {activeOrganization && (
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Members</CardTitle>
+                    <CardDescription>Manage members for {activeOrganization.name}.</CardDescription>
+                  </div>
+                  <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        Invite Member
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Invite Member</DialogTitle>
+                        <DialogDescription>
+                          Invite a new member to {activeOrganization.name}.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <form onSubmit={handleInviteMember} className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="inviteEmail">Email</Label>
+                          <Input
+                            id="inviteEmail"
+                            type="email"
+                            required
+                            value={inviteEmail}
+                            onChange={(e) => setInviteEmail(e.target.value)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="inviteRole">Role</Label>
+                          <Select value={inviteRole} onValueChange={setInviteRole}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="member">Member</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                              <SelectItem value="owner">Owner</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        {inviteError && (
+                          <div className="text-sm text-destructive">{inviteError}</div>
+                        )}
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setShowInviteDialog(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button type="submit">Invite</Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                </CardHeader>
+                <CardContent>
+                  {isMembersPending ? (
+                    <div>Loading members...</div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Role</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {members?.map((member: any) => (
+                          <TableRow key={member.id}>
+                            <TableCell>{member.user.email}</TableCell>
+                            <TableCell>
+                              <Select
+                                value={member.role}
+                                onValueChange={(val) => handleUpdateRole(member.id, val)}
+                              >
+                                <SelectTrigger className="w-32 h-8">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="member">Member</SelectItem>
+                                  <SelectItem value="admin">Admin</SelectItem>
+                                  <SelectItem value="owner">Owner</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => handleRemoveMember(member.id)}
+                              >
+                                Remove
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {members?.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={3} className="text-center text-muted-foreground">
+                              No members found.
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
                   )}
-                </TableBody>
-              </Table>
+                </CardContent>
+              </Card>
             )}
-          </CardContent>
-        </Card>
-      )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Generate Tracker Snippet</CardTitle>
-          <CardDescription>
-            Enter the exact origin (e.g., https://yourdomain.com) where your tracker will be
-            installed. The generated token will only be valid for requests coming from this origin.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="origin">Authorized Origin</Label>
-            <Input
-              id="origin"
-              placeholder="https://example.com"
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
-            />
-            {error && <p className="text-sm font-medium text-destructive">{error}</p>}
-          </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Generate Tracker Snippet</CardTitle>
+                <CardDescription>
+                  Enter the exact origin (e.g., https://yourdomain.com) where your tracker will be
+                  installed. The generated token will only be valid for requests coming from this
+                  origin.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="origin">Authorized Origin</Label>
+                  <Input
+                    id="origin"
+                    placeholder="https://example.com"
+                    value={origin}
+                    onChange={(e) => setOrigin(e.target.value)}
+                  />
+                  {error && <p className="text-sm font-medium text-destructive">{error}</p>}
+                </div>
 
-          {generatedSnippet && (
-            <div className="space-y-2 pt-4">
-              <Label>Your Tracker Snippet</Label>
-              <div className="relative">
-                <pre className="p-4 bg-muted rounded-md text-sm overflow-x-auto">
-                  <code>{generatedSnippet}</code>
-                </pre>
-              </div>
-            </div>
-          )}
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={() => setOrigin('')} disabled={isLoading}>
-            Clear
-          </Button>
-          {generatedSnippet ? (
-            <Button onClick={copyToClipboard}>Copy Snippet</Button>
-          ) : (
-            <Button onClick={generateToken} disabled={!origin || isLoading}>
-              {isLoading ? 'Generating...' : 'Generate JWT Snippet'}
-            </Button>
-          )}
-        </CardFooter>
-      </Card>
-    </>
+                {generatedSnippet && (
+                  <div className="space-y-2 pt-4">
+                    <Label>Your Tracker Snippet</Label>
+                    <div className="relative">
+                      <pre className="p-4 bg-muted rounded-md text-sm overflow-x-auto">
+                        <code>{generatedSnippet}</code>
+                      </pre>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button variant="outline" onClick={() => setOrigin('')} disabled={isLoading}>
+                  Clear
+                </Button>
+                {generatedSnippet ? (
+                  <Button onClick={copyToClipboard}>Copy Snippet</Button>
+                ) : (
+                  <Button onClick={generateToken} disabled={!origin || isLoading}>
+                    {isLoading ? 'Generating...' : 'Generate JWT Snippet'}
+                  </Button>
+                )}
+              </CardFooter>
+            </Card>
+          </TabsContent>
+        </ScrollArea>
+      </Tabs>
+    </div>
   );
 }

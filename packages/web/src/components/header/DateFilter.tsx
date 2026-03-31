@@ -243,12 +243,7 @@ function CustomDateRangePicker({
       </Tabs.Root>
 
       <div className="mt-6 pt-4 border-t flex justify-end gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setOpen(false)}
-          className="px-6"
-        >
+        <Button type="button" variant="outline" onClick={() => setOpen(false)} className="px-6">
           Cancel
         </Button>
         <Button

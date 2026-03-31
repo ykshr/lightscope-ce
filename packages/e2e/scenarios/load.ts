@@ -16,7 +16,10 @@ async function sendEvent() {
   try {
     const res = await fetch(`${INSERT_URL}/events`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
+      },
       body: JSON.stringify(eventPayload),
     });
     return res.ok;

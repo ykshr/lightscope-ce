@@ -1,3 +1,4 @@
+const ONE_HOUR_MS = 3600000;
 import { test, expect } from '@playwright/test';
 import { generatePayload } from '../utils/generator';
 
@@ -58,8 +59,8 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   const query = `
     query {
       rank(
-        startDate: "${new Date(Date.now() - 3600000).toISOString()}"
-        endDate: "${new Date(Date.now() + 3600000).toISOString()}"
+        startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+        endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
         limit: 10
       ) {
         total

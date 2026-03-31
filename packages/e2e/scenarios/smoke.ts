@@ -3,6 +3,7 @@ import { generatePayload } from '../utils/generator';
 
 const API_URL = process.env.API_URL || 'http://127.0.0.1:3000';
 const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3001';
+const ONE_HOUR_MS = 3600000;
 
 async function main() {
   console.log('Starting E2E Test...');
@@ -20,7 +21,7 @@ async function main() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer test-token',
+      Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
     },
     body: JSON.stringify(eventPayload),
   });
@@ -39,8 +40,8 @@ async function main() {
   const query = `
     query {
       rank(
-        startDate: "${new Date(Date.now() - 3600000).toISOString()}"
-        endDate: "${new Date(Date.now() + 3600000).toISOString()}"
+        startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+        endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
         limit: 10
       ) {
         total
@@ -55,7 +56,10 @@ async function main() {
   console.log('Querying GraphQL...');
   const gqlRes = await fetch(`${API_URL}/gql`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
+    },
     body: JSON.stringify({ query }),
   });
 

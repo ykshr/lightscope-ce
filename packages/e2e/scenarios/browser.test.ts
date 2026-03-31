@@ -2,7 +2,7 @@ const ONE_HOUR_MS = 3600000;
 import { test, expect } from '@playwright/test';
 import { generatePayload } from '../utils/generator';
 
-const API_URL = 'http://127.0.0.1:3000';
+const API_URL = 'http://127.0.0.1:3001';
 const MOCK_SITE_URL = 'http://127.0.0.1:8080';
 
 test('Browser Tracking Script Verification', async ({ browser }) => {

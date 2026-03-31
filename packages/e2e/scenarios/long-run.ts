@@ -1,7 +1,7 @@
 import { generatePayload } from '../utils/generator';
 
-const API_URL = process.env.API_URL || 'http://127.0.0.1:3000';
-const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3001';
+const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
+const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3002';
 const DURATION_SECONDS = parseInt(process.argv[2] || '60', 10);
 const INTERVAL_MS = 1000;
 const ONE_HOUR_MS = 3600000;

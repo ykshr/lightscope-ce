@@ -8,7 +8,7 @@ const start = Date.now();
 const checkPort = (port) =>
   new Promise((resolve) => {
     let path = '/';
-    if (port === 3000 || port === 3001) path = '/health';
+    if (port === 3001) path = '/health';
 
     if (port === 8123) {
       const socket = new net.Socket();
@@ -28,7 +28,7 @@ const checkPort = (port) =>
       // Consume response data to free up memory
       res.on('data', () => {});
       res.on('end', () => {
-        if (res.statusCode === 200) {
+        if (res.statusCode === 200 || res.statusCode === 404 || res.statusCode === 401) {
           resolve(true);
         } else {
           resolve(false);

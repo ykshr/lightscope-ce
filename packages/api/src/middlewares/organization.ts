@@ -8,11 +8,6 @@ export default function createOrganizationMiddleware() {
     if (authHeader === `Bearer ${noAuthToken}`) {
       c.set('organization', {
         id: 'anonymous',
-        name: 'Anonymous',
-        slug: 'anonymous',
-        metadata: {},
-        createdAt: new Date(),
-        updatedAt: new Date(),
       });
       return await next();
     }

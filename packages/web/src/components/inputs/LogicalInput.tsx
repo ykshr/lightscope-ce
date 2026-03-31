@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Plus } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import Badge from '../common/Badge';
@@ -18,18 +12,24 @@ interface LogicalInputProps {
 
 export default function LogicalInput({ label, value, onChange }: LogicalInputProps) {
   const [inputValue, setInputValue] = useState('');
+  const [addMode, setAddMode] = useState<'AND' | 'OR'>('AND');
 
   const safeValue = value?.filter((g) => g.length > 0) ?? [];
 
-  const addTag = (asAnd: boolean) => {
+  const addTag = () => {
     if (!inputValue.trim()) return;
+    const trimmedValue = inputValue.trim();
     const newValue = [...safeValue];
-    if (asAnd || newValue.length === 0) {
-      newValue.push([inputValue.trim()]);
+
+    if (addMode === 'AND' || newValue.length === 0) {
+      // Add as a new AND group
+      newValue.push([trimmedValue]);
     } else {
+      // Add as an OR to the last existing group
       const lastIdx = newValue.length - 1;
-      newValue[lastIdx] = [...newValue[lastIdx], inputValue.trim()];
+      newValue[lastIdx] = [...newValue[lastIdx], trimmedValue];
     }
+
     onChange(newValue);
     setInputValue('');
   };
@@ -41,112 +41,95 @@ export default function LogicalInput({ label, value, onChange }: LogicalInputPro
     onChange(newValue);
   };
 
-  const convertAndToOr = (targetGroupIdx: number) => {
-    const newValue = [...safeValue];
-    const groupToMove = newValue[targetGroupIdx];
-    newValue[targetGroupIdx - 1] = [...newValue[targetGroupIdx - 1], ...groupToMove];
-    newValue.splice(targetGroupIdx, 1);
-    onChange(newValue);
-  };
-
-  const convertOrToAnd = (gIdx: number, iIdx: number) => {
-    const newValue = [...safeValue];
-    const currentGroup = newValue[gIdx];
-
-    // Split the group into two parts at the clicked position
-    const firstPart = currentGroup.slice(0, iIdx); // [A, B]
-    const secondPart = currentGroup.slice(iIdx); // [C, D]
-
-    // Replace the current group with the first part
-    newValue[gIdx] = firstPart;
-    // Insert the second part as a new group at the next index
-    newValue.splice(gIdx + 1, 0, secondPart);
-
-    onChange(newValue.filter((g) => g.length > 0));
-  };
-
   return (
-    <div className="flex flex-col gap-3 w-full">
-      {label && <Label>{label}</Label>}
+    <div className="flex flex-col gap-2 w-full p-4 border rounded-lg bg-card shadow-sm">
+      {label && <Label className="text-sm font-semibold">{label}</Label>}
 
-      {/* Input area */}
-      <div className="flex gap-2 justify-center items-center">
-        <input
-          className="flex-1 px-3 py-2 border rounded-lg"
-          placeholder="New..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              addTag(true);
-            }
-          }}
-        />
-        <Button type="button" variant="outline" onClick={() => addTag(true)} className="px-3 py-2">
-          Add
-        </Button>
-      </div>
+      <div className="flex flex-col gap-4">
+        {/* Input area */}
+        <div className="flex items-center gap-2 w-full">
+          <div className="relative flex-1 flex items-center">
+             <input
+                className="flex-1 px-3 py-2 text-sm border rounded-md bg-background shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                placeholder="Type and press Enter to add..."
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag();
+                  }
+                }}
+              />
+          </div>
 
-      {/* Display area */}
-      <div className="flex flex-wrap items-center gap-2 p-2 border bg-secondary/20 min-h-[70px]">
-        {safeValue.map((group, gIdx) => (
-          <React.Fragment key={`group-${gIdx}`}>
-            {gIdx > 0 && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button type="button" variant="ghost">
-                    AND
-                    <ChevronDown className="ml-0.5 h-3 w-3 opacity-50" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="center">
-                  <DropdownMenuItem onClick={() => convertAndToOr(gIdx)}>OR</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+          <div className="flex items-center border rounded-md bg-background overflow-hidden h-9 shadow-sm shrink-0">
+              <Button
+                type="button"
+                variant={addMode === 'AND' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setAddMode('AND')}
+                className="h-full rounded-none px-2.5 text-xs font-semibold"
+              >
+                AND
+              </Button>
+              <Button
+                type="button"
+                variant={addMode === 'OR' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setAddMode('OR')}
+                className="h-full rounded-none px-2.5 text-xs font-semibold"
+              >
+                OR
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={addTag}
+                disabled={!inputValue.trim()}
+                className="h-full rounded-none border-l px-3 hover:bg-muted text-muted-foreground hover:text-foreground"
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add
+              </Button>
+          </div>
+        </div>
 
-            <div
-              className={`flex flex-wrap items-center gap-1.5 p-1 rounded-md max-w-full ${
-                group.length > 1 ? 'border-3 border-dashed bg-muted/40' : ''
-              }`}
-            >
-              {group.map((item, iIdx) => (
-                <React.Fragment key={`item-${gIdx}-${iIdx}`}>
-                  {iIdx > 0 && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button type="button" variant="ghost">
+        {/* Display area */}
+        <div className={`flex flex-col gap-3 p-4 border rounded-md bg-muted/20 min-h-[80px] transition-colors ${
+            safeValue.length === 0 ? 'items-center justify-center border-dashed' : ''
+          }`}>
+          {safeValue.length === 0 ? (
+            <span className="text-xs text-muted-foreground">No logical conditions added yet</span>
+          ) : (
+            safeValue.map((group, gIdx) => (
+              <React.Fragment key={`group-${gIdx}`}>
+                {gIdx > 0 && (
+                   <div className="flex items-center justify-center -my-1">
+                      <span className="px-2 py-0.5 rounded-full bg-background border text-[10px] font-bold text-muted-foreground shadow-sm uppercase tracking-wider">
+                        AND
+                      </span>
+                   </div>
+                )}
+
+                <div className={`flex flex-wrap items-center gap-2 p-2.5 rounded-md ${
+                  group.length > 1 ? 'border border-primary/20 bg-primary/5 shadow-inner' : 'border border-transparent bg-background shadow-sm'
+                }`}>
+                  {group.map((item, iIdx) => (
+                    <React.Fragment key={`item-${gIdx}-${iIdx}`}>
+                      {iIdx > 0 && (
+                        <span className="text-[10px] font-bold text-primary/70 uppercase tracking-wide">
                           OR
-                          <ChevronDown className="h-2 w-2 ml-0.5 opacity-50" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="center">
-                        <DropdownMenuItem onClick={() => convertOrToAnd(gIdx, iIdx)}>
-                          AND
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                  <Badge name={item} onRemove={() => removeTag(gIdx, iIdx)} />
-                  {/* <Badge className="bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-sm flex items-center gap-0 px-0 h-8 border-none overflow-hidden shadow-sm transition-colors">
-                    <span className="px-2 text-[11px] border-r border-current/20 h-full flex items-center opacity-80">
-                      About:{' '}
-                      <span className="font-bold ml-1 opacity-100">{item}</span>
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => removeTag(gIdx, iIdx)}
-                      className="px-2 hover:bg-red-500 hover:text-white h-full transition-colors"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </button>
-                  </Badge> */}
-                </React.Fragment>
-              ))}
-            </div>
-          </React.Fragment>
-        ))}
+                        </span>
+                      )}
+                      <Badge name={item} onRemove={() => removeTag(gIdx, iIdx)} />
+                    </React.Fragment>
+                  ))}
+                </div>
+              </React.Fragment>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

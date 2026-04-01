@@ -1,12 +1,12 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
-const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3002';
+const PROXY_URL = process.env.PROXY_URL || 'http://127.0.0.1:3002';
 const ONE_HOUR_MS = 3600000;
 
 test.describe('API Error Handling and GraphQL Tests', () => {
   test('POST /events should handle malformed JSON', async ({ request }) => {
-    const response = await request.post(`${INSERT_URL}/events`, {
+    const response = await request.post(`${PROXY_URL}/events`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
@@ -18,7 +18,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
   });
 
   test('POST /events should handle missing required fields', async ({ request }) => {
-    const response = await request.post(`${INSERT_URL}/events`, {
+    const response = await request.post(`${PROXY_URL}/events`, {
       headers: {
         Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
       },

@@ -1,7 +1,7 @@
 import { generatePayload } from '../utils/generator';
 
 const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
-const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3002';
+const PROXY_URL = process.env.PROXY_URL || 'http://127.0.0.1:3002';
 const CONCURRENCY = 100;
 const DURATION_SECONDS = 5;
 
@@ -14,7 +14,7 @@ async function sendEvent() {
   });
 
   try {
-    const res = await fetch(`${INSERT_URL}/events`, {
+    const res = await fetch(`${PROXY_URL}/events`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(eventPayload),

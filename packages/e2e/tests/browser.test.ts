@@ -4,9 +4,11 @@ import { expect, test } from '@playwright/test';
 
 const ONE_HOUR_MS = 3600000;
 
-test('Browser Tracking Script Verification', async ({ browser }) => {
+test.beforeEach(() => {
   test.use({ storageState: 'auth.json' });
+});
 
+test('Browser Tracking Script Verification', async ({ browser }) => {
   const generated = generatePayload();
   const userAgent = generated.user_agent;
 

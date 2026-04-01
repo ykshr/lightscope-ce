@@ -16,6 +16,14 @@ export default async () => {
   });
   await testUtils.saveUser(user);
 
+  const org = testUtils.createOrganization({ name: 'Test Org' });
+  await testUtils.saveOrganization(org);
+  await testUtils.addMember({
+    userId: user.id,
+    organizationId: org.id as string,
+    role: 'admin',
+  });
+
   const req = await request.newContext();
   await req.post(`${env.apiURL}/auth/sign-in/email`, {
     data: { email, password },

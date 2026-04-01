@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { UAParser } from 'ua-parser-js';
 
 test.describe('Data Generator Logic Verification', () => {
-  test.beforeAll(() => {
+  test.beforeEach(() => {
     test.use({ storageState: 'auth.json' });
   });
 

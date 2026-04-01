@@ -2,7 +2,7 @@ import { env } from '@/fixtures/env';
 import { expect, test } from '@playwright/test';
 
 test.describe('Web Dashboard Verification', () => {
-  test.beforeAll(() => {
+  test.beforeEach(() => {
     test.use({ storageState: 'auth.json' });
   });
 

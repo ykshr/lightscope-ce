@@ -2,7 +2,7 @@ import { env } from '@/fixtures/env';
 import { expect, test } from '@playwright/test';
 
 test.describe('PROXY Error Handling and GraphQL Tests', () => {
-  test.beforeAll(() => {
+  test.beforeEach(() => {
     test.use({ storageState: 'auth.json' });
   });
 

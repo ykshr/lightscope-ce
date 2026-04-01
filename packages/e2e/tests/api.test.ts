@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 const ONE_HOUR_MS = 3600000;
 
 test.describe('API Error Handling and GraphQL Tests', () => {
-  test.beforeAll(() => {
+  test.beforeEach(() => {
     test.use({ storageState: 'auth.json' });
   });
 

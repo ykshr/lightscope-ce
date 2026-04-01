@@ -448,3 +448,23 @@ export const generateAnalyticsPayload = (params: {
     created_at: new Date().toISOString().replace('T', ' ').split('.')[0],
   };
 };
+
+// --- Auto-initialization Logic ---
+if (typeof window !== 'undefined') {
+  // 1. Look for its script tag
+  const currentScript = document.currentScript as HTMLScriptElement;
+
+  // 2. Get configs from data
+  const endpoint = currentScript?.getAttribute('data-endpoint');
+  const token = currentScript?.getAttribute('data-token');
+
+  if (endpoint && token) {
+    window.addEventListener('load', () => {
+      const tracker = new AnalyticsTracker(endpoint, { token });
+      tracker.trackPageView();
+      (window as any).LightscopeTracker = tracker;
+    });
+  } else {
+    console.warn('Lightscope: data-token attribute is missing. Auto-initialization skipped.');
+  }
+}

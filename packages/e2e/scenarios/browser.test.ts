@@ -1,9 +1,8 @@
+import { API_URL, MOCK_SITE_URL } from '@/helpers/env';
+import { generatePayload } from '@/utils/generator';
 import { expect, test } from '@playwright/test';
-import { generatePayload } from '../utils/generator';
 
 const ONE_HOUR_MS = 3600000;
-const API_URL = 'http://127.0.0.1:3001';
-const MOCK_SITE_URL = 'http://127.0.0.1:8080';
 
 test('Browser Tracking Script Verification', async ({ browser }) => {
   const generated = generatePayload();
@@ -80,10 +79,7 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
 
     const gqlRes = await fetch(`${API_URL}/gql`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),
     });
 

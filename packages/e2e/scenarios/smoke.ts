@@ -1,7 +1,6 @@
-import { generatePayload } from '../utils/generator';
+import { API_URL, PROXY_URL } from '@/helpers/env';
+import { generatePayload } from '@/utils/generator';
 
-const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
-const PROXY_URL = process.env.PROXY_URL || 'http://127.0.0.1:3002';
 const ONE_HOUR_MS = 3600000;
 
 async function main() {
@@ -11,7 +10,7 @@ async function main() {
   const eventPayload = generatePayload({
     event_name: 'page_view',
     site_name: 'localhost',
-    url: 'http://127.0.0.1:5173/test-page',
+    url: 'http://example.com/test-page',
     user_agent: 'E2E Test Agent',
   });
 

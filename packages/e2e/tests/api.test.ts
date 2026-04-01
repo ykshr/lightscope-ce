@@ -1,9 +1,13 @@
-import { API_URL } from '@/helpers/env';
+import { env } from '@/fixtures/env';
 import { expect, test } from '@playwright/test';
 
 const ONE_HOUR_MS = 3600000;
 
 test.describe('API Error Handling and GraphQL Tests', () => {
+  test.beforeAll(() => {
+    test.use({ storageState: 'auth.json' });
+  });
+
   test('GraphQL queries should return expected structures for trend and aggregations', async ({
     request,
   }) => {
@@ -22,7 +26,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
       }
     `;
 
-    const res = await request.post(`${API_URL}/gql`, {
+    const res = await request.post(`${env.apiURL}/gql`, {
       headers: { 'Content-Type': 'application/json' },
       data: { query },
     });
@@ -52,7 +56,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
       }
     `;
 
-    const res = await request.post(`${API_URL}/gql`, {
+    const res = await request.post(`${env.apiURL}/gql`, {
       headers: { 'Content-Type': 'application/json' },
       data: { query },
     });
@@ -89,7 +93,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
       }
     `;
 
-    const res = await request.post(`${API_URL}/gql`, {
+    const res = await request.post(`${env.apiURL}/gql`, {
       headers: { 'Content-Type': 'application/json' },
       data: { query },
     });

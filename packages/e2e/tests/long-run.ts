@@ -1,4 +1,4 @@
-import { API_URL, PROXY_URL } from '@/helpers/env';
+import { env } from '@/fixtures/env';
 import { generatePayload } from '@/utils/generator';
 
 const DURATION_SECONDS = parseInt(process.argv[2] || '60', 10);
@@ -14,7 +14,7 @@ async function sendEvent() {
   });
 
   try {
-    const res = await fetch(`${PROXY_URL}/events`, {
+    const res = await fetch(`${env.proxyURL}/events`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(eventPayload),
@@ -50,7 +50,7 @@ async function verifyData() {
   `;
 
   try {
-    const gqlRes = await fetch(`${API_URL}/gql`, {
+    const gqlRes = await fetch(`${env.apiURL}/gql`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),

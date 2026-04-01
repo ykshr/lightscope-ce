@@ -1,5 +1,5 @@
-import { PROXY_URL } from '@/helpers/env';
-import { generatePayload } from '../utils/generator';
+import { env } from '@/fixtures/env';
+import { generatePayload } from '@/utils/generator';
 
 const CONCURRENCY = 100;
 const DURATION_SECONDS = 5;
@@ -13,7 +13,7 @@ async function sendEvent() {
   });
 
   try {
-    const res = await fetch(`${PROXY_URL}/events`, {
+    const res = await fetch(`${env.proxyURL}/events`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(eventPayload),
@@ -46,8 +46,7 @@ async function runLoadTest() {
   await Promise.all(workers);
 
   const duration = (Date.now() - startTime) / 1000;
-  console.log(`
-Load Test Completed in ${duration.toFixed(2)}s`);
+  console.log(`Load Test Completed in ${duration.toFixed(2)}s`);
   console.log(`Total Requests: ${totalSent}`);
   console.log(`Success Rate: ${((successCount / totalSent) * 100).toFixed(2)}%`);
   console.log(`RPS: ${(totalSent / duration).toFixed(2)}`);

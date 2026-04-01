@@ -1,10 +1,12 @@
-import { API_URL, MOCK_SITE_URL } from '@/helpers/env';
+import { env } from '@/fixtures/env';
 import { generatePayload } from '@/utils/generator';
 import { expect, test } from '@playwright/test';
 
 const ONE_HOUR_MS = 3600000;
 
 test('Browser Tracking Script Verification', async ({ browser }) => {
+  test.use({ storageState: 'auth.json' });
+
   const generated = generatePayload();
   const userAgent = generated.user_agent;
 
@@ -22,7 +24,7 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   const utmParams = '?utm_source=test_source&utm_medium=test_medium&utm_campaign=test_campaign';
   const refererUrl = 'https://example.com/referrer-page';
 
-  await page.goto(`${MOCK_SITE_URL}/index.html${utmParams}`, {
+  await page.goto(`${env.mockSiteURL}/index.html${utmParams}`, {
     referer: refererUrl,
   });
 
@@ -77,7 +79,7 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
     // Start the 500ms timer
     const waitPromise = new Promise((resolve) => setTimeout(resolve, 500));
 
-    const gqlRes = await fetch(`${API_URL}/gql`, {
+    const gqlRes = await fetch(`${env.apiURL}/gql`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),

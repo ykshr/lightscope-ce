@@ -3,6 +3,10 @@ import { expect, test } from '@playwright/test';
 import { UAParser } from 'ua-parser-js';
 
 test.describe('Data Generator Logic Verification', () => {
+  test.beforeAll(() => {
+    test.use({ storageState: 'auth.json' });
+  });
+
   test('generatePayload should create a valid full payload structure', async () => {
     const payload = generatePayload();
     expect(payload.event_id).toBeDefined();

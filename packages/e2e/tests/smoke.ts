@@ -1,4 +1,4 @@
-import { API_URL, PROXY_URL } from '@/helpers/env';
+import { env } from '@/fixtures/env';
 import { generatePayload } from '@/utils/generator';
 
 const ONE_HOUR_MS = 3600000;
@@ -15,7 +15,7 @@ async function main() {
   });
 
   console.log('Sending event...', eventPayload.event_id);
-  const eventRes = await fetch(`${PROXY_URL}/events`, {
+  const eventRes = await fetch(`${env.proxyURL}/events`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(eventPayload),
@@ -49,7 +49,7 @@ async function main() {
   `;
 
   console.log('Querying GraphQL...');
-  const gqlRes = await fetch(`${API_URL}/gql`, {
+  const gqlRes = await fetch(`${env.apiURL}/gql`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query }),

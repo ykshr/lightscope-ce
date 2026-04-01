@@ -1,9 +1,13 @@
-import { WEB_URL } from '@/helpers/env';
+import { env } from '@/fixtures/env';
 import { expect, test } from '@playwright/test';
 
 test.describe('Web Dashboard Verification', () => {
+  test.beforeAll(() => {
+    test.use({ storageState: 'auth.json' });
+  });
+
   test('should load the overview page and display key metrics', async ({ page }) => {
-    await page.goto(`${WEB_URL}/`);
+    await page.goto(`${env.webURL}/`);
 
     // Check that the sidebar title is visible
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
@@ -19,33 +23,33 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should navigate to the ranking page', async ({ page }) => {
-    await page.goto(`${WEB_URL}/`);
+    await page.goto(`${env.webURL}/`);
 
     // Find link to ranking and click it
     await page.click('a[href="/ranking"]');
 
     // Verify navigation to ranking
-    await expect(page).toHaveURL(`${WEB_URL}/ranking`);
+    await expect(page).toHaveURL(`${env.webURL}/ranking`);
 
     // Verify the page content is loaded
     await expect(page.locator('text=Ranking').first()).toBeVisible();
   });
 
   test('should navigate to the article page', async ({ page }) => {
-    await page.goto(`${WEB_URL}/`);
+    await page.goto(`${env.webURL}/`);
 
     // Find link to article and click it
     await page.click('a[href="/article"]');
 
     // Verify navigation to article
-    await expect(page).toHaveURL(`${WEB_URL}/article`);
+    await expect(page).toHaveURL(`${env.webURL}/article`);
 
     // Verify article page specific content
     await expect(page.locator('text=Global Economy Trends')).toBeVisible();
   });
 
   test('should interact with date range picker and filtering', async ({ page }) => {
-    await page.goto(`${WEB_URL}/`);
+    await page.goto(`${env.webURL}/`);
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // The DateFilter has a quick access button "This week" on desktop
@@ -58,7 +62,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should interact with the advanced article filter', async ({ page }) => {
-    await page.goto(`${WEB_URL}/`);
+    await page.goto(`${env.webURL}/`);
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Click the filter button (has the lucide-filter icon)
@@ -85,7 +89,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should collapse and expand the sidebar', async ({ page }) => {
-    await page.goto(`${WEB_URL}/`);
+    await page.goto(`${env.webURL}/`);
 
     // On desktop, sidebar should be open and title visible
     const title = page.locator('h1', { hasText: 'LittleScope' });
@@ -105,7 +109,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should interact with the custom date range picker modal', async ({ page }) => {
-    await page.goto(`${WEB_URL}/`);
+    await page.goto(`${env.webURL}/`);
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Open the Date Filter modal
@@ -134,7 +138,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test.skip('should interact with the search bar', async ({ page }) => {
-    await page.goto(`${WEB_URL}/`);
+    await page.goto(`${env.webURL}/`);
 
     const searchInput = page.locator('input[placeholder="Type a command or search..."]');
     await expect(searchInput).toBeVisible();
@@ -146,7 +150,7 @@ test.describe('Web Dashboard Verification', () => {
   });
 
   test('should verify pagination elements in the Ranking page', async ({ page }) => {
-    await page.goto(`${WEB_URL}/ranking`);
+    await page.goto(`${env.webURL}/ranking`);
 
     // Wait for the table to load
     await expect(page.locator('text=Ranking').first()).toBeVisible();

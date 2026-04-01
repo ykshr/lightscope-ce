@@ -1,4 +1,3 @@
-import { strict as assert } from 'assert';
 import { generatePayload } from '../utils/generator';
 
 const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
@@ -19,10 +18,7 @@ async function main() {
   console.log('Sending event...', eventPayload.event_id);
   const eventRes = await fetch(`${INSERT_URL}/events`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(eventPayload),
   });
 
@@ -56,10 +52,7 @@ async function main() {
   console.log('Querying GraphQL...');
   const gqlRes = await fetch(`${API_URL}/gql`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query }),
   });
 

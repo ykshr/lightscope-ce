@@ -1,12 +1,10 @@
 import { env } from '@/fixtures/env';
+import login from '@/setup/login';
+import { injectTracker } from '@/setup/tracker';
 import { generatePayload } from '@/utils/generator';
 import { expect, test } from '@playwright/test';
 
 const ONE_HOUR_MS = 3600000;
-
-test.beforeEach(() => {
-  test.use({ storageState: 'auth.json' });
-});
 
 test('Browser Tracking Script Verification', async ({ browser }) => {
   const generated = generatePayload();
@@ -14,6 +12,9 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
 
   const context = await browser.newContext({ userAgent });
   const page = await context.newPage();
+
+  const { storage, org } = await login();
+  await context.addCookies(storage.cookies);
 
   // 1. Navigate to the page and verify Page View event sent
   const pageViewPromise = page.waitForRequest(
@@ -29,6 +30,8 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   await page.goto(`${env.mockSiteURL}/index.html${utmParams}`, {
     referer: refererUrl,
   });
+
+  await injectTracker(page, org.id as string, env.mockSiteURL);
 
   const pageViewReq = await pageViewPromise;
   expect(pageViewReq).toBeTruthy();

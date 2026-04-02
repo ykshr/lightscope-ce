@@ -1,4 +1,12 @@
-import { API_URL, ORG_NAME, ORG_SLUG, USER_EMAIL, USER_NAME, USER_PASSWORD } from '@/helpers/env';
+import {
+  API_URL,
+  ORG_NAME,
+  ORG_SLUG,
+  USER_EMAIL,
+  USER_NAME,
+  USER_PASSWORD,
+  WEB_URL,
+} from '@/helpers/env';
 import setupUserAndOrganization from '@/setup/auth';
 import { request } from '@playwright/test';
 
@@ -12,9 +20,12 @@ export default async () => {
   };
 
   // Create a Playwright request context to capture session cookies from authClient
-  const requestContext = await request.newContext({ baseURL: API_URL });
+  const requestContext = await request.newContext({
+    baseURL: API_URL,
+    extraHTTPHeaders: { Origin: WEB_URL },
+  });
 
-  const { user, org } = await setupUserAndOrganization(testUserAndOrg);
+  const { user, org } = await setupUserAndOrganization(requestContext, testUserAndOrg);
 
   // Save the authentication state (cookies/storage) to a file for reuse in tests
   await requestContext.storageState({ path: 'storage/auth.json' });

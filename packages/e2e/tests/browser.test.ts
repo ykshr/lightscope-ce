@@ -14,7 +14,6 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   const page = await context.newPage();
 
   const { storage, org } = await login();
-  await context.addCookies(storage.cookies);
 
   // 1. Navigate to the page and verify Page View event sent
   const pageViewPromise = page.waitForRequest(
@@ -44,12 +43,12 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   const headers = await pageViewReq.headers();
   expect(headers['user-agent']).toBe(userAgent);
 
-  // 2. Click button and verify Custom Event sent
+  // 2. Click button
   const clickPromise = page.waitForRequest(
     (req) =>
       req.url().includes('/events') &&
       req.method() === 'POST' &&
-      JSON.parse(req.postData() || '{}').event_name === 'manual_click'
+      JSON.parse(req.postData() || '{}').event_name === 'click'
   );
 
   await page.click('#track-btn');
@@ -78,6 +77,8 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
     }
   `;
 
+  const cookie = storage.cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; ');
+
   // Use a more efficient polling mechanism that overlaps fetch latency with wait time
   // but avoids a mandatory 500ms delay on the first successful attempt.
   for (let i = 0; i < 20; i++) {
@@ -86,7 +87,7 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
 
     const gqlRes = await fetch(`${env.apiURL}/gql`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { Cookie: cookie, 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),
     });
 

@@ -1,4 +1,4 @@
-import { env } from '@/fixtures/env';
+import { env } from '@/helpers/env';
 import { generatePayload } from '@/utils/generator';
 
 const CONCURRENCY = 100;

@@ -1,4 +1,4 @@
-import { env } from '@/fixtures/env';
+import { env } from '@/helpers/env';
 import { expect, test } from '@playwright/test';
 
 test.describe('Web Dashboard Verification', () => {

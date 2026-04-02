@@ -1,4 +1,4 @@
-import { env } from '@/fixtures/env';
+import { env } from '@/helpers/env';
 import { auth } from '@/utils/auth';
 import { request } from '@playwright/test';
 

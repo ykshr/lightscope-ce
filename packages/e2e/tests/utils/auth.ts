@@ -1,6 +1,8 @@
-import { betterAuth } from 'better-auth';
-import { organization, testUtils } from 'better-auth/plugins';
+import { API_URL } from '@/helpers/env';
+import { createAuthClient } from 'better-auth/client';
+import { organizationClient } from 'better-auth/client/plugins';
 
-export const auth = betterAuth({
-  plugins: [organization(), testUtils()],
+export const authClient = createAuthClient({
+  baseURL: `${API_URL}/api/auth`,
+  plugins: [organizationClient()],
 });

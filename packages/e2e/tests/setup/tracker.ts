@@ -1,4 +1,4 @@
-import { env } from '@/fixtures/env';
+import { env } from '@/helpers/env';
 import { sign } from 'hono/jwt';
 import path from 'path';
 import { Page } from 'playwright';

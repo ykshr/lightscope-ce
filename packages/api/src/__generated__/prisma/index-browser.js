@@ -122,9 +122,9 @@ exports.Prisma.TrackerScalarFieldEnum = {
   organizationId: 'organizationId',
   origin: 'origin',
   token: 'token',
-  iat: 'iat',
-  nbf: 'nbf',
-  exp: 'exp',
+  issuedAt: 'issuedAt',
+  notBefore: 'notBefore',
+  expiresAt: 'expiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

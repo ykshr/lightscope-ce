@@ -51,9 +51,9 @@ trackerApp.post('/generate', async (c: Context) => {
     const data = {
       organizationId,
       origin,
-      nbf,
-      iat,
-      exp,
+      notBefore: nbf,
+      issuedAt: iat,
+      expiresAt: exp,
       token,
     };
 

@@ -1615,9 +1615,9 @@ export namespace Prisma {
     organizationId: string | null
     origin: string | null
     token: string | null
-    iat: Date | null
-    nbf: Date | null
-    exp: Date | null
+    issuedAt: Date | null
+    notBefore: Date | null
+    expiresAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1627,9 +1627,9 @@ export namespace Prisma {
     organizationId: string | null
     origin: string | null
     token: string | null
-    iat: Date | null
-    nbf: Date | null
-    exp: Date | null
+    issuedAt: Date | null
+    notBefore: Date | null
+    expiresAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1639,9 +1639,9 @@ export namespace Prisma {
     organizationId: number
     origin: number
     token: number
-    iat: number
-    nbf: number
-    exp: number
+    issuedAt: number
+    notBefore: number
+    expiresAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -1653,9 +1653,9 @@ export namespace Prisma {
     organizationId?: true
     origin?: true
     token?: true
-    iat?: true
-    nbf?: true
-    exp?: true
+    issuedAt?: true
+    notBefore?: true
+    expiresAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1665,9 +1665,9 @@ export namespace Prisma {
     organizationId?: true
     origin?: true
     token?: true
-    iat?: true
-    nbf?: true
-    exp?: true
+    issuedAt?: true
+    notBefore?: true
+    expiresAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1677,9 +1677,9 @@ export namespace Prisma {
     organizationId?: true
     origin?: true
     token?: true
-    iat?: true
-    nbf?: true
-    exp?: true
+    issuedAt?: true
+    notBefore?: true
+    expiresAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -1762,9 +1762,9 @@ export namespace Prisma {
     organizationId: string
     origin: string
     token: string
-    iat: Date
-    nbf: Date
-    exp: Date | null
+    issuedAt: Date
+    notBefore: Date
+    expiresAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: TrackerCountAggregateOutputType | null
@@ -1791,9 +1791,9 @@ export namespace Prisma {
     organizationId?: boolean
     origin?: boolean
     token?: boolean
-    iat?: boolean
-    nbf?: boolean
-    exp?: boolean
+    issuedAt?: boolean
+    notBefore?: boolean
+    expiresAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["tracker"]>
@@ -1803,9 +1803,9 @@ export namespace Prisma {
     organizationId?: boolean
     origin?: boolean
     token?: boolean
-    iat?: boolean
-    nbf?: boolean
-    exp?: boolean
+    issuedAt?: boolean
+    notBefore?: boolean
+    expiresAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["tracker"]>
@@ -1815,9 +1815,9 @@ export namespace Prisma {
     organizationId?: boolean
     origin?: boolean
     token?: boolean
-    iat?: boolean
-    nbf?: boolean
-    exp?: boolean
+    issuedAt?: boolean
+    notBefore?: boolean
+    expiresAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["tracker"]>
@@ -1827,14 +1827,14 @@ export namespace Prisma {
     organizationId?: boolean
     origin?: boolean
     token?: boolean
-    iat?: boolean
-    nbf?: boolean
-    exp?: boolean
+    issuedAt?: boolean
+    notBefore?: boolean
+    expiresAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TrackerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "origin" | "token" | "iat" | "nbf" | "exp" | "createdAt" | "updatedAt", ExtArgs["result"]["tracker"]>
+  export type TrackerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "origin" | "token" | "issuedAt" | "notBefore" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tracker"]>
 
   export type $TrackerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Tracker"
@@ -1844,9 +1844,9 @@ export namespace Prisma {
       organizationId: string
       origin: string
       token: string
-      iat: Date
-      nbf: Date
-      exp: Date | null
+      issuedAt: Date
+      notBefore: Date
+      expiresAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["tracker"]>
@@ -2276,9 +2276,9 @@ export namespace Prisma {
     readonly organizationId: FieldRef<"Tracker", 'String'>
     readonly origin: FieldRef<"Tracker", 'String'>
     readonly token: FieldRef<"Tracker", 'String'>
-    readonly iat: FieldRef<"Tracker", 'DateTime'>
-    readonly nbf: FieldRef<"Tracker", 'DateTime'>
-    readonly exp: FieldRef<"Tracker", 'DateTime'>
+    readonly issuedAt: FieldRef<"Tracker", 'DateTime'>
+    readonly notBefore: FieldRef<"Tracker", 'DateTime'>
+    readonly expiresAt: FieldRef<"Tracker", 'DateTime'>
     readonly createdAt: FieldRef<"Tracker", 'DateTime'>
     readonly updatedAt: FieldRef<"Tracker", 'DateTime'>
   }
@@ -10429,9 +10429,9 @@ export namespace Prisma {
     organizationId: 'organizationId',
     origin: 'origin',
     token: 'token',
-    iat: 'iat',
-    nbf: 'nbf',
-    exp: 'exp',
+    issuedAt: 'issuedAt',
+    notBefore: 'notBefore',
+    expiresAt: 'expiresAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -10595,9 +10595,9 @@ export namespace Prisma {
     organizationId?: StringFilter<"Tracker"> | string
     origin?: StringFilter<"Tracker"> | string
     token?: StringFilter<"Tracker"> | string
-    iat?: DateTimeFilter<"Tracker"> | Date | string
-    nbf?: DateTimeFilter<"Tracker"> | Date | string
-    exp?: DateTimeNullableFilter<"Tracker"> | Date | string | null
+    issuedAt?: DateTimeFilter<"Tracker"> | Date | string
+    notBefore?: DateTimeFilter<"Tracker"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"Tracker"> | Date | string | null
     createdAt?: DateTimeFilter<"Tracker"> | Date | string
     updatedAt?: DateTimeFilter<"Tracker"> | Date | string
   }
@@ -10607,9 +10607,9 @@ export namespace Prisma {
     organizationId?: SortOrder
     origin?: SortOrder
     token?: SortOrder
-    iat?: SortOrder
-    nbf?: SortOrder
-    exp?: SortOrderInput | SortOrder
+    issuedAt?: SortOrder
+    notBefore?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10622,9 +10622,9 @@ export namespace Prisma {
     NOT?: TrackerWhereInput | TrackerWhereInput[]
     organizationId?: StringFilter<"Tracker"> | string
     origin?: StringFilter<"Tracker"> | string
-    iat?: DateTimeFilter<"Tracker"> | Date | string
-    nbf?: DateTimeFilter<"Tracker"> | Date | string
-    exp?: DateTimeNullableFilter<"Tracker"> | Date | string | null
+    issuedAt?: DateTimeFilter<"Tracker"> | Date | string
+    notBefore?: DateTimeFilter<"Tracker"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"Tracker"> | Date | string | null
     createdAt?: DateTimeFilter<"Tracker"> | Date | string
     updatedAt?: DateTimeFilter<"Tracker"> | Date | string
   }, "id" | "token">
@@ -10634,9 +10634,9 @@ export namespace Prisma {
     organizationId?: SortOrder
     origin?: SortOrder
     token?: SortOrder
-    iat?: SortOrder
-    nbf?: SortOrder
-    exp?: SortOrderInput | SortOrder
+    issuedAt?: SortOrder
+    notBefore?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TrackerCountOrderByAggregateInput
@@ -10652,9 +10652,9 @@ export namespace Prisma {
     organizationId?: StringWithAggregatesFilter<"Tracker"> | string
     origin?: StringWithAggregatesFilter<"Tracker"> | string
     token?: StringWithAggregatesFilter<"Tracker"> | string
-    iat?: DateTimeWithAggregatesFilter<"Tracker"> | Date | string
-    nbf?: DateTimeWithAggregatesFilter<"Tracker"> | Date | string
-    exp?: DateTimeNullableWithAggregatesFilter<"Tracker"> | Date | string | null
+    issuedAt?: DateTimeWithAggregatesFilter<"Tracker"> | Date | string
+    notBefore?: DateTimeWithAggregatesFilter<"Tracker"> | Date | string
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"Tracker"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Tracker"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Tracker"> | Date | string
   }
@@ -11159,9 +11159,9 @@ export namespace Prisma {
     organizationId: string
     origin: string
     token: string
-    iat?: Date | string
-    nbf?: Date | string
-    exp?: Date | string | null
+    issuedAt?: Date | string
+    notBefore?: Date | string
+    expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11171,9 +11171,9 @@ export namespace Prisma {
     organizationId: string
     origin: string
     token: string
-    iat?: Date | string
-    nbf?: Date | string
-    exp?: Date | string | null
+    issuedAt?: Date | string
+    notBefore?: Date | string
+    expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11183,9 +11183,9 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     origin?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
-    iat?: DateTimeFieldUpdateOperationsInput | Date | string
-    nbf?: DateTimeFieldUpdateOperationsInput | Date | string
-    exp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notBefore?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11195,9 +11195,9 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     origin?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
-    iat?: DateTimeFieldUpdateOperationsInput | Date | string
-    nbf?: DateTimeFieldUpdateOperationsInput | Date | string
-    exp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notBefore?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11207,9 +11207,9 @@ export namespace Prisma {
     organizationId: string
     origin: string
     token: string
-    iat?: Date | string
-    nbf?: Date | string
-    exp?: Date | string | null
+    issuedAt?: Date | string
+    notBefore?: Date | string
+    expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11219,9 +11219,9 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     origin?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
-    iat?: DateTimeFieldUpdateOperationsInput | Date | string
-    nbf?: DateTimeFieldUpdateOperationsInput | Date | string
-    exp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notBefore?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11231,9 +11231,9 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     origin?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
-    iat?: DateTimeFieldUpdateOperationsInput | Date | string
-    nbf?: DateTimeFieldUpdateOperationsInput | Date | string
-    exp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notBefore?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11827,9 +11827,9 @@ export namespace Prisma {
     organizationId?: SortOrder
     origin?: SortOrder
     token?: SortOrder
-    iat?: SortOrder
-    nbf?: SortOrder
-    exp?: SortOrder
+    issuedAt?: SortOrder
+    notBefore?: SortOrder
+    expiresAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11839,9 +11839,9 @@ export namespace Prisma {
     organizationId?: SortOrder
     origin?: SortOrder
     token?: SortOrder
-    iat?: SortOrder
-    nbf?: SortOrder
-    exp?: SortOrder
+    issuedAt?: SortOrder
+    notBefore?: SortOrder
+    expiresAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11851,9 +11851,9 @@ export namespace Prisma {
     organizationId?: SortOrder
     origin?: SortOrder
     token?: SortOrder
-    iat?: SortOrder
-    nbf?: SortOrder
-    exp?: SortOrder
+    issuedAt?: SortOrder
+    notBefore?: SortOrder
+    expiresAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }

@@ -27,7 +27,7 @@
     <meta property="article:tag" content="test" />
 
     <!-- The script will be mounted here -->
-    <script src="/dist/browser.js"></script>
+    <!-- <script src="/dist/browser.js"></script> -->
   </head>
   <body>
     <h1>Lightscope E2E Test Page</h1>
@@ -38,34 +38,5 @@
     <div style="margin-top: 20px">
       <button id="auto-track-btn">Auto Tracked Button</button>
     </div>
-
-    <script>
-      window.addEventListener('load', () => {
-        console.log('Initializing Lightscope...');
-        // The global name 'Lightscope' is defined in the build script
-        // The class is exported as 'AnalyticsTracker'
-        if (typeof Lightscope !== 'undefined' && Lightscope.AnalyticsTracker) {
-          window.tracker = new Lightscope.AnalyticsTracker('http://localhost:3001/events', {
-            token: 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==',
-            site_name: 'mock-site',
-            heartbeat_interval_ms: 5000,
-          });
-
-          // Track initial page view
-          window.tracker.trackPageView();
-          console.log('Page view tracked');
-
-          // Manual tracking
-          document.getElementById('track-btn').addEventListener('click', () => {
-            window.tracker.sendEvent('manual_click', {
-              button_id: 'track-btn',
-            });
-            console.log('Manual click tracked');
-          });
-        } else {
-          console.error('Lightscope library not loaded correctly');
-        }
-      });
-    </script>
   </body>
 </html>

@@ -4,6 +4,8 @@ CREATE TABLE "tracker" (
     "organizationId" TEXT NOT NULL,
     "origin" TEXT NOT NULL,
     "token" TEXT NOT NULL,
+    "issuedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "notBefore" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "expiresAt" DATETIME,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL

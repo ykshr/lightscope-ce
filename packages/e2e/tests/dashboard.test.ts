@@ -1,6 +1,5 @@
-import { test, expect } from '@playwright/test';
-
-const WEB_URL = process.env.WEB_URL || 'http://127.0.0.1:5173';
+import { WEB_URL } from '@/helpers/env';
+import { expect, test } from '@playwright/test';
 
 test.describe('Web Dashboard Verification', () => {
   test('should load the overview page and display key metrics', async ({ page }) => {

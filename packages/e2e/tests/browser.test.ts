@@ -1,8 +1,9 @@
-import { test, expect } from '@playwright/test';
-import { generatePayload } from '../utils/generator';
+import { API_URL, MOCK_SITE_URL } from '@/helpers/env';
+import { injectTracker } from '@/setup/tracker';
+import { generatePayload } from '@/utils/generator';
+import { expect, test } from '@playwright/test';
 
-const API_URL = 'http://127.0.0.1:3000';
-const MOCK_SITE_URL = 'http://127.0.0.1:8080';
+const ONE_HOUR_MS = 3600000;
 
 test('Browser Tracking Script Verification', async ({ browser }) => {
   const generated = generatePayload();
@@ -26,6 +27,9 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
     referer: refererUrl,
   });
 
+  const org = JSON.parse(process.env.ORG_DATA || '{}');
+  await injectTracker(page, org.id as string, MOCK_SITE_URL);
+
   const pageViewReq = await pageViewPromise;
   expect(pageViewReq).toBeTruthy();
   console.log('Page view event verified.');
@@ -37,12 +41,12 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   const headers = await pageViewReq.headers();
   expect(headers['user-agent']).toBe(userAgent);
 
-  // 2. Click button and verify Custom Event sent
+  // 2. Click button
   const clickPromise = page.waitForRequest(
     (req) =>
       req.url().includes('/events') &&
       req.method() === 'POST' &&
-      JSON.parse(req.postData() || '{}').event_name === 'manual_click'
+      JSON.parse(req.postData() || '{}').event_name === 'click'
   );
 
   await page.click('#track-btn');
@@ -58,8 +62,8 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   const query = `
     query {
       rank(
-        startDate: "${new Date(Date.now() - 3600000).toISOString()}"
-        endDate: "${new Date(Date.now() + 3600000).toISOString()}"
+        startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+        endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
         limit: 10
       ) {
         total
@@ -79,10 +83,8 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
 
     const gqlRes = await fetch(`${API_URL}/gql`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ query }),
     });
 

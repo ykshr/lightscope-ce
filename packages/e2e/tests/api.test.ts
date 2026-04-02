@@ -1,15 +1,9 @@
-import { env } from '@/helpers/env';
-import login from '@/setup/login';
+import { API_URL } from '@/helpers/env';
 import { expect, test } from '@playwright/test';
 
 const ONE_HOUR_MS = 3600000;
 
 test.describe('API Error Handling and GraphQL Tests', () => {
-  test.beforeEach(async ({ context }) => {
-    const { storage } = await login();
-    await context.addCookies(storage.cookies);
-  });
-
   test('GraphQL queries should return expected structures for trend and aggregations', async ({
     request,
   }) => {
@@ -28,7 +22,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
       }
     `;
 
-    const res = await request.post(`${env.apiURL}/gql`, {
+    const res = await request.post(`${API_URL}/gql`, {
       headers: { 'Content-Type': 'application/json' },
       data: { query },
     });
@@ -58,7 +52,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
       }
     `;
 
-    const res = await request.post(`${env.apiURL}/gql`, {
+    const res = await request.post(`${API_URL}/gql`, {
       headers: { 'Content-Type': 'application/json' },
       data: { query },
     });
@@ -95,7 +89,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
       }
     `;
 
-    const res = await request.post(`${env.apiURL}/gql`, {
+    const res = await request.post(`${API_URL}/gql`, {
       headers: { 'Content-Type': 'application/json' },
       data: { query },
     });

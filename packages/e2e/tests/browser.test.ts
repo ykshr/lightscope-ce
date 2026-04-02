@@ -1,5 +1,4 @@
-import { env } from '@/helpers/env';
-import login from '@/setup/login';
+import { API_URL, MOCK_SITE_URL } from '@/helpers/env';
 import { injectTracker } from '@/setup/tracker';
 import { generatePayload } from '@/utils/generator';
 import { expect, test } from '@playwright/test';
@@ -13,8 +12,6 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   const context = await browser.newContext({ userAgent });
   const page = await context.newPage();
 
-  const { storage, org } = await login();
-
   // 1. Navigate to the page and verify Page View event sent
   const pageViewPromise = page.waitForRequest(
     (req) =>
@@ -26,11 +23,12 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
   const utmParams = '?utm_source=test_source&utm_medium=test_medium&utm_campaign=test_campaign';
   const refererUrl = 'https://example.com/referrer-page';
 
-  await page.goto(`${env.mockSiteURL}/index.html${utmParams}`, {
+  await page.goto(`${MOCK_SITE_URL}/index.html${utmParams}`, {
     referer: refererUrl,
   });
 
-  await injectTracker(page, org.id as string, env.mockSiteURL);
+  const { org } = JSON.parse(process.env.ORG_DATA || '{}');
+  await injectTracker(page, org.id as string, MOCK_SITE_URL);
 
   const pageViewReq = await pageViewPromise;
   expect(pageViewReq).toBeTruthy();
@@ -77,17 +75,16 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
     }
   `;
 
-  const cookie = storage.cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; ');
-
   // Use a more efficient polling mechanism that overlaps fetch latency with wait time
   // but avoids a mandatory 500ms delay on the first successful attempt.
   for (let i = 0; i < 20; i++) {
     // Start the 500ms timer
     const waitPromise = new Promise((resolve) => setTimeout(resolve, 500));
 
-    const gqlRes = await fetch(`${env.apiURL}/gql`, {
+    const gqlRes = await fetch(`${API_URL}/gql`, {
       method: 'POST',
-      headers: { Cookie: cookie, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ query }),
     });
 

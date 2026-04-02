@@ -1,4 +1,5 @@
-import { env } from '@/helpers/env';
+import { API_URL, PROXY_URL } from '@/helpers/env';
+import { generateToken } from '@/setup/tracker';
 import { generatePayload } from '@/utils/generator';
 
 const ONE_HOUR_MS = 3600000;
@@ -15,9 +16,11 @@ async function main() {
   });
 
   console.log('Sending event...', eventPayload.event_id);
-  const eventRes = await fetch(`${env.proxyURL}/events`, {
+  const org = JSON.parse(process.env.ORG_DATA || '{}');
+  const token = await generateToken(org.id as string, 'http://localhost');
+  const eventRes = await fetch(`${PROXY_URL}/events`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify(eventPayload),
   });
 
@@ -49,9 +52,10 @@ async function main() {
   `;
 
   console.log('Querying GraphQL...');
-  const gqlRes = await fetch(`${env.apiURL}/gql`, {
+  const gqlRes = await fetch(`${API_URL}/gql`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify({ query }),
   });
 

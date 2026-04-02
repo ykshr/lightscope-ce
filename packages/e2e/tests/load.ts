@@ -1,4 +1,5 @@
-import { env } from '@/helpers/env';
+import { PROXY_URL } from '@/helpers/env';
+import { generateToken } from '@/setup/tracker';
 import { generatePayload } from '@/utils/generator';
 
 const CONCURRENCY = 100;
@@ -13,9 +14,11 @@ async function sendEvent() {
   });
 
   try {
-    const res = await fetch(`${env.proxyURL}/events`, {
+    const org = JSON.parse(process.env.ORG_DATA || '{}');
+    const token = await generateToken(org.id as string, 'http://localhost');
+    const res = await fetch(`${PROXY_URL}/events`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(eventPayload),
     });
     return res.ok;

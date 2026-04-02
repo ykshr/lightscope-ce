@@ -1,3 +1,5 @@
+import { AlgorithmTypes } from 'hono/jwt';
+
 const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
 const PROXY_URL = process.env.PROXY_URL || 'http://127.0.0.1:3002';
 const WEB_URL = process.env.WEB_URL || 'http://127.0.0.1:3000';
@@ -5,8 +7,8 @@ const MOCK_SITE_URL = process.env.MOCK_SITE_URL || 'http://127.0.0.1:8080';
 
 export { API_URL, MOCK_SITE_URL, PROXY_URL, WEB_URL };
 
-const JWT_SECRET = process.env.JWT_SECRET || 'this-is-a-secret-for-testing-purposes-only';
-const JWT_ALGORITHM = process.env.JWT_ALGORITHM || 'HS256';
+const JWT_SECRET = process.env.JWT_SECRET || 'secret-for-dev-only-do-not-use-in-prod';
+const JWT_ALGORITHM = process.env.JWT_ALGORITHM || AlgorithmTypes.HS256;
 
 export { JWT_ALGORITHM, JWT_SECRET };
 

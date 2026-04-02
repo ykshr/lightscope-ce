@@ -27,7 +27,7 @@ test('Browser Tracking Script Verification', async ({ browser }) => {
     referer: refererUrl,
   });
 
-  const { org } = JSON.parse(process.env.ORG_DATA || '{}');
+  const org = JSON.parse(process.env.ORG_DATA || '{}');
   await injectTracker(page, org.id as string, MOCK_SITE_URL);
 
   const pageViewReq = await pageViewPromise;

@@ -93,14 +93,18 @@ export default function OrganizationSwitcher() {
                         <span className="truncate font-medium text-destructive">
                           未登録 (Unregistered)
                         </span>
-                        <span className="truncate text-xs text-destructive/80">Please create an organization</span>
+                        <span className="truncate text-xs text-destructive/80">
+                          Please create an organization
+                        </span>
                       </>
                     ) : (
                       <>
                         <span className="truncate font-medium">
                           {activeOrganization?.name || 'Not selected'}
                         </span>
-                        <span className="truncate text-xs">{activeOrganization?.metadata?.plan}</span>
+                        <span className="truncate text-xs">
+                          {activeOrganization?.metadata?.plan}
+                        </span>
                       </>
                     )}
                   </div>
@@ -147,9 +151,7 @@ export default function OrganizationSwitcher() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create an Organization</DialogTitle>
-          <DialogDescription>
-            Enter the details for your new organization.
-          </DialogDescription>
+          <DialogDescription>Enter the details for your new organization.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleCreateOrg} className="space-y-4">
           <div className="space-y-2">

@@ -66,7 +66,6 @@ const unauthenticatedRouter = createBrowserRouter([
 
 function App() {
   const { data, isPending } = authClient.useSession();
-  console.log({ data, isPending });
 
   if (isPending) return null;
 

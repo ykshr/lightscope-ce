@@ -1,15 +1,16 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Filter, RotateCcw, Trash } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import ResponsiveModal from '@/components/common/ResponsiveModal';
 import DateBeforeAfterInput from '@/components/inputs/DateBeforeAfterInput';
 import LogicalInput from '@/components/inputs/LogicalInput';
 import TagInput from '@/components/inputs/TagInput';
-import ResponsiveModal from '@/components/common/ResponsiveModal';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
 import { type ArticleFilter } from '@/types/filter';
+import { Filter, RotateCcw, Trash } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 export default function ArticleFilter() {
   const [open, setOpen] = useState(false);
@@ -37,6 +38,9 @@ export default function ArticleFilter() {
     updateUrlParams(articleFilter);
     setOpen(false);
   };
+
+  const isDesktop = useIsDesktop();
+  const formHight = isDesktop ? 65 : 50;
 
   return (
     <ResponsiveModal
@@ -75,7 +79,7 @@ export default function ArticleFilter() {
       onOpenChange={setOpen}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-        <ScrollArea className="h-[60vh] px-5">
+        <ScrollArea className={`h-[${formHight}vh] px-5`}>
           <div className="grid gap-6 py-4">
             {/* Date fields */}
             <Label className="text-base font-bold">Dates</Label>

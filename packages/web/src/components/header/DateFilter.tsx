@@ -3,19 +3,12 @@ import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { convertDateString, getStartOfMinute, getStartOfNextMinute } from '@/helpers/date';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
 import { cn } from '@/utils';
 import * as Tabs from '@radix-ui/react-tabs';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock } from 'lucide-react';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -148,104 +141,118 @@ function CustomDateRangePicker({
   return (
     <ResponsiveModal
       trigger={
-        <Button variant={isActive ? 'default' : 'outline'}>
-          <CalendarIcon />
+        <Button variant={isActive ? 'default' : 'outline'} className="gap-2">
+          <CalendarIcon className="h-4 w-4" />
+          <span className="hidden md:inline">Custom Date</span>
         </Button>
       }
-      title="Date Filter"
-      description="Set other date filter conditions"
+      title="Advanced Date Filter"
+      description="Choose relative presets or specific dates."
       open={open}
       onOpenChange={setOpen}
+      dialogClassName="md:max-w-2xl"
     >
       {/* Tabs Component */}
-      <Tabs.Root value={mode} onValueChange={setMode} className="w-full">
-        <Tabs.List className="grid w-full grid-cols-2 mb-4 bg-muted p-1 rounded-lg">
+      <Tabs.Root value={mode} onValueChange={setMode} className="w-full flex flex-col pt-2">
+        <Tabs.List className="grid w-full grid-cols-2 mb-6 bg-muted/50 p-1.5 rounded-lg border shadow-sm">
           <Tabs.Trigger
             value="relative"
             className={cn(
-              'py-1.5 text-sm font-medium transition-all rounded-md',
+              'py-2 text-sm font-semibold transition-all rounded-md flex items-center justify-center gap-2',
               tabTriggerClassName
             )}
           >
+            <Clock className="h-4 w-4" />
             Relative
           </Tabs.Trigger>
           <Tabs.Trigger
             value="absolute"
             className={cn(
-              'py-1.5 text-sm font-medium transition-all rounded-md',
+              'py-2 text-sm font-semibold transition-all rounded-md flex items-center justify-center gap-2',
               tabTriggerClassName
             )}
           >
-            Absolute
+            <CalendarIcon className="h-4 w-4" />
+            Absolute Range
           </Tabs.Trigger>
         </Tabs.List>
-        <Tabs.TabsContent value="relative" className="space-y-4">
-          <Label>Relative</Label>
-          <Select
-            value={selectedRelative.label}
-            onValueChange={(label) => {
-              const preset = RELATIVE_OPTIONS.find((o) => o.label === label);
-              if (preset) setSelectedRelative(preset);
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {RELATIVE_OPTIONS.map((o) => (
-                <SelectItem key={o.label} value={o.label}>
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
 
-          <div className="rounded-md bg-muted text-xs p-3 space-y-1">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">From (inclusive):</span>
-              <span className="font-medium">
-                {showCurrentDate(selectedRelative.startDateString)}
-              </span>
+        <div className="min-h-[280px]">
+          <Tabs.TabsContent value="relative" className="space-y-6 animate-in fade-in-50">
+            <div className="space-y-3">
+              <Label className="text-base">Quick Presets</Label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {RELATIVE_OPTIONS.map((o) => (
+                  <Button
+                    key={o.label}
+                    type="button"
+                    variant={selectedRelative.label === o.label ? 'default' : 'outline'}
+                    className="justify-start font-normal h-9"
+                    onClick={() => setSelectedRelative(o)}
+                  >
+                    {o.label}
+                  </Button>
+                ))}
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">To (exclusive):</span>
-              <span className="font-medium">
-                {showCurrentDate(selectedRelative.endDateString, false)}
-              </span>
-            </div>
-          </div>
-        </Tabs.TabsContent>
 
-        <Tabs.TabsContent value="absolute" className="space-y-4">
-          <Label>
-            Date Range
-            <Button
-              className="ml-auto"
-              variant="ghost"
-              size="sm"
-              onClick={() => setRange(undefined)}
-            >
-              Reset
-            </Button>
-          </Label>
-          <div className="rounded-md border bg-card overflow-hidden flex justify-center">
-            <Calendar
-              mode="range"
-              selected={range}
-              onSelect={setRange}
-              numberOfMonths={isDesktop ? 2 : 1}
-              autoFocus
-            />
-          </div>
-        </Tabs.TabsContent>
+            <div className="space-y-2">
+              <Label className="text-base">Selected Range Details</Label>
+              <div className="rounded-lg bg-muted/30 border text-sm p-4 space-y-2.5">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                  <span className="text-muted-foreground font-medium">From (inclusive)</span>
+                  <span className="font-semibold bg-background border px-2 py-1 rounded shadow-sm">
+                    {showCurrentDate(selectedRelative.startDateString)}
+                  </span>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                  <span className="text-muted-foreground font-medium">To (exclusive)</span>
+                  <span className="font-semibold bg-background border px-2 py-1 rounded shadow-sm">
+                    {showCurrentDate(selectedRelative.endDateString, false)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Tabs.TabsContent>
+
+          <Tabs.TabsContent value="absolute" className="space-y-4 animate-in fade-in-50">
+            <div className="flex items-center justify-between">
+              <Label className="text-base">Select Date Range</Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setRange(undefined)}
+                className="h-8 px-2 text-muted-foreground hover:text-foreground"
+              >
+                Reset Selection
+              </Button>
+            </div>
+
+            <div className="rounded-lg border bg-card/50 shadow-sm overflow-hidden flex justify-center p-2">
+              <Calendar
+                mode="range"
+                selected={range}
+                onSelect={setRange}
+                numberOfMonths={isDesktop ? 2 : 1}
+                autoFocus
+              />
+            </div>
+          </Tabs.TabsContent>
+        </div>
       </Tabs.Root>
-      <div className="p-4 border-t bg-muted/50 flex justify-end gap-2">
+
+      <div className="mt-6 pt-4 border-t flex justify-end gap-3">
+        <Button type="button" variant="outline" onClick={() => setOpen(false)} className="px-6">
+          Cancel
+        </Button>
         <Button
+          type="button"
           onClick={handleApply}
-          className="w-full mt-4"
+          className="px-8 shadow-sm"
           disabled={mode === 'absolute' && (!range?.from || !range?.to)}
         >
-          Apply Changes
+          Apply Filter
         </Button>
       </div>
     </ResponsiveModal>

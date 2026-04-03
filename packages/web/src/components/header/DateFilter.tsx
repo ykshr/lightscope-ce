@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { convertDateString, getStartOfMinute, getStartOfNextMinute } from '@/helpers/date';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
@@ -138,6 +139,8 @@ function CustomDateRangePicker({
     }
   };
 
+  const formHight = isDesktop ? 55 : 40;
+
   return (
     <ResponsiveModal
       trigger={
@@ -150,7 +153,6 @@ function CustomDateRangePicker({
       description="Choose relative presets or specific dates."
       open={open}
       onOpenChange={setOpen}
-      dialogClassName="md:max-w-2xl"
     >
       {/* Tabs Component */}
       <Tabs.Root value={mode} onValueChange={setMode} className="w-full flex flex-col pt-2">
@@ -176,8 +178,7 @@ function CustomDateRangePicker({
             Absolute Range
           </Tabs.Trigger>
         </Tabs.List>
-
-        <div className="min-h-[280px]">
+        <ScrollArea className={`h-[${formHight}vh] px-5`}>
           <Tabs.TabsContent value="relative" className="space-y-6 animate-in fade-in-50">
             <div className="space-y-3">
               <Label className="text-base">Quick Presets</Label>
@@ -228,7 +229,6 @@ function CustomDateRangePicker({
                 Reset Selection
               </Button>
             </div>
-
             <div className="rounded-lg border bg-card/50 shadow-sm overflow-hidden flex justify-center p-2">
               <Calendar
                 mode="range"
@@ -239,7 +239,7 @@ function CustomDateRangePicker({
               />
             </div>
           </Tabs.TabsContent>
-        </div>
+        </ScrollArea>
       </Tabs.Root>
 
       <div className="mt-6 pt-4 border-t flex justify-end gap-3">

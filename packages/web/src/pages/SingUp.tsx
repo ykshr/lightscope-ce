@@ -33,7 +33,15 @@ export default function SingUp() {
       return;
     }
 
-    setShowOrgDialog(true);
+    const orgs = await authClient.organization.list();
+
+    if (orgs.data && orgs.data.length > 0) {
+      // If the user already has an organization (e.g. from an invite), redirect to dashboard
+      navigate('/');
+    } else {
+      // If no organization, show the create organization dialog
+      setShowOrgDialog(true);
+    }
   };
 
   const handleCreateOrg = async (e: React.FormEvent) => {

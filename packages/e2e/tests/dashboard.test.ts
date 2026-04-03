@@ -72,7 +72,7 @@ test.describe('Web Dashboard Verification', () => {
     await expect(page.locator('text=Advanced Filter')).toBeVisible();
 
     // Input "test-site" into "Site Names" TagInput
-    const siteNamesInput = page.locator('div:has(> label:has-text("Site Names")) >> input');
+    const siteNamesInput = page.locator('div:has(> label:text-is("Site Names")) >> input');
     await siteNamesInput.fill('test-site');
     await siteNamesInput.press('Enter');
 
@@ -87,21 +87,21 @@ test.describe('Web Dashboard Verification', () => {
   test('should collapse and expand the sidebar', async ({ page }) => {
     await page.goto('/');
 
-    // On desktop, sidebar should be open and title visible
-    const title = page.locator('h1', { hasText: 'LittleScope' });
-    await expect(title).toBeVisible();
+    // On desktop, sidebar should be open
+    const sidebar = page.locator('[data-sidebar="sidebar"]');
+    await expect(sidebar).toHaveAttribute('data-state', 'expanded');
 
-    // Click the chevron left button to collapse
-    await page.locator('button:has(.lucide-chevron-left)').click();
+    // Click the trigger button to collapse
+    await page.locator('button[data-sidebar="trigger"]').click();
 
-    // Title should no longer be visible
-    await expect(title).toBeHidden();
+    // Sidebar should be collapsed
+    await expect(sidebar).toHaveAttribute('data-state', 'collapsed');
 
-    // Click the chevron right button to expand
-    await page.locator('button:has(.lucide-chevron-right)').click();
+    // Click the trigger button to expand
+    await page.locator('button[data-sidebar="trigger"]').click();
 
-    // Title should be visible again
-    await expect(title).toBeVisible();
+    // Sidebar should be expanded again
+    await expect(sidebar).toHaveAttribute('data-state', 'expanded');
   });
 
   test('should interact with the custom date range picker modal', async ({ page }) => {

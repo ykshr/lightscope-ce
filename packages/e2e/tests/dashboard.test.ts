@@ -80,8 +80,7 @@ test.describe('Web Dashboard Verification', () => {
     await page.locator('button', { hasText: 'Apply Changes' }).first().click();
 
     // Verify URL updates with the filter
-    await expect(page).toHaveURL(/articleFilter/);
-    await expect(page).toHaveURL(/test-site/);
+    await expect(page).toHaveURL(/isn=test-site/);
   });
 
   test('should collapse and expand the sidebar', async ({ page }) => {

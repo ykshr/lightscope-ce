@@ -1,17 +1,15 @@
-import { API_URL, MOCK_SITE_URL } from '@/helpers/env';
-import { injectTracker } from '@/setup/tracker';
-import { generatePayload } from '@/utils/generator';
-import { expect, test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { generatePayload } from '../utils/generator';
 
-const ONE_HOUR_MS = 3600000;
+const API_URL = 'http://127.0.0.1:3001';
+const MOCK_SITE_URL = 'http://127.0.0.1:8080';
 
-test('Browser Tracking Script Verification', async ({ browser, request }) => {
+test('Browser Tracking Script Verification', async ({ browser }) => {
   const generated = generatePayload();
   const userAgent = generated.user_agent;
 
   const context = await browser.newContext({ userAgent });
   const page = await context.newPage();
-  page.on('console', (msg) => console.log('BROWSER LOG:', msg.text()));
 
   // 1. Navigate to the page and verify Page View event sent
   const pageViewPromise = page.waitForRequest(
@@ -28,9 +26,6 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
     referer: refererUrl,
   });
 
-  const org = JSON.parse(process.env.ORG_DATA || '{}');
-  await injectTracker(page, org.id as string, MOCK_SITE_URL);
-
   const pageViewReq = await pageViewPromise;
   expect(pageViewReq).toBeTruthy();
   console.log('Page view event verified.');
@@ -39,21 +34,21 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
   expect(postData.query_params?.utm_source).toBe('test_source');
   expect(postData.referrer).toBe(refererUrl);
   // Optional: User agent should be sent in headers, verified by API
-  const headers = pageViewReq.headers();
+  const headers = await pageViewReq.headers();
   expect(headers['user-agent']).toBe(userAgent);
 
-  // 2. Click button
+  // 2. Click button and verify Custom Event sent
   const clickPromise = page.waitForRequest(
     (req) =>
       req.url().includes('/events') &&
       req.method() === 'POST' &&
-      JSON.parse(req.postData() || '{}').event_name === 'click'
+      JSON.parse(req.postData() || '{}').event_name === 'manual_click'
   );
 
   await page.click('#track-btn');
   const clickReq = await clickPromise;
   expect(clickReq).toBeTruthy();
-  console.log('Click event verified.');
+  console.log('Manual click event verified.');
 
   // 3. Wait for ingestion with dynamic polling
   console.log('Waiting for ingestion with dynamic polling...');
@@ -63,8 +58,8 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
   const query = `
     query {
       rank(
-        startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
-        endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
+        startDate: "${new Date(Date.now() - 3600000).toISOString()}"
+        endDate: "${new Date(Date.now() + 3600000).toISOString()}"
         limit: 10
       ) {
         total
@@ -82,13 +77,17 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
     // Start the 500ms timer
     const waitPromise = new Promise((resolve) => setTimeout(resolve, 500));
 
-    const res = await request.post(`${API_URL}/gql`, {
-      headers: { 'Content-Type': 'application/json' },
-      data: { query },
+    const gqlRes = await fetch(`${API_URL}/gql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
+      },
+      body: JSON.stringify({ query }),
     });
 
-    if (res.ok) {
-      const gqlData = await res.json();
+    if (gqlRes.ok) {
+      const gqlData = await gqlRes.json();
       articles = gqlData.data?.rank?.articles || [];
       const foundArticle = articles.find((a: any) => a.url.includes('index.html'));
       if (foundArticle) {

@@ -1,25 +1,22 @@
-import { API_URL, PROXY_URL } from '@/helpers/env';
-import { generateToken } from '@/setup/tracker';
-import { generatePayload } from '@/utils/generator';
+import { generatePayload } from '../utils/generator';
 
+const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
+const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3001';
 const DURATION_SECONDS = parseInt(process.argv[2] || '60', 10);
 const INTERVAL_MS = 1000;
-const ONE_HOUR_MS = 3600000;
 
 async function sendEvent() {
   const eventPayload = generatePayload({
     event_name: 'long_run_event',
     site_name: 'long-run-test',
-    url: 'http://example.com/long-run-page',
+    url: 'http://127.0.0.1:3000/long-run-page',
     user_agent: 'Long Run Test Agent',
   });
 
   try {
-    const org = JSON.parse(process.env.ORG_DATA || '{}');
-    const token = await generateToken(org.id as string, 'http://localhost');
-    const res = await fetch(`${PROXY_URL}/events`, {
+    const res = await fetch(`${INSERT_URL}/events`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(eventPayload),
     });
     if (res.ok) {
@@ -39,8 +36,8 @@ async function verifyData() {
   const query = `
     query {
       rank(
-        startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
-        endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
+        startDate: "${new Date(Date.now() - 3600000).toISOString()}"
+        endDate: "${new Date(Date.now() + 3600000).toISOString()}"
         limit: 10
       ) {
         total
@@ -56,7 +53,6 @@ async function verifyData() {
     const gqlRes = await fetch(`${API_URL}/gql`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ query }),
     });
 

@@ -30,31 +30,25 @@ trackerApp.post('/generate', async (c: Context) => {
     }
 
     const { origin, availableMinutes } = parsed.data;
-
-    const nbf = Math.floor(Date.now() / 1000);
-    const iat = Math.floor(Date.now() / 1000);
-    const exp = availableMinutes
+    const iat = availableMinutes
       ? Math.floor(Date.now() / 1000) + 60 * availableMinutes
       : undefined;
 
     const payload = {
       organizationId,
       origin,
-      nbf,
       iat,
-      exp,
     };
 
     const { secret, algorithm } = c.var.$.jwt;
     const token = await sign(payload, secret, algorithm);
+    const expiresAt = iat ? new Date(iat * 1000) : undefined;
 
     const data = {
       organizationId,
       origin,
-      notBefore: nbf,
-      issuedAt: iat,
-      expiresAt: exp,
       token,
+      expiresAt,
     };
 
     await c.var.$.prisma.tracker.create({ data });

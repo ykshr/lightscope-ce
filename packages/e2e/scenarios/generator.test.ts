@@ -1,5 +1,5 @@
-import { generateMinimalPayload, generatePayload } from '@/utils/generator';
-import { expect, test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { generatePayload, generateMinimalPayload } from '../utils/generator';
 import { UAParser } from 'ua-parser-js';
 
 test.describe('Data Generator Logic Verification', () => {

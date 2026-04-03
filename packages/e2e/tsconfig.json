@@ -8,8 +8,7 @@
     "baseUrl": ".",
     "paths": {
       "@lightscope-ce/tracker": ["../packages/tracker/src/index.ts"],
-      "@lightscope-ce/tracker/*": ["../packages/tracker/src/*"],
-      "@/*": ["tests/*"]
+      "@lightscope-ce/tracker/*": ["../packages/tracker/src/*"]
     }
   },
   "include": ["**/*.ts", "../packages/tracker/src/**/*.ts"]

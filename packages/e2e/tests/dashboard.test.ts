@@ -63,8 +63,8 @@ test.describe('Web Dashboard Verification', () => {
 
     // Click the filter button (has the lucide-funnel icon)
     await page
-      .locator('button')
-      .filter({ has: page.locator('.lucide-funnel') })
+      .locator('button', { hasText: 'Advanced Filter' })
+      .or(page.locator('button').filter({ has: page.locator('.lucide-filter') }))
       .first()
       .click();
 
@@ -77,7 +77,7 @@ test.describe('Web Dashboard Verification', () => {
     await siteNamesInput.press('Enter');
 
     // Click "Apply Changes"
-    await page.locator('button', { hasText: 'Apply Changes' }).first().click();
+    await page.locator('button:text-is("Apply Changes")').click();
 
     // Verify URL updates with the filter
     await expect(page).toHaveURL(/isn=test-site/);
@@ -125,7 +125,7 @@ test.describe('Web Dashboard Verification', () => {
     await page.locator('div[role="option"]:has-text("Yesterday")').click();
 
     // Click Apply Changes
-    await page.locator('button', { hasText: 'Apply Changes' }).first().click();
+    await page.locator('button:text-is("Apply Changes")').click();
 
     // Verify URL updates
     await expect(page).toHaveURL(/sd=So-1D/);

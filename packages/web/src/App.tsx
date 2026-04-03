@@ -65,11 +65,11 @@ const unauthenticatedRouter = createBrowserRouter([
 ]);
 
 function App() {
-  const { data: session, isPending } = authClient.useSession();
+  const { data, isPending } = authClient.useSession();
 
   if (isPending) return null;
 
-  if (!session) {
+  if (!data) {
     return <RouterProvider router={unauthenticatedRouter} />;
   }
 

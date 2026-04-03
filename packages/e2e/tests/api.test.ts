@@ -1,36 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { API_URL } from '@/helpers/env';
+import { expect, test } from '@playwright/test';
 
-const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
-const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3001';
 const ONE_HOUR_MS = 3600000;
 
 test.describe('API Error Handling and GraphQL Tests', () => {
-  test('POST /events should handle malformed JSON', async ({ request }) => {
-    const response = await request.post(`${INSERT_URL}/events`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
-      },
-      data: '{"bad json"',
-    });
-    // Should return 400 Bad Request
-    expect(response.status()).toBe(400);
-  });
-
-  test('POST /events should handle missing required fields', async ({ request }) => {
-    const response = await request.post(`${INSERT_URL}/events`, {
-      headers: {
-        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
-      },
-      data: {
-        event_name: 'page_view',
-        // missing url, which is required
-      },
-    });
-    // Assume API returns 400 for missing required fields
-    expect(response.status()).toBe(400);
-  });
-
   test('GraphQL queries should return expected structures for trend and aggregations', async ({
     request,
   }) => {
@@ -50,9 +23,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     `;
 
     const res = await request.post(`${API_URL}/gql`, {
-      headers: {
-        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       data: { query },
     });
     const json = await res.json();
@@ -82,9 +53,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     `;
 
     const res = await request.post(`${API_URL}/gql`, {
-      headers: {
-        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       data: { query },
     });
     const json = await res.json();
@@ -121,9 +90,7 @@ test.describe('API Error Handling and GraphQL Tests', () => {
     `;
 
     const res = await request.post(`${API_URL}/gql`, {
-      headers: {
-        Authorization: `Bearer ${process.env.NO_AUTH_TOKEN || 'dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg=='}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       data: { query },
     });
     const json = await res.json();

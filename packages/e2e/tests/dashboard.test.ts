@@ -77,7 +77,11 @@ test.describe('Web Dashboard Verification', () => {
     await siteNamesInput.press('Enter');
 
     // Click "Apply Changes"
-    await page.locator('button', { hasText: 'Apply Changes' }).first().click();
+    await page
+      .locator('button', { hasText: 'Apply Changes' })
+      .filter({ hasText: 'Apply Changes' })
+      .first()
+      .click({ force: true });
 
     // Verify URL updates with the filter
     await expect(page).toHaveURL(/isn=test-site/);
@@ -125,7 +129,11 @@ test.describe('Web Dashboard Verification', () => {
     await page.locator('div[role="option"]:has-text("Yesterday")').click();
 
     // Click Apply Changes
-    await page.locator('button', { hasText: 'Apply Changes' }).first().click();
+    await page
+      .locator('button', { hasText: 'Apply Changes' })
+      .filter({ hasText: 'Apply Changes' })
+      .first()
+      .click({ force: true });
 
     // Verify URL updates
     await expect(page).toHaveURL(/sd=So-1D/);

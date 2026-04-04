@@ -1,45 +1,35 @@
 # AGENTS.md (clickhouse)
 
-Contains:
-- XML configurations for clickhouse server
-- CREATE TABLE statements run at the clickhouse server startup
-- Materialized views
-
-This defines the analytics data layer.
+This package defines the analytics data layer. It contains XML configuration files for the ClickHouse server, CREATE TABLE statements executed at startup, and definitions for Materialized Views.
 
 ---
 
-# Schema Safety Rules
+## Coding Conventions
+- **Schema Safety**:
+  - Schema changes must always be backward compatible.
+  - Ensure that rollouts to the production environment are safe.
+  - Never remove existing columns that are used by the API.
+- **Materialized Views Rules**:
+  - If making changes, consider the impact on data flow and ensure there is no data loss.
+  - Verify that the correct aggregation logic is maintained.
 
-Never:
-- DROP TABLE without migration plan
-- Change engine type casually
-- Remove existing columns used by API
-- Change primary key without impact explanation
+## Execution & Testing Commands
+- **Build Docker Image**:
+  ```bash
+  pnpm --filter @lightscope-ce/clickhouse run docker:build
+  ```
+- *Note*: Typically, you will use `docker compose up -d` from the root directory to build and start the test environment.
 
----
+## Project Structure
+- `config.xml`, `users.xml`: Core configuration files for the ClickHouse server.
+- `init-db.sh` or `*.sql`: Schema definitions (tables and materialized views) initialized when the container starts.
 
-# Compatibility
-
-Schema changes must be:
-- Backward compatible
-- Safe for production rollout
-- Explicitly documented
-
----
-
-# Materialized Views
-
-If modifying:
-- Explain data flow impact
-- Ensure no data loss
-- Ensure correct aggregation logic
-
----
-
-# Critical Analytics Integrity
-
-Never:
-- Change time bucketing logic silently
-- Change timezone handling silently
-- Change session definition silently
+## Prohibitions
+- **Schema Prohibitions**:
+  - Never execute `DROP TABLE` without a migration plan.
+  - Do not change engine types (like `MergeTree`) casually.
+  - Do not change the primary key (`ORDER BY` clause) without a prior explanation of the impact.
+- **Analytics Integrity Prohibitions**:
+  - Do not silently change time bucketing logic.
+  - Do not silently change time zone handling logic.
+  - Do not silently change the definition of a session.

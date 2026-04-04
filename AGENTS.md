@@ -1,73 +1,45 @@
-# AGENTS.md (root)
+# LightScope CE - Global AGENTS.md
 
-This is a TypeScript monorepo using pnpm workspaces.
+This repository is a TypeScript monorepo using `pnpm workspaces`. Please strictly follow these rules:
 
-packages/
-  api/
-  clickhouse/
-  e2e/
-  mock-site/
-  proxy/
-  tracker/
-  web/
+## Coding Conventions
+- **Language**: Write all code, comments, and commit messages in concise and intuitive English.
+- **Type Safety**: Maintain strict TypeScript. The use of `any` or unsafe casting (like `as any`) is prohibited.
+- **Import Rules**: Always import from a package's public exports. Deep cross-package imports (e.g., `../../api/src/...`) are not allowed.
+- **Minimal Changes**: Edit only the necessary lines. Do not reformat unrelated files, and avoid rewriting entire modules unnecessarily.
 
-There is NO turborepo, nx, or build orchestrator.
+## Execution & Testing Commands
+- **Run CI/CD Checks**: Executes linting, type checking, unit testing, and formatting across all packages. Always run this before marking a task as complete.
+  ```bash
+  pnpm run ci
+  ```
+- **Run E2E Tests**:
+  ```bash
+  pnpm run test:e2e
+  ```
+- **Code Formatting (Prettier)**:
+  ```bash
+  pnpm run format
+  ```
 
-AI agents must respect package boundaries.
+## Project Structure
+This repository does not use a build orchestrator like `turborepo` or `nx`. Please respect the boundaries of each package:
+- `packages/api/`: GraphQL API backend (Hono, GraphQL Server, Better Auth, Prisma).
+- `packages/proxy/`: REST API for tracker event ingestion (Hono).
+- `packages/web/`: Frontend dashboard (React 19, Vite, Tailwind v4).
+- `packages/tracker/`: Client-side tracking script.
+- `packages/clickhouse/`: ClickHouse configuration files and migrations.
+- `packages/e2e/`: End-to-end tests using Playwright.
+- `packages/mock-site/`: Mock site used for E2E testing.
 
----
-
-# CI/CD Checks
-
-Before marking a task as complete, you must run the following command to ensure all checks pass:
-
-```bash
-pnpm run ci
-```
-
-This command runs linting, type checking, unit tests, and formatting checks across all packages.
-
----
-
-# Global Rules
-
-## 1. Language
-- Write all projects in concise and intuitive English
-
-## 2. Do Not Change Architecture
-Never introduce:
-- ORM (Exceptions: Prisma and Better Auth for user management)
-- New framework
-- New build system
-- Global state libraries
-- Monorepo restructuring
-
-## 3. Minimal Diffs
-- Edit only necessary lines.
-- Do not reformat unrelated files.
-- Do not rewrite entire modules unless required.
-
-## 4. Type Safety
-- No `any`
-- No unsafe casting
-- Strict TypeScript only
-
-## 5. No Deep Cross-Package Imports
-
-Allowed:
-  import from package public exports
-
-Not allowed:
-  ../../api/src/...
-
----
-
-# AI Operational Rule
-
-Before modifying:
-1. Read entire file
-2. Understand surrounding architecture
-3. Preserve style and patterns
-4. Make smallest safe change possible
-
-If unsure → ask instead of guessing.
+## Prohibitions
+- **Unauthorized Architecture Changes**:
+  - Do not introduce new ORMs (Exceptions: Prisma and Better Auth for user management are allowed).
+  - Do not introduce new frameworks.
+  - Do not introduce new build systems or orchestrators.
+  - Do not introduce global state management libraries.
+  - Do not restructure the monorepo itself.
+- **Rules for AI Agents**:
+  - Do not modify a file without reading the entire file first.
+  - Do not ignore the surrounding architecture or existing styles/patterns.
+  - Do not guess or proceed with implementation if unsure (ask questions instead).

@@ -1,81 +1,43 @@
-# AGENTS.md (api)
+# AGENTS.md (proxy)
 
 Stack:
 - Node (ESM)
-- Apollo Server v5
-- Express v5
+- Hono
 - ClickHouse
-- Redis
-- DataLoader
-- GraphQL Codegen
-- zod
+- Zod
+- LRU Cache
 
-Entry:
-  src/index.ts
+Entry: `src/index.ts`
 
 ---
 
-# Architectural Rules
+## Coding Conventions
+- **Endpoint Responsibilities**: The primary role is to receive events from trackers quickly, validate them, and save them to ClickHouse.
+- **Input Validation**: Use Zod to strictly validate that the incoming payloads are in the correct format.
+- **CORS and Authentication**: The `JwtAuth` provider strictly validates the `Origin` or `Referer` headers against the `origin` claim in the JWT. If these headers are missing, it treats the request as unauthorized (to prevent tracking).
 
-## Resolver Layer
-- Resolvers must stay thin.
-- Business logic belongs in service modules.
-- No raw SQL inside resolver body.
+## Execution & Testing Commands
+- **Start Development Server**:
+  ```bash
+  pnpm --filter @lightscope-ce/proxy run dev
+  ```
+- **Build**:
+  ```bash
+  pnpm --filter @lightscope-ce/proxy run build
+  ```
+- **Run Tests (Vitest)**:
+  ```bash
+  pnpm --filter @lightscope-ce/proxy run test
+  ```
 
-## ClickHouse Rules
+## Project Structure
+- `src/index.ts`: The entry point for the Hono application.
+- `src/helpers/`: Utility functions for parsing tracker data and IP geolocation (e.g., MaxMind).
+- `src/routes/`: Route definitions for the REST API.
 
-This is a high-volume analytics system.
-
-Never:
-- SELECT * without LIMIT
-- Perform unbounded queries
-- Perform client-side aggregation
-- Build SQL via unsafe string concatenation
-
-Always:
-- Explicit GROUP BY
-- Explicit projections
-- Explicit WHERE
-- Explicit LIMIT (unless aggregation query)
-
----
-
-## Validation
-
-GraphQL type definitions are not runtime validation.
-
-All external inputs must:
-- Be validated with zod
-- Be normalized before usage
-
----
-
-## Performance
-
-- Assume large datasets
-- Avoid loading full result sets in memory
-- Prefer pre-aggregated tables
-
----
-
-## Security
-
-Never:
-- Log raw SQL errors
-- Expose internal table names
-- Trust client-provided column names
-
----
-
-## Codegen
-
-After modifying:
-- schema
-- queries
-- mutations
-- fragments
-
-Run:
-  pnpm run codegen
-
-Never manually edit generated files.
+## Prohibitions
+- **Security**:
+  - If `ALLOWED_ORIGIN` is not configured, the CORS middleware is skipped and the browser's Same-Origin Policy applies. Do not change this behavior without authorization.
+  - To prevent SQL injection, you must always use parameterized queries when inserting data into ClickHouse.
+- **Performance**:
+  - Do not introduce heavy synchronous processing that would block incoming requests from trackers.

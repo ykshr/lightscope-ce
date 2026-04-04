@@ -5,8 +5,8 @@ This is the web frontend for LightScope, built with React and Vite.
 ## Features
 
 - **Frontend Framework**: React 19 with Vite
-- **Styling**: Tailwind CSS 4 with `shadcn/ui` components (Radix UI)
-- **Data Fetching**: TanStack Query (React Query) with GraphQL
+- **Styling**: Tailwind CSS v4 with `shadcn/ui` components (Radix UI)
+- **Data Fetching**: TanStack Query (React Query v5) with GraphQL
 - **Visualization**: Recharts for charts and D3 for map visualizations
 - **Routing**: React Router
 - **Internationalization**: `i18n-iso-countries` support
@@ -15,28 +15,29 @@ This is the web frontend for LightScope, built with React and Vite.
 
 ### Prerequisites
 
-Ensure you have Node.js and npm/yarn/pnpm installed.
+Ensure you have Node.js and pnpm installed. It is recommended to run commands from the monorepo root.
 
 ### Scripts
 
-- **`npm run dev`**: Starts the development server on port 5173.
-- **`npm run build`**: Type-checks and builds the project for production.
-- **`npm run preview`**: Previews the production build locally.
-- **`npm run lint`**: Runs ESLint to check for code quality issues.
-- **`npm run codegen`**: Generates TypeScript types and hooks from GraphQL queries/mutations.
+Run these from the `packages/web` directory, or use `pnpm --filter @lightscope-ce/web run <script>` from the root:
+
+- `npm run dev`: Starts the Vite development server on port 5173.
+- `npm run build`: Type-checks and builds the project for production.
+- `npm run preview`: Previews the production build locally.
+- `npm run lint`: Runs ESLint to check for code quality issues.
+- `npm run codegen`: Generates TypeScript types and React Query hooks from GraphQL queries/mutations.
+- `npm run test`: Runs the Vitest test suite.
 
 ## Development
 
-1. Install dependencies:
-
+1. Install dependencies from the root:
    ```bash
-   npm install
+   pnpm install
    ```
 
-2. Start the development server:
-
+2. Start the development server from the root:
    ```bash
-   npm run dev
+   pnpm --filter @lightscope-ce/web run dev
    ```
 
 3. Open your browser at `http://localhost:5173`.

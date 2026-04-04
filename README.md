@@ -6,7 +6,7 @@ LightScope CE (Community Edition) is a high-performance web analytics platform p
 
 This project uses **pnpm workspaces** to manage the following packages:
 
-- **packages/web**: Frontend application (React, Vite, TailwindCSS, Recharts)
+- **packages/web**: Frontend application (React 19, Vite, Tailwind CSS v4, Recharts)
 - **packages/api**: GraphQL API backend (Node.js, Hono `@hono/graphql-server`, ClickHouse, Prisma, Better Auth)
 - **packages/proxy**: REST API for tracker event ingestion (Node.js, Hono, ClickHouse)
 - **packages/clickhouse**: ClickHouse database configuration and SQL migrations
@@ -16,7 +16,7 @@ This project uses **pnpm workspaces** to manage the following packages:
 
 ## Tech Stack
 
-- **Frontend**: React, TypeScript, Vite, Tailwind CSS, Radix UI, TanStack Query
+- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Radix UI, TanStack Query
 - **Backend**: Node.js, TypeScript, Hono, GraphQL API (api), REST API (proxy), Prisma (SQLite), Better Auth
 - **Database**: ClickHouse (for high-speed analytics queries)
 - **Infrastructure**: Docker, Docker Compose, Nginx

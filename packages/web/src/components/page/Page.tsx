@@ -3,7 +3,7 @@ import Header from '@/components/page/Header';
 import { ReactNode } from 'react';
 
 interface PageProps {
-  header: ReactNode;
+  header?: ReactNode;
   children: ReactNode;
 }
 

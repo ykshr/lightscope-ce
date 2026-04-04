@@ -2,10 +2,10 @@ import Sidebar from '@/components/sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import authClient from '@/helpers/auth';
 import Article from '@/pages/article';
+import SingIn from '@/pages/auth/SingIn';
+import SingUp from '@/pages/auth/SingUp';
 import Overview from '@/pages/overview';
 import Ranking from '@/pages/ranking';
-import SingIn from '@/pages/SingIn';
-import SingUp from '@/pages/SingUp';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([

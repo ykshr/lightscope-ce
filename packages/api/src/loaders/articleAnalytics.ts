@@ -55,10 +55,12 @@ export default function getLoader<T extends AnalyticsBase>(
 
       const analyticsMap = new Map<string, T[]>();
       for (const a of analytics) {
-        analyticsMap.set(
-          a.url,
-          analytics.filter((aa) => a.url === aa.url)
-        );
+        const existing = analyticsMap.get(a.url);
+        if (existing) {
+          existing.push(a);
+        } else {
+          analyticsMap.set(a.url, [a]);
+        }
       }
 
       return urls.map((url) => analyticsMap.get(url) ?? null);

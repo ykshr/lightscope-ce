@@ -7,7 +7,7 @@ export default function Ranking() {
 
   return (
     <Page header={header}>
-      <ArticleTable />
+      <ArticleTable title="Ranking" />
     </Page>
   );
 }

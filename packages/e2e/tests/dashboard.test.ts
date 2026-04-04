@@ -115,14 +115,10 @@ test.describe('Web Dashboard Verification', () => {
       .click();
 
     // Verify modal is open
-    await expect(page.getByRole('heading', { name: 'Date Filter' })).toBeVisible();
-
-    // Click the Select trigger for Relative options
-    // Assuming the SelectValue shows "Today" by default
-    await page.locator('button[role="combobox"]').first().click();
+    await expect(page.getByRole('heading', { name: 'Advanced Date Filter' })).toBeVisible();
 
     // Select "Yesterday"
-    await page.locator('div[role="option"]:has-text("Yesterday")').click();
+    await page.getByRole('button', { name: 'Yesterday', exact: true }).click();
 
     // Click Apply Changes
     await page.locator('button:text-is("Apply Changes")').click();

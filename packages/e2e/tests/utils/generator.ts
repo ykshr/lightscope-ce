@@ -1,12 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { UAParser } from 'ua-parser-js';
 import {
-  AnalyticsPayload,
-  BrowsingAttributes,
   generateAnalyticsPayload,
+  AnalyticsPayload,
   OGMetadata,
   UserAttributes,
-} from '../../../tracker/src/index';
+  BrowsingAttributes,
+} from '@lightscope-ce/tracker';
 
 // Export Payload as alias for AnalyticsPayload
 export type Payload = AnalyticsPayload;

@@ -1,0 +1,8 @@
+services:
+  clickhouse:
+    build:
+      context: ./packages/clickhouse
+      cache_from:
+        - type=gha
+      cache_to:
+        - type=gha,mode=max

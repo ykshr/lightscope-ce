@@ -68,6 +68,8 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Run format:check
         run: pnpm run format:check
@@ -100,5 +102,10 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm --filter @lightscope-ce/e2e exec playwright install-deps
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Run E2E tests
         run: pnpm run test:e2e
+        env:
+          COMPOSE_FILE: docker-compose.yml:docker-compose.ci.yml

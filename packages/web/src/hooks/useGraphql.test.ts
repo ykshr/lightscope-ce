@@ -83,7 +83,7 @@ describe('fetcher lib', () => {
       const { result } = renderHook(() => useGraphql('query { test }'));
 
       await expect(result.current()).rejects.toThrow(
-        JSON.stringify({ status: 500, text: '{"errors":[]}' })
+        JSON.stringify({ status: 500, body: '{"errors":[]}' })
       );
     });
 
@@ -113,7 +113,7 @@ describe('fetcher lib', () => {
 
       const { result } = renderHook(() => useGraphql('query { test }'));
 
-      await expect(result.current()).rejects.toThrow(JSON.stringify({ status: 500, text: '{}' }));
+      await expect(result.current()).rejects.toThrow(JSON.stringify({ status: 500, body: '{}' }));
     });
   });
 });

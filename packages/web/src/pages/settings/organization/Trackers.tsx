@@ -30,7 +30,7 @@ export default function Trackers({}: Props) {
       const snippet = `<script defer src="${PROXY_URL}/static/tracker.js" data-host="${PROXY_URL}" data-token="${token}"></script>`;
       setGeneratedSnippet(snippet);
     } catch (err: any) {
-      setError(err.message || 'An error occurred');
+      setError(err || 'An error occurred');
     } finally {
       setIsLoading(false);
     }

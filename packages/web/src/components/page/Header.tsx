@@ -7,7 +7,7 @@ interface HeaderProps {
 
 export default function Header({ children }: HeaderProps) {
   return (
-    <header className="flex-none px-6 py-5 border-b">
+    <header className="flex-none p-3 border-b">
       <div className="w-full flex items-center justify-between gap-4">
         <SidebarTrigger />
         {children && <div className="flex items-center gap-2">{children}</div>}

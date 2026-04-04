@@ -3,12 +3,16 @@ import CardLiveViews from '@/components/cards/LiveViews';
 import CardTotalViews from '@/components/cards/TotalViews';
 import CardUniqueUsers from '@/components/cards/UniqueUsers';
 import AreaStacked from '@/components/charts/ArticleAreaStacked';
+import DateFilter from '@/components/filters/DateFilter';
+import Page from '@/components/page/Page';
 import PieReferrerDomain from '@/components/pies/PieReferrerDomain';
 import ArticleTable from '@/components/tables/ArticleTable';
 
 export default function Overview() {
+  const header = <DateFilter />;
+
   return (
-    <>
+    <Page header={header}>
       {/* Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <CardTotalViews />
@@ -29,6 +33,6 @@ export default function Overview() {
 
       {/* Articles Table */}
       <ArticleTable title="Ranking" viewMoreHref="/articles" />
-    </>
+    </Page>
   );
 }

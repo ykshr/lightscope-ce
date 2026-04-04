@@ -1,32 +1,16 @@
-import Footer from '@/components/Footer';
-import Header from '@/components/header';
 import Sidebar from '@/components/sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import authClient from '@/helpers/auth';
 import Article from '@/pages/article';
+import SingIn from '@/pages/auth/SingIn';
+import SingUp from '@/pages/auth/SingUp';
 import Overview from '@/pages/overview';
 import Ranking from '@/pages/ranking';
-import SingIn from '@/pages/SingIn';
-import SingUp from '@/pages/SingUp';
-import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
-
-function AppLayout() {
-  return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-      <Header />
-
-      <main className="flex-1 overflow-y-auto p-10 scrollbar-hide w-full mx-auto flex flex-col gap-6">
-        <Outlet />
-      </main>
-
-      <Footer />
-    </div>
-  );
-}
+import Settings from '@/pages/settings';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
     errorElement: <></>,
     children: [
       {
@@ -40,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: '/article',
         element: <Article />,
+      },
+      {
+        path: '/settings',
+        element: <Settings />,
       },
       {
         path: '*',

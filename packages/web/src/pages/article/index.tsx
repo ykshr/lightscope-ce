@@ -1,13 +1,16 @@
-import CardTotalViews from '@/components/cards/TotalViews';
-import CardUniqueUsers from '@/components/cards/UniqueUsers';
 import CardEngagementTime from '@/components/cards/EngagementTime';
 import CardLiveViews from '@/components/cards/LiveViews';
-import { Separator } from '@/components/ui/separator';
-import Metadata, { type Article } from './Metadata';
+import CardTotalViews from '@/components/cards/TotalViews';
+import CardUniqueUsers from '@/components/cards/UniqueUsers';
+import AreaStacked from '@/components/charts/ArticleAreaStacked';
+import ArticleFilter from '@/components/filters/ArticleFilter';
+import DateFilter from '@/components/filters/DateFilter';
+import MapCountry from '@/components/maps/MapCountry';
+import Page from '@/components/page/Page';
 import PieReferrerDomain from '@/components/pies/PieReferrerDomain';
 import PieUtmCampaign from '@/components/pies/PieUtmCampaign';
-import MapCountry from '@/components/maps/MapCountry';
-import AreaStacked from '@/components/charts/ArticleAreaStacked';
+import { Separator } from '@/components/ui/separator';
+import Metadata, { type Article } from './Metadata';
 
 // --- Sample Data ---
 const SAMPLE_ARTICLE: Article = {
@@ -30,10 +33,17 @@ const SAMPLE_ARTICLE: Article = {
 
 // --- Main Component ---
 export default function Article() {
+  const header = (
+    <>
+      <DateFilter />
+      <ArticleFilter />
+    </>
+  );
+
   const article = SAMPLE_ARTICLE;
 
   return (
-    <>
+    <Page header={header}>
       {/* Main Header Card */}
       <Metadata article={article} />
 
@@ -51,6 +61,6 @@ export default function Article() {
       </div>
 
       <AreaStacked showLegend showAnalyticsFilter />
-    </>
+    </Page>
   );
 }

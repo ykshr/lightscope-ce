@@ -61,10 +61,10 @@ test.describe('Web Dashboard Verification', () => {
     await page.goto('/article');
     // await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
-    // Click the filter button (has the lucide-filter icon)
+    // Click the filter button (has the lucide-funnel icon)
     await page
-      .locator('button', { hasText: 'Advanced Filter' })
-      .or(page.locator('button').filter({ has: page.locator('.lucide-filter') }))
+      .locator('button')
+      .filter({ has: page.locator('.lucide-funnel') })
       .first()
       .click();
 
@@ -77,9 +77,7 @@ test.describe('Web Dashboard Verification', () => {
     await siteNamesInput.press('Enter');
 
     // Click "Apply Changes"
-    // Since there might be multiple "Apply Changes" buttons (e.g. from Date Filter and Article Filter),
-    // we want the one inside the active dialog.
-    await page.locator('div[role="dialog"] button:has-text("Apply Changes")').click();
+    await page.locator('button', { hasText: 'Apply Changes' }).first().click();
 
     // Verify URL updates with the filter
     await expect(page).toHaveURL(/isn=test-site/);
@@ -126,8 +124,8 @@ test.describe('Web Dashboard Verification', () => {
     // Select "Yesterday"
     await page.locator('div[role="option"]:has-text("Yesterday")').click();
 
-    // Click Apply Changes inside the active dialog
-    await page.locator('div[role="dialog"] button:has-text("Apply Changes")').click();
+    // Click Apply Changes
+    await page.locator('button', { hasText: 'Apply Changes' }).first().click();
 
     // Verify URL updates
     await expect(page).toHaveURL(/sd=So-1D/);

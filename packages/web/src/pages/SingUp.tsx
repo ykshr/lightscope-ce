@@ -118,7 +118,7 @@ export default function SingUp() {
       </div>
 
       <Dialog open={showOrgDialog} onOpenChange={setShowOrgDialog}>
-        <DialogContent showCloseButton={false}>
+        {showOrgDialog && <DialogContent showCloseButton={false}>
           <DialogHeader>
             <DialogTitle>Create an Organization</DialogTitle>
             <DialogDescription>
@@ -165,7 +165,7 @@ export default function SingUp() {
               <Button type="submit">Create</Button>
             </div>
           </form>
-        </DialogContent>
+        </DialogContent>}
       </Dialog>
     </div>
   );

@@ -148,7 +148,7 @@ export default function OrganizationSwitcher() {
         </SidebarMenuItem>
       </SidebarMenu>
 
-      <DialogContent>
+      {showCreateDialog && <DialogContent>
         <DialogHeader>
           <DialogTitle>Create an Organization</DialogTitle>
           <DialogDescription>Enter the details for your new organization.</DialogDescription>
@@ -185,7 +185,7 @@ export default function OrganizationSwitcher() {
             <Button type="submit">Create</Button>
           </div>
         </form>
-      </DialogContent>
+      </DialogContent>}
     </Dialog>
   );
 }

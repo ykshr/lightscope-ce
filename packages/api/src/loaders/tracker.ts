@@ -19,7 +19,7 @@ export default async function getLoader(c: Context) {
       organizationId,
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: 'asc',
     },
   });
 

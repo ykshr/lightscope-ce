@@ -34,37 +34,37 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Cache eslint
-        uses: actions/cache@v4
-        with:
-          path: '**/.eslintcache'
-          key: ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-eslint-
+      # - name: Cache eslint
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: '**/.eslintcache'
+      #     key: ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-eslint-
 
-      - name: Cache prettier
-        uses: actions/cache@v4
-        with:
-          path: '**/.prettier-cache'
-          key: ${{ runner.os }}-prettier-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-prettier-
+      # - name: Cache prettier
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: '**/.prettier-cache'
+      #     key: ${{ runner.os }}-prettier-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-prettier-
 
-      - name: Cache vitest
-        uses: actions/cache@v4
-        with:
-          path: '**/node_modules/.vite/vitest'
-          key: ${{ runner.os }}-vitest-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-vitest-
+      # - name: Cache vitest
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: '**/node_modules/.vite/vitest'
+      #     key: ${{ runner.os }}-vitest-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-vitest-
 
-      - name: Cache typescript
-        uses: actions/cache@v4
-        with:
-          path: '**/*.tsbuildinfo'
-          key: ${{ runner.os }}-typescript-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-typescript-
+      # - name: Cache typescript
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: '**/*.tsbuildinfo'
+      #     key: ${{ runner.os }}-typescript-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-typescript-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -85,12 +85,12 @@ jobs:
         id: playwright-version
         run: echo "VERSION=$(pnpm --filter @lightscope-ce/e2e exec playwright --version | awk '{print $2}')" >> $GITHUB_ENV
 
-      - name: Cache Playwright Browsers
-        uses: actions/cache@v4
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.VERSION }}
+      # - name: Cache Playwright Browsers
+      #   uses: actions/cache@v4
+      #   id: playwright-cache
+      #   with:
+      #     path: ~/.cache/ms-playwright
+      #     key: ${{ runner.os }}-playwright-${{ env.VERSION }}
 
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'

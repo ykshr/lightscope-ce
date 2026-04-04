@@ -30,66 +30,40 @@ import { useState } from 'react';
 import { Props } from './type';
 
 export default function Members({ org, me }: Props) {
-  const [showInviteDialog, setShowInviteDialog] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRole, setInviteRole] = useState('member');
-  const [inviteError, setInviteError] = useState('');
-  const [updateError, setUpdateError] = useState('');
-
+  const [error, setError] = useState('');
   const isAdmin = me?.role === 'admin' || me?.role === 'owner';
 
-  const handleInviteMember = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setInviteError('');
-    const { error } = await authClient.organization.inviteMember({
-      email: inviteEmail,
-      role: inviteRole as 'member' | 'admin' | 'owner',
-    });
-    if (error) {
-      setInviteError(error.message || 'Failed to invite member');
-    } else {
-      setShowInviteDialog(false);
-      setInviteEmail('');
-      setInviteRole('member');
-    }
-  };
-
-  function clearErrors() {
-    setInviteError('');
-    setUpdateError('');
-  }
-
   const handleUpdateRole = async (memberId: string, role: string) => {
-    clearErrors();
+    setError('');
     const { error } = await authClient.organization.updateMemberRole({
       memberId,
       role,
     });
     if (error) {
-      setUpdateError(error.message || 'Failed to update role');
+      setError(error.message || 'Failed to update role');
     }
   };
 
   const handleRemoveMember = async (memberId: string) => {
     if (confirm('Are you sure you want to remove this member?')) {
-      clearErrors();
+      setError('');
       const { error } = await authClient.organization.removeMember({
         memberIdOrEmail: memberId,
       });
       if (error) {
-        setUpdateError(error.message || 'Failed to remove member');
+        setError(error.message || 'Failed to remove member');
       }
     }
   };
 
   const handleCancelInvitation = async (invitationId: string) => {
     if (confirm('Are you sure you want to cancel this invitation?')) {
-      clearErrors();
+      setError('');
       const { error } = await authClient.organization.cancelInvitation({
         invitationId,
       });
       if (error) {
-        setUpdateError(error.message || 'Failed to cancel invitation');
+        setError(error.message || 'Failed to cancel invitation');
       }
     }
   };
@@ -103,51 +77,7 @@ export default function Members({ org, me }: Props) {
             Manage members for {org.name}. {!isAdmin && 'You need to be an admin to edit.'}
           </CardDescription>
         </div>
-        <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
-          <DialogTrigger asChild>
-            <Button variant="outline" size="sm" disabled={!isAdmin}>
-              Invite Member
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Invite Member</DialogTitle>
-              <DialogDescription>Invite a new member to {org.name}.</DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleInviteMember} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="inviteEmail">Email</Label>
-                <Input
-                  id="inviteEmail"
-                  type="email"
-                  required
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="inviteRole">Role</Label>
-                <Select value={inviteRole} onValueChange={setInviteRole}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="member">Member</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="owner">Owner</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {inviteError && <div className="text-sm text-destructive">{inviteError}</div>}
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setShowInviteDialog(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit">Invite</Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <InviteDialog name={org.name} isAdmin={isAdmin} />
       </CardHeader>
       <CardContent>
         <Table>
@@ -187,10 +117,85 @@ export default function Members({ org, me }: Props) {
             ))}
           </TableBody>
         </Table>
-        {inviteError && <span className="text-xs text-destructive">{inviteError}</span>}
-        {updateError && <span className="text-xs text-destructive">{updateError}</span>}
+        {error && <span className="text-xs text-destructive">{error}</span>}
       </CardContent>
     </Card>
+  );
+}
+
+function InviteDialog({ name, isAdmin }: { name: string; isAdmin: boolean }) {
+  const [showDialog, setShowDialog] = useState(false);
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState<'member' | 'admin' | 'owner'>('member');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+    const { error } = await authClient.organization.inviteMember({ email, role });
+    if (!error) {
+      setEmail('');
+      setRole('member');
+      setShowDialog(false);
+    } else {
+      setError(error.message || 'An error occurred');
+    }
+    setIsLoading(false);
+  };
+
+  return (
+    <Dialog open={showDialog} onOpenChange={setShowDialog}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" disabled={!isAdmin}>
+          Invite Member
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Invite Member</DialogTitle>
+          <DialogDescription>Invite a new member to {name}.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleInvite} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="inviteEmail">Email</Label>
+            <Input
+              id="inviteEmail"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="inviteRole">Role</Label>
+            <Select
+              value={role}
+              onValueChange={(value) => setRole(value as 'member' | 'admin' | 'owner')}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="member">Member</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="owner">Owner</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {error && <div className="text-sm text-destructive">{error}</div>}
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              Invite
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
 

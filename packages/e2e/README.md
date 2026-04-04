@@ -15,7 +15,7 @@ This directory contains the E2E test suite using Playwright and standard testing
    Run the following from the workspace root:
    ```bash
    pnpm install
-   pnpm --filter lightscope-e2e run postinstall
+   pnpm --filter @lightscope-ce/e2e run postinstall
    ```
 
 2. **Build the Tracker Package:**
@@ -43,7 +43,7 @@ This directory contains the E2E test suite using Playwright and standard testing
 A quick verification that the proxy API accepts events and ClickHouse ingests them.
 
 ```bash
-pnpm --filter lightscope-e2e run test:smoke
+pnpm --filter @lightscope-ce/e2e run test:smoke
 ```
 
 ### 2. Browser Verification (Playwright)
@@ -55,7 +55,7 @@ Verifies the actual client-side tracking script (`packages/tracker`) running in 
 - Queries the GraphQL API to verify data ingestion.
 
 ```bash
-pnpm --filter lightscope-e2e run test:e2e
+pnpm --filter @lightscope-ce/e2e run test:e2e
 ```
 
 ### 3. Load Test
@@ -64,7 +64,7 @@ Sends a high volume of events concurrently to test API performance.
 - Default: 100 concurrent requests for 5 seconds.
 
 ```bash
-pnpm --filter lightscope-e2e run test:load
+pnpm --filter @lightscope-ce/e2e run test:load
 ```
 
 ### 4. Long Running Test
@@ -73,9 +73,9 @@ Sends events periodically over a duration to verify stability.
 - Default: 1 event/sec for 60 seconds.
 
 ```bash
-pnpm --filter lightscope-e2e run test:long-run
+pnpm --filter @lightscope-ce/e2e run test:long-run
 # Custom duration (seconds)
-pnpm --filter lightscope-e2e run test:long-run -- 120
+pnpm --filter @lightscope-ce/e2e run test:long-run -- 120
 ```
 
 ## Troubleshooting

@@ -1,6 +1,6 @@
 {
-  "name": "lightscope-e2e",
-  "version": "1.0.0",
+  "name": "@lightscope-ce/e2e",
+  "version": "0.0.1",
   "description": "End-to-End tests for Lightscope CE",
   "scripts": {
     "postinstall": "playwright install chromium",

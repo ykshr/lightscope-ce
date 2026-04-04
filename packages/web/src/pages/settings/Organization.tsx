@@ -38,6 +38,60 @@ import { fetchPost } from '@/helpers/fetch';
 import { useState } from 'react';
 import useFetchMembers from './useFetchMembers';
 
+function OrganizationRow({ org, isActive, onSetActive, onDelete }: any) {
+  const [name, setName] = useState(org.name);
+  const [slug, setSlug] = useState(org.slug || '');
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState('');
+
+  const isChanged = name !== org.name || slug !== (org.slug || '');
+
+  const handleUpdate = async () => {
+    setIsUpdating(true);
+    setError('');
+    const { error } = await authClient.organization.update({
+      organizationId: org.id,
+      data: { name, slug: slug || undefined },
+    });
+    if (error) {
+      setError(error.message || 'Failed to update');
+    }
+    setIsUpdating(false);
+  };
+
+  return (
+    <TableRow>
+      <TableCell>
+        <Button
+          variant={isActive ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => onSetActive(org.id)}
+          disabled={isActive}
+        >
+          {isActive ? 'Active' : 'Set Active'}
+        </Button>
+      </TableCell>
+      <TableCell>
+        <Input value={name} onChange={(e) => setName(e.target.value)} />
+      </TableCell>
+      <TableCell>
+        <Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="Slug" />
+      </TableCell>
+      <TableCell className="text-right">
+        <div className="flex justify-end gap-2 items-center">
+          {error && <span className="text-xs text-destructive">{error}</span>}
+          <Button size="sm" disabled={!isChanged || isUpdating} onClick={handleUpdate}>
+            Save
+          </Button>
+          <Button variant="destructive" size="sm" onClick={() => onDelete(org.id)}>
+            Delete
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
 export default function Organization() {
   const [origin, setOrigin] = useState('');
   const [generatedSnippet, setGeneratedSnippet] = useState('');
@@ -74,42 +128,20 @@ export default function Organization() {
     reFetchMembers,
   } = useFetchMembers(activeOrganization?.id);
 
-  // Update organization state
-  const [showUpdateOrgDialog, setShowUpdateOrgDialog] = useState(false);
-  const [updateOrgName, setUpdateOrgName] = useState('');
-  const [updateOrgSlug, setUpdateOrgSlug] = useState('');
-  const [orgUpdateError, setOrgUpdateError] = useState('');
-
-  const handleUpdateOrg = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setOrgUpdateError('');
-    if (!activeOrganization) return;
-    const { error } = await authClient.organization.update({
-      organizationId: activeOrganization.id,
-      data: {
-        name: updateOrgName,
-        slug: updateOrgSlug || undefined,
-      },
-    });
-    if (error) {
-      setOrgUpdateError(error.message || 'Failed to update organization');
-    } else {
-      setShowUpdateOrgDialog(false);
-    }
-  };
-
-  const handleDeleteOrg = async () => {
-    if (!activeOrganization) return;
+  const handleDeleteOrg = async (orgId: string) => {
     if (
       confirm('Are you sure you want to delete this organization? This action cannot be undone.')
     ) {
       const { error } = await authClient.organization.delete({
-        organizationId: activeOrganization.id,
+        organizationId: orgId,
       });
       if (error) {
         alert(error.message || 'Failed to delete organization');
       } else {
-        await authClient.organization.setActive({ organizationId: null });
+        // If we deleted the active organization, set active to null
+        if (activeOrganization?.id === orgId) {
+          await authClient.organization.setActive({ organizationId: null });
+        }
       }
     }
   };
@@ -191,43 +223,39 @@ export default function Organization() {
           <CardTitle>Organization Management</CardTitle>
           <CardDescription>Manage your organizations and active workspace.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Active Organization</Label>
-            {isOrganizationsPending ? (
-              <div>Loading organizations...</div>
-            ) : (
-              <Select value={activeOrganization?.id || 'none'} onValueChange={handleSetActiveOrg}>
-                <SelectTrigger className="w-full sm:w-[300px]">
-                  <SelectValue placeholder="Select an organization" />
-                </SelectTrigger>
-                <SelectContent>
-                  {organizations?.map((org) => (
-                    <SelectItem key={org.id} value={org.id}>
-                      {org.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setUpdateOrgName(activeOrganization?.name || '');
-                setUpdateOrgSlug(activeOrganization?.slug || '');
-                setShowUpdateOrgDialog(true);
-              }}
-            >
-              Edit Organization
-            </Button>
-            <Button variant="destructive" size="sm" onClick={handleDeleteOrg}>
-              Delete Organization
-            </Button>
-          </div>
+        <CardContent>
+          {isOrganizationsPending ? (
+            <div>Loading organizations...</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-32">Status</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Slug</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {organizations?.map((org) => (
+                  <OrganizationRow
+                    key={org.id}
+                    org={org}
+                    isActive={activeOrganization?.id === org.id}
+                    onSetActive={handleSetActiveOrg}
+                    onDelete={handleDeleteOrg}
+                  />
+                ))}
+                {organizations?.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center text-muted-foreground">
+                      No organizations found.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
         <CardFooter>
           <Dialog open={showCreateOrgDialog} onOpenChange={setShowCreateOrgDialog}>
@@ -273,40 +301,6 @@ export default function Organization() {
           </Dialog>
         </CardFooter>
       </Card>
-      <Dialog open={showUpdateOrgDialog} onOpenChange={setShowUpdateOrgDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Update Organization</DialogTitle>
-            <DialogDescription>Modify your organization details.</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleUpdateOrg} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="updateOrgName">Name</Label>
-              <Input
-                id="updateOrgName"
-                required
-                value={updateOrgName}
-                onChange={(e) => setUpdateOrgName(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="updateOrgSlug">Slug (optional)</Label>
-              <Input
-                id="updateOrgSlug"
-                value={updateOrgSlug}
-                onChange={(e) => setUpdateOrgSlug(e.target.value)}
-              />
-            </div>
-            {orgUpdateError && <div className="text-sm text-destructive">{orgUpdateError}</div>}
-            <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => setShowUpdateOrgDialog(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">Update</Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
 
       {activeOrganization && (
         <Card>

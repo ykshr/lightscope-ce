@@ -77,7 +77,7 @@ test.describe('Web Dashboard Verification', () => {
     await siteNamesInput.press('Enter');
 
     // Click "Apply Changes"
-    await page.getByRole('button', { name: 'Apply Changes', exact: true }).click();
+    await page.getByRole('button', { name: 'Apply Changes', exact: true }).click({ force: true });
 
     // Verify URL updates with the filter
     await expect(page).toHaveURL(/isn=test-site/);

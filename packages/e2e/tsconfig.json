@@ -9,7 +9,7 @@
     "paths": {
       "@lightscope-ce/tracker": ["../packages/tracker/src/index.ts"],
       "@lightscope-ce/tracker/*": ["../packages/tracker/src/*"],
-      "@/*": ["tests/*"]
+      "@/*": ["./*"]
     }
   },
   "include": ["**/*.ts", "../packages/tracker/src/**/*.ts"]

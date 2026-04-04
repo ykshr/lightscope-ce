@@ -6,6 +6,7 @@ import SingIn from '@/pages/auth/SingIn';
 import SingUp from '@/pages/auth/SingUp';
 import Overview from '@/pages/overview';
 import Ranking from '@/pages/ranking';
+import Settings from '@/pages/settings';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: '/article',
         element: <Article />,
+      },
+      {
+        path: '/settings',
+        element: <Settings />,
       },
       {
         path: '*',

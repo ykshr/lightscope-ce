@@ -2,6 +2,9 @@ import authClient from '@/helpers/auth';
 import { useEffect, useState } from 'react';
 
 export default function useFetchMembers(organizationId?: string) {
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const reFetchMembers = () => setRefreshTrigger((prev) => prev + 1);
+
   const [members, setMembers] = useState<any[]>([]);
   const [isPending, setIsPending] = useState(false);
 
@@ -23,7 +26,7 @@ export default function useFetchMembers(organizationId?: string) {
       setIsPending(false);
     }
     fetchMembers();
-  }, [organizationId]);
+  }, [organizationId, refreshTrigger]);
 
-  return { members, isPending };
+  return { members, isPending, reFetchMembers };
 }

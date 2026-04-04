@@ -1,46 +1,35 @@
 # AGENTS.md (tracker)
 
-This is the client-side analytics embed script.
-
-This package is performance critical and size sensitive.
-
----
-
-# Strict Rules
-
-1. No heavy dependencies.
-2. No React.
-3. No large libraries.
-4. No Node-only APIs.
-5. Must run in browser environment.
-6. Keep bundle size minimal.
-7. Preserve backward compatibility.
+クライアントサイドのアナリティクス埋め込みスクリプトです。
+このパッケージはパフォーマンスが非常に重要であり、バンドルサイズに敏感です。
 
 ---
 
-# Performance Rules
+## コーディング規約
+- **依存関係の制限**:
+  - 重い依存関係を追加しないでください。
+  - React や大きなライブラリをインポートしないでください。
+  - Node.js専用のAPI（`fs`, `path` など）は使用しないでください。
+- **ブラウザ環境**: `window`, `document`, `navigator` などのグローバルオブジェクトに依存し、ブラウザ環境で動作することを保証してください。
+- **後方互換性**: パブリック関数のシグネチャ、イベントフォーマット、ペイロードの形状は明示的な指示がない限り変更しないでください。
 
-- Minimize allocations.
-- Avoid large polyfills.
-- Avoid unnecessary abstraction.
-- Keep runtime small.
+## 実行・テストコマンド
+- ブラウザ用ビルド (esbuild):
+  ```bash
+  pnpm --filter @lightscope-ce/tracker run build:browser
+  ```
+- ビルド (TypeScript の型チェックを含む):
+  ```bash
+  pnpm --filter @lightscope-ce/tracker run build
+  ```
 
----
+## プロジェクト構造
+- `src/index.ts`: トラッカーのメインロジック。
+- `dist/browser.js`: `build:browser` によって出力されるブラウザ用のバンドルファイル。
 
-# Public API Stability
-
-Never:
-- Change public function signature
-- Change event format
-- Change payload shape
-
-Without explicit instruction.
-
----
-
-# Safety
-
-Never:
-- Block main thread unnecessarily
-- Introduce synchronous heavy computation
-- Leak memory via listeners
+## 禁止事項
+- **パフォーマンスと安全性**:
+  - メインスレッドを不必要にブロックする処理を導入しないでください。
+  - 同期的な重い計算処理を追加しないでください。
+  - イベントリスナーなどを適切にクリーンアップし、メモリリークを発生させないでください。
+  - 不要なポリフィルや抽象化を避け、ランタイムサイズを最小限に保ってください。

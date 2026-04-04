@@ -1,45 +1,35 @@
 # AGENTS.md (clickhouse)
 
-Contains:
-- XML configurations for clickhouse server
-- CREATE TABLE statements run at the clickhouse server startup
-- Materialized views
-
-This defines the analytics data layer.
+このパッケージはアナリティクスのデータレイヤーを定義します。ClickHouse サーバーのXML設定ファイル、起動時に実行される CREATE TABLE ステートメント、および Materialized Views の定義が含まれています。
 
 ---
 
-# Schema Safety Rules
+## コーディング規約
+- **スキーマの安全性**:
+  - スキーマの変更は常に後方互換性を持つ必要があります。
+  - プロダクション環境へのロールアウトが安全であることを確認してください。
+  - API で使用されている既存のカラムは削除しないでください。
+- **Materialized Views のルール**:
+  - 変更を行う場合は、データフローへの影響を考慮し、データの損失が発生しないようにしてください。
+  - 正しい集計ロジックが維持されていることを確認してください。
 
-Never:
-- DROP TABLE without migration plan
-- Change engine type casually
-- Remove existing columns used by API
-- Change primary key without impact explanation
+## 実行・テストコマンド
+- Docker イメージのビルド:
+  ```bash
+  pnpm --filter @lightscope-ce/clickhouse run docker:build
+  ```
+- ※ 通常はルートディレクトリの `docker compose up -d` を使用して起動およびテスト環境を構築します。
 
----
+## プロジェクト構造
+- `config.xml`, `users.xml`: ClickHouse サーバーのコア設定ファイル。
+- `init-db.sh` または `*.sql`: コンテナ起動時に初期化されるスキーマ定義（テーブルおよびマテリアライズドビュー）。
 
-# Compatibility
-
-Schema changes must be:
-- Backward compatible
-- Safe for production rollout
-- Explicitly documented
-
----
-
-# Materialized Views
-
-If modifying:
-- Explain data flow impact
-- Ensure no data loss
-- Ensure correct aggregation logic
-
----
-
-# Critical Analytics Integrity
-
-Never:
-- Change time bucketing logic silently
-- Change timezone handling silently
-- Change session definition silently
+## 禁止事項
+- **スキーマに関する禁止事項**:
+  - マイグレーションプランなしに `DROP TABLE` を実行しないでください。
+  - エンジンタイプ（`MergeTree` など）を安易に変更しないでください。
+  - 影響の事前説明なしにプライマリキー（`ORDER BY` 句）を変更しないでください。
+- **分析の整合性に関する禁止事項**:
+  - タイムバケッティングのロジックを無断で変更しないでください。
+  - タイムゾーンの処理ロジックを無断で変更しないでください。
+  - セッションの定義を無断で変更しないでください。

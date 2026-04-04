@@ -1,73 +1,45 @@
-# AGENTS.md (root)
+# LightScope CE - Global AGENTS.md
 
-This is a TypeScript monorepo using pnpm workspaces.
+このリポジトリは `pnpm workspaces` を使用した TypeScript モノレポ構成です。以下のルールに必ず従ってください。
 
-packages/
-  api/
-  clickhouse/
-  e2e/
-  mock-site/
-  proxy/
-  tracker/
-  web/
+## コーディング規約
+- **言語設定**: コード、コメント、コミットメッセージはすべて簡潔で直感的な英語で記述してください。
+- **型安全性**: Strict TypeScript を維持してください。`any` の使用や安全でないキャスト (`as any` など) は禁止です。
+- **インポートのルール**: 別パッケージのパブリックエクスポートからインポートしてください。パッケージをまたいだ深いインポート（例: `../../api/src/...`）は禁止です。
+- **変更の最小化**: 必要な行のみを編集してください。関係のないファイルのフォーマット変更や、モジュール全体の不必要な書き換えは避けてください。
 
-There is NO turborepo, nx, or build orchestrator.
+## 実行・テストコマンド
+- CI/CD チェックの実行: 全てのパッケージに対してLint、型チェック、ユニットテスト、フォーマットチェックを実行します。タスク完了前に必ず実行してください。
+  ```bash
+  pnpm run ci
+  ```
+- E2Eテストの実行:
+  ```bash
+  pnpm run test:e2e
+  ```
+- コードのフォーマット (Prettier):
+  ```bash
+  pnpm run format
+  ```
 
-AI agents must respect package boundaries.
+## プロジェクト構造
+このリポジトリには `turborepo` や `nx` などのビルドオーケストレーターは存在しません。各パッケージの境界を遵守してください。
+- `packages/api/`: GraphQL API バックエンド (Hono, GraphQL Server, Better Auth, Prisma)
+- `packages/proxy/`: トラッカーのイベント受信 REST API (Hono)
+- `packages/web/`: フロントエンド・ダッシュボード (React 19, Vite, Tailwind v4)
+- `packages/tracker/`: クライアントサイドのトラッキングスクリプト
+- `packages/clickhouse/`: ClickHouse の設定ファイルとマイグレーション
+- `packages/e2e/`: Playwright によるエンドツーエンドテスト
+- `packages/mock-site/`: E2Eテスト用のモックサイト
 
----
-
-# CI/CD Checks
-
-Before marking a task as complete, you must run the following command to ensure all checks pass:
-
-```bash
-pnpm run ci
-```
-
-This command runs linting, type checking, unit tests, and formatting checks across all packages.
-
----
-
-# Global Rules
-
-## 1. Language
-- Write all projects in concise and intuitive English
-
-## 2. Do Not Change Architecture
-Never introduce:
-- ORM (Exceptions: Prisma and Better Auth for user management)
-- New framework
-- New build system
-- Global state libraries
-- Monorepo restructuring
-
-## 3. Minimal Diffs
-- Edit only necessary lines.
-- Do not reformat unrelated files.
-- Do not rewrite entire modules unless required.
-
-## 4. Type Safety
-- No `any`
-- No unsafe casting
-- Strict TypeScript only
-
-## 5. No Deep Cross-Package Imports
-
-Allowed:
-  import from package public exports
-
-Not allowed:
-  ../../api/src/...
-
----
-
-# AI Operational Rule
-
-Before modifying:
-1. Read entire file
-2. Understand surrounding architecture
-3. Preserve style and patterns
-4. Make smallest safe change possible
-
-If unsure → ask instead of guessing.
+## 禁止事項
+- **アーキテクチャの無断変更**:
+  - 新たなORMの導入（例外：ユーザー管理用の Prisma および Better Auth のみ許可）
+  - 新たなフレームワークの導入
+  - 新たなビルドシステム・オーケストレーターの導入
+  - グローバルな状態管理ライブラリの導入
+  - モノレポ構造自体の再構築
+- **AIエージェントへの禁止事項**:
+  - 対象ファイル全体を読まずに変更を行うこと。
+  - 周辺のアーキテクチャや既存のスタイル・パターンを無視すること。
+  - 確信がないまま推測で実装を進めること（不明点は質問すること）。

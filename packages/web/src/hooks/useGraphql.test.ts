@@ -82,7 +82,9 @@ describe('fetcher lib', () => {
 
       const { result } = renderHook(() => useGraphql('query { test }'));
 
-      await expect(result.current()).rejects.toThrow('Response was not ok - 500: {"errors":[]}');
+      await expect(result.current()).rejects.toThrow(
+        JSON.stringify({ status: 500, text: '{"errors":[]}' })
+      );
     });
 
     it('should throw provided message when network response is not ok and no errors array exists', async () => {
@@ -111,7 +113,7 @@ describe('fetcher lib', () => {
 
       const { result } = renderHook(() => useGraphql('query { test }'));
 
-      await expect(result.current()).rejects.toThrow('Response was not ok - 500: {}');
+      await expect(result.current()).rejects.toThrow(JSON.stringify({ status: 500, text: '{}' }));
     });
   });
 });

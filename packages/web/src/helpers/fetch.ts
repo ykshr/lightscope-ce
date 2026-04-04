@@ -21,7 +21,7 @@ export async function fetchGet(
     if (res.status === 401) {
       throw new Error('Not authenticated');
     }
-    throw new Error(`Response was not ok - ${res.status}: ${text}`);
+    throw new Error(JSON.stringify({ status: res.status, text }));
   }
 
   if (!expectJson) return text;
@@ -54,7 +54,7 @@ export async function fetchPost(
     if (res.status === 401) {
       throw new Error('Not authenticated');
     }
-    throw new Error(`Response was not ok - ${res.status}: ${text}`);
+    throw new Error(JSON.stringify({ status: res.status, text }));
   }
 
   if (!expectJson) return text;
@@ -85,7 +85,7 @@ export async function fetchDelete(
     if (res.status === 401) {
       throw new Error('Not authenticated');
     }
-    throw new Error(`Response was not ok - ${res.status}: ${text}`);
+    throw new Error(JSON.stringify({ status: res.status, text }));
   }
 
   if (!expectJson) return text;

@@ -1,45 +1,45 @@
 # LightScope CE - Global AGENTS.md
 
-このリポジトリは `pnpm workspaces` を使用した TypeScript モノレポ構成です。以下のルールに必ず従ってください。
+This repository is a TypeScript monorepo using `pnpm workspaces`. Please strictly follow these rules:
 
-## コーディング規約
-- **言語設定**: コード、コメント、コミットメッセージはすべて簡潔で直感的な英語で記述してください。
-- **型安全性**: Strict TypeScript を維持してください。`any` の使用や安全でないキャスト (`as any` など) は禁止です。
-- **インポートのルール**: 別パッケージのパブリックエクスポートからインポートしてください。パッケージをまたいだ深いインポート（例: `../../api/src/...`）は禁止です。
-- **変更の最小化**: 必要な行のみを編集してください。関係のないファイルのフォーマット変更や、モジュール全体の不必要な書き換えは避けてください。
+## Coding Conventions
+- **Language**: Write all code, comments, and commit messages in concise and intuitive English.
+- **Type Safety**: Maintain strict TypeScript. The use of `any` or unsafe casting (like `as any`) is prohibited.
+- **Import Rules**: Always import from a package's public exports. Deep cross-package imports (e.g., `../../api/src/...`) are not allowed.
+- **Minimal Changes**: Edit only the necessary lines. Do not reformat unrelated files, and avoid rewriting entire modules unnecessarily.
 
-## 実行・テストコマンド
-- CI/CD チェックの実行: 全てのパッケージに対してLint、型チェック、ユニットテスト、フォーマットチェックを実行します。タスク完了前に必ず実行してください。
+## Execution & Testing Commands
+- **Run CI/CD Checks**: Executes linting, type checking, unit testing, and formatting across all packages. Always run this before marking a task as complete.
   ```bash
   pnpm run ci
   ```
-- E2Eテストの実行:
+- **Run E2E Tests**:
   ```bash
   pnpm run test:e2e
   ```
-- コードのフォーマット (Prettier):
+- **Code Formatting (Prettier)**:
   ```bash
   pnpm run format
   ```
 
-## プロジェクト構造
-このリポジトリには `turborepo` や `nx` などのビルドオーケストレーターは存在しません。各パッケージの境界を遵守してください。
-- `packages/api/`: GraphQL API バックエンド (Hono, GraphQL Server, Better Auth, Prisma)
-- `packages/proxy/`: トラッカーのイベント受信 REST API (Hono)
-- `packages/web/`: フロントエンド・ダッシュボード (React 19, Vite, Tailwind v4)
-- `packages/tracker/`: クライアントサイドのトラッキングスクリプト
-- `packages/clickhouse/`: ClickHouse の設定ファイルとマイグレーション
-- `packages/e2e/`: Playwright によるエンドツーエンドテスト
-- `packages/mock-site/`: E2Eテスト用のモックサイト
+## Project Structure
+This repository does not use a build orchestrator like `turborepo` or `nx`. Please respect the boundaries of each package:
+- `packages/api/`: GraphQL API backend (Hono, GraphQL Server, Better Auth, Prisma).
+- `packages/proxy/`: REST API for tracker event ingestion (Hono).
+- `packages/web/`: Frontend dashboard (React 19, Vite, Tailwind v4).
+- `packages/tracker/`: Client-side tracking script.
+- `packages/clickhouse/`: ClickHouse configuration files and migrations.
+- `packages/e2e/`: End-to-end tests using Playwright.
+- `packages/mock-site/`: Mock site used for E2E testing.
 
-## 禁止事項
-- **アーキテクチャの無断変更**:
-  - 新たなORMの導入（例外：ユーザー管理用の Prisma および Better Auth のみ許可）
-  - 新たなフレームワークの導入
-  - 新たなビルドシステム・オーケストレーターの導入
-  - グローバルな状態管理ライブラリの導入
-  - モノレポ構造自体の再構築
-- **AIエージェントへの禁止事項**:
-  - 対象ファイル全体を読まずに変更を行うこと。
-  - 周辺のアーキテクチャや既存のスタイル・パターンを無視すること。
-  - 確信がないまま推測で実装を進めること（不明点は質問すること）。
+## Prohibitions
+- **Unauthorized Architecture Changes**:
+  - Do not introduce new ORMs (Exceptions: Prisma and Better Auth for user management are allowed).
+  - Do not introduce new frameworks.
+  - Do not introduce new build systems or orchestrators.
+  - Do not introduce global state management libraries.
+  - Do not restructure the monorepo itself.
+- **Rules for AI Agents**:
+  - Do not modify a file without reading the entire file first.
+  - Do not ignore the surrounding architecture or existing styles/patterns.
+  - Do not guess or proceed with implementation if unsure (ask questions instead).

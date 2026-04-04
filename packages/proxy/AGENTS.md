@@ -11,33 +11,33 @@ Entry: `src/index.ts`
 
 ---
 
-## コーディング規約
-- **エンドポイントの責務**: トラッカーからのイベントを高速に受け取り、検証し、ClickHouseに保存することが主な役割です。
-- **入力値の検証**: Zod を使用して、受信したペイロードが正しいフォーマットであることを厳密に検証してください。
-- **CORS と認証**: JwtAuth プロバイダは、JWTの `origin` クレームに対して `Origin` または `Referer` ヘッダを厳密に検証します。これらのヘッダが欠落している場合は未承認（追跡防止）として扱います。
+## Coding Conventions
+- **Endpoint Responsibilities**: The primary role is to receive events from trackers quickly, validate them, and save them to ClickHouse.
+- **Input Validation**: Use Zod to strictly validate that the incoming payloads are in the correct format.
+- **CORS and Authentication**: The `JwtAuth` provider strictly validates the `Origin` or `Referer` headers against the `origin` claim in the JWT. If these headers are missing, it treats the request as unauthorized (to prevent tracking).
 
-## 実行・テストコマンド
-- 開発サーバー起動:
+## Execution & Testing Commands
+- **Start Development Server**:
   ```bash
   pnpm --filter @lightscope-ce/proxy run dev
   ```
-- ビルド:
+- **Build**:
   ```bash
   pnpm --filter @lightscope-ce/proxy run build
   ```
-- テスト実行 (Vitest):
+- **Run Tests (Vitest)**:
   ```bash
   pnpm --filter @lightscope-ce/proxy run test
   ```
 
-## プロジェクト構造
-- `src/index.ts`: Hono アプリケーションのエントリーポイント
-- `src/helpers/`: トラッカーデータのパース、IPアドレスのジオロケーション（MaxMindなど）のユーティリティ関数。
-- `src/routes/`: 各種 REST API のルート定義。
+## Project Structure
+- `src/index.ts`: The entry point for the Hono application.
+- `src/helpers/`: Utility functions for parsing tracker data and IP geolocation (e.g., MaxMind).
+- `src/routes/`: Route definitions for the REST API.
 
-## 禁止事項
-- **セキュリティ**:
-  - `ALLOWED_ORIGIN` が設定されていない場合、CORSミドルウェアはスキップされブラウザのSame-Origin Policyが適用されます。この挙動を無断で変更しないでください。
-  - SQLインジェクションを防ぐため、ClickHouseへのデータ挿入時には必ずパラメータ化されたクエリを使用してください。
-- **パフォーマンス**:
-  - トラッカーからのリクエストをブロックするような重い同期処理を導入しないでください。
+## Prohibitions
+- **Security**:
+  - If `ALLOWED_ORIGIN` is not configured, the CORS middleware is skipped and the browser's Same-Origin Policy applies. Do not change this behavior without authorization.
+  - To prevent SQL injection, you must always use parameterized queries when inserting data into ClickHouse.
+- **Performance**:
+  - Do not introduce heavy synchronous processing that would block incoming requests from trackers.

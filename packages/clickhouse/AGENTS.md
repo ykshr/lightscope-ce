@@ -1,35 +1,35 @@
 # AGENTS.md (clickhouse)
 
-このパッケージはアナリティクスのデータレイヤーを定義します。ClickHouse サーバーのXML設定ファイル、起動時に実行される CREATE TABLE ステートメント、および Materialized Views の定義が含まれています。
+This package defines the analytics data layer. It contains XML configuration files for the ClickHouse server, CREATE TABLE statements executed at startup, and definitions for Materialized Views.
 
 ---
 
-## コーディング規約
-- **スキーマの安全性**:
-  - スキーマの変更は常に後方互換性を持つ必要があります。
-  - プロダクション環境へのロールアウトが安全であることを確認してください。
-  - API で使用されている既存のカラムは削除しないでください。
-- **Materialized Views のルール**:
-  - 変更を行う場合は、データフローへの影響を考慮し、データの損失が発生しないようにしてください。
-  - 正しい集計ロジックが維持されていることを確認してください。
+## Coding Conventions
+- **Schema Safety**:
+  - Schema changes must always be backward compatible.
+  - Ensure that rollouts to the production environment are safe.
+  - Never remove existing columns that are used by the API.
+- **Materialized Views Rules**:
+  - If making changes, consider the impact on data flow and ensure there is no data loss.
+  - Verify that the correct aggregation logic is maintained.
 
-## 実行・テストコマンド
-- Docker イメージのビルド:
+## Execution & Testing Commands
+- **Build Docker Image**:
   ```bash
   pnpm --filter @lightscope-ce/clickhouse run docker:build
   ```
-- ※ 通常はルートディレクトリの `docker compose up -d` を使用して起動およびテスト環境を構築します。
+- *Note*: Typically, you will use `docker compose up -d` from the root directory to build and start the test environment.
 
-## プロジェクト構造
-- `config.xml`, `users.xml`: ClickHouse サーバーのコア設定ファイル。
-- `init-db.sh` または `*.sql`: コンテナ起動時に初期化されるスキーマ定義（テーブルおよびマテリアライズドビュー）。
+## Project Structure
+- `config.xml`, `users.xml`: Core configuration files for the ClickHouse server.
+- `init-db.sh` or `*.sql`: Schema definitions (tables and materialized views) initialized when the container starts.
 
-## 禁止事項
-- **スキーマに関する禁止事項**:
-  - マイグレーションプランなしに `DROP TABLE` を実行しないでください。
-  - エンジンタイプ（`MergeTree` など）を安易に変更しないでください。
-  - 影響の事前説明なしにプライマリキー（`ORDER BY` 句）を変更しないでください。
-- **分析の整合性に関する禁止事項**:
-  - タイムバケッティングのロジックを無断で変更しないでください。
-  - タイムゾーンの処理ロジックを無断で変更しないでください。
-  - セッションの定義を無断で変更しないでください。
+## Prohibitions
+- **Schema Prohibitions**:
+  - Never execute `DROP TABLE` without a migration plan.
+  - Do not change engine types (like `MergeTree`) casually.
+  - Do not change the primary key (`ORDER BY` clause) without a prior explanation of the impact.
+- **Analytics Integrity Prohibitions**:
+  - Do not silently change time bucketing logic.
+  - Do not silently change time zone handling logic.
+  - Do not silently change the definition of a session.

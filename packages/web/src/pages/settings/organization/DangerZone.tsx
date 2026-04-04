@@ -1,14 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import authClient from '@/helpers/auth';
-
-interface Props {
-  org: {
-    name: string;
-    slug: string;
-    id: string;
-  };
-}
+import { Props } from './type';
 
 export default function DangerZone({ org }: Props) {
   const handleDeleteOrg = async () => {

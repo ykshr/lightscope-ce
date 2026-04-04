@@ -11,29 +11,23 @@ import {
 } from '@/components/ui/table';
 import authClient from '@/helpers/auth';
 import { useState } from 'react';
+import { Props } from './type';
 
-interface Props {
-  org: {
-    name: string;
-    slug: string;
-    id: string;
-  };
-}
-
-export default function General({ org }: Props) {
+export default function General({ org, me }: Props) {
   const [newName, setNewName] = useState(org.name);
-  const [newSlug, setNewSlug] = useState(org.slug || '');
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState('');
 
-  const isChanged = newName !== org.name || newSlug !== (org.slug || '');
+  const isAdmin = me?.role === 'admin' || me?.role === 'owner';
+
+  const isChanged = newName !== org.name;
 
   const handleUpdate = async () => {
     setIsUpdating(true);
     setError('');
     const { error } = await authClient.organization.update({
       organizationId: org.id,
-      data: { name: newName, slug: newSlug || undefined },
+      data: { name: newName, slug: org.slug },
     });
     if (error) {
       setError(error.message || 'Failed to update');
@@ -45,7 +39,9 @@ export default function General({ org }: Props) {
     <Card>
       <CardHeader>
         <CardTitle>General</CardTitle>
-        <CardDescription>General settings for your organization.</CardDescription>
+        <CardDescription>
+          General settings for {org.name}. {!isAdmin && 'You need to be an admin to edit.'}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -59,18 +55,22 @@ export default function General({ org }: Props) {
           <TableBody>
             <TableRow>
               <TableCell>
-                <Input value={newName} onChange={(e) => setNewName(e.target.value)} />
-              </TableCell>
-              <TableCell>
                 <Input
-                  value={newSlug}
-                  onChange={(e) => setNewSlug(e.target.value)}
-                  placeholder="Slug"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  disabled={!isAdmin || isUpdating}
                 />
               </TableCell>
               <TableCell>
+                <Input value={org.slug} disabled />
+              </TableCell>
+              <TableCell>
                 <div className="flex gap-2 items-center">
-                  <Button size="sm" disabled={!isChanged || isUpdating} onClick={handleUpdate}>
+                  <Button
+                    size="sm"
+                    disabled={!isAdmin || !isChanged || isUpdating}
+                    onClick={handleUpdate}
+                  >
                     Save
                   </Button>
                 </div>

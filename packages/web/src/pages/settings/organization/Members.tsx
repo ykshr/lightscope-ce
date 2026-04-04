@@ -27,22 +27,16 @@ import {
 } from '@/components/ui/table';
 import authClient from '@/helpers/auth';
 import { useState } from 'react';
-import useFetchMembers from './useFetchMembers';
+import { Props } from './type';
 
-interface Props {
-  org: {
-    name: string;
-    slug: string;
-    id: string;
-  };
-}
-
-export default function Members({ org }: Props) {
+export default function Members({ org, me }: Props) {
   const [showInviteDialog, setShowInviteDialog] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('member');
   const [inviteError, setInviteError] = useState('');
-  const { members, isPending: isMembersPending, reFetchMembers } = useFetchMembers(org.id);
+  const [updateError, setUpdateError] = useState('');
+
+  const isAdmin = me?.role === 'admin' || me?.role === 'owner';
 
   const handleInviteMember = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,27 +49,49 @@ export default function Members({ org }: Props) {
       setInviteError(error.message || 'Failed to invite member');
     } else {
       setShowInviteDialog(false);
-      reFetchMembers();
       setInviteEmail('');
       setInviteRole('member');
     }
   };
 
-  const handleRemoveMember = async (memberId: string) => {
-    if (confirm('Are you sure you want to remove this member?')) {
-      const { error } = await authClient.organization.removeMember({
-        memberIdOrEmail: memberId,
-      });
-      if (!error) reFetchMembers();
-    }
-  };
+  function clearErrors() {
+    setInviteError('');
+    setUpdateError('');
+  }
 
   const handleUpdateRole = async (memberId: string, role: string) => {
+    clearErrors();
     const { error } = await authClient.organization.updateMemberRole({
       memberId,
       role,
     });
-    if (!error) reFetchMembers();
+    if (error) {
+      setUpdateError(error.message || 'Failed to update role');
+    }
+  };
+
+  const handleRemoveMember = async (memberId: string) => {
+    if (confirm('Are you sure you want to remove this member?')) {
+      clearErrors();
+      const { error } = await authClient.organization.removeMember({
+        memberIdOrEmail: memberId,
+      });
+      if (error) {
+        setUpdateError(error.message || 'Failed to remove member');
+      }
+    }
+  };
+
+  const handleCancelInvitation = async (invitationId: string) => {
+    if (confirm('Are you sure you want to cancel this invitation?')) {
+      clearErrors();
+      const { error } = await authClient.organization.cancelInvitation({
+        invitationId,
+      });
+      if (error) {
+        setUpdateError(error.message || 'Failed to cancel invitation');
+      }
+    }
   };
 
   return (
@@ -83,11 +99,13 @@ export default function Members({ org }: Props) {
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle>Members</CardTitle>
-          <CardDescription>Manage members for {org.name}.</CardDescription>
+          <CardDescription>
+            Manage members for {org.name}. {!isAdmin && 'You need to be an admin to edit.'}
+          </CardDescription>
         </div>
         <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" disabled={!isAdmin}>
               Invite Member
             </Button>
           </DialogTrigger>
@@ -132,58 +150,90 @@ export default function Members({ org }: Props) {
         </Dialog>
       </CardHeader>
       <CardContent>
-        {isMembersPending ? (
-          <div>Loading members...</div>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {members?.map((member: any) => (
-                <TableRow key={member.id}>
-                  <TableCell>{member.user.email}</TableCell>
-                  <TableCell>
-                    <Select
-                      value={member.role}
-                      onValueChange={(val) => handleUpdateRole(member.id, val)}
-                    >
-                      <SelectTrigger className="w-32 h-8">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="member">Member</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
-                        <SelectItem value="owner">Owner</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleRemoveMember(member.id)}
-                    >
-                      Remove
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {members?.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-center text-muted-foreground">
-                    No members found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        )}
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {org.members.map((member) => (
+              <MemberTableRow
+                member={{
+                  id: member.id,
+                  email: member.user?.email || 'unknown email',
+                  role: member.role,
+                  status: 'member',
+                }}
+                isEditable={isAdmin}
+                handleUpdateRole={handleUpdateRole}
+                handleRemoveMember={handleRemoveMember}
+              />
+            ))}
+            {org.invitations.map((invitation) => (
+              <MemberTableRow
+                member={{
+                  id: invitation.id,
+                  email: invitation.email,
+                  role: invitation.role,
+                  status: invitation.status,
+                }}
+                isEditable={isAdmin}
+                handleRemoveMember={handleCancelInvitation}
+              />
+            ))}
+          </TableBody>
+        </Table>
+        {inviteError && <span className="text-xs text-destructive">{inviteError}</span>}
+        {updateError && <span className="text-xs text-destructive">{updateError}</span>}
       </CardContent>
     </Card>
+  );
+}
+
+type Row = {
+  member: { id: string; email: string; role: string; status: string };
+  isEditable: boolean;
+  handleUpdateRole?: (id: string, role: string) => void;
+  handleRemoveMember?: (id: string) => void;
+};
+
+function MemberTableRow({ member, isEditable, handleUpdateRole, handleRemoveMember }: Row) {
+  const { id, email, role, status } = member;
+  const isMember = status === 'member';
+  return (
+    <TableRow key={id}>
+      <TableCell>{email}</TableCell>
+      <TableCell>
+        <Select
+          value={role}
+          onValueChange={(val) => handleUpdateRole?.(id, val)}
+          disabled={!isEditable || !handleUpdateRole}
+        >
+          <SelectTrigger className="w-32 h-8">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="member">Member</SelectItem>
+            <SelectItem value="admin">Admin</SelectItem>
+            <SelectItem value="owner">Owner</SelectItem>
+          </SelectContent>
+        </Select>
+      </TableCell>
+      <TableCell>{status}</TableCell>
+      <TableCell>
+        <Button
+          variant={isMember ? 'destructive' : 'outline'}
+          size="sm"
+          onClick={() => handleRemoveMember?.(id)}
+          disabled={!isEditable || !handleRemoveMember}
+        >
+          {isMember ? 'Remove' : 'Cancel'}
+        </Button>
+      </TableCell>
+    </TableRow>
   );
 }

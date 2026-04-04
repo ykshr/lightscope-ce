@@ -12,16 +12,9 @@ import { Label } from '@/components/ui/label';
 import { PROXY_URL } from '@/helpers/env';
 import { fetchPost } from '@/helpers/fetch';
 import { useState } from 'react';
+import { Props } from './type';
 
-interface Props {
-  org: {
-    name: string;
-    slug: string;
-    id: string;
-  };
-}
-
-export default function Trackers({ org }: Props) {
+export default function Trackers({}: Props) {
   const [origin, setOrigin] = useState('');
   const [generatedSnippet, setGeneratedSnippet] = useState('');
   const [isLoading, setIsLoading] = useState(false);

@@ -1,6 +1,6 @@
 import Page from '@/components/page/Page';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import Organization from '@/pages/settings/Organization';
+import Organization from '@/pages/settings/organization';
 import Profile from '@/pages/settings/Profile';
 
 export default function Settings() {

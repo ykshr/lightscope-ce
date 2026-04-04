@@ -7,7 +7,7 @@ const trackerApp = new Hono();
 
 const generateSchema = z.object({
   origin: z.string().url('Must be a valid URL like https://example.com'),
-  availableMinutes: z.number().int().nonnegative().optional().nullable(),
+  expiresAt: z.coerce.date().optional().nullable(),
 });
 
 trackerApp.get('/', async (c: Context) => {
@@ -29,13 +29,13 @@ trackerApp.post('/generate', async (c: Context) => {
       return c.json({ error: 'Invalid payload', details: parsed.error.errors }, 400);
     }
 
-    const { origin, availableMinutes } = parsed.data;
+    const { origin, expiresAt } = parsed.data;
 
-    const nbf = Math.floor(Date.now() / 1000);
-    const iat = Math.floor(Date.now() / 1000);
-    const exp = availableMinutes
-      ? Math.floor(Date.now() / 1000) + 60 * availableMinutes
-      : undefined;
+    const notBefore = new Date();
+    const nbf = Math.floor(notBefore.getTime() / 1000);
+    const issuedAt = new Date();
+    const iat = Math.floor(issuedAt.getTime() / 1000);
+    const exp = expiresAt ? Math.floor(expiresAt.getTime() / 1000) : undefined;
 
     const payload = {
       organizationId,
@@ -51,18 +51,21 @@ trackerApp.post('/generate', async (c: Context) => {
     const data = {
       organizationId,
       origin,
-      notBefore: nbf,
-      issuedAt: iat,
-      expiresAt: exp,
+      notBefore,
+      issuedAt,
+      expiresAt,
       token,
     };
 
+    console.log(data);
     await c.var.$.prisma.tracker.create({ data });
-
+    console.log('success');
     const trackers = await getLoader(c);
+    console.log(trackers);
 
     return c.json({ trackers });
   } catch (error) {
+    console.error(error);
     return c.json({ error: 'Failed to generate token' }, 500);
   }
 });

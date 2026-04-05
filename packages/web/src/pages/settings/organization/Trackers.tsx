@@ -56,9 +56,7 @@ export default function Trackers({ org, me }: Props) {
         <div>
           <CardTitle>Tracker tokens</CardTitle>
           <CardDescription>
-            Manage tracker tokens for {org.name}. {!isAdmin && 'You need to be an admin to edit.'}
-            Enter the exact origin (e.g., https://yourdomain.com) where your tracker will be
-            installed. The generated token will only be valid for requests coming from this origin.
+            Manage tracker tokens. {!isAdmin && 'You need to be an admin to edit.'}
           </CardDescription>
         </div>
         <NewTokenDialog name={org.name} isAdmin={isAdmin} reFetchTrackers={reFetchTrackers} />
@@ -152,7 +150,11 @@ function NewTokenDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New Token</DialogTitle>
-          <DialogDescription>Generate a new token to {name}.</DialogDescription>
+          <DialogDescription>
+            Generate a new token to {name}. Enter the exact origin (e.g., https://yourdomain.com)
+            where your tracker will be installed. The generated token will only be valid for
+            requests coming from this origin.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleNewToken} className="space-y-4">
           <div className="space-y-2">

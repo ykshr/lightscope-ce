@@ -1,14 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Label } from '@/components/ui/label';
 import authClient from '@/helpers/auth';
 import { useState } from 'react';
 import { Props } from './type';
@@ -40,44 +33,28 @@ export default function General({ org, me }: Props) {
       <CardHeader>
         <CardTitle>General</CardTitle>
         <CardDescription>
-          General settings for {org.name}. {!isAdmin && 'You need to be an admin to edit.'}
+          General settings. {!isAdmin && 'You need to be an admin to edit.'}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Display Name</TableHead>
-              <TableHead>Slug (readonly)</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                <Input
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  readOnly={!isAdmin || isUpdating}
-                />
-              </TableCell>
-              <TableCell>
-                <Input value={org.slug} readOnly={!isAdmin} />
-              </TableCell>
-              <TableCell>
-                <div className="flex gap-2 items-center">
-                  <Button
-                    size="sm"
-                    disabled={!isAdmin || !isChanged || isUpdating}
-                    onClick={handleUpdate}
-                  >
-                    Save
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="slug">Slug (readonly)</Label>
+          <Input id="slug" value={org.slug} readOnly />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="displayName">Display Name</Label>
+          <Input
+            id="displayName"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            readOnly={!isAdmin || isUpdating}
+          />
+        </div>
+        <div className="flex gap-2 items-center justify-end">
+          <Button size="sm" disabled={!isChanged || isUpdating} onClick={handleUpdate}>
+            Save
+          </Button>
+        </div>
         {error && <span className="text-xs text-destructive">{error}</span>}
       </CardContent>
     </Card>

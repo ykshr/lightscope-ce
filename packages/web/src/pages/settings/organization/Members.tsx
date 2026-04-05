@@ -74,7 +74,7 @@ export default function Members({ org, me }: Props) {
         <div>
           <CardTitle>Members</CardTitle>
           <CardDescription>
-            Manage members for {org.name}. {!isAdmin && 'You need to be an admin to edit.'}
+            Manage members. {!isAdmin && 'You need to be an admin to edit.'}
           </CardDescription>
         </div>
         <InviteDialog name={org.name} isAdmin={isAdmin} />

@@ -58,7 +58,7 @@ export default function Profile() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email (readonly)</Label>
-            <Input id="email" defaultValue={user?.email || ''} readOnly />
+            <Input id="email" value={user?.email || ''} readOnly />
           </div>
           <div className="space-y-2">
             <Label htmlFor="displayName">Display Name</Label>
@@ -74,6 +74,7 @@ export default function Profile() {
               Save
             </Button>
           </div>
+          {error && <span className="text-xs text-destructive">{error}</span>}
         </CardContent>
       </Card>
 

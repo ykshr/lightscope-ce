@@ -27,7 +27,7 @@ export default function General({ org, me }: Props) {
     setError('');
     const { error } = await authClient.organization.update({
       organizationId: org.id,
-      data: { name: newName, slug: org.slug },
+      data: { name: newName },
     });
     if (error) {
       setError(error.message || 'Failed to update');
@@ -48,7 +48,7 @@ export default function General({ org, me }: Props) {
           <TableHeader>
             <TableRow>
               <TableHead>Display Name</TableHead>
-              <TableHead>Slug</TableHead>
+              <TableHead>Slug (readonly)</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>

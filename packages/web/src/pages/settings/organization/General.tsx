@@ -51,7 +51,7 @@ export default function General({ org, me }: Props) {
           />
         </div>
         <div className="flex gap-2 items-center justify-end">
-          <Button size="sm" disabled={!isChanged || isUpdating} onClick={handleUpdate}>
+          <Button size="sm" disabled={!isAdmin || !isChanged || isUpdating} onClick={handleUpdate}>
             Save
           </Button>
         </div>

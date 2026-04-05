@@ -13,6 +13,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { Link } from 'react-router-dom';
 
 import OrganizationSwitcher from '@/components/sidebar/Organization';
 import User from '@/components/sidebar/User';
@@ -22,10 +23,10 @@ function SidebarItem(item: { href: string; icon: React.ElementType; name: string
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={isActive} className="py-5">
-        <a href={item.href}>
+        <Link to={item.href}>
           <item.icon />
           <span>{item.name}</span>
-        </a>
+        </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
   );
@@ -39,13 +40,13 @@ export default function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <div className={`flex items-center gap-3 px-2 py-2 ${isCollapsed ? 'justify-center' : ''}`}>
-          <a href="/" className="flex items-center justify-center">
+          <Link to="/" className="flex items-center justify-center">
             <img
               src="/LittleScope_logo.png"
               alt="LittleScope Logo"
               className="min-w-7 w-7 h-7 object-contain"
             />
-          </a>
+          </Link>
           {!isCollapsed && (
             <h1 className="text-base font-bold leading-tight tracking-tight whitespace-nowrap overflow-hidden">
               LittleScope

@@ -14,6 +14,7 @@ import { metricUrlParamsToVariables } from '@/helpers/metric';
 import { useUrlParams } from '@/hooks/useUrl';
 import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import useProcessData from './helpers/useProcessData';
 import Sort, { findCategoryOptionByValue } from './templates/Sort';
 import TableBody from './templates/TableBody';
@@ -92,9 +93,9 @@ export default function ArticleTable({
           </div>
           {viewMoreHref && (
             <Button variant="link" className="text-sm flex items-center gap-1 ml-auto" asChild>
-              <a href={viewMoreHref}>
+              <Link to={viewMoreHref}>
                 View More <ArrowRight size={16} />
-              </a>
+              </Link>
             </Button>
           )}
         </div>

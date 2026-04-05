@@ -2,6 +2,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui
 import { Skeleton } from '@/components/ui/skeleton';
 import authClient from '@/helpers/auth';
 import { UserIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function User() {
   const { data: session, isPending } = authClient.useSession();
@@ -20,13 +21,13 @@ export default function User() {
           </SidebarMenuButton>
         ) : (
           <SidebarMenuButton asChild className="py-6">
-            <a href="/settings" className="flex items-center gap-3 w-full">
+            <Link to="/settings" className="flex items-center gap-3 w-full">
               <UserIcon className="shrink-0" />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.name}</span>
                 <span className="truncate text-xs text-muted-foreground">{user.email}</span>
               </div>
-            </a>
+            </Link>
           </SidebarMenuButton>
         )}
       </SidebarMenuItem>

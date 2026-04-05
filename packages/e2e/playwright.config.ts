@@ -3,7 +3,7 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: 'tests',
-  globalSetup: 'tests/setup/global-setup.ts',
+  globalSetup: 'setup/global-setup.ts',
   use: {
     baseURL: WEB_URL,
     storageState: 'storage/auth.json',

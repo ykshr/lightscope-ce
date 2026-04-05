@@ -6,7 +6,7 @@ import {
   generateAnalyticsPayload,
   OGMetadata,
   UserAttributes,
-} from '../../../tracker/src/index';
+} from '../../tracker/src/index';
 
 // Export Payload as alias for AnalyticsPayload
 export type Payload = AnalyticsPayload;

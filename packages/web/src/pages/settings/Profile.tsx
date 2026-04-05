@@ -11,11 +11,30 @@ import {
 } from '@/components/ui/select';
 import { useTheme } from '@/contexts/ThemeContext';
 import authClient from '@/helpers/auth';
+import { useState } from 'react';
 
 export default function Profile() {
   const { theme, setTheme } = useTheme();
   const { data: session } = authClient.useSession();
   const user = session?.user;
+
+  const [newName, setNewName] = useState(user?.name || '');
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState('');
+
+  const isChanged = newName !== user?.name;
+
+  const handleUpdate = async () => {
+    setIsUpdating(true);
+    setError('');
+    const { error } = await authClient.updateUser({
+      name: newName,
+    });
+    if (error) {
+      setError(error.message || 'Failed to update');
+    }
+    setIsUpdating(false);
+  };
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -33,23 +52,39 @@ export default function Profile() {
     <div className="space-y-10">
       <Card>
         <CardHeader>
-          <CardTitle>My Profile</CardTitle>
+          <CardTitle>General</CardTitle>
           <CardDescription>Manage your personal settings.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="displayName">Display Name</Label>
-            <Input id="displayName" defaultValue={user?.name || ''} readOnly />
-            <p className="text-xs text-muted-foreground">
-              Name change functionality requires backend support.
-            </p>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Email (read-only)</Label>
             <Input id="email" defaultValue={user?.email || ''} readOnly />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="displayName">Display Name</Label>
+            <Input
+              id="displayName"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              readOnly={isUpdating}
+            />
+          </div>
+          <div className="flex gap-2 items-center justify-end">
+            <Button size="sm" disabled={!isChanged || isUpdating} onClick={handleUpdate}>
+              Save
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Preferences</CardTitle>
+          <CardDescription>Manage your preferences.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
           <div className="space-y-2 pt-4">
-            <Label>Theme Preference</Label>
+            <Label>Theme</Label>
             <Select value={theme} onValueChange={(val: any) => setTheme(val)}>
               <SelectTrigger className="w-full sm:w-[300px]">
                 <SelectValue placeholder="Select a theme" />

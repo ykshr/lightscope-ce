@@ -58,11 +58,11 @@ export default function General({ org, me }: Props) {
                 <Input
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  disabled={!isAdmin || isUpdating}
+                  readOnly={!isAdmin || isUpdating}
                 />
               </TableCell>
               <TableCell>
-                <Input value={org.slug} disabled />
+                <Input value={org.slug} readOnly={!isAdmin} />
               </TableCell>
               <TableCell>
                 <div className="flex gap-2 items-center">

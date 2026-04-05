@@ -41,3 +41,6 @@ Run these from the `packages/web` directory, or use `pnpm --filter @lightscope-c
    ```
 
 3. Open your browser at `http://localhost:5173`.
+## Contributing
+
+Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository.

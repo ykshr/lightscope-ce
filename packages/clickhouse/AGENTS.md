@@ -4,7 +4,7 @@ This package defines the analytics data layer. It contains XML configuration fil
 
 ---
 
-## Coding Conventions
+## コーディング規約 (Coding Conventions)
 - **Schema Safety**:
   - Schema changes must always be backward compatible.
   - Ensure that rollouts to the production environment are safe.
@@ -13,18 +13,18 @@ This package defines the analytics data layer. It contains XML configuration fil
   - If making changes, consider the impact on data flow and ensure there is no data loss.
   - Verify that the correct aggregation logic is maintained.
 
-## Execution & Testing Commands
+## 実行・テストコマンド (Execution & Testing Commands)
 - **Build Docker Image**:
   ```bash
   pnpm --filter @lightscope-ce/clickhouse run docker:build
   ```
 - *Note*: Typically, you will use `docker compose up -d` from the root directory to build and start the test environment.
 
-## Project Structure
+## プロジェクト構造 (Project Structure)
 - `config.xml`, `users.xml`: Core configuration files for the ClickHouse server.
 - `init-db.sh` or `*.sql`: Schema definitions (tables and materialized views) initialized when the container starts.
 
-## Prohibitions
+## 禁止事項 (Prohibitions)
 - **Schema Prohibitions**:
   - Never execute `DROP TABLE` without a migration plan.
   - Do not change engine types (like `MergeTree`) casually.

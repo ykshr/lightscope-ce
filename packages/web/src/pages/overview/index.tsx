@@ -32,7 +32,7 @@ export default function Overview() {
       </div>
 
       {/* Articles Table */}
-      <ArticleTable title="Ranking" viewMoreHref="/articles" />
+      <ArticleTable title="Ranking" viewMoreHref="/ranking" />
     </Page>
   );
 }

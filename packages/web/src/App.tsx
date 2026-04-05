@@ -7,11 +7,23 @@ import SingUp from '@/pages/auth/SingUp';
 import Overview from '@/pages/overview';
 import Ranking from '@/pages/ranking';
 import Settings from '@/pages/settings';
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
+
+const RootLayout = () => {
+  return (
+    <SidebarProvider>
+      <Sidebar />
+      <SidebarInset>
+        <Outlet />
+      </SidebarInset>
+    </SidebarProvider>
+  );
+};
 
 const router = createBrowserRouter([
   {
     errorElement: <></>,
+    element: <RootLayout />,
     children: [
       {
         path: '/',
@@ -61,14 +73,7 @@ function App() {
     return <RouterProvider router={unauthenticatedRouter} />;
   }
 
-  return (
-    <SidebarProvider>
-      <Sidebar />
-      <SidebarInset>
-        <RouterProvider router={router} />
-      </SidebarInset>
-    </SidebarProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

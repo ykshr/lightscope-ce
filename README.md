@@ -96,3 +96,7 @@ LightScope consists of four main components:
 ## License
 
 MIT License
+
+## Contributing
+
+Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository.

@@ -1,5 +1,5 @@
 import { useTotalCityQuery, useTotalCountryQuery } from '@/__generated__/graphql';
-import { Spinner } from '@/components/Loading';
+import { Spinner } from '@/components/common/Loading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';

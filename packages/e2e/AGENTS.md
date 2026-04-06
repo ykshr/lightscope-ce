@@ -4,7 +4,7 @@ End-to-End Tests using Playwright and standard testing scripts.
 
 ---
 
-## コーディング規約
+## Coding Conventions
 - **Locators**: In Playwright tests, using loose locators like `page.locator('button', { hasText: '...' }).first()` can cause timeouts by targeting hidden background elements. Use exact match structural locators like `page.getByRole('button', { name: '...', exact: true })` or chain `.filter()` methods for strict, robust element resolution.
 - **Actions**:
   - Always wait for the React application to fully mount and hydrate (e.g., `await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();`) before attempting click actions on interactive elements like buttons, to prevent test timeouts caused by interacting with unhydrated DOM nodes.
@@ -12,7 +12,7 @@ End-to-End Tests using Playwright and standard testing scripts.
 - **Authentication**: When making API requests (e.g., to `/gql` or `/events`) in E2E tests, you must include an `Authorization` header matching the `NO_AUTH_TOKEN` (default `Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==`) to successfully pass the API's `NoAuthProvider` middleware.
 - **Constants**: The magic number `3600000` (representing one hour in milliseconds) is frequently used for date range calculations in E2E scenarios (`packages/e2e/scenarios/`). It should be extracted to a named constant like `ONE_HOUR_MS` to improve readability and maintainability.
 
-## 実行・テストコマンド
+## Execution & Testing Commands
 - **Smoke Test**:
   ```bash
   pnpm --filter @lightscope-ce/e2e run test:smoke
@@ -30,10 +30,10 @@ End-to-End Tests using Playwright and standard testing scripts.
   pnpm --filter @lightscope-ce/e2e run test:long-run
   ```
 
-## プロジェクト構造
+## Project Structure
 - `scenarios/`: Contains the specific test scenario scripts (e.g., `load`, `long-run`).
 - `tests/`: Contains the Playwright E2E test files.
 
-## 禁止事項
+## Prohibitions
 - **Polling Loops Anti-Pattern**: To optimize E2E polling loops and avoid the 'Synchronous Await in Loop' anti-pattern, start the retry interval timer (e.g., `setTimeout` Promise) before the asynchronous check (e.g., `fetch`). Only `await` the timer if the check fails and the loop needs to repeat, allowing network latency to overlap with the wait time without penalizing immediate success on the first attempt.
 - **Service Readiness**: The script `utils/wait-for-services.js` checks if Docker services are ready before running E2E tests. For HTTP services, it must perform actual `http.get` requests expecting a 200 OK status, rather than just `net.Socket` TCP connects, to prevent race conditions.

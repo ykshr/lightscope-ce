@@ -15,26 +15,27 @@ Entry: `src/index.ts`
 
 ---
 
-## Coding Conventions
+## コーディング規約
 - **Resolver Responsibilities**: Keep resolvers thin. Business logic belongs in service modules. Do not write raw SQL inside the resolver body.
 - **Input Validation**: GraphQL type definitions do not guarantee runtime validation. All external inputs must be strictly validated with Zod and normalized before use.
 - **Performance**: Always assume large datasets. Avoid loading full result sets into memory. Prefer pre-aggregated tables whenever possible.
 - **Security**:
-  - Sensitive information like `JWT_SECRET` must be retrieved from environment variables. Hardcoded fallback values are strictly prohibited (throw an error if missing).
+  - Sensitive information like `JWT_SECRET` must be explicitly configured in the environment. Hardcoded fallback values are strictly prohibited, and missing secrets must cause the request context creation to fail securely by throwing an error.
   - Do not log raw SQL errors.
   - Do not expose internal table names to the client.
   - Do not trust client-provided column names.
-- **Hono Context**: Environment variables and bindings (like `JWT_SECRET`, `CLICKHOUSE_URL`) are retrieved from the Hono context using the `env(c)` function from `hono/adapter` within `createContext.ts`. Better Auth plugins objects (like `user` and `organization`) are exposed via `c.var`. Organization ID must be accessed via `c.var.organization.id`.
-- **Better Auth Plugins**: When configuring frontend Better Auth plugins (like `organizationClient()`), ensure the corresponding backend plugin (e.g., `organization()`) is actively configured in the API to avoid 404 API errors.
+- **Hono Context**: Environment variables and bindings (like `JWT_SECRET`, `CLICKHOUSE_URL`) are retrieved from the Hono context using the `env(c)` function from `hono/adapter` within `createContext.ts`. Better Auth plugin objects (like `user` and `organization`) are exposed via `c.var`. Organization ID must be accessed via `c.var.organization.id` rather than assuming an `organizationId` property exists directly on the `user` object.
+- **Better Auth Plugins**: When configuring frontend Better Auth plugins (like `organizationClient()`), ensure the corresponding backend plugin (e.g., `organization()`) is actively configured in the API (`packages/api/src/helpers/auth.ts`) to avoid 404 API errors. The `NoAuth` authentication provider (`packages/api/src/helpers/auth/noAuth.ts`) returns a static anonymous user object with `id: 'anonymous'`, `role: 'admin'`, and `tenantId: 'none'`. Its `handler` method returns a 401 Unauthorized Response.
+- **Helpers**: The `packages/api/src/helpers/rename.ts` utility uses recursive mapped types (`SnakeToCamelObject` and `SnakeToCamelCase`) to provide strong type safety when converting snake_case database records into camelCase TypeScript objects. The `snakeToCamel` utility uses a module-level `Map` to cache string transformations, which significantly optimizes the recursive `renameKeySnakeToCamel` function for objects with many or repeated keys, resulting in measurable performance gains (~5x speedup).
 - **Mocking GraphQL**: When mocking `GraphQLResolveInfo` in tests, explicitly provide expected dummy properties and methods (e.g., `schema: { getType: () => null }`, `returnType: { name: 'Dummy' }`) instead of using empty objects cast as `any` (`{} as any`).
 
-## Execution & Testing Commands
+## 実行・テストコマンド
 - **Start Development Server**:
   ```bash
   pnpm --filter @lightscope-ce/api run dev
   ```
 - **Build (Including Prisma Client generation)**:
-  To ensure `@prisma/client` types are available during CI builds where `node_modules` are freshly installed, the `build` script in `package.json` must explicitly generate the Prisma client before running the TypeScript compiler (`npx prisma generate && tsc`).
+  To ensure `@prisma/client` types are available during CI builds where `node_modules` are freshly installed, the `build` script in `package.json` must explicitly generate the Prisma client before running the TypeScript compiler (e.g., `"build": "npx prisma generate && tsc"`).
   ```bash
   pnpm --filter @lightscope-ce/api run build
   ```
@@ -43,7 +44,7 @@ Entry: `src/index.ts`
   pnpm --filter @lightscope-ce/api run test
   ```
 - **Generate GraphQL Code**:
-  Resolver types, enums, and schemas are generated into `src/__generated__/` (e.g., `graphql-resolvers.ts`, `schema.generated.graphql`) using `graphql-codegen`. Run this if these files are missing (e.g., causing 'Unknown file extension .graphql' errors).
+  Resolver types, enums, and schemas are generated into `src/__generated__/` (e.g., `graphql-resolvers.ts`, `schema.generated.graphql`) using `graphql-codegen`. Run `pnpm --filter @lightscope-ce/api run codegen` if these files are missing (e.g., causing 'Unknown file extension .graphql' errors in Node) or need updating before running the API.
   ```bash
   pnpm --filter @lightscope-ce/api run codegen
   ```
@@ -52,24 +53,22 @@ Entry: `src/index.ts`
   pnpm --filter @lightscope-ce/api run db:generate
   ```
 
-## Project Structure
+## プロジェクト構造
 - `src/index.ts`: The entry point of the application.
-- `src/__generated__/`: Contains types and schemas generated by `graphql-codegen`, as well as the Prisma Client. Import using `@/__generated__/prisma/client` rather than `@prisma/client` to avoid module resolution errors.
-- `src/resolvers/`: GraphQL resolvers. Note that the legacy `src/graphql/*` path is deprecated; loaders and resolvers have been migrated directly to `src/`. Do not create or reference files in the legacy path prefixes.
+- `src/__generated__/`: Contains types and schemas generated by `graphql-codegen`, as well as the Prisma Client. When configuring Prisma, the output path for the generated client in `schema.prisma` is set to `./src/__generated__/prisma`. Imports should use `@/__generated__/prisma/client` rather than `@prisma/client` to avoid module resolution errors.
+- `src/resolvers/`: GraphQL resolvers. Note that the directory structure within `packages/api/src/graphql/` (including `loaders` and `resolvers`) has been migrated directly to `packages/api/src/` (e.g., `packages/api/src/resolvers`). Do not create or reference files in the legacy `graphql/*` path prefixes.
 - `src/helpers/`: Utility functions and authentication providers (e.g., `better-auth` configuration).
-  - The `snakeToCamel` utility uses recursive mapped types (`SnakeToCamelObject`, `SnakeToCamelCase`) for strong type safety and uses a module-level `Map` to cache string transformations for significant performance gains.
-  - The `NoAuth` provider (`noAuth.ts`) returns a static anonymous user object with `id: 'anonymous'`, `role: 'admin'`, and `tenantId: 'none'`. Its `handler` method returns a 401 Unauthorized Response.
 
-## Prohibitions
+## 禁止事項
 - **ClickHouse Prohibitions**:
   - Never execute `SELECT *` without a `LIMIT`.
   - Do not perform client-side aggregation.
-  - Do not build SQL queries using unsafe string concatenation. Always use inline param syntax `{paramName:DataType}` (e.g., `{title:String}`, `{urls:Array(String)}`) and pass values in the `query_params` object. When hashing array parameters, use `arrayMap(x -> cityHash64(x), {keys:Array(String)})` rather than applying the hash function directly to the array.
+  - Do not build SQL queries using unsafe string concatenation. Always use inline param syntax `{paramName:DataType}` (e.g., `{title:String}`, `{urls:Array(String)}`) and pass values in the `query_params` object to prevent SQL injection. When hashing array parameters in ClickHouse queries (e.g., using `cityHash64`), use `arrayMap(x -> cityHash64(x), {keys:Array(String)})` rather than applying the hash function directly to the array, which incorrectly computes a single hash for the entire array string.
   - Do not execute unbounded queries.
   - *Except where necessary for specific analytics*, always specify explicit `GROUP BY`, `WHERE`, and `LIMIT` clauses.
 - **GraphQL Codegen Prohibitions**:
   - Do not manually edit files under `src/__generated__/`. After modifying schemas or fragments, you must run `pnpm run codegen`.
 - **Prisma Prohibitions**:
   - Do not import the generated client directly from `@prisma/client`.
-  - Do not add unnecessary fields to the schema (`prisma/schema.prisma`). Keep it to the absolute minimum required to support application requirements and Better Auth core operations (e.g., `name`, `email`, and `image` are strictly required for the `User` model by default).
-- **CORS Policy**: The API service follows a restrictive CORS policy where the `ALLOWED_ORIGIN` environment variable must be explicitly defined. If missing, the CORS middleware is skipped.
+  - The Prisma schema (`packages/api/prisma/schema.prisma`) should be kept to the absolute minimum fields necessary to support application requirements and Better Auth core operations (e.g., `name`, `email`, and `image` are strictly required for the `User` model by default).
+- **CORS Policy**: The API service follows a restrictive CORS policy where the `ALLOWED_ORIGIN` environment variable (supporting comma-separated strings) must be explicitly defined; if it is missing, the CORS middleware is skipped, defaulting to the browser's Same-Origin Policy.

@@ -21,12 +21,12 @@ Ensure you have Node.js and pnpm installed. It is recommended to run commands fr
 
 Run these from the `packages/web` directory, or use `pnpm --filter @lightscope-ce/web run <script>` from the root:
 
-- `npm run dev`: Starts the Vite development server on port 5173.
-- `npm run build`: Type-checks and builds the project for production.
-- `npm run preview`: Previews the production build locally.
-- `npm run lint`: Runs ESLint to check for code quality issues.
-- `npm run codegen`: Generates TypeScript types and React Query hooks from GraphQL queries/mutations.
-- `npm run test`: Runs the Vitest test suite.
+- `pnpm run dev`: Starts the Vite development server on port 5173.
+- `pnpm run build`: Type-checks and builds the project for production.
+- `pnpm run preview`: Previews the production build locally.
+- `pnpm run lint`: Runs ESLint to check for code quality issues.
+- `pnpm run codegen`: Generates TypeScript types and React Query hooks from GraphQL queries/mutations.
+- `pnpm run test`: Runs the Vitest test suite.
 
 ## Development
 

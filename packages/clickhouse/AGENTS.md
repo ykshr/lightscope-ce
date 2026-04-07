@@ -4,7 +4,10 @@ This package defines the analytics data layer. It contains XML configuration fil
 
 ---
 
-## Coding Conventions
+#### Coding Conventions
+- **Indentation**: Use 2 spaces for indentation (where applicable, e.g. SQL files).
+- **Naming Conventions**: Use `snake_case` for database tables and columns.
+- **Library Restrictions**: This package relies on ClickHouse natively. Do not introduce JS/TS dependencies for schema management.
 - **Schema Safety**:
   - Schema changes must always be backward compatible.
   - Ensure that rollouts to the production environment are safe.
@@ -13,18 +16,23 @@ This package defines the analytics data layer. It contains XML configuration fil
   - If making changes, consider the impact on data flow and ensure there is no data loss.
   - Verify that the correct aggregation logic is maintained.
 
-## Execution & Testing Commands
-- **Build Docker Image**:
+#### Build & Test Commands
+- **How to build the project**:
+  Build Docker Image:
   ```bash
   pnpm --filter @lightscope-ce/clickhouse run docker:build
   ```
-- *Note*: Typically, you will use `docker compose up -d` from the root directory to build and start the test environment.
+- **How to run tests (commands and steps)**:
+  Typically, you will use `docker compose up -d` from the root directory to build and start the test environment. There are no automated tests isolated to just this package.
 
-## Project Structure
+#### Project Structure
 - `config.xml`, `users.xml`: Core configuration files for the ClickHouse server.
 - `init-db.sh` or `*.sql`: Schema definitions (tables and materialized views) initialized when the container starts.
+- **Guidance on code placement**: Place SQL migrations/init scripts alongside `init-db.sh`. Keep server configuration in XML files.
 
-## Prohibitions
+#### Restrictions
+- **Guardrails**:
+  - "Do not modify this directory": Do not restructure the Docker setup inside this package without explicit instruction.
 - **Schema Prohibitions**:
   - Never execute `DROP TABLE` without a migration plan.
   - Do not change engine types (like `MergeTree`) casually.

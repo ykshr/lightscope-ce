@@ -178,7 +178,7 @@ function CustomDateRangePicker({
             Absolute Range
           </Tabs.Trigger>
         </Tabs.List>
-        <ScrollArea className={`h-[${formHight}vh] px-5`}>
+        <ScrollArea className="px-5" style={{ height: `${formHight}vh` }}>
           <Tabs.TabsContent value="relative" className="space-y-6 animate-in fade-in-50">
             <div className="space-y-3">
               <Label className="text-base">Quick Presets</Label>

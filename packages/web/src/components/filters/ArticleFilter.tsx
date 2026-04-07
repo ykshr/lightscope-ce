@@ -79,7 +79,7 @@ export default function ArticleFilter() {
       onOpenChange={setOpen}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-        <ScrollArea className={`h-[${formHight}vh] px-5`}>
+        <ScrollArea className="px-5" style={{ height: `${formHight}vh` }}>
           <div className="grid gap-6 py-4">
             {/* Date fields */}
             <Label className="text-base font-bold">Dates</Label>

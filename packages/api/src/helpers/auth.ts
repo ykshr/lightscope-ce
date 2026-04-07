@@ -20,6 +20,12 @@ export default createBetterAuth({
   trustedOrigins,
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ url }) => {
+      console.log(`Reset password url: ${url}`);
+    },
+  },
+  rateLimit: {
+    enabled: true,
   },
   database: prismaAdapter(prisma, {
     provider: 'sqlite',

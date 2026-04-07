@@ -21,6 +21,12 @@ export default async function createContext(c: Context): Promise<$> {
     trustedOrigins,
     emailAndPassword: {
       enabled: true,
+      sendResetPassword: async ({ url }) => {
+        console.log(`Reset password url: ${url}`);
+      },
+    },
+    rateLimit: {
+      enabled: true,
     },
     database: prismaAdapter(prisma, {
       provider: 'sqlite',

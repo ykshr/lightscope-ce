@@ -9,7 +9,7 @@ This package contains the Docker configuration and schema definitions for the Li
 
 ## Scripts
 
-- `npm run docker:build`: Builds a customized ClickHouse Docker image with LightScope's initialization scripts included.
+- `pnpm run docker:build`: Builds a customized ClickHouse Docker image with LightScope's initialization scripts included.
 
 ## Getting Started
 

@@ -4,9 +4,9 @@ This package contains the REST API service for LightScope, primarily responsible
 
 ## Scripts
 
-- `npm run dev`: Start the development server using `tsx`.
-- `npm run build`: Build the project using `tsc`.
-- `npm run start`: Start the production server from the `dist` directory.
+- `pnpm run dev`: Start the development server using `tsx`.
+- `pnpm run build`: Build the project using `tsc`.
+- `pnpm run start`: Start the production server from the `dist` directory.
 
 ## Key Technologies
 

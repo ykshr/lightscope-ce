@@ -29,7 +29,7 @@ This repository is a TypeScript monorepo using `pnpm workspaces`. Please strictl
   ```bash
   pnpm run format
   ```
-- *Note*: In automated or isolated environments, running `git fetch` or `git pull` may fail with 'terminal prompts disabled' due to the absence of credentials. `pnpm` commands may fail with `ERR_PNPM_META_FETCH_FAIL` if it attempts to verify its own version from the npm registry in network-restricted environments.
+- *Note*: In automated or isolated environments, running `git fetch` or `git pull` from remote repositories may fail with 'terminal prompts disabled' errors due to the absence of interactive authentication credentials. `pnpm` commands may fail with `ERR_PNPM_META_FETCH_FAIL` if it attempts to verify its own version from the npm registry in network-restricted environments.
 
 ## Project Structure
 This repository does not use a build orchestrator like `turborepo` or `nx`. Please respect the boundaries of each package:

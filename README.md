@@ -71,7 +71,7 @@ This will start the following services:
 - **ClickHouse**: `http://localhost:8123`
 - **API**: `http://localhost:3000`
 - **Proxy**: `http://localhost:3001`
-- **Web Dashboard**: `http://localhost:5173`
+- **Web Dashboard**: `http://localhost:3000`
 - **Mock Site**: `http://localhost:8080`
 
 *Note:* If Docker Compose fails to pull the ClickHouse image, it may be due to Docker Hub unauthenticated pull rate limits. Please log in or try again later.

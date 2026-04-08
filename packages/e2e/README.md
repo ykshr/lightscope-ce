@@ -33,7 +33,7 @@ This directory contains the E2E test suite using Playwright and standard testing
    - ClickHouse (Database at localhost:8123)
    - API (Backend at localhost:3000)
    - Proxy (Ingestion API at localhost:3001)
-   - Web (Frontend at localhost:5173)
+   - Web (Frontend at localhost:3000)
    - Mock Site (Test Page at localhost:8080)
 
 ## Test Scenarios

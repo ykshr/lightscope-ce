@@ -57,9 +57,8 @@ export default class JwtAuth implements AuthProvider {
           return null;
         }
       } else {
-        console.log(
-          'JwtAuth: Request lacks Origin/Referer header, tracking conditionally allowed but warned'
-        );
+        console.error('JwtAuth: Request lacks Origin/Referer header, tracking disallowed');
+        return null;
       }
 
       return {

@@ -1,8 +1,7 @@
-import { mock, expect, test, beforeEach, afterEach, describe } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock ua-parser-js at the module level.
-// Bun.mock.module allows mocking packages that are not installed.
-mock.module('ua-parser-js', () => {
+vi.mock('ua-parser-js', () => {
   return {
     UAParser: class {
       getResult() {
@@ -75,7 +74,7 @@ describe('AnalyticsTracker', () => {
   const config = { token: 'test-token' };
 
   beforeEach(() => {
-    global.fetch = mock(() => Promise.resolve({ ok: true } as Response));
+    global.fetch = vi.fn(() => Promise.resolve({ ok: true } as Response)) as any;
     tracker = new AnalyticsTracker(apiEndpoint, config);
   });
 
@@ -85,7 +84,7 @@ describe('AnalyticsTracker', () => {
 
   test('should not crash when fetch fails', async () => {
     // Mock fetch to reject
-    global.fetch = mock(() => Promise.reject(new Error('Network error')));
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network error'))) as any;
 
     // This should not throw because of the try-catch block in sendEvent
     try {

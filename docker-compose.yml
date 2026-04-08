@@ -27,6 +27,7 @@ services:
       - /app/node_modules
     command: sh -c "npm install -g pnpm && pnpm install && pnpm --filter @lightscope-ce/api run db:push && pnpm dev"
     environment:
+      - DATABASE_URL=file:./prisma/dev.db
       - CLICKHOUSE_URL=http://clickhouse:8123
       - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}

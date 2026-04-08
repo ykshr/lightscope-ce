@@ -32,7 +32,7 @@ describe('JwtAuth', () => {
     expect(tracker).toEqual({ organizationId: 'org_123' });
   });
 
-  it('should return tracker when Referer matches', async () => {
+  it('should return null even when Referer matches', async () => {
     const payload = {
       organizationId: 'org_123',
       origin: 'https://example.com',
@@ -45,7 +45,9 @@ describe('JwtAuth', () => {
     });
 
     const tracker = await auth.getTracker(c);
-    expect(tracker).toEqual({ organizationId: 'org_123' });
+    // CURRENTLY this returns { organizationId: 'org_123' }
+    // After fix, it should return null
+    expect(tracker).toBeNull();
   });
 
   it('should return null when Origin/Referer is missing (vulnerability reproduction)', async () => {

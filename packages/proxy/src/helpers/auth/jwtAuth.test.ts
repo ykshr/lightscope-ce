@@ -5,7 +5,7 @@ import JwtAuth from './jwtAuth';
 
 describe('JwtAuth', () => {
   const secret = 'test-secret';
-  const algorithm: AlgorithmTypes = 'HS256';
+  const algorithm: AlgorithmTypes = AlgorithmTypes.HS256;
   const auth = new JwtAuth(secret, algorithm);
 
   const createMockContext = (headers: Record<string, string>) => {

@@ -7,11 +7,7 @@ import {
   Link as LinkIcon,
   Stack,
 } from '@phosphor-icons/react';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,10 +17,7 @@ interface CreateOrganizationModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function CreateOrganizationModal({
-  open,
-  onOpenChange,
-}: CreateOrganizationModalProps) {
+export function CreateOrganizationModal({ open, onOpenChange }: CreateOrganizationModalProps) {
   const [plan, setPlan] = React.useState<'free' | 'paid'>('free');
 
   return (
@@ -41,8 +34,8 @@ export function CreateOrganizationModal({
                 Organization Details
               </DialogTitle>
               <p className="text-muted-foreground mx-auto max-w-md">
-                Establish your digital infrastructure by selecting a plan and
-                defining your organization's core identity.
+                Establish your digital infrastructure by selecting a plan and defining your
+                organization's core identity.
               </p>
               <div className="mt-6 flex items-center justify-center gap-2">
                 <div className="bg-primary h-1.5 w-16 rounded-full"></div>
@@ -56,9 +49,7 @@ export function CreateOrganizationModal({
               <section>
                 <div className="mb-6 flex items-center gap-2">
                   <Stack size={24} weight="fill" className="text-primary" />
-                  <h2 className="font-heading text-xl font-bold">
-                    Select Organization Type
-                  </h2>
+                  <h2 className="font-heading text-xl font-bold">Select Organization Type</h2>
                 </div>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {/* Private Organization Card */}
@@ -76,26 +67,15 @@ export function CreateOrganizationModal({
                         <div className="bg-muted text-primary rounded-lg p-3">
                           <User size={24} weight="fill" />
                         </div>
-                        <span className="text-primary text-lg font-bold">
-                          Free
-                        </span>
+                        <span className="text-primary text-lg font-bold">Free</span>
                       </div>
-                      <h3 className="font-heading mb-1 text-lg font-bold">
-                        Private Organization
-                      </h3>
-                      <p className="text-muted-foreground mb-4 text-sm font-medium">
-                        Just for me
-                      </p>
+                      <h3 className="font-heading mb-1 text-lg font-bold">Private Organization</h3>
+                      <p className="text-muted-foreground mb-4 text-sm font-medium">Just for me</p>
                       <p className="text-muted-foreground text-sm leading-relaxed">
-                        Best for individual projects and personal data
-                        management.
+                        Best for individual projects and personal data management.
                       </p>
                       <div className="absolute right-4 top-4 opacity-0 transition-opacity peer-checked:opacity-100">
-                        <CheckCircle
-                          size={24}
-                          weight="fill"
-                          className="text-primary"
-                        />
+                        <CheckCircle size={24} weight="fill" className="text-primary" />
                       </div>
                     </div>
                   </label>
@@ -114,26 +94,17 @@ export function CreateOrganizationModal({
                       <div className="bg-primary text-primary-foreground rounded-lg p-3">
                         <Users size={24} weight="fill" />
                       </div>
-                      <span className="text-primary text-lg font-bold">
-                        Paid
-                      </span>
+                      <span className="text-primary text-lg font-bold">Paid</span>
                     </div>
-                    <h3 className="font-heading mb-1 text-lg font-bold">
-                      Enterprise Organization
-                    </h3>
+                    <h3 className="font-heading mb-1 text-lg font-bold">Enterprise Organization</h3>
                     <p className="text-muted-foreground mb-4 text-sm font-medium">
                       Invite your team
                     </p>
                     <p className="text-muted-foreground text-sm leading-relaxed">
-                      Advanced permissions, collaboration, and custom billing
-                      for scale.
+                      Advanced permissions, collaboration, and custom billing for scale.
                     </p>
                     <div className="absolute right-4 top-4 opacity-0 transition-opacity peer-checked:opacity-100">
-                      <CheckCircle
-                        size={24}
-                        weight="fill"
-                        className="text-primary"
-                      />
+                      <CheckCircle size={24} weight="fill" className="text-primary" />
                     </div>
                     <div className="bg-primary/20 text-primary mt-4 inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
                       Professional Choice
@@ -146,9 +117,7 @@ export function CreateOrganizationModal({
               <section className="bg-muted/30 border-border rounded-xl border p-8 space-y-8">
                 <div className="flex items-center gap-2">
                   <Buildings size={24} weight="fill" className="text-primary" />
-                  <h2 className="font-heading text-xl font-bold">
-                    Core Identity
-                  </h2>
+                  <h2 className="font-heading text-xl font-bold">Core Identity</h2>
                 </div>
                 <div className="flex max-w-2xl flex-col gap-6">
                   {/* Display Name Input */}
@@ -167,10 +136,7 @@ export function CreateOrganizationModal({
                   </div>
                   {/* Slug Input */}
                   <div className="flex flex-col gap-2">
-                    <Label
-                      htmlFor="slug"
-                      className="text-muted-foreground text-sm font-semibold"
-                    >
+                    <Label htmlFor="slug" className="text-muted-foreground text-sm font-semibold">
                       Organization Slug
                     </Label>
                     <Input
@@ -181,9 +147,7 @@ export function CreateOrganizationModal({
                     <p className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
                       <LinkIcon size={14} />
                       app.yourdomain.com/
-                      <span className="text-primary font-bold">
-                        my-cool-project
-                      </span>
+                      <span className="text-primary font-bold">my-cool-project</span>
                     </p>
                   </div>
                 </div>
@@ -213,8 +177,7 @@ export function CreateOrganizationModal({
         {/* Footer Decorative/Legal */}
         <div className="border-border bg-muted/10 border-t px-6 py-6 text-center">
           <p className="text-muted-foreground text-xs opacity-80">
-            Powered by Better Auth • Secured with The Architectural Sentinel
-            Protocol
+            Powered by Better Auth • Secured with The Architectural Sentinel Protocol
           </p>
         </div>
       </DialogContent>

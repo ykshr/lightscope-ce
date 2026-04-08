@@ -92,20 +92,24 @@ export default function processArticleFilter(
   }
 
   if (filter.includeAuthors?.length) {
-    const sets = filter.includeAuthors.filter(Boolean).map((set, i) => {
-      const paramKey = `includeAuthors_${i}`;
+    const sets: string[] = [];
+    for (const set of filter.includeAuthors) {
+      if (!set) continue;
+      const paramKey = `includeAuthors_${sets.length}`;
       params[paramKey] = set;
-      return `hasAny(${col('authors')}, {${paramKey}:Array(String)})`;
-    });
+      sets.push(`hasAny(${col('authors')}, {${paramKey}:Array(String)})`);
+    }
     if (sets.length) c.push(`(${sets.join(' AND ')})`);
   }
 
   if (filter.excludeAuthors?.length) {
-    const sets = filter.excludeAuthors.filter(Boolean).map((set, i) => {
-      const paramKey = `excludeAuthors_${i}`;
+    const sets: string[] = [];
+    for (const set of filter.excludeAuthors) {
+      if (!set) continue;
+      const paramKey = `excludeAuthors_${sets.length}`;
       params[paramKey] = set;
-      return `NOT hasAny(${col('authors')}, {${paramKey}:Array(String)})`;
-    });
+      sets.push(`NOT hasAny(${col('authors')}, {${paramKey}:Array(String)})`);
+    }
     if (sets.length) c.push(`(${sets.join(' AND ')})`);
   }
 
@@ -120,20 +124,24 @@ export default function processArticleFilter(
   }
 
   if (filter.includeTags?.length) {
-    const sets = filter.includeTags.filter(Boolean).map((set, i) => {
-      const paramKey = `includeTags_${i}`;
+    const sets: string[] = [];
+    for (const set of filter.includeTags) {
+      if (!set) continue;
+      const paramKey = `includeTags_${sets.length}`;
       params[paramKey] = set;
-      return `hasAny(${col('tags')}, {${paramKey}:Array(String)})`;
-    });
+      sets.push(`hasAny(${col('tags')}, {${paramKey}:Array(String)})`);
+    }
     if (sets.length) c.push(`(${sets.join(' AND ')})`);
   }
 
   if (filter.excludeTags?.length) {
-    const sets = filter.excludeTags.filter(Boolean).map((set, i) => {
-      const paramKey = `excludeTags_${i}`;
+    const sets: string[] = [];
+    for (const set of filter.excludeTags) {
+      if (!set) continue;
+      const paramKey = `excludeTags_${sets.length}`;
       params[paramKey] = set;
-      return `NOT hasAny(${col('tags')}, {${paramKey}:Array(String)})`;
-    });
+      sets.push(`NOT hasAny(${col('tags')}, {${paramKey}:Array(String)})`);
+    }
     if (sets.length) c.push(`(${sets.join(' AND ')})`);
   }
 

@@ -67,34 +67,6 @@ const categoryOptions = [
       includeDomains: ['direct'],
     },
   },
-  // {
-  //   label: 'Referrer:Facebook',
-  //   value: {
-  //     category: 'referrer',
-  //     includeDomains: ['facebook.com'],
-  //   },
-  // },
-  // {
-  //   label: 'Referrer:X',
-  //   value: {
-  //     category: 'referrer',
-  //     includeDomains: ['x.com'],
-  //   },
-  // },
-  // {
-  //   label: 'Referrer:Instagram',
-  //   value: {
-  //     category: 'referrer',
-  //     includeDomains: ['instagram.com'],
-  //   },
-  // },
-  // {
-  //   label: 'Referrer:Tiktok',
-  //   value: {
-  //     category: 'referrer',
-  //     includeDomains: ['tiktok.com'],
-  //   },
-  // },
   {
     label: 'Device:Tablet',
     value: {

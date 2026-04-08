@@ -1,0 +1,183 @@
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { fetchDelete, fetchPost } from '@/helpers/fetch';
+import useTrackers from '@/pages/settings/organization/useTrackers';
+import { Check, X } from 'lucide-react';
+import { useState } from 'react';
+import { Props } from './type';
+
+export default function Trackers({ org, me }: Props) {
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const isAdmin = me?.role === 'admin' || me?.role === 'owner';
+
+  // const copyToClipboard = () => {
+  //   navigator.clipboard.writeText(generatedSnippet);
+  // };
+  const { trackers, reFetchTrackers } = useTrackers(org.id);
+
+  const handleRemoveToken = async (tokenId: string) => {
+    if (confirm('Are you sure you want to remove this token?')) {
+      setError('');
+      setIsLoading(true);
+      setError('');
+      try {
+        await fetchDelete(`/tracker/${tokenId}`);
+        reFetchTrackers();
+      } catch (err: any) {
+        setError(err || 'An error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>Tracker tokens</CardTitle>
+          <CardDescription>
+            Manage tracker tokens. {!isAdmin && 'You need to be an admin to edit.'}
+          </CardDescription>
+        </div>
+        <NewTokenDialog name={org.name} isAdmin={isAdmin} reFetchTrackers={reFetchTrackers} />
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Origin</TableHead>
+              <TableHead>Token</TableHead>
+              <TableHead>IsActive</TableHead>
+              <TableHead>CreatedAt</TableHead>
+              <TableHead>ExpiresAt</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {trackers.map(({ id, origin, token, createdAt, expiresAt }) => (
+              <TableRow key={id}>
+                <TableCell>{origin}</TableCell>
+                <TableCell>{'...' + token.slice(-25)}</TableCell>
+                <TableCell>
+                  {isActive(expiresAt) ? <Check color="green" /> : <X color="red" />}
+                </TableCell>
+                <TableCell>{createdAt.toLocaleString()}</TableCell>
+                <TableCell>{expiresAt?.toLocaleString() || 'Never'}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleRemoveToken(id)}
+                    disabled={!isAdmin || isLoading}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        {error && <span className="text-xs text-destructive">{error}</span>}
+      </CardContent>
+    </Card>
+  );
+}
+
+function isActive(expiresAt?: Date | null) {
+  if (!expiresAt) return true;
+  const now = new Date();
+  return now < expiresAt;
+}
+
+function NewTokenDialog({
+  name,
+  isAdmin,
+  reFetchTrackers,
+}: {
+  name: string;
+  isAdmin: boolean;
+  reFetchTrackers: () => void;
+}) {
+  const [showDialog, setShowDialog] = useState(false);
+  const [origin, setOrigin] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleNewToken = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+    try {
+      await fetchPost('/tracker/generate', { origin });
+      setIsLoading(false);
+      setOrigin('');
+      setError('');
+      setShowDialog(false);
+      reFetchTrackers();
+    } catch (err: any) {
+      setError(err || 'An error occurred');
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={showDialog} onOpenChange={setShowDialog}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" disabled={!isAdmin}>
+          New Token
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>New Token</DialogTitle>
+          <DialogDescription>
+            Generate a new token to {name}. Enter the exact origin (e.g., https://yourdomain.com)
+            where your tracker will be installed. The generated token will only be valid for
+            requests coming from this origin.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleNewToken} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="origin">Origin</Label>
+            <Input
+              id="origin"
+              placeholder="https://example.com"
+              required
+              value={origin}
+              onChange={(e) => setOrigin(e.target.value)}
+            />
+          </div>
+          {error && <div className="text-sm text-destructive">{error}</div>}
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              Generate
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}

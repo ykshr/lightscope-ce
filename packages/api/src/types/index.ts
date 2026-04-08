@@ -14,6 +14,7 @@ type Organization = {
 };
 
 export type Bindings = {
+  DATABASE_URL: string;
   CLICKHOUSE_URL: string;
   CLICKHOUSE_USERNAME: string;
   CLICKHOUSE_PASSWORD: string;

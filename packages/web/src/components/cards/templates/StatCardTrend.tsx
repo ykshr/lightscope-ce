@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Spinner } from '@/components/common/Loading';
 import TrendBadge from '@/components/common/TrendBadge';
-import { Spinner } from '@/components/Loading';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export type ParamsTrend = {
   label: string;

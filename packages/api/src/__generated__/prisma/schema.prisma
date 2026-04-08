@@ -3,6 +3,8 @@ model Tracker {
   organizationId String
   origin         String
   token          String    @unique
+  issuedAt       DateTime  @default(now())
+  notBefore      DateTime  @default(now())
   expiresAt      DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt

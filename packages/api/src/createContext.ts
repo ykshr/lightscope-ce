@@ -11,15 +11,25 @@ import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
 
 export default async function createContext(c: Context): Promise<$> {
+  const { DATABASE_URL, ALLOWED_ORIGINS } = env(c);
+  if (!DATABASE_URL) {
+    throw new Error('DATABASE_URL is not defined in the environment.');
+  }
+
   const adapter = new PrismaLibSql({
-    url: 'file:./prisma/dev.db',
+    url: DATABASE_URL,
   });
   const prisma = new PrismaClient({ adapter });
-  const { ALLOWED_ORIGINS } = env<{ ALLOWED_ORIGINS?: string }>(c);
   const trustedOrigins = processAllowedOriginsString(ALLOWED_ORIGINS);
   const auth = createBetterAuth({
     trustedOrigins,
     emailAndPassword: {
+      enabled: true,
+      sendResetPassword: async ({ url }) => {
+        console.log(`Reset password url: ${url}`);
+      },
+    },
+    rateLimit: {
       enabled: true,
     },
     database: prismaAdapter(prisma, {

@@ -1,45 +1,43 @@
 # AGENTS.md (clickhouse)
 
-Contains:
-- XML configurations for clickhouse server
-- CREATE TABLE statements run at the clickhouse server startup
-- Materialized views
-
-This defines the analytics data layer.
+This package defines the analytics data layer. It contains XML configuration files for the ClickHouse server, CREATE TABLE statements executed at startup, and definitions for Materialized Views.
 
 ---
 
-# Schema Safety Rules
+#### Coding Conventions
+- **Indentation**: Use 2 spaces for indentation (where applicable, e.g. SQL files).
+- **Naming Conventions**: Use `snake_case` for database tables and columns.
+- **Library Restrictions**: This package relies on ClickHouse natively. Do not introduce JS/TS dependencies for schema management.
+- **Schema Safety**:
+  - Schema changes must always be backward compatible.
+  - Ensure that rollouts to the production environment are safe.
+  - Never remove existing columns that are used by the API.
+- **Materialized Views Rules**:
+  - If making changes, consider the impact on data flow and ensure there is no data loss.
+  - Verify that the correct aggregation logic is maintained.
 
-Never:
-- DROP TABLE without migration plan
-- Change engine type casually
-- Remove existing columns used by API
-- Change primary key without impact explanation
+#### Build & Test Commands
+- **How to build the project**:
+  Build Docker Image:
+  ```bash
+  pnpm --filter @lightscope-ce/clickhouse run docker:build
+  ```
+- **How to run tests (commands and steps)**:
+  Typically, you will use `docker compose up -d` from the root directory to build and start the test environment. There are no automated tests isolated to just this package.
 
----
+#### Project Structure
+- `config.xml`, `users.xml`: Core configuration files for the ClickHouse server.
+- `init-db.sh` or `*.sql`: Schema definitions (tables and materialized views) initialized when the container starts.
+- **Guidance on code placement**: Place SQL migrations/init scripts alongside `init-db.sh`. Keep server configuration in XML files.
 
-# Compatibility
-
-Schema changes must be:
-- Backward compatible
-- Safe for production rollout
-- Explicitly documented
-
----
-
-# Materialized Views
-
-If modifying:
-- Explain data flow impact
-- Ensure no data loss
-- Ensure correct aggregation logic
-
----
-
-# Critical Analytics Integrity
-
-Never:
-- Change time bucketing logic silently
-- Change timezone handling silently
-- Change session definition silently
+#### Restrictions
+- **Guardrails**:
+  - "Do not modify this directory": Do not restructure the Docker setup inside this package without explicit instruction.
+- **Schema Prohibitions**:
+  - Never execute `DROP TABLE` without a migration plan.
+  - Do not change engine types (like `MergeTree`) casually.
+  - Do not change the primary key (`ORDER BY` clause) without a prior explanation of the impact.
+- **Analytics Integrity Prohibitions**:
+  - Do not silently change time bucketing logic.
+  - Do not silently change time zone handling logic.
+  - Do not silently change the definition of a session.

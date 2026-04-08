@@ -1,33 +1,29 @@
-import Footer from '@/components/Footer';
-import Header from '@/components/header';
 import Sidebar from '@/components/sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import authClient from '@/helpers/auth';
 import Article from '@/pages/article';
+import SingIn from '@/pages/auth/SingIn';
+import SingUp from '@/pages/auth/SingUp';
 import Overview from '@/pages/overview';
 import Ranking from '@/pages/ranking';
-import SingIn from '@/pages/SingIn';
-import SingUp from '@/pages/SingUp';
+import Settings from '@/pages/settings';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 
-function AppLayout() {
+const RootLayout = () => {
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-      <Header />
-
-      <main className="flex-1 overflow-y-auto p-10 scrollbar-hide w-full mx-auto flex flex-col gap-6">
+    <SidebarProvider>
+      <Sidebar />
+      <SidebarInset>
         <Outlet />
-      </main>
-
-      <Footer />
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
-}
+};
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
     errorElement: <></>,
+    element: <RootLayout />,
     children: [
       {
         path: '/',
@@ -40,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: '/article',
         element: <Article />,
+      },
+      {
+        path: '/settings',
+        element: <Settings />,
       },
       {
         path: '*',
@@ -65,22 +65,15 @@ const unauthenticatedRouter = createBrowserRouter([
 ]);
 
 function App() {
-  const { data: session, isPending } = authClient.useSession();
+  const { data, isPending } = authClient.useSession();
 
   if (isPending) return null;
 
-  if (!session) {
+  if (!data) {
     return <RouterProvider router={unauthenticatedRouter} />;
   }
 
-  return (
-    <SidebarProvider>
-      <Sidebar />
-      <SidebarInset>
-        <RouterProvider router={router} />
-      </SidebarInset>
-    </SidebarProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

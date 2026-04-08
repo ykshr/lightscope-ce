@@ -1,4 +1,4 @@
-import { Spinner } from '@/components/Loading';
+import { Spinner } from '@/components/common/Loading';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export type Params = {

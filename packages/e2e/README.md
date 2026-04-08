@@ -1,40 +1,38 @@
 # End-to-End Tests for Lightscope CE
 
-This directory contains the E2E test suite with multiple scenarios.
+This directory contains the E2E test suite using Playwright and standard testing scripts.
 
 ## Prerequisites
 
 - Docker and Docker Compose
-- Node.js 18+
+- Node.js 20+
+- pnpm 9+
 - Playwright (for browser tests)
 
 ## Setup
 
 1. **Install Dependencies:**
-
+   Run the following from the workspace root:
    ```bash
-   cd e2e
-   npm install
-   npx playwright install --with-deps chromium
+   pnpm install
+   pnpm --filter @lightscope-ce/e2e run postinstall
    ```
 
 2. **Build the Tracker Package:**
-   Ensure tracker package for browser tests is built so it can be served to the test page.
-
+   Ensure the tracker package for browser tests is built so it can be served to the test page.
    ```bash
-   cd ../tracker
-   npm install
-   npm run build:browser
+   pnpm --filter @lightscope-ce/tracker run build
    ```
 
 3. **Start the Infrastructure:**
-   From the root directory:
+   From the workspace root directory:
    ```bash
-   docker-compose up -d --build
+   docker compose up -d --build
    ```
    This starts:
-   - ClickHouse (Database)
+   - ClickHouse (Database at localhost:8123)
    - API (Backend at localhost:3000)
+   - Proxy (Ingestion API at localhost:3001)
    - Web (Frontend at localhost:5173)
    - Mock Site (Test Page at localhost:8080)
 
@@ -42,11 +40,10 @@ This directory contains the E2E test suite with multiple scenarios.
 
 ### 1. Smoke Test (No Browser)
 
-A quick verification that the API accepts events and ClickHouse ingests them.
+A quick verification that the proxy API accepts events and ClickHouse ingests them.
 
 ```bash
-cd e2e
-npm run test:smoke
+pnpm --filter @lightscope-ce/e2e run test:smoke
 ```
 
 ### 2. Browser Verification (Playwright)
@@ -54,39 +51,39 @@ npm run test:smoke
 Verifies the actual client-side tracking script (`packages/tracker`) running in a browser.
 
 - Loads the test page from `mock-site`.
-- Intercepts network requests to verify `page_view` and `custom_click` events.
-- Queries GraphQL to verify data ingestion.
+- Intercepts network requests to verify events are sent to the proxy.
+- Queries the GraphQL API to verify data ingestion.
 
 ```bash
-cd e2e
-npm run test
+pnpm --filter @lightscope-ce/e2e run test:e2e
 ```
 
 ### 3. Load Test
 
 Sends a high volume of events concurrently to test API performance.
-
 - Default: 100 concurrent requests for 5 seconds.
 
 ```bash
-cd e2e
-npm run test:load
+pnpm --filter @lightscope-ce/e2e run test:load
 ```
 
 ### 4. Long Running Test
 
 Sends events periodically over a duration to verify stability.
-
 - Default: 1 event/sec for 60 seconds.
 
 ```bash
-cd e2e
-npm run test:long-run
+pnpm --filter @lightscope-ce/e2e run test:long-run
 # Custom duration (seconds)
-npm run test:long-run -- 120
+pnpm --filter @lightscope-ce/e2e run test:long-run -- 120
 ```
 
 ## Troubleshooting
 
 - **ClickHouse not ready:** If tests fail immediately, wait a few seconds for ClickHouse to fully start.
-- **Script not found:** Ensure `packages/tracker/dist/browser.js` exists. If not, run `npm run build:browser` in `packages/tracker`.
+- **Script not found:** Ensure `packages/tracker/dist/browser.js` exists. If not, run `pnpm --filter @lightscope-ce/tracker run build:browser`.
+## Contributing
+
+Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository.
+
+*Note on Service Readiness*: The script `utils/wait-for-services.js` checks if Docker services are ready before running E2E tests. For HTTP services, it must perform actual `http.get` requests expecting a 200 OK status, rather than just `net.Socket` TCP connects, to prevent race conditions.

@@ -1,6 +1,5 @@
 {
   "name": "@lightscope-ce/web",
-  "private": true,
   "version": "0.1.0",
   "description": "Web dashboard for LightScope",
   "license": "MIT",

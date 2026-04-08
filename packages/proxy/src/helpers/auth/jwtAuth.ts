@@ -35,31 +35,23 @@ export default class JwtAuth implements AuthProvider {
       }
 
       // Check origin. In browsers, Origin header is sent for cross-origin POSTs.
-      // If the Origin header is absent, we might check Referer, though Origin is more strict.
-      const requestOrigin = c.req.header('Origin') || c.req.header('Referer');
+      const requestOrigin = c.req.header('Origin');
+      if (!requestOrigin) {
+        console.error('JwtAuth: Request lacks Origin header');
+        return null;
+      }
 
-      if (requestOrigin) {
-        // Some rudimentary origin comparison.
-        // A tracker embedded in https://mysite.com might send Origin: https://mysite.com
-        // or Referer: https://mysite.com/some/path
-        try {
-          const tokenOriginUrl = new URL(decodedPayload.origin);
-          const requestUrl = new URL(requestOrigin);
+      // Some rudimentary origin comparison.
+      // A tracker embedded in https://mysite.com might send Origin: https://mysite.com
+      // or Referer: https://mysite.com/some/path
+      const tokenOriginUrl = new URL(decodedPayload.origin);
+      const requestUrl = new URL(requestOrigin);
 
-          if (tokenOriginUrl.hostname !== requestUrl.hostname) {
-            console.error(
-              `JwtAuth: Origin mismatch. Token allows ${tokenOriginUrl.hostname}, but request came from ${requestUrl.hostname}`
-            );
-            return null;
-          }
-        } catch (e) {
-          console.error('JwtAuth: Failed to parse origins for comparison', e);
-          return null;
-        }
-      } else {
-        console.log(
-          'JwtAuth: Request lacks Origin/Referer header, tracking conditionally allowed but warned'
+      if (tokenOriginUrl.hostname !== requestUrl.hostname) {
+        console.error(
+          `JwtAuth: Origin mismatch. Token allows ${tokenOriginUrl.hostname}, but request came from ${requestUrl.hostname}`
         );
+        return null;
       }
 
       return {

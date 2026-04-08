@@ -1,6 +1,5 @@
 {
   "name": "@lightscope-ce/mock-site",
-  "version": "1.0.0",
-  "description": "Mock site for testing",
-  "private": true
+  "version": "0.1.0",
+  "description": "Mock site for testing"
 }

@@ -1,6 +1,6 @@
+import { Loading } from '@/components/common/Loading';
 import { TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { Column } from './types';
-import { Loading } from '@/components/Loading';
 
 export default function Body<T extends { id: string | number }>({
   isLoading,

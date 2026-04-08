@@ -1,8 +1,8 @@
-import { strict as assert } from 'assert';
-import { generatePayload } from '../utils/generator';
+import { API_URL, PROXY_URL } from '@/helpers/env';
+import { generateToken } from '@/setup/tracker';
+import { generatePayload } from '@/utils/generator';
 
-const API_URL = process.env.API_URL || 'http://127.0.0.1:3000';
-const INSERT_URL = process.env.INSERT_URL || 'http://127.0.0.1:3001';
+const ONE_HOUR_MS = 3600000;
 
 async function main() {
   console.log('Starting E2E Test...');
@@ -11,17 +11,16 @@ async function main() {
   const eventPayload = generatePayload({
     event_name: 'page_view',
     site_name: 'localhost',
-    url: 'http://127.0.0.1:5173/test-page',
+    url: 'http://example.com/test-page',
     user_agent: 'E2E Test Agent',
   });
 
   console.log('Sending event...', eventPayload.event_id);
-  const eventRes = await fetch(`${INSERT_URL}/events`, {
+  const org = JSON.parse(process.env.ORG_DATA || '{}');
+  const token = await generateToken(org.id as string, 'http://localhost');
+  const eventRes = await fetch(`${PROXY_URL}/events`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer test-token',
-    },
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify(eventPayload),
   });
 
@@ -39,8 +38,8 @@ async function main() {
   const query = `
     query {
       rank(
-        startDate: "${new Date(Date.now() - 3600000).toISOString()}"
-        endDate: "${new Date(Date.now() + 3600000).toISOString()}"
+        startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+        endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
         limit: 10
       ) {
         total
@@ -56,6 +55,7 @@ async function main() {
   const gqlRes = await fetch(`${API_URL}/gql`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify({ query }),
   });
 

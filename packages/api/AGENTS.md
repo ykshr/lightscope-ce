@@ -28,8 +28,8 @@ Entry: `src/index.ts`
   - Do not expose internal table names to the client.
   - Do not trust client-provided column names.
 - **Hono Context**: Environment variables and bindings (like `JWT_SECRET`, `CLICKHOUSE_URL`) are retrieved from the Hono context using the `env(c)` function from `hono/adapter` within `createContext.ts`. Better Auth plugin objects (like `user` and `organization`) are exposed via `c.var`. Organization ID must be accessed via `c.var.organization.id` rather than assuming an `organizationId` property exists directly on the `user` object.
-- **Better Auth Plugins**: When configuring frontend Better Auth plugins (like `organizationClient()`), ensure the corresponding backend plugin (e.g., `organization()`) is actively configured in the API (`packages/api/src/helpers/auth.ts`) to avoid 404 API errors. The `NoAuth` authentication provider (`packages/api/src/helpers/auth/noAuth.ts`) returns a static anonymous user object with `id: 'anonymous'`, `role: 'admin'`, and `tenantId: 'none'`. Its `handler` method returns a 401 Unauthorized Response.
-- **Helpers**: The `packages/api/src/helpers/rename.ts` utility uses recursive mapped types (`SnakeToCamelObject` and `SnakeToCamelCase`) to provide strong type safety when converting snake_case database records into camelCase TypeScript objects. The `snakeToCamel` utility uses a module-level `Map` to cache string transformations, which significantly optimizes the recursive `renameKeySnakeToCamel` function for objects with many or repeated keys, resulting in measurable performance gains (~5x speedup).
+- **Better Auth Plugins**: When configuring frontend Better Auth plugins (like `organizationClient()`), ensure the corresponding backend plugin (e.g., `organization()`) is actively configured in the API (`packages/api/src/helpers/auth.ts`) to avoid 404 API errors. The `NoAuth` authentication provider (`packages/api/src/helpers/auth/noAuth.ts`) returns a static anonymous user object with `id: 'anonymous'`, `role: 'admin'`, and `tenantId: 'none'`. Its `handler` method returns a 401 Unauthorized Response. When using Better Auth, the built-in rate limiting feature (`rateLimit: { enabled: true }`) defaults to in-memory storage, meaning no database schema modifications are required to enable abuse prevention.
+- **Helpers**: The `packages/api/src/helpers/rename.ts` utility uses recursive mapped types (`SnakeToCamelObject` and `SnakeToCamelCase`) to provide strong type safety when converting snake_case database records into camelCase TypeScript objects. The `snakeToCamel` utility uses a module-level `Map` to cache string transformations, which significantly optimizes the recursive `renameKeySnakeToCamel` function for objects with many or repeated keys, resulting in measurable performance gains (~5x speedup). This utility is tested by `packages/api/src/helpers/rename.test.ts`, covering simple objects, nested structures, arrays, and edge cases.
 - **Mocking GraphQL**: When mocking `GraphQLResolveInfo` in tests, explicitly provide expected dummy properties and methods (e.g., `schema: { getType: () => null }`, `returnType: { name: 'Dummy' }`) instead of using empty objects cast as `any` (`{} as any`).
 
 #### Build & Test Commands
@@ -51,7 +51,8 @@ Entry: `src/index.ts`
   ```
 - **Generate Prisma / Auth Schema**:
   ```bash
-  pnpm --filter @lightscope-ce/api run db:generate
+  pnpm exec auth generate --config ./src/helpers/auth.ts --output ./prisma/schema/schema.prisma --yes
+  pnpm exec prisma generate
   ```
 
 #### Project Structure
@@ -74,4 +75,5 @@ Entry: `src/index.ts`
 - **Prisma Prohibitions**:
   - Do not import the generated client directly from `@prisma/client`.
   - The Prisma schema (`packages/api/prisma/schema.prisma`) should be kept to the absolute minimum fields necessary to support application requirements and Better Auth core operations (e.g., `name`, `email`, and `image` are strictly required for the `User` model by default).
+  - Prisma uses the `PrismaLibSql` adapter, which requires a `DATABASE_URL` environment variable (defined in `Bindings` type and retrieved via `env(c)`).
 - **CORS Policy**: The API service follows a restrictive CORS policy where the `ALLOWED_ORIGIN` environment variable (supporting comma-separated strings) must be explicitly defined; if it is missing, the CORS middleware is skipped, defaulting to the browser's Same-Origin Policy.

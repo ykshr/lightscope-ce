@@ -38,3 +38,5 @@ This package is extremely performance-critical and highly sensitive to bundle si
   - Do not add synchronous, heavy computational logic.
   - Ensure event listeners are properly cleaned up to avoid memory leaks.
   - Avoid unnecessary polyfills or abstractions to keep the runtime size to a minimum.
+
+  - "Do not modify this directory": Maintain the existing directory boundaries and responsibilities.

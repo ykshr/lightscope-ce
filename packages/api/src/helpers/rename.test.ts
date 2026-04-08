@@ -48,14 +48,10 @@ describe('renameKeySnakeToCamel', () => {
 
   it('should handle nested arrays and objects', () => {
     const input = {
-      items_list: [
-        { item_id: 1, tags_list: ['tag_one', 'tag_two'] },
-      ],
+      items_list: [{ item_id: 1, tags_list: ['tag_one', 'tag_two'] }],
     };
     const expected = {
-      itemsList: [
-        { itemId: 1, tagsList: ['tag_one', 'tag_two'] },
-      ],
+      itemsList: [{ itemId: 1, tagsList: ['tag_one', 'tag_two'] }],
     };
     expect(renameKeySnakeToCamel(input)).toEqual(expected);
   });

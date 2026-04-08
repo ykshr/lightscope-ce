@@ -9,20 +9,6 @@ import useProcessData from './helpers/useProcessData';
 import AreaStacked from './templates/AreaStacked';
 import Filter, { findCategoryOptionByValue } from './templates/Filter';
 
-// const data = [
-//   { date: '2024-04-01', desktop: 222, mobile: 150 },
-//   { date: '2024-04-02', desktop: 97, mobile: 180 },
-//   { date: '2024-04-03', desktop: 167, mobile: 120 },
-//   { date: '2024-04-04', desktop: 242, mobile: 260 },
-//   { date: '2024-04-05', desktop: 373, mobile: 290 },
-//   { date: '2024-04-06', desktop: 301, mobile: 340 },
-// ];
-
-// const categories = [
-//   { id: 'desktop', label: 'Desktop', value: 1402 },
-//   { id: 'mobile', label: 'Mobile', value: 1540 },
-// ];
-
 interface ArticleAreaStackedProps {
   title?: string;
   description?: string;

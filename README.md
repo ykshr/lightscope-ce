@@ -16,7 +16,7 @@ This project uses **pnpm workspaces** to manage the following packages:
 
 ## Tech Stack
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Radix UI, TanStack Query
+- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Radix UI, TanStack Query v5
 - **Backend**: Node.js, TypeScript, Hono, GraphQL API (api), REST API (proxy), Prisma (SQLite), Better Auth
 - **Database**: ClickHouse (for high-speed analytics queries)
 - **Infrastructure**: Docker, Docker Compose, Nginx

@@ -2,6 +2,8 @@
 
 This is the web frontend for LightScope, built with React and Vite.
 
+The Web package (`packages/web`) is built with React 19, Vite, Tailwind CSS v4, and TanStack React Query v5.
+
 ## Features
 
 - **Frontend Framework**: React 19 with Vite

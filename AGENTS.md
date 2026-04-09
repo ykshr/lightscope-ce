@@ -2,8 +2,10 @@
 
 This repository is a TypeScript monorepo using `pnpm workspaces`. Please strictly follow these rules:
 
+All `AGENTS.md` files in the repository must be structured with four specific English headers: `#### Coding Conventions`, `#### Build & Test Commands`, `#### Project Structure`, and `#### Restrictions`.
+
 #### Coding Conventions
-- **Language**: Write all code, comments, and commit messages in concise and intuitive English. Note that Pull Request comments and repository discussions may be written in Japanese; ensure they are translated to understand the instructions accurately. When handling PR comments via `read_pr_comments`, always evaluate them against the code as it appears in the *modified* state of the pull request.
+- **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Note that Pull Request comments and repository discussions may be written in Japanese; ensure they are translated to understand the instructions accurately. When handling PR comments via `read_pr_comments`, always evaluate them against the code as it appears in the *modified* state of the pull request.
 - **Type Safety**: Maintain strict TypeScript. The use of `any` or unsafe casting (like `as any`) is prohibited.
 - **Indentation**: Use 2 spaces for indentation in TypeScript/JavaScript/JSON/YAML files (enforced by Prettier).
 - **Naming Conventions**: Use `camelCase` for variables and functions. Use `PascalCase` for classes, React components, and interfaces/types.
@@ -22,7 +24,7 @@ This repository is a TypeScript monorepo using `pnpm workspaces`. Please strictl
 #### Build & Test Commands
 - **How to build the project**: Run `pnpm run build` in the respective package or `pnpm run ci` from the root to build and test everything.
 - **How to run tests (commands and steps)**:
-  - **Run CI/CD Checks**: Executes linting, type checking, unit testing, and formatting across all packages. Always run this before marking a task as complete.
+  - **Run CI/CD Checks**: To run comprehensive repository-wide CI checks (including linting, type checking, unit tests, and formatting), execute the command `pnpm run ci` from the workspace root. Always run this before marking a task as complete.
     ```bash
     pnpm run ci
     ```
@@ -30,7 +32,7 @@ This repository is a TypeScript monorepo using `pnpm workspaces`. Please strictl
     ```bash
     pnpm run test:e2e
     ```
-- **Code Formatting (Prettier)**: Format the entire repository.
+- **Code Formatting (Prettier)**: To format the entire repository using Prettier, run the command `pnpm run format` from the workspace root.
   ```bash
   pnpm run format
   ```
@@ -62,6 +64,7 @@ This repository does not use a build orchestrator like `turborepo` or `nx`. Plea
   - Do not introduce global state management libraries.
   - Do not restructure the monorepo itself.
 - **Rules for AI Agents**:
+  - When tasked with documentation updates, do not modify any actual code, even if CI errors occur.
   - Do not modify a file without reading the entire file first.
   - Do not ignore the surrounding architecture or existing styles/patterns.
   - Do not guess or proceed with implementation if unsure (ask questions instead).

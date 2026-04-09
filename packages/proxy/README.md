@@ -1,6 +1,6 @@
 # @lightscope-ce/proxy
 
-This package contains the REST API service for LightScope, primarily responsible for high-performance event ingestion from trackers. It is built with Hono and connected directly to ClickHouse.
+The Proxy package (`packages/proxy`) is a high-performance REST API built with Node.js and Hono, responsible for event ingestion from trackers and connected directly to ClickHouse.
 
 ## Scripts
 

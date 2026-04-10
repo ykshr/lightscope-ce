@@ -37,6 +37,10 @@ trackerApp.post('/generate', async (c: Context) => {
     const iat = Math.floor(issuedAt.getTime() / 1000);
     const exp = expiresAt ? Math.floor(expiresAt.getTime() / 1000) : undefined;
 
+    if (1000 < origin.length) {
+      return c.json({ error: 'Origin is too long' }, 400);
+    }
+
     const payload = {
       organizationId,
       origin,
@@ -57,11 +61,8 @@ trackerApp.post('/generate', async (c: Context) => {
       token,
     };
 
-    console.log(data);
     await c.var.$.prisma.tracker.create({ data });
-    console.log('success');
     const trackers = await getLoader(c);
-    console.log(trackers);
 
     return c.json({ trackers });
   } catch (error) {

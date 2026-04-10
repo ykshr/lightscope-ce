@@ -8,6 +8,7 @@ import useMediaQuery, { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
 import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { getDefaultClassNames } from 'react-day-picker';
 import { useSearchParams } from 'react-router-dom';
 
 const RELATIVE_OPTIONS_QUICK_ACCESS = [
@@ -172,7 +173,6 @@ function CustomDateRangePicker({
     if (isScreen600) return 2;
     return 1;
   })();
-  console.log(isScreen1024, isDesktop, isScreen600, numberOfMonths);
 
   return (
     <ResponsiveModal
@@ -259,6 +259,9 @@ function CustomDateRangePicker({
               numberOfMonths={numberOfMonths}
               autoFocus
               className="w-[90%] [&_table]:w-full [&_th]:w-full [&_td]:w-full [&_td>*]:w-full [&_td>*]:h-auto [&_td>*]:aspect-square"
+              classNames={{
+                months: `relative flex flex-col gap-4 sm:flex-row ${getDefaultClassNames().months}`,
+              }}
             />
           </div>
         </main>

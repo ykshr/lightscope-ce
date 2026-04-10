@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import NewOrganizationDialog from '@/components/sidebar/NewOrganizationDialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +7,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -87,77 +85,7 @@ export default function Organization() {
         </SidebarMenuItem>
       </SidebarMenu>
 
-      <AddOrganizationDialog open={openAddDialog} onOpenChange={setOpenAddDialog} />
+      <NewOrganizationDialog open={openAddDialog} onOpenChange={setOpenAddDialog} />
     </>
-  );
-}
-
-function AddOrganizationDialog({
-  open,
-  onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
-  const [name, setName] = useState('');
-  const [slug, setSlug] = useState('');
-  const [error, setError] = useState<string | null>(null);
-
-  const handleCreateOrg = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    const { error } = await authClient.organization.create({ name, slug });
-    if (error) {
-      setError(error.message || 'Failed to create organization');
-      return;
-    }
-
-    setName('');
-    setSlug('');
-    onOpenChange(false);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create an Organization</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleCreateOrg} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium" htmlFor="slug">
-              Slug (Unique ID)
-            </label>
-            <Input
-              id="slug"
-              placeholder="my-organization"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium" htmlFor="name">
-              Display Name
-            </label>
-            <Input
-              id="name"
-              placeholder="My Organization"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          {error && <div className="text-sm text-destructive">{error}</div>}
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button type="submit">Create</Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
   );
 }

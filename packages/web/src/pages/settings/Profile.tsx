@@ -102,8 +102,8 @@ export default function Profile() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-destructive">Danger Zone</CardTitle>
-          <CardDescription>Irreversible account actions.</CardDescription>
+          <CardTitle>Account</CardTitle>
+          <CardDescription>Account actions.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between p-4 border rounded-md">

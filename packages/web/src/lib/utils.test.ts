@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { cn } from './index';
+import { describe, expect, it } from 'vitest';
+import { cn } from './utils';
 
 describe('cn utility function', () => {
   it('merges basic string class names', () => {

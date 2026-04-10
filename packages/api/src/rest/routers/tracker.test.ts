@@ -15,9 +15,23 @@ const setupApp = (role: string = 'member') => {
   const app = new Hono<{ Variables: Variables; Bindings: Bindings }>();
 
   app.use('*', async (c, next) => {
-    c.set('user', { id: 'u1', name: 'user', email: 'user@example.com', emailVerified: false, image: null, createdAt: new Date(), updatedAt: new Date() } as any);
+    c.set('user', {
+      id: 'u1',
+      name: 'user',
+      email: 'user@example.com',
+      emailVerified: false,
+      image: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as any);
     c.set('organization', { id: 'org1' });
-    c.set('me', { id: 'm1', organizationId: 'org1', userId: 'u1', role, createdAt: new Date() } as any);
+    c.set('me', {
+      id: 'm1',
+      organizationId: 'org1',
+      userId: 'u1',
+      role,
+      createdAt: new Date(),
+    } as any);
     c.set('$', {
       jwt: { secret: 'secret', algorithm: 'HS256' },
       prisma: {

@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/table';
 import { fetchDelete, fetchPost } from '@/helpers/fetch';
 import useTrackers from '@/pages/settings/organization/useTrackers';
-import { Check, X } from 'lucide-react';
+import { Check, Copy, X } from 'lucide-react';
 import { useState } from 'react';
 import { Props } from './type';
 
@@ -29,9 +29,6 @@ export default function Trackers({ org, me }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const isAdmin = me?.role === 'admin' || me?.role === 'owner';
 
-  // const copyToClipboard = () => {
-  //   navigator.clipboard.writeText(generatedSnippet);
-  // };
   const { trackers, reFetchTrackers } = useTrackers(org.id);
 
   const handleRemoveToken = async (tokenId: string) => {
@@ -76,8 +73,21 @@ export default function Trackers({ org, me }: Props) {
           <TableBody>
             {trackers.map(({ id, origin, token, createdAt, expiresAt }) => (
               <TableRow key={id}>
-                <TableCell>{origin}</TableCell>
-                <TableCell>{'...' + token.slice(-25)}</TableCell>
+                <TableCell className="max-w-[150px] truncate sm:max-w-[200px]" title={origin}>
+                  {origin}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="max-w-[150px] truncate text-left sm:max-w-[250px]"
+                      dir="rtl"
+                      title={token}
+                    >
+                      {token}&lrm;
+                    </span>
+                    <CopyTokenButton token={token} />
+                  </div>
+                </TableCell>
                 <TableCell>
                   {isActive(expiresAt) ? <Check color="green" /> : <X color="red" />}
                 </TableCell>
@@ -179,5 +189,36 @@ function NewTokenDialog({
         </form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function CopyTokenButton({ token }: { token: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(token);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="flex w-20 items-center">
+      <Button
+        variant="ghost"
+        size={copied ? 'sm' : 'icon'}
+        className={`h-6 ${copied ? 'px-2' : 'w-6'} transition-all duration-200`}
+        onClick={handleCopy}
+        title="Copy token"
+      >
+        {copied ? (
+          <>
+            <Check className="mr-1 size-3 shrink-0 text-green-500" />
+            <span className="text-xs text-green-500">Copied</span>
+          </>
+        ) : (
+          <Copy className="size-3 shrink-0 text-muted-foreground" />
+        )}
+      </Button>
+    </div>
   );
 }

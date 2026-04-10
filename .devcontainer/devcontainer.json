@@ -20,7 +20,7 @@
     // "ghcr.io/devcontainers/features/docker-in-docker:2": { "moby": false }
   },
 
-  "postCreateCommand": "pnpm install && pnpm --filter @lightscope-ce/e2e exec playwright install",
+  "postCreateCommand": "pnpm install && pnpm --filter @lightscope-ce/e2e exec playwright install --with-deps",
 
   "forwardPorts": [3000, 9229]
 }

@@ -82,7 +82,7 @@ export default function ArticleFilter() {
         </>
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full grid gap-6 py-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full grid gap-6 py-4 px-6">
         {/* Date fields */}
         <Label className="text-base font-bold">Dates</Label>
         <DateBeforeAfterInput

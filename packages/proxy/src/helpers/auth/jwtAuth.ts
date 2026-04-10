@@ -44,13 +44,18 @@ export default class JwtAuth implements AuthProvider {
       // Some rudimentary origin comparison.
       // A tracker embedded in https://mysite.com might send Origin: https://mysite.com
       // or Referer: https://mysite.com/some/path
-      const tokenOriginUrl = new URL(decodedPayload.origin);
-      const requestUrl = new URL(requestOrigin);
+      try {
+        const tokenOriginUrl = new URL(decodedPayload.origin);
+        const requestUrl = new URL(requestOrigin);
 
-      if (tokenOriginUrl.hostname !== requestUrl.hostname) {
-        console.error(
-          `JwtAuth: Origin mismatch. Token allows ${tokenOriginUrl.hostname}, but request came from ${requestUrl.hostname}`
-        );
+        if (tokenOriginUrl.hostname !== requestUrl.hostname) {
+          console.error(
+            `JwtAuth: Origin mismatch. Token allows ${tokenOriginUrl.hostname}, but request came from ${requestUrl.hostname}`
+          );
+          return null;
+        }
+      } catch (e) {
+        console.error('JwtAuth: Failed to parse origins for comparison', e);
         return null;
       }
 

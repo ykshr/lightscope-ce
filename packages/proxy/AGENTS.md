@@ -17,6 +17,7 @@ Entry: `src/index.ts`
 - **Library Restrictions**: Do not introduce heavy dependencies. Keep the proxy lightweight to maintain high performance.
 - **Endpoint Responsibilities**: The primary role is to receive events from trackers quickly, validate them, and save them to ClickHouse. The Proxy package (`packages/proxy`) is a high-performance REST API built with Node.js and Hono, responsible for event ingestion from trackers and connected directly to ClickHouse.
 - **Input Validation**: Use Zod to strictly validate that the incoming payloads are in the correct format.
+- **Typing**: In `packages/proxy`, the `AlgorithmTypes` exported from `hono/jwt` must be used as a value (e.g., `AlgorithmTypes.HS256`) for strictly typed assignments and default parameters to avoid compilation errors like 'Type "HS256" is not assignable to type AlgorithmTypes'.
 - **CORS and Authentication**: The `JwtAuth` provider in `packages/proxy` strictly validates the request's `Origin` or `Referer` header against the `origin` claim in the JWT; if both headers are missing, the provider returns `null` to prevent unauthorized tracking.
 
 #### Build & Test Commands
@@ -25,6 +26,7 @@ Entry: `src/index.ts`
   ```bash
   pnpm --filter @lightscope-ce/proxy run build
   ```
+  To build or test the proxy service (`packages/proxy`), use the workspace commands `pnpm --filter @lightscope-ce/proxy run build` and `pnpm --filter @lightscope-ce/proxy run test` respectively.
 - **How to run tests (commands and steps)**:
   ```bash
   pnpm --filter @lightscope-ce/proxy run test

@@ -13,6 +13,8 @@ This package contains the GraphQL API service for LightScope, built with Hono an
 
 ## Key Technologies
 
+The API package (`packages/api`) uses TypeScript, Hono (`@hono/graphql-server`), ClickHouse, and Prisma (SQLite) with Better Auth for authentication.
+
 - **Hono**: Ultrafast web framework for the Edge.
 - **GraphQL Server**: Integration provided by `@hono/graphql-server`.
 - **Better Auth**: Authentication framework.

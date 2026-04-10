@@ -13,6 +13,11 @@ type Organization = {
   id: string;
 };
 
+type Member = {
+  id: string;
+  role: string;
+};
+
 export type Bindings = {
   DATABASE_URL: string;
   CLICKHOUSE_URL: string;
@@ -33,7 +38,7 @@ export type $ = {
   };
 };
 
-export type Variables = { user: User; organization: Organization; $: $ };
+export type Variables = { user: User; organization: Organization; me: Member; $: $ };
 
 export type Env = {
   Bindings: Bindings;

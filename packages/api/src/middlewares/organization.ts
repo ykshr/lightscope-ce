@@ -24,12 +24,26 @@ export default function createOrganizationMiddleware() {
       },
     });
 
+    if (!activeOrganization) {
+      return c.json({ error: 'not found active organization' }, 401);
+    }
+
+    const me = activeOrganization.members?.find(
+      (member: any) => member.user.id === session.user.id
+    );
+
+    if (!me) {
+      return c.json({ error: 'unauthorized' }, 401);
+    }
+
+    const { id, ...orgWithoutId } = activeOrganization;
     const organization = {
       id: activeOrganizationId,
-      ...activeOrganization,
+      ...orgWithoutId,
     };
 
     c.set('organization', organization);
+    c.set('me', me as any);
     return await next();
   });
 }

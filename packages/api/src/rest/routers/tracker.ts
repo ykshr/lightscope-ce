@@ -21,6 +21,11 @@ trackerApp.get('/', async (c: Context) => {
 
 trackerApp.post('/generate', async (c: Context) => {
   try {
+    const me = c.var.me;
+    if (me?.role !== 'admin' && me?.role !== 'owner') {
+      return c.json({ error: 'forbidden' }, 403);
+    }
+
     const organizationId = c.var.organization.id;
     const body = await c.req.json();
     const parsed = generateSchema.safeParse(body);
@@ -57,11 +62,8 @@ trackerApp.post('/generate', async (c: Context) => {
       token,
     };
 
-    console.log(data);
     await c.var.$.prisma.tracker.create({ data });
-    console.log('success');
     const trackers = await getLoader(c);
-    console.log(trackers);
 
     return c.json({ trackers });
   } catch (error) {
@@ -72,10 +74,14 @@ trackerApp.post('/generate', async (c: Context) => {
 
 trackerApp.delete('/:id', async (c: Context) => {
   try {
+    const me = c.var.me;
+    if (me?.role !== 'admin' && me?.role !== 'owner') {
+      return c.json({ error: 'forbidden' }, 403);
+    }
+
     const id = c.req.param('id');
     const organizationId = c.var.organization.id;
 
-    // We should probably check if the tracker belongs to the org, but Prisma can do this.
     await c.var.$.prisma.tracker.deleteMany({
       where: {
         id,

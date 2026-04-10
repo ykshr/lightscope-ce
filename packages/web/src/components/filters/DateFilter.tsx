@@ -4,7 +4,7 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { convertDateString, getStartOfMinute, getStartOfNextMinute } from '@/helpers/date';
-import { useIsDesktop } from '@/hooks/useMediaQuery';
+import useMediaQuery, { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
 import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -104,6 +104,8 @@ function CustomDateRangePicker({
   onApply: (s: Date | string, e: Date | string) => void;
 }) {
   const isDesktop = useIsDesktop();
+  const isScreen600 = useMediaQuery('(min-width: 600px)');
+  const isScreen1024 = useMediaQuery('(min-width: 1024px)');
   const [open, setOpen] = useState(false);
   const [selectedRelative, setSelectedRelative] = useState<
     (typeof RELATIVE_OPTIONS)[0] | undefined
@@ -164,6 +166,14 @@ function CustomDateRangePicker({
     setSelectedRelative(undefined);
   };
 
+  const numberOfMonths = (() => {
+    if (isScreen1024) return 2;
+    if (isDesktop) return 1;
+    if (isScreen600) return 2;
+    return 1;
+  })();
+  console.log(isScreen1024, isDesktop, isScreen600, numberOfMonths);
+
   return (
     <ResponsiveModal
       trigger={
@@ -194,64 +204,61 @@ function CustomDateRangePicker({
     >
       <div className="flex flex-col md:flex-row w-full overflow-hidden border rounded-lg mt-4">
         {/* Sidebar: Common Ranges */}
-        <aside className="w-full md:w-48 bg-muted/30 p-4 flex flex-col space-y-1 border-b md:border-b-0 md:border-r overflow-y-auto">
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">
-            Presets
-          </h3>
-          {RELATIVE_OPTIONS.map((o) => {
-            const isSelected = selectedRelative?.label === o.label;
-            return (
-              <Button
-                key={o.label}
-                type="button"
-                variant={isSelected ? 'default' : 'ghost'}
-                className="justify-start font-normal h-9 w-full"
-                onClick={() => handlePresetClick(o)}
-              >
-                {o.label}
-              </Button>
-            );
-          })}
-        </aside>
+        {isDesktop && (
+          <aside className="w-full md:w-48 bg-muted/30 p-4 flex flex-col space-y-1 border-b md:border-b-0 md:border-r overflow-y-auto">
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">
+              Presets
+            </h3>
+            {RELATIVE_OPTIONS.map((o) => {
+              const isSelected = selectedRelative?.label === o.label;
+              return (
+                <Button
+                  key={o.label}
+                  type="button"
+                  variant={isSelected ? 'default' : 'ghost'}
+                  className="justify-start font-normal h-9 w-full"
+                  onClick={() => handlePresetClick(o)}
+                >
+                  {o.label}
+                </Button>
+              );
+            })}
+          </aside>
+        )}
 
         {/* Main Calendar Interface */}
         <main className="flex-1 flex flex-col bg-background relative overflow-y-auto">
           {/* Details header */}
-          <div className="px-6 py-4 flex flex-col sm:flex-row items-center gap-4 bg-muted/10 border-b">
+          <div className="px-6 py-4 flex flex-col lg:flex-row items-center gap-4 bg-muted/10 border-b">
             <div className="flex-1 flex flex-col gap-1.5 w-full">
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                Start Date
-              </span>
+              <span>Start Date</span>
               <Input
                 type="datetime-local"
                 value={formatForInput(range?.from)}
                 onChange={handleStartDateChange}
-                className="text-sm font-semibold bg-background shadow-sm"
               />
             </div>
-            <div className="text-muted-foreground hidden sm:block mt-4">
+            <div className="text-muted-foreground hidden lg:block mt-4">
               <ArrowRight className="w-5 h-5" />
             </div>
             <div className="flex-1 flex flex-col gap-1.5 w-full">
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                End Date
-              </span>
+              <span>End Date</span>
               <Input
                 type="datetime-local"
                 value={formatForInput(range?.to)}
                 onChange={handleEndDateChange}
-                className="text-sm font-semibold bg-background shadow-sm"
               />
             </div>
           </div>
 
-          <div className="flex-1 p-4 flex justify-center items-start overflow-y-auto">
+          <div className="flex-1 p-2 flex justify-center items-start w-full">
             <Calendar
               mode="range"
               selected={range}
               onSelect={handleCalendarSelect}
-              numberOfMonths={isDesktop ? 2 : 1}
+              numberOfMonths={numberOfMonths}
               autoFocus
+              className="w-[90%] [&_table]:w-full [&_th]:w-full [&_td]:w-full [&_td>*]:w-full [&_td>*]:h-auto [&_td>*]:aspect-square"
             />
           </div>
         </main>

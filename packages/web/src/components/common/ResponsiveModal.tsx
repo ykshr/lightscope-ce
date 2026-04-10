@@ -52,7 +52,7 @@ export default function ResponsiveModal({
         {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
         <DialogContent
           className={cn(
-            'sm:max-w-[max-content] md:max-w-[700px] max-h-[90dvh] flex flex-col',
+            'sm:max-w-[max-content] md:max-w-[70vw] max-h-[90dvh] flex flex-col',
             dialogClassName
           )}
         >

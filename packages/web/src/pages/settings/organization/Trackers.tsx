@@ -130,6 +130,7 @@ function NewTokenDialog({
 }) {
   const [showDialog, setShowDialog] = useState(false);
   const [origin, setOrigin] = useState('');
+  const [expiresAt, setExpiresAt] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -138,9 +139,14 @@ function NewTokenDialog({
     setIsLoading(true);
     setError('');
     try {
-      await fetchPost('/tracker/generate', { origin });
+      const payload: any = { origin };
+      if (expiresAt) {
+        payload.expiresAt = new Date(expiresAt).toISOString();
+      }
+      await fetchPost('/tracker/generate', payload);
       setIsLoading(false);
       setOrigin('');
+      setExpiresAt('');
       setError('');
       setShowDialog(false);
       reFetchTrackers();
@@ -175,6 +181,15 @@ function NewTokenDialog({
               required
               value={origin}
               onChange={(e) => setOrigin(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="expiresAt">Expires At (Optional)</Label>
+            <Input
+              id="expiresAt"
+              type="datetime-local"
+              value={expiresAt}
+              onChange={(e) => setExpiresAt(e.target.value)}
             />
           </div>
           {error && <div className="text-sm text-destructive">{error}</div>}

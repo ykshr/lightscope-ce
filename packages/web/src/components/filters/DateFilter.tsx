@@ -2,15 +2,12 @@ import ResponsiveModal from '@/components/common/ResponsiveModal';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';
-import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Input } from '@/components/ui/input';
 import { convertDateString, getStartOfMinute, getStartOfNextMinute } from '@/helpers/date';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
-import { cn } from '@/utils';
-import * as Tabs from '@radix-ui/react-tabs';
-import { Calendar as CalendarIcon, Clock } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 const RELATIVE_OPTIONS_QUICK_ACCESS = [
@@ -20,23 +17,21 @@ const RELATIVE_OPTIONS_QUICK_ACCESS = [
 ];
 
 const RELATIVE_OPTIONS = [
+  { label: 'Past 12 hours', startDateString: 'PT12H', endDateString: 'So1D' },
+  { label: 'Past 24 hours', startDateString: 'PT24H', endDateString: 'So1D' },
+  // { label: 'Past 48 hours', startDateString: 'PT48H', endDateString: 'So1D' },
   { label: 'Today', startDateString: 'So0D', endDateString: 'So1D' },
   { label: 'Yesterday', startDateString: 'So-1D', endDateString: 'So0D' },
   { label: 'This week', startDateString: 'So0W', endDateString: 'So1D' },
   { label: 'Last week', startDateString: 'So-1W', endDateString: 'So0W' },
-  { label: 'This 2 weeks', startDateString: 'So-2W', endDateString: 'So1D' },
+  // { label: 'This 2 weeks', startDateString: 'So-2W', endDateString: 'So1D' },
   { label: 'This month', startDateString: 'So0M', endDateString: 'So1D' },
   { label: 'Last month', startDateString: 'So-1M', endDateString: 'So0M' },
-  { label: 'This 3 months', startDateString: 'So-3M', endDateString: 'So1D' },
+  // { label: 'This 3 months', startDateString: 'So-3M', endDateString: 'So1D' },
   { label: 'This year', startDateString: 'So0Y', endDateString: 'So0M' },
-  { label: 'Past 24 hours', startDateString: 'PT24H', endDateString: 'So1D' },
-  { label: 'Past 48 hours', startDateString: 'PT48H', endDateString: 'So1D' },
   { label: 'Past 7 days', startDateString: 'P7D', endDateString: 'So1D' },
   { label: 'Past 30 days', startDateString: 'P30D', endDateString: 'So1D' },
 ];
-
-const tabTriggerClassName =
-  'data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm';
 
 export default function DateFilter() {
   const [searchParams] = useSearchParams();
@@ -110,12 +105,25 @@ function CustomDateRangePicker({
 }) {
   const isDesktop = useIsDesktop();
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<string>('relative');
-  const [selectedRelative, setSelectedRelative] = useState(RELATIVE_OPTIONS[0]);
+  const [selectedRelative, setSelectedRelative] = useState<
+    (typeof RELATIVE_OPTIONS)[0] | undefined
+  >(RELATIVE_OPTIONS[0]);
   const [range, setRange] = useState<DateRange | undefined>();
 
+  useEffect(() => {
+    if (open && selectedRelative) {
+      try {
+        const from = getStartOfMinute(convertDateString(selectedRelative.startDateString), 0, 5);
+        const to = getStartOfNextMinute(convertDateString(selectedRelative.endDateString), 0, 5);
+        setRange({ from, to });
+      } catch (e) {
+        // Ignore
+      }
+    }
+  }, [open, selectedRelative]);
+
   const handleApply = () => {
-    if (mode === 'relative') {
+    if (selectedRelative) {
       const { startDateString, endDateString } = selectedRelative;
       onApply(startDateString, endDateString);
       setOpen(false);
@@ -127,19 +135,34 @@ function CustomDateRangePicker({
     }
   };
 
-  const showCurrentDate = (relativeStr: string, isStartDate: boolean = true) => {
-    try {
-      const date = convertDateString(relativeStr);
-      const roundedDate = isStartDate
-        ? getStartOfMinute(date, 0, 5)
-        : getStartOfNextMinute(date, 0, 5);
-      return roundedDate.toLocaleString();
-    } catch (e) {
-      return 'Invalid date';
-    }
+  const formatForInput = (date?: Date) => {
+    if (!date || isNaN(date.getTime())) return '';
+    const offset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - offset).toISOString().slice(0, 16);
   };
 
-  const formHight = isDesktop ? 55 : 40;
+  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    const newDate = val ? new Date(val) : undefined;
+    setRange((prev) => ({ from: newDate, to: prev?.to }));
+    setSelectedRelative(undefined);
+  };
+
+  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    const newDate = val ? new Date(val) : undefined;
+    setRange((prev) => ({ from: prev?.from, to: newDate }));
+    setSelectedRelative(undefined);
+  };
+
+  const handlePresetClick = (preset: (typeof RELATIVE_OPTIONS)[0]) => {
+    setSelectedRelative(preset);
+  };
+
+  const handleCalendarSelect = (newRange: DateRange | undefined) => {
+    setRange(newRange);
+    setSelectedRelative(undefined);
+  };
 
   return (
     <ResponsiveModal
@@ -153,107 +176,85 @@ function CustomDateRangePicker({
       description="Choose relative presets or specific dates."
       open={open}
       onOpenChange={setOpen}
+      footer={
+        <div className="flex justify-end gap-3">
+          <Button type="button" variant="outline" onClick={() => setOpen(false)} className="px-6">
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            onClick={handleApply}
+            className="px-8 shadow-sm"
+            disabled={!selectedRelative && (!range?.from || !range?.to)}
+          >
+            Apply Filter
+          </Button>
+        </div>
+      }
     >
-      {/* Tabs Component */}
-      <Tabs.Root value={mode} onValueChange={setMode} className="w-full flex flex-col pt-2">
-        <Tabs.List className="grid w-full grid-cols-2 mb-6 bg-muted/50 p-1.5 rounded-lg border shadow-sm">
-          <Tabs.Trigger
-            value="relative"
-            className={cn(
-              'py-2 text-sm font-semibold transition-all rounded-md flex items-center justify-center gap-2',
-              tabTriggerClassName
-            )}
-          >
-            <Clock className="h-4 w-4" />
-            Relative
-          </Tabs.Trigger>
-          <Tabs.Trigger
-            value="absolute"
-            className={cn(
-              'py-2 text-sm font-semibold transition-all rounded-md flex items-center justify-center gap-2',
-              tabTriggerClassName
-            )}
-          >
-            <CalendarIcon className="h-4 w-4" />
-            Absolute Range
-          </Tabs.Trigger>
-        </Tabs.List>
-        <ScrollArea className="px-5" style={{ height: `${formHight}vh` }}>
-          <Tabs.TabsContent value="relative" className="space-y-6 animate-in fade-in-50">
-            <div className="space-y-3">
-              <Label className="text-base">Quick Presets</Label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {RELATIVE_OPTIONS.map((o) => (
-                  <Button
-                    key={o.label}
-                    type="button"
-                    variant={selectedRelative.label === o.label ? 'default' : 'outline'}
-                    className="justify-start font-normal h-9"
-                    onClick={() => setSelectedRelative(o)}
-                  >
-                    {o.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-base">Selected Range Details</Label>
-              <div className="rounded-lg bg-muted/30 border text-sm p-4 space-y-2.5">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
-                  <span className="text-muted-foreground font-medium">From (inclusive)</span>
-                  <span className="font-semibold bg-background border px-2 py-1 rounded shadow-sm">
-                    {showCurrentDate(selectedRelative.startDateString)}
-                  </span>
-                </div>
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
-                  <span className="text-muted-foreground font-medium">To (exclusive)</span>
-                  <span className="font-semibold bg-background border px-2 py-1 rounded shadow-sm">
-                    {showCurrentDate(selectedRelative.endDateString, false)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </Tabs.TabsContent>
-
-          <Tabs.TabsContent value="absolute" className="space-y-4 animate-in fade-in-50">
-            <div className="flex items-center justify-between">
-              <Label className="text-base">Select Date Range</Label>
+      <div className="flex flex-col md:flex-row w-full overflow-hidden border rounded-lg mt-4">
+        {/* Sidebar: Common Ranges */}
+        <aside className="w-full md:w-48 bg-muted/30 p-4 flex flex-col space-y-1 border-b md:border-b-0 md:border-r overflow-y-auto">
+          <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">
+            Presets
+          </h3>
+          {RELATIVE_OPTIONS.map((o) => {
+            const isSelected = selectedRelative?.label === o.label;
+            return (
               <Button
+                key={o.label}
                 type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setRange(undefined)}
-                className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                variant={isSelected ? 'default' : 'ghost'}
+                className="justify-start font-normal h-9 w-full"
+                onClick={() => handlePresetClick(o)}
               >
-                Reset Selection
+                {o.label}
               </Button>
-            </div>
-            <div className="rounded-lg border bg-card/50 shadow-sm overflow-hidden flex justify-center p-2">
-              <Calendar
-                mode="range"
-                selected={range}
-                onSelect={setRange}
-                numberOfMonths={isDesktop ? 2 : 1}
-                autoFocus
+            );
+          })}
+        </aside>
+
+        {/* Main Calendar Interface */}
+        <main className="flex-1 flex flex-col bg-background relative overflow-y-auto">
+          {/* Details header */}
+          <div className="px-6 py-4 flex flex-col sm:flex-row items-center gap-4 bg-muted/10 border-b">
+            <div className="flex-1 flex flex-col gap-1.5 w-full">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                Start Date
+              </span>
+              <Input
+                type="datetime-local"
+                value={formatForInput(range?.from)}
+                onChange={handleStartDateChange}
+                className="text-sm font-semibold bg-background shadow-sm"
               />
             </div>
-          </Tabs.TabsContent>
-        </ScrollArea>
-      </Tabs.Root>
+            <div className="text-muted-foreground hidden sm:block mt-4">
+              <ArrowRight className="w-5 h-5" />
+            </div>
+            <div className="flex-1 flex flex-col gap-1.5 w-full">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                End Date
+              </span>
+              <Input
+                type="datetime-local"
+                value={formatForInput(range?.to)}
+                onChange={handleEndDateChange}
+                className="text-sm font-semibold bg-background shadow-sm"
+              />
+            </div>
+          </div>
 
-      <div className="mt-6 pt-4 border-t flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => setOpen(false)} className="px-6">
-          Cancel
-        </Button>
-        <Button
-          type="button"
-          onClick={handleApply}
-          className="px-8 shadow-sm"
-          disabled={mode === 'absolute' && (!range?.from || !range?.to)}
-        >
-          Apply Filter
-        </Button>
+          <div className="flex-1 p-4 flex justify-center items-start overflow-y-auto">
+            <Calendar
+              mode="range"
+              selected={range}
+              onSelect={handleCalendarSelect}
+              numberOfMonths={isDesktop ? 2 : 1}
+              autoFocus
+            />
+          </div>
+        </main>
       </div>
     </ResponsiveModal>
   );

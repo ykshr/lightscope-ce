@@ -2,6 +2,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -10,6 +11,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -20,11 +22,12 @@ import { cn } from '@/utils';
 interface ResponsiveModalProps {
   dialogClassName?: string;
   drawerClassName?: string;
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
   children: React.ReactNode;
   trigger?: React.ReactNode;
-  title: string;
+  title?: string;
   description?: string;
-  buttons?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
@@ -36,9 +39,10 @@ export default function ResponsiveModal({
   trigger,
   title,
   description,
-  buttons,
+  header,
   open,
   onOpenChange,
+  footer,
 }: ResponsiveModalProps) {
   const isDesktop = useIsDesktop();
 
@@ -46,15 +50,21 @@ export default function ResponsiveModal({
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-        <DialogContent className={cn('sm:max-w-[max-content] md:max-w-[700px]', dialogClassName)}>
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-            <div className="flex items-center justify-between w-full">
+        <DialogContent
+          className={cn(
+            'sm:max-w-[max-content] md:max-w-[700px] max-h-[90dvh] flex flex-col',
+            dialogClassName
+          )}
+        >
+          {(title || description || header) && (
+            <DialogHeader>
+              {title && <DialogTitle>{title}</DialogTitle>}
               {description && <DialogDescription>{description}</DialogDescription>}
-              {buttons && <div>{buttons}</div>}
-            </div>
-          </DialogHeader>
-          {children}
+              {header}
+            </DialogHeader>
+          )}
+          <div className="overflow-y-auto flex-1 min-h-0">{children}</div>
+          {footer && <DialogFooter>{footer}</DialogFooter>}
         </DialogContent>
       </Dialog>
     );
@@ -63,15 +73,16 @@ export default function ResponsiveModal({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-      <DrawerContent className={drawerClassName}>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>{title}</DrawerTitle>
-          <div className="flex items-center justify-between w-full">
+      <DrawerContent className={cn('max-h-[90dvh] flex flex-col', drawerClassName)}>
+        {(title || description || header) && (
+          <DrawerHeader className="text-left">
+            {title && <DrawerTitle>{title}</DrawerTitle>}
             {description && <DrawerDescription>{description}</DrawerDescription>}
-            {buttons && <div>{buttons}</div>}
-          </div>
-        </DrawerHeader>
-        <div className="px-4 pb-4">{children}</div>
+            {header}
+          </DrawerHeader>
+        )}
+        <div className="px-4 pb-4 overflow-y-auto flex-1 min-h-0">{children}</div>
+        {footer && <DrawerFooter>{footer}</DrawerFooter>}
       </DrawerContent>
     </Drawer>
   );

@@ -135,6 +135,7 @@ export default function MapCountry() {
           >
             <g transform={`translate(${transform.x},${transform.y}) scale(${transform.k})`}>
               {geographies?.map((d: any) => {
+                if (!d.id) return;
                 const stat = countries.find((s) => s.id === d.id);
                 const isSelected = d.id != null && selectedCountry?.id === d.id;
                 return (

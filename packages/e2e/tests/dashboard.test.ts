@@ -72,7 +72,10 @@ test.describe('Web Dashboard Verification', () => {
     await expect(page.locator('text=Advanced Filter')).toBeVisible();
 
     // Input "test-site" into "Site Names" TagInput
-    const siteNamesInput = page.locator('div:has(> label:text-is("Site Names")) >> input');
+    const siteNamesInput = page
+      .locator('div', { has: page.locator('label', { hasText: 'Site Names' }) })
+      .locator('input')
+      .first();
     await siteNamesInput.fill('test-site');
     await siteNamesInput.press('Enter');
 

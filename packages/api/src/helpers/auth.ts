@@ -14,6 +14,7 @@ const adapter = new PrismaLibSql({
 
 const prisma = new PrismaClient({ adapter });
 
+// @ts-ignore
 const trustedOrigins = processAllowedOriginsString(process.env.ALLOWED_ORIGINS);
 
 export default createBetterAuth({

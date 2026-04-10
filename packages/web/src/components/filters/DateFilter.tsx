@@ -231,7 +231,7 @@ function CustomDateRangePicker({
           {/* Details header */}
           <div className="px-6 py-4 flex flex-col lg:flex-row items-center gap-4 bg-muted/10 border-b">
             <div className="flex-1 flex flex-col gap-1.5 w-full">
-              <span>Start Date</span>
+              <span>Start Date (inclusive)</span>
               <Input
                 type="datetime-local"
                 value={formatForInput(range?.from)}
@@ -242,7 +242,7 @@ function CustomDateRangePicker({
               <ArrowRight className="w-5 h-5" />
             </div>
             <div className="flex-1 flex flex-col gap-1.5 w-full">
-              <span>End Date</span>
+              <span>End Date (exclusive)</span>
               <Input
                 type="datetime-local"
                 value={formatForInput(range?.to)}

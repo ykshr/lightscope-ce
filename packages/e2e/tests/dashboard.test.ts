@@ -73,7 +73,7 @@ test.describe('Web Dashboard Verification', () => {
 
     // Input "test-site" into "Site Names" TagInput
     const siteNamesInput = page
-      .locator('div', { has: page.locator('label', { hasText: 'Site Names' }) })
+      .locator('div', { has: page.locator('label', { hasText: 'Site Names', exact: true }) })
       .locator('input')
       .first();
     await siteNamesInput.fill('test-site');

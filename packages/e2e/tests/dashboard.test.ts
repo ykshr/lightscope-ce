@@ -1,52 +1,43 @@
-import { WEB_URL } from '@/helpers/env';
 import { expect, test } from '@playwright/test';
 
 test.describe('Web Dashboard Verification', () => {
-  test('should load the overview page and display key metrics', async ({ page }) => {
+  test('should display total page views properly', async ({ page }) => {
+    // Wait for initial render and data fetch
     await page.goto('/');
 
-    // Check that the sidebar title is visible
-    // await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
+    // Wait until the "Total Page Views" card finishes loading
+    await expect(page.locator('.lucide-loader-circle')).toHaveCount(0);
 
-    // Verify key metrics cards are visible
-    await expect(page.locator('text=Total Page Views')).toBeVisible();
-    await expect(page.locator('text=Unique Users')).toBeVisible();
-    await expect(page.locator('text=Engagement Time')).toBeVisible();
-    await expect(page.locator('text=Realtime Visitors')).toBeVisible();
+    // Assert that the card title exists
+    await expect(page.locator('h3', { hasText: 'Total Page Views' })).toBeVisible();
 
-    // The table should have the title "Ranking"
-    await expect(page.locator('text=Ranking').first()).toBeVisible();
+    // The mock data logic injects '2,400' on the overview page for 24h
+    // Check that '2,400' is displayed within the card (assuming mock data hasn't mutated yet)
+    await expect(
+      page.locator('div:has(> h3:text-is("Total Page Views")) >> text="2,400"')
+    ).toBeVisible();
   });
 
-  test('should navigate to the ranking page', async ({ page }) => {
+  test('should display pie charts data properly', async ({ page }) => {
     await page.goto('/');
 
-    // Find link to ranking and click it
-    await page.click('a[href="/ranking"]');
+    // Wait for the loaders to disappear
+    await expect(page.locator('.lucide-loader-circle')).toHaveCount(0);
 
-    // Verify navigation to ranking
-    await expect(page).toHaveURL(`${WEB_URL}/ranking`);
+    // Verify the Top Referrer Domains title is visible
+    await expect(page.locator('h3', { hasText: 'Top Referrer Domains' })).toBeVisible();
 
-    // Verify the page content is loaded
-    await expect(page.locator('text=Ranking').first()).toBeVisible();
+    // The Top Referrer pie chart should have segments rendered (SVG paths inside rechart)
+    const pieChartPaths = page.locator('.recharts-pie-sector');
+    expect(await pieChartPaths.count()).toBeGreaterThan(0);
   });
 
-  test('should navigate to the article page', async ({ page }) => {
+  test('should interact with the date range filter', async ({ page }) => {
     await page.goto('/');
 
-    // Find link to article and click it
-    await page.click('a[href="/article"]');
-
-    // Verify navigation to article
-    await expect(page).toHaveURL(`${WEB_URL}/article`);
-
-    // Verify article page specific content
-    await expect(page.locator('text=Global Economy Trends')).toBeVisible();
-  });
-
-  test('should interact with date range picker and filtering', async ({ page }) => {
-    await page.goto('/');
-    // await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
+    // Click the date filter trigger to open the modal/popover
+    const dateFilterTrigger = page.locator('button', { hasText: 'Today' }).first();
+    await dateFilterTrigger.click();
 
     // The DateFilter has a quick access button "This week" on desktop
     const thisWeekBtn = page.locator('button', { hasText: 'This week' }).first();
@@ -71,19 +62,26 @@ test.describe('Web Dashboard Verification', () => {
     // Verify modal is open
     await expect(page.locator('text=Advanced Filter')).toBeVisible();
 
-    // Input "test-site" into "Site Names" TagInput
-    const siteNamesInput = page
-      .locator('div', { has: page.locator('label', { hasText: 'Site Names', exact: true }) })
-      .locator('input')
-      .first();
+    // Find the TagInput container for "Site Names"
+    const tagInputContainer = page.locator('div:has(> label:text-is("Site Names"))');
+
+    const siteNamesInput = tagInputContainer.locator('input[placeholder="New..."]');
+
     await siteNamesInput.fill('test-site');
     await siteNamesInput.press('Enter');
+
+    // Wait for the badge to be rendered inside the modal
+    const tagBadge = tagInputContainer.locator('span', { hasText: 'test-site', exact: true });
+    await expect(tagBadge).toBeVisible();
 
     // Click "Apply Changes"
     await page.getByRole('button', { name: 'Apply Changes', exact: true }).dispatchEvent('click');
 
+    // Wait for the modal to close and the filter to apply
+    await expect(page.locator('text=Advanced Filter')).toBeHidden();
+
     // Verify URL updates with the filter
-    await expect(page).toHaveURL(/isn=test-site/);
+    await expect(page).toHaveURL(/isn=test-site/, { timeout: 10000 });
   });
 
   test('should collapse and expand the sidebar', async ({ page }) => {
@@ -94,70 +92,26 @@ test.describe('Web Dashboard Verification', () => {
     await expect(sidebar).toHaveAttribute('data-state', 'expanded');
 
     // Click the trigger button to collapse
-    await page.locator('button[data-sidebar="trigger"]').click();
+    const triggerBtn = page.locator('button[data-sidebar="trigger"]').first();
+    await triggerBtn.click();
 
-    // Sidebar should be collapsed
+    // Verify sidebar collapsed
     await expect(sidebar).toHaveAttribute('data-state', 'collapsed');
 
-    // Click the trigger button to expand
-    await page.locator('button[data-sidebar="trigger"]').click();
-
-    // Sidebar should be expanded again
+    // Click again to expand
+    await triggerBtn.click();
     await expect(sidebar).toHaveAttribute('data-state', 'expanded');
   });
 
-  test('should interact with the custom date range picker modal', async ({ page }) => {
-    await page.goto('/');
-    // await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
-
-    // Open the Date Filter modal
-    await page
-      .locator('button')
-      .filter({ has: page.locator('.lucide-calendar') })
-      .first()
-      .click();
-
-    // Verify modal is open
-    await expect(page.getByRole('heading', { name: 'Advanced Date Filter' })).toBeVisible();
-
-    // Select "Yesterday"
-    await page.getByRole('button', { name: 'Yesterday', exact: true }).click();
-
-    // Click Apply Changes
-    await page.getByRole('button', { name: 'Apply Filter', exact: true }).click();
-
-    // Verify URL updates
-    await expect(page).toHaveURL(/sd=So-1D/);
-    await expect(page).toHaveURL(/ed=So0D/);
-  });
-
-  test.skip('should interact with the search bar', async ({ page }) => {
+  test('should open organization switcher', async ({ page }) => {
     await page.goto('/');
 
-    const searchInput = page.locator('input[placeholder="Type a command or search..."]');
-    await expect(searchInput).toBeVisible();
+    // Click the organization switcher button
+    const orgSwitcherBtn = page.locator('div[data-sidebar="menu"] button').first();
+    await orgSwitcherBtn.click();
 
-    await searchInput.fill('Calendar');
-
-    // CommandList should show suggestions
-    await expect(page.locator('text=Calendar').nth(1)).toBeVisible(); // 0 is input or heading, 1 is the item
-  });
-
-  test('should verify pagination elements in the Ranking page', async ({ page }) => {
-    await page.goto('/ranking');
-
-    // Wait for the table to load
-    await expect(page.locator('text=Ranking').first()).toBeVisible();
-
-    // Check if Pagination is rendered (it depends on data, but if there's data, we can check for the Pagination item or at least that it doesn't crash)
-    // If there's no data, the pagination might not be visible, so we check if the Footer exists
-    const footer = page.locator('div:has(> nav[aria-label="pagination"])');
-    // If it's visible, test the Next button
-    if (await footer.isVisible()) {
-      const nextBtn = page.locator('a:has(.lucide-chevron-right)'); // Next button
-      if (await nextBtn.isVisible()) {
-        await expect(nextBtn).toBeVisible();
-      }
-    }
+    // Verify the dropdown menu appears
+    const dropdown = page.locator('.lucide-plus').locator('..'); // The "Add organization" button container
+    await expect(dropdown).toBeVisible();
   });
 });

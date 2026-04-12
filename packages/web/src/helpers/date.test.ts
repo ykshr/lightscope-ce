@@ -9,6 +9,7 @@ import {
   getStartOfMinute,
   getStartOfNextMinute,
   getStartOfNextFiveMinutes,
+  getPreviousDates,
   convertDateString,
 } from './date';
 
@@ -87,6 +88,17 @@ describe('date helpers', () => {
       const date = new Date('2023-01-01T12:31:45Z');
       const next = getStartOfNextFiveMinutes(date); // 31 + 1 = 32 -> ceil(32/5)*5 = 35
       expect(next.getMinutes()).toBe(35);
+    });
+  });
+
+  describe('getPreviousDates', () => {
+    it('should calculate previous date range correctly', () => {
+      const start = new Date('2023-01-01T10:00:00Z');
+      const end = new Date('2023-01-01T12:00:00Z');
+      const { startDatePrevious, endDatePrevious } = getPreviousDates(start, end);
+
+      expect(startDatePrevious.toISOString()).toBe('2023-01-01T08:00:00.000Z');
+      expect(endDatePrevious.toISOString()).toBe('2023-01-01T10:00:00.000Z');
     });
   });
 

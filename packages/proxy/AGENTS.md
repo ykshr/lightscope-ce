@@ -46,6 +46,7 @@ Entry: `src/index.ts`
 - **Guardrails**:
   - "Do not modify this directory": Do not arbitrarily change the project structure inside `src/`.
 - **Security**:
+  - The packages 'api' and 'proxy' utilize a 'redactError' helper (in 'src/helpers/error.ts') to sanitize logs by extracting only 'name', 'message', and 'stack' from Error objects, preventing sensitive metadata exposure.
   - The API and Proxy services follow a restrictive CORS policy where the `ALLOWED_ORIGIN` environment variable (supporting comma-separated strings) must be explicitly defined; if it is missing, the CORS middleware is skipped, defaulting to the browser's Same-Origin Policy. Do not change this behavior without authorization.
   - To prevent SQL injection, you must always use parameterized queries when inserting data into ClickHouse. In ClickHouse queries using `@clickhouse/client`, parameterized variables must use the syntax `{paramName:DataType}` (e.g., `{title:String}`, `{urls:Array(String)}`) inline with the query string, passing values in the `query_params` object.
 - **Performance**:

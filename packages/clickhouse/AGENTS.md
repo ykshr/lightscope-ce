@@ -28,7 +28,7 @@ This package defines the analytics data layer. It contains XML configuration fil
 #### Project Structure
 - `config.xml`, `users.xml`: Core configuration files for the ClickHouse server.
 - `init-db.sh` or `*.sql`: Schema definitions (tables and materialized views) initialized when the container starts.
-- **Guidance on code placement**: Place SQL migrations/init scripts alongside `init-db.sh`. Keep server configuration in XML files.
+- **Guidance on code placement**: Place SQL migrations/init scripts alongside `init-db.sh`. Keep server configuration in XML files. In `docker-compose.yml`, the `ALLOWED_ORIGINS` environment variable for both `api` and `proxy` services must include `http://localhost:8080` and `http://127.0.0.1:8080` to support cross-origin requests from the `mock-site` used during E2E testing.
 
 #### Restrictions
 - **Guardrails**:

@@ -1,8 +1,10 @@
+import processAllowedOriginsString from '@/helpers/allowedOrigins';
 import createContextMiddleware from '@/middlewares/context';
 import createTrackerMiddleware from '@/middlewares/tracker';
 import eventsRouter from '@/routers/events';
 import { $, Env } from '@/types';
 import { Context, Hono } from 'hono';
+import { env } from 'hono/adapter';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 
@@ -11,8 +13,12 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.use('*', logger());
   app.use('*', async (c, next) => {
+    const { ALLOWED_ORIGINS } = env(c);
+    const origin = processAllowedOriginsString(ALLOWED_ORIGINS);
+    if (!origin) return next();
+
     const corsMiddlewareHandler = cors({
-      origin: '*',
+      origin,
       allowHeaders: ['Content-Type', 'Authorization'],
     });
     return corsMiddlewareHandler(c, next);

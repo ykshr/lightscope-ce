@@ -6,7 +6,7 @@ test.describe('Web Dashboard Verification', () => {
     await page.goto('/');
 
     // Check that the sidebar title is visible
-    // await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
+    await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Verify key metrics cards are visible
     await expect(page.locator('text=Total Page Views')).toBeVisible();
@@ -46,7 +46,7 @@ test.describe('Web Dashboard Verification', () => {
 
   test('should interact with date range picker and filtering', async ({ page }) => {
     await page.goto('/');
-    // await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
+    await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // The DateFilter has a quick access button "This week" on desktop
     const thisWeekBtn = page.locator('button', { hasText: 'This week' }).first();
@@ -59,7 +59,7 @@ test.describe('Web Dashboard Verification', () => {
 
   test('should interact with the advanced article filter', async ({ page }) => {
     await page.goto('/article');
-    // await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
+    await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Click the filter button (has the lucide-funnel icon)
     await page
@@ -105,7 +105,7 @@ test.describe('Web Dashboard Verification', () => {
 
   test('should interact with the custom date range picker modal', async ({ page }) => {
     await page.goto('/');
-    // await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
+    await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Open the Date Filter modal
     await page

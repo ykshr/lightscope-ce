@@ -3,12 +3,12 @@ import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
-import { convertDateString, getStartOfMinute, getStartOfNextMinute } from '@/helpers/date';
+import { convertDateString } from '@/helpers/date';
 import useMediaQuery, { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
 import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getDefaultClassNames } from 'react-day-picker';
+import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom';
 
 const RELATIVE_OPTIONS_QUICK_ACCESS = [
@@ -77,13 +77,13 @@ export default function DateFilter() {
             </Button>
           );
         })}
-        <CustomDateRangePicker
+        <CustomDateRangeDialog
           isActive={getTabValue() === 'custom'}
           onApply={(start, end) => updateUrlParams({ sd: start, ed: end })}
         />
       </ButtonGroup>
       <ButtonGroup className="sm:hidden">
-        <CustomDateRangePicker
+        <CustomDateRangeDialog
           isActive={getTabValue() === 'custom'}
           onApply={(start, end) => updateUrlParams({ sd: start, ed: end })}
         />
@@ -92,12 +92,13 @@ export default function DateFilter() {
   );
 }
 
-type DateRange = {
-  from: Date | undefined;
-  to?: Date | undefined;
+type DateFilterFormValues = {
+  startDate: string | Date;
+  endDate: string | Date;
+  presetLabel?: string;
 };
 
-function CustomDateRangePicker({
+function CustomDateRangeDialog({
   isActive,
   onApply,
 }: {
@@ -108,71 +109,55 @@ function CustomDateRangePicker({
   const isScreen600 = useMediaQuery('(min-width: 600px)');
   const isScreen1024 = useMediaQuery('(min-width: 1024px)');
   const [open, setOpen] = useState(false);
-  const [selectedRelative, setSelectedRelative] = useState<
-    (typeof RELATIVE_OPTIONS)[0] | undefined
-  >(RELATIVE_OPTIONS[0]);
-  const [range, setRange] = useState<DateRange | undefined>();
 
-  useEffect(() => {
-    if (open && selectedRelative) {
-      try {
-        const from = getStartOfMinute(convertDateString(selectedRelative.startDateString), 0, 5);
-        const to = getStartOfNextMinute(convertDateString(selectedRelative.endDateString), 0, 5);
-        setRange({ from, to });
-      } catch (e) {
-        // Ignore
-      }
-    }
-  }, [open, selectedRelative]);
+  const { handleSubmit, setValue, watch } = useForm<DateFilterFormValues>();
+  const watchedValues = watch();
 
-  const handleApply = () => {
-    if (selectedRelative) {
-      const { startDateString, endDateString } = selectedRelative;
-      onApply(startDateString, endDateString);
-      setOpen(false);
-    } else {
-      if (range?.from && range?.to) {
-        onApply(range.from, range.to);
-        setOpen(false);
-      }
-    }
-  };
-
-  const formatForInput = (date?: Date) => {
-    if (!date || isNaN(date.getTime())) return '';
-    const offset = date.getTimezoneOffset() * 60000;
-    return new Date(date.getTime() - offset).toISOString().slice(0, 16);
-  };
-
-  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    const newDate = val ? new Date(val) : undefined;
-    setRange((prev) => ({ from: newDate, to: prev?.to }));
-    setSelectedRelative(undefined);
-  };
-
-  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    const newDate = val ? new Date(val) : undefined;
-    setRange((prev) => ({ from: prev?.from, to: newDate }));
-    setSelectedRelative(undefined);
-  };
-
-  const handlePresetClick = (preset: (typeof RELATIVE_OPTIONS)[0]) => {
-    setSelectedRelative(preset);
-  };
-
-  const handleCalendarSelect = (newRange: DateRange | undefined) => {
-    setRange(newRange);
-    setSelectedRelative(undefined);
-  };
-
+  // --- 元の判定条件を復元 ---
   const numberOfMonths = (() => {
     if (isScreen1024) return 2;
     if (isDesktop) return 1;
     if (isScreen600) return 2;
     return 1;
   })();
+
+  useEffect(() => {
+    if (open && !watchedValues.startDate) {
+      const defaultPreset = RELATIVE_OPTIONS[0];
+      handlePresetClick(defaultPreset);
+    }
+  }, [open]);
+
+  const onSubmit = (data: DateFilterFormValues) => {
+    onApply(data.startDate, data.endDate);
+    setOpen(false);
+  };
+
+  const handlePresetClick = (preset: (typeof RELATIVE_OPTIONS)[0]) => {
+    setValue('startDate', preset.startDateString);
+    setValue('endDate', preset.endDateString);
+    setValue('presetLabel', preset.label);
+  };
+
+  const getDisplayDate = (val: string | Date | undefined) => {
+    if (!val) return undefined;
+    try {
+      return typeof val === 'string' ? convertDateString(val) : val;
+    } catch {
+      return undefined;
+    }
+  };
+
+  const formatForInput = (date?: Date) => {
+    if (!date || isNaN(date.getTime())) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
 
   return (
     <ResponsiveModal
@@ -187,85 +172,92 @@ function CustomDateRangePicker({
       open={open}
       onOpenChange={setOpen}
       footer={
-        <div className="flex justify-end gap-3">
-          <Button type="button" variant="outline" onClick={() => setOpen(false)} className="px-6">
+        <div className="flex justify-end gap-3 w-full">
+          <Button type="button" variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
           <Button
-            type="button"
-            onClick={handleApply}
+            type="submit"
+            form="date-filter-form"
             className="px-8 shadow-sm"
-            disabled={!selectedRelative && (!range?.from || !range?.to)}
+            disabled={!watchedValues.startDate || !watchedValues.endDate}
           >
             Apply Filter
           </Button>
         </div>
       }
     >
-      <div className="flex flex-col md:flex-row w-full overflow-hidden border rounded-lg mt-4">
-        {/* Sidebar: Common Ranges */}
+      <form
+        id="date-filter-form"
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col md:flex-row w-full overflow-hidden border rounded-lg mt-4"
+      >
         {isDesktop && (
-          <aside className="w-full md:w-48 bg-muted/30 p-4 flex flex-col space-y-1 border-b md:border-b-0 md:border-r overflow-y-auto">
+          <aside className="w-full md:w-48 bg-muted/30 p-4 flex flex-col space-y-1 border-r overflow-y-auto max-h-[500px]">
             <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">
               Presets
             </h3>
-            {RELATIVE_OPTIONS.map((o) => {
-              const isSelected = selectedRelative?.label === o.label;
-              return (
-                <Button
-                  key={o.label}
-                  type="button"
-                  variant={isSelected ? 'default' : 'ghost'}
-                  className="justify-start font-normal h-9 w-full"
-                  onClick={() => handlePresetClick(o)}
-                >
-                  {o.label}
-                </Button>
-              );
-            })}
+            {RELATIVE_OPTIONS.map((o) => (
+              <Button
+                key={o.label}
+                type="button"
+                variant={watchedValues.presetLabel === o.label ? 'default' : 'ghost'}
+                className="justify-start font-normal h-9 w-full"
+                onClick={() => handlePresetClick(o)}
+              >
+                {o.label}
+              </Button>
+            ))}
           </aside>
         )}
 
-        {/* Main Calendar Interface */}
-        <main className="flex-1 flex flex-col bg-background relative overflow-y-auto">
-          {/* Details header */}
+        <main className="flex-1 flex flex-col bg-background">
           <div className="px-6 py-4 flex flex-col lg:flex-row items-center gap-4 bg-muted/10 border-b">
-            <div className="flex-1 flex flex-col gap-1.5 w-full">
-              <span>Start Date (inclusive)</span>
+            <div className="flex-1 w-full flex flex-col gap-1.5">
+              <span className="text-xs font-medium">Start Date (inclusive)</span>
               <Input
                 type="datetime-local"
-                value={formatForInput(range?.from)}
-                onChange={handleStartDateChange}
+                value={formatForInput(getDisplayDate(watchedValues.startDate))}
+                onChange={(e) => {
+                  const newDate = e.target.value ? new Date(e.target.value) : '';
+                  setValue('startDate', newDate);
+                  setValue('presetLabel', undefined);
+                }}
               />
             </div>
-            <div className="text-muted-foreground hidden lg:block mt-4">
-              <ArrowRight className="w-5 h-5" />
-            </div>
-            <div className="flex-1 flex flex-col gap-1.5 w-full">
-              <span>End Date (exclusive)</span>
+            <ArrowRight className="hidden lg:block text-muted-foreground mt-4" />
+            <div className="flex-1 w-full flex flex-col gap-1.5">
+              <span className="text-xs font-medium">End Date (exclusive)</span>
               <Input
                 type="datetime-local"
-                value={formatForInput(range?.to)}
-                onChange={handleEndDateChange}
+                value={formatForInput(getDisplayDate(watchedValues.endDate))}
+                onChange={(e) => {
+                  const newDate = e.target.value ? new Date(e.target.value) : '';
+                  setValue('endDate', newDate);
+                  setValue('presetLabel', undefined);
+                }}
               />
             </div>
           </div>
 
-          <div className="flex-1 p-2 flex justify-center items-start w-full">
+          <div className="p-4 flex justify-center overflow-x-auto">
             <Calendar
               mode="range"
-              selected={range}
-              onSelect={handleCalendarSelect}
-              numberOfMonths={numberOfMonths}
-              autoFocus
-              className="w-[90%] [&_table]:w-full [&_th]:w-full [&_td]:w-full [&_td>*]:w-full [&_td>*]:h-auto [&_td>*]:aspect-square"
-              classNames={{
-                months: `relative flex flex-col gap-4 sm:flex-row ${getDefaultClassNames().months}`,
+              selected={{
+                from: getDisplayDate(watchedValues.startDate),
+                to: getDisplayDate(watchedValues.endDate),
               }}
+              onSelect={(range) => {
+                setValue('startDate', range?.from ?? '');
+                setValue('endDate', range?.to ?? '');
+                setValue('presetLabel', undefined);
+              }}
+              numberOfMonths={numberOfMonths} // 元のロジックを使用
+              className="w-full"
             />
           </div>
         </main>
-      </div>
+      </form>
     </ResponsiveModal>
   );
 }

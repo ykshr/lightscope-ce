@@ -15,7 +15,7 @@ import {
 describe('date helpers', () => {
   describe('formatDate', () => {
     it('should format date correctly', () => {
-      const date = new Date('2023-01-01T12:00');
+      const date = new Date('2023-01-01T12:00:00Z');
       expect(formatDate(date)).toBe('2023-01-01T12:00');
     });
 

@@ -12,8 +12,10 @@ export type SnakeToCamelObject<T> = T extends Date
         }
       : T;
 
+const SNAKE_TO_CAMEL_REGEX = /_([a-z])/g;
+
 const snakeToCamel = (str: string): string => {
-  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+  return str.replace(SNAKE_TO_CAMEL_REGEX, (_, letter) => letter.toUpperCase());
 };
 
 export function renameKeySnakeToCamel<T>(obj: T): SnakeToCamelObject<T> {

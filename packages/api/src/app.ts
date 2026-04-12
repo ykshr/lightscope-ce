@@ -19,11 +19,11 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
   app.use('*', logger());
   app.use('*', async (c, next) => {
     const { ALLOWED_ORIGINS } = env<{ ALLOWED_ORIGINS?: string }>(c);
-    const origin = processAllowedOriginsString(ALLOWED_ORIGINS);
-    if (!origin) return next();
+    const origins = processAllowedOriginsString(ALLOWED_ORIGINS);
+    if (!origins) return next();
 
     const handler = cors({
-      origin,
+      origin: origins.length === 1 ? origins[0] : origins,
       allowHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
     });

@@ -1,9 +1,10 @@
 const cache = new Map<string, string>();
+const SNAKE_TO_CAMEL_REGEX = /_([a-z])/g;
 
 const snakeToCamel = (str: string): string => {
   const cached = cache.get(str);
   if (cached !== undefined) return cached;
-  const result = str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+  const result = str.replace(SNAKE_TO_CAMEL_REGEX, (_, letter) => letter.toUpperCase());
   cache.set(str, result);
   return result;
 };

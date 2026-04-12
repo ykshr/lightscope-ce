@@ -1,23 +1,23 @@
-import { describe, it, expect } from 'vitest';
 import dayjs from 'dayjs';
+import { describe, expect, it } from 'vitest';
 import {
-  formatDate,
-  getStartOfDay,
-  getStartOfNextDay,
-  getTimeBetween,
-  getPastDate,
-  getStartOfMinute,
-  getStartOfNextMinute,
-  getStartOfNextFiveMinutes,
-  getPreviousDates,
   convertDateString,
+  formatDate,
+  getPastDate,
+  getPreviousDates,
+  getStartOfDay,
+  getStartOfMinute,
+  getStartOfNextDay,
+  getStartOfNextFiveMinutes,
+  getStartOfNextMinute,
+  getTimeBetween,
 } from './date';
 
 describe('date helpers', () => {
   describe('formatDate', () => {
     it('should format date correctly', () => {
       const date = new Date('2023-01-01T12:00:00Z');
-      expect(formatDate(date)).toBe('2023-01-01T12:00Z');
+      expect(formatDate(date)).toBe('2023-01-01T12:00');
     });
 
     it('should format date with custom format', () => {

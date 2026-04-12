@@ -36,15 +36,4 @@ test.describe('PROXY Error Handling and GraphQL Tests', () => {
     // Assume API returns 400 for missing required fields
     expect(response.status()).toBe(400);
   });
-
-  // test('POST /events should work', async ({ request }) => {
-  //   const { requestContext, token } = await setup();
-  //   const response = await requestContext.post('/events', {
-  //     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-  //     data: {
-  //       event_name: 'page_view',
-  //     },
-  //   });
-  //   expect(response.status()).toBe(200);
-  // });
 });

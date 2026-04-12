@@ -1,12 +1,12 @@
 import dayjs, { type ManipulateType } from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import duration from 'dayjs/plugin/duration';
+import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 dayjs.extend(duration);
 
-export function formatDate(date: Date, formatStr: string = 'YYYY-MM-DDTHH:mm[Z]'): string {
-  return dayjs(date).utc().format(formatStr);
+export function formatDate(date: Date, formatStr: string = 'YYYY-MM-DDTHH:mm'): string {
+  return dayjs(date).format(formatStr);
 }
 
 export function getStartOfDay(date: Date, offset: number = 0, interval: number = 1): Date {

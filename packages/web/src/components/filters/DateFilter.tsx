@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
-import { convertDateString } from '@/helpers/date';
+import { convertDateString, formatDate } from '@/helpers/date';
 import useMediaQuery, { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
 import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
@@ -113,7 +113,6 @@ function CustomDateRangeDialog({
   const { handleSubmit, setValue, watch } = useForm<DateFilterFormValues>();
   const watchedValues = watch();
 
-  // --- 元の判定条件を復元 ---
   const numberOfMonths = (() => {
     if (isScreen1024) return 2;
     if (isDesktop) return 1;
@@ -150,13 +149,7 @@ function CustomDateRangeDialog({
 
   const formatForInput = (date?: Date) => {
     if (!date || isNaN(date.getTime())) return '';
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    return formatDate(date);
   };
 
   return (

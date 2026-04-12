@@ -75,14 +75,18 @@ export default function ArticleFilter() {
       footer={
         <>
           <div className="flex justify-end">
-            <Button onClick={() => setOpen(false)} className="w-full mt-4">
+            <Button type="submit" form="article-filter-form" className="w-full mt-4">
               Apply Changes
             </Button>
           </div>
         </>
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full grid gap-6 py-4 px-6">
+      <form
+        id="article-filter-form"
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full grid gap-6 py-4 px-6"
+      >
         {/* Date fields */}
         <Label className="text-base font-bold">Dates</Label>
         <DateBeforeAfterInput

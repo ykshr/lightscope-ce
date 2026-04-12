@@ -15,6 +15,7 @@ export type Bindings = {
   CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS: number;
   CLICKHOUSE_INSERT_MAX_TRY: number;
   MAXMIND_DB_PATH: string;
+  ALLOWED_ORIGINS?: string;
 };
 
 export type $ = {

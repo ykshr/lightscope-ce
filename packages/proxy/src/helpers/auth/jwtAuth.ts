@@ -1,3 +1,4 @@
+import { redactError } from '@/helpers/error';
 import { Context } from 'hono';
 import { AlgorithmTypes, verify } from 'hono/jwt';
 import { AuthProvider, Tracker } from './index';
@@ -55,7 +56,7 @@ export default class JwtAuth implements AuthProvider {
           return null;
         }
       } catch (e) {
-        console.error('JwtAuth: Failed to parse origins for comparison', e);
+        console.error('JwtAuth: Failed to parse origins for comparison', redactError(e));
         return null;
       }
 
@@ -63,7 +64,7 @@ export default class JwtAuth implements AuthProvider {
         organizationId: decodedPayload.organizationId,
       };
     } catch (e) {
-      console.error('JwtAuth: Error verifying JWT token:', e);
+      console.error('JwtAuth: Error verifying JWT token:', redactError(e));
       return null;
     }
   }

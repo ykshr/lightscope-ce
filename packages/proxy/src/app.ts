@@ -1,4 +1,5 @@
 import processAllowedOriginsString from '@/helpers/allowedOrigins';
+import { redactError } from '@/helpers/error';
 import createContextMiddleware from '@/middlewares/context';
 import createTrackerMiddleware from '@/middlewares/tracker';
 import eventsRouter from '@/routers/events';
@@ -37,7 +38,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
     if (err instanceof SyntaxError) {
       return c.json({ error: 'Bad request: Invalid JSON' }, 400);
     }
-    console.error(err);
+    console.error(redactError(err));
     return c.json({ error: 'Internal Server Error' }, 500);
   });
 

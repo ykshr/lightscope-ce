@@ -1,3 +1,4 @@
+import { redactError } from '@/helpers/error';
 import getLoader from '@/loaders/tracker';
 import { Context, Hono } from 'hono';
 import { sign } from 'hono/jwt';
@@ -71,7 +72,7 @@ trackerApp.post('/generate', async (c: Context) => {
 
     return c.json({ trackers });
   } catch (error) {
-    console.error(error);
+    console.error(redactError(error));
     return c.json({ error: 'Failed to generate token' }, 500);
   }
 });

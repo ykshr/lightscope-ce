@@ -1,3 +1,4 @@
+import { redactError } from '@/helpers/error';
 import type { Article, PV } from '@/types';
 import { ClickHouseClient, createClient } from '@clickhouse/client';
 import { EgressProvider } from './index';
@@ -56,7 +57,7 @@ export default class ClickHouseEgress implements EgressProvider {
         });
         return;
       } catch (e) {
-        console.error(`ClickHouse batch insert failed (try ${tryCount})`, e);
+        console.error(`ClickHouse batch insert failed (try ${tryCount})`, redactError(e));
         tryCount++;
       }
     }

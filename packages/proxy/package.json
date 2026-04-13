@@ -11,7 +11,7 @@
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
     "start": "node dist/bundle.js",
     "dev": "tsx src/index.ts",
-    "test:integration": "docker build -t @lightscope-ce/proxy-test -f Dockerfile ../../ && docker run -d --name proxy-integration-test -p 3002:3002 -e CLICKHOUSE_URL=http://localhost:8123 -e CLICKHOUSE_USERNAME=lightscope -e CLICKHOUSE_PASSWORD=lightscope -e CLICKHOUSE_DB=lightscope -e PORT=3002 -e ALLOWED_ORIGINS=* -e JWT_SECRET=secret-for-dev-only-do-not-use-in-prod @lightscope-ce/proxy-test && WAIT_PORTS=3002 node ../../utils/wait-for-services.js && vitest run integration ; docker rm -f proxy-integration-test"
+    "test:integration": "WAIT_PORTS=3002 docker compose up -d proxy && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v"
   },
   "dependencies": {
     "@clickhouse/client": "^1.14.0",

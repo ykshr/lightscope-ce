@@ -1,90 +1,10 @@
+include:
+  - packages/clickhouse/docker-compose.yml
+  - packages/api/docker-compose.yml
+  - packages/proxy/docker-compose.yml
+  - packages/web/docker-compose.yml
+
 services:
-  clickhouse:
-    build:
-      context: ./packages/clickhouse
-    ports:
-      - '8123:8123'
-      - '9000:9000'
-    environment:
-      - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
-      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
-    ulimits:
-      nofile:
-        soft: 262144
-        hard: 262144
-    healthcheck:
-      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:8123/ping']
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  api:
-    build:
-      context: .
-      dockerfile: packages/api/Dockerfile
-    environment:
-      - DATABASE_URL=file:./prisma/dev.db
-      - CLICKHOUSE_URL=http://clickhouse:8123
-      - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
-      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
-      - PORT=3001
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
-      - JWT_SECRET=${JWT_SECRET:-secret-for-dev-only-do-not-use-in-prod}
-    ports:
-      - '3001:3001'
-    depends_on:
-      clickhouse:
-        condition: service_healthy
-    healthcheck:
-      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:3001/health']
-      interval: 5s
-      timeout: 5s
-      retries: 20
-
-  proxy:
-    build:
-      context: .
-      dockerfile: packages/proxy/Dockerfile
-    environment:
-      - CLICKHOUSE_URL=http://clickhouse:8123
-      - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
-      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
-      - PORT=3002
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
-      - JWT_SECRET=${JWT_SECRET:-secret-for-dev-only-do-not-use-in-prod}
-    ports:
-      - '3002:3002'
-    depends_on:
-      clickhouse:
-        condition: service_healthy
-    healthcheck:
-      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:3001/health']
-      interval: 5s
-      timeout: 5s
-      retries: 20
-
-  web:
-    build:
-      context: .
-      dockerfile: packages/web/Dockerfile
-    environment:
-      - VITE_API_ENDPOINT=${VITE_API_ENDPOINT:-http://localhost:3001}
-      - VITE_PROXY_ENDPOINT=${VITE_PROXY_ENDPOINT:-http://localhost:3002}
-      - PORT=3000
-    ports:
-      - '3000:3000'
-    depends_on:
-      api:
-        condition: service_healthy
-    healthcheck:
-      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:3000/']
-      interval: 5s
-      timeout: 5s
-      retries: 20
-
   mock-site:
     image: nginx:alpine
     ports:

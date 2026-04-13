@@ -1,5 +1,5 @@
 import type { FilterToQuery } from '@/types/filter';
-import { convertDateString, formatDate } from './date';
+import { convertDateString, formatDate, timezoneOffset as tOffset } from './date';
 type DataType = 'date' | 'string' | 'array' | 'nestedArray' | 'number';
 
 interface KeyConfig {
@@ -159,8 +159,8 @@ export function encodeUrlParams(
 export function decodeUrlParams(search: string): FilterToQuery {
   const params = new URLSearchParams(search);
   const result: any = {
-    startDate: convertDateString('So0D'),
-    endDate: convertDateString('So1D'),
+    startDate: convertDateString(`So0D${tOffset}`),
+    endDate: convertDateString(`So1D${tOffset}`),
   };
 
   params.forEach((value, shortKey) => {

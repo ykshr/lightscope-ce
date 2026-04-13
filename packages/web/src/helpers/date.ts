@@ -5,6 +5,8 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 dayjs.extend(duration);
 
+export const timezoneOffset = dayjs().format('Z');
+
 export function formatDate(date: Date, formatStr: string = 'YYYY-MM-DDTHH:mmZ'): string {
   return dayjs(date).format(formatStr);
 }
@@ -73,11 +75,12 @@ export function convertDateString(date: Date | string): Date {
   }
 
   // Valid units: Y (year), M (month), W (week), D (day), h (hour), m (minute)
-  const soMatch = date.match(/^So([+-]?\d+)([YMWDhm])$/);
+  const soMatch = date.match(/^So([+-]?\d+)([YMWDhm])([+-]\d{2}:\d{2}|Z)?$/);
 
   if (soMatch) {
     const value = parseInt(soMatch[1], 10);
     const unitChar = soMatch[2];
+    const offset = soMatch[3];
 
     const unitMap: Record<string, ManipulateType> = {
       Y: 'year',
@@ -91,8 +94,13 @@ export function convertDateString(date: Date | string): Date {
     const unit = unitMap[unitChar];
     if (!unit) throw new Error('Invalid unit in So format');
 
+    let d = dayjs();
+    if (offset) {
+      d = d.utcOffset(offset === 'Z' ? 0 : offset);
+    }
+
     // Calculate the date based on the current date and the relative offset
-    return dayjs().add(value, unit).startOf(unit).toDate();
+    return d.add(value, unit).startOf(unit).toDate();
   }
 
   // ISO 8601 Duration format (e.g., P1D, PT24H)

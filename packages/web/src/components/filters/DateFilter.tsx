@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
-import { convertDateString, formatDate } from '@/helpers/date';
+import { convertDateString, formatDate, timezoneOffset as tOffset } from '@/helpers/date';
 import useMediaQuery, { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
 import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
@@ -12,26 +12,74 @@ import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom';
 
 const RELATIVE_OPTIONS_QUICK_ACCESS = [
-  { label: 'Today', startDateString: 'So0D', endDateString: 'So1D' },
-  { label: 'This week', startDateString: 'So0W', endDateString: 'So1D' },
-  { label: 'This month', startDateString: 'So0M', endDateString: 'So1D' },
+  {
+    label: 'Today',
+    startDateString: `So0D${tOffset}`,
+    endDateString: `So1D${tOffset}`,
+  },
+  {
+    label: 'This week',
+    startDateString: `So0W${tOffset}`,
+    endDateString: `So1D${tOffset}`,
+  },
+  {
+    label: 'This month',
+    startDateString: `So0M${tOffset}`,
+    endDateString: `So1D${tOffset}`,
+  },
 ];
 
 const RELATIVE_OPTIONS = [
-  { label: 'Past 12 hours', startDateString: 'PT12H', endDateString: 'So1D' },
-  { label: 'Past 24 hours', startDateString: 'PT24H', endDateString: 'So1D' },
-  // { label: 'Past 48 hours', startDateString: 'PT48H', endDateString: 'So1D' },
-  { label: 'Today', startDateString: 'So0D', endDateString: 'So1D' },
-  { label: 'Yesterday', startDateString: 'So-1D', endDateString: 'So0D' },
-  { label: 'This week', startDateString: 'So0W', endDateString: 'So1D' },
-  { label: 'Last week', startDateString: 'So-1W', endDateString: 'So0W' },
-  // { label: 'This 2 weeks', startDateString: 'So-2W', endDateString: 'So1D' },
-  { label: 'This month', startDateString: 'So0M', endDateString: 'So1D' },
-  { label: 'Last month', startDateString: 'So-1M', endDateString: 'So0M' },
-  // { label: 'This 3 months', startDateString: 'So-3M', endDateString: 'So1D' },
-  { label: 'This year', startDateString: 'So0Y', endDateString: 'So0M' },
-  { label: 'Past 7 days', startDateString: 'P7D', endDateString: 'So1D' },
-  { label: 'Past 30 days', startDateString: 'P30D', endDateString: 'So1D' },
+  { label: 'Past 12 hours', startDateString: 'PT12H', endDateString: `So1D${tOffset}` },
+  { label: 'Past 24 hours', startDateString: 'PT24H', endDateString: `So1D${tOffset}` },
+  // { label: 'Past 48 hours', startDateString: 'PT48H', endDateString: `So1D${tOffset}` },
+  {
+    label: 'Today',
+    startDateString: `So0D${tOffset}`,
+    endDateString: `So1D${tOffset}`,
+  },
+  {
+    label: 'Yesterday',
+    startDateString: `So-1D${tOffset}`,
+    endDateString: `So0D${tOffset}`,
+  },
+  {
+    label: 'This week',
+    startDateString: `So0W${tOffset}`,
+    endDateString: `So1D${tOffset}`,
+  },
+  {
+    label: 'Last week',
+    startDateString: `So-1W${tOffset}`,
+    endDateString: `So0W${tOffset}`,
+  },
+  // { label: 'This 2 weeks', startDateString: `So-2W${tOffset}`, endDateString: `So1D${tOffset}` },
+  {
+    label: 'This month',
+    startDateString: `So0M${tOffset}`,
+    endDateString: `So1D${tOffset}`,
+  },
+  {
+    label: 'Last month',
+    startDateString: `So-1M${tOffset}`,
+    endDateString: `So0M${tOffset}`,
+  },
+  // { label: 'This 3 months', startDateString: `So-3M${tOffset}`, endDateString: `So1D${tOffset}` },
+  {
+    label: 'This year',
+    startDateString: `So0Y${tOffset}`,
+    endDateString: `So0M${tOffset}`,
+  },
+  {
+    label: 'Past 7 days',
+    startDateString: `P7D${tOffset}`,
+    endDateString: `So1D${tOffset}`,
+  },
+  {
+    label: 'Past 30 days',
+    startDateString: `P30D${tOffset}`,
+    endDateString: `So1D${tOffset}`,
+  },
 ];
 
 export default function DateFilter() {
@@ -50,7 +98,7 @@ export default function DateFilter() {
       });
       return;
     }
-    updateUrlParams({ startDate: 'So0D', endDate: 'So1D' });
+    updateUrlParams({ startDate: 'So0D', endDate: `So1D${tOffset}` });
   };
 
   const getTabValue = () => {

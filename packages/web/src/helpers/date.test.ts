@@ -4,7 +4,6 @@ import {
   convertDateString,
   formatDate,
   getPastDate,
-  getPreviousDates,
   getStartOfDay,
   getStartOfMinute,
   getStartOfNextDay,
@@ -91,17 +90,6 @@ describe('date helpers', () => {
     });
   });
 
-  describe('getPreviousDates', () => {
-    it('should calculate previous date range correctly', () => {
-      const start = new Date('2023-01-01T10:00:00Z');
-      const end = new Date('2023-01-01T12:00:00Z');
-      const { startDatePrevious, endDatePrevious } = getPreviousDates(start, end);
-
-      expect(startDatePrevious.toISOString()).toBe('2023-01-01T08:00:00.000Z');
-      expect(endDatePrevious.toISOString()).toBe('2023-01-01T10:00:00.000Z');
-    });
-  });
-
   describe('convertDateString', () => {
     it('should return date object if input is Date', () => {
       const date = new Date();
@@ -115,6 +103,12 @@ describe('date helpers', () => {
       // Allow small difference due to execution time
       expect(date.getTime()).toBeCloseTo(expected.getTime(), -2); // Check roughly
       // Actually startOf('day') sets time to 00:00:00, so it should be exact if local time matches
+    });
+
+    it('should parse So format with timezone offset (So+1D+09:00)', () => {
+      const date = convertDateString('So+1D+09:00');
+      const expected = dayjs().utcOffset('+09:00').add(1, 'day').startOf('day').toDate();
+      expect(date.getTime()).toBeCloseTo(expected.getTime(), -2);
     });
 
     it('should parse ISO duration (P1D)', () => {

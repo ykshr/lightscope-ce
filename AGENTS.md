@@ -7,9 +7,9 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 #### Coding Conventions
 - **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Note that Pull Request comments and repository discussions may be written in Japanese; ensure they are translated to understand the instructions accurately. When handling PR comments via `read_pr_comments`, always evaluate them against the code as it appears in the *modified* state of the pull request.
 - **Type Safety**: Maintain strict TypeScript. The use of `any` or unsafe casting (like `as any`) is prohibited.
-- **Indentation**: Use 2 spaces for indentation in TypeScript/JavaScript/JSON/YAML files (enforced by Prettier).
-- **Naming Conventions**: Use `camelCase` for variables and functions. Use `PascalCase` for classes, React components, and interfaces/types.
-- **Library Restrictions**: Do not introduce heavy dependencies or global state libraries unnecessarily. Do not use external ORMs other than Prisma.
+- **Rules for indentation**: Use 2 spaces for indentation in TypeScript/JavaScript/JSON/YAML files (enforced by Prettier).
+- **Naming conventions**: Use `camelCase` for variables and functions. Use `PascalCase` for classes, React components, and interfaces/types.
+- **Restrictions on libraries that should or should not be used**: Do not introduce heavy dependencies or global state libraries unnecessarily. Do not use external ORMs other than Prisma.
 - **Import Rules**: Always import from a package's public exports. Deep cross-package imports (e.g., `../../api/src/...`) are not allowed.
 - **Minimal Changes**: Edit only the necessary lines. Do not reformat unrelated files, and avoid rewriting entire modules unnecessarily. Temporary benchmark or verification files created during the development of performance optimizations should be removed from the source directory before submitting a Pull Request to maintain codebase hygiene.
 - **PR Titles**:
@@ -43,6 +43,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 - *Note*: In automated or isolated environments, running `git fetch` or `git pull` from remote repositories may fail with 'terminal prompts disabled' errors due to the absence of interactive authentication credentials. `pnpm` commands may fail with `ERR_PNPM_META_FETCH_FAIL` if it attempts to verify its own version from the npm registry in network-restricted environments.
 
 #### Project Structure
+- **Explanation of key directories**:
 This repository does not use a build orchestrator like `turborepo` or `nx`. Please respect the boundaries of each package:
 - `packages/api/`: GraphQL API backend (Hono, GraphQL Server, Better Auth, Prisma).
 - `packages/proxy/`: REST API for tracker event ingestion (Hono).
@@ -51,7 +52,7 @@ This repository does not use a build orchestrator like `turborepo` or `nx`. Plea
 - `packages/clickhouse/`: ClickHouse configuration files and migrations.
 - `packages/e2e/`: End-to-end tests using Playwright.
 - `packages/mock-site/`: Mock site used for E2E testing.
-- **Guidance on where to place code**:
+- **Guidance on where to place different types of code**:
   - Reusable React components go in `packages/web/src/components/`.
   - Database schema changes go in `packages/api/prisma/` and `packages/clickhouse/`.
   - Tracker logic goes in `packages/tracker/src/`.

@@ -94,10 +94,7 @@ export function convertDateString(date: Date | string): Date {
     const unit = unitMap[unitChar];
     if (!unit) throw new Error('Invalid unit in So format');
 
-    let d = dayjs();
-    if (offset) {
-      d = d.utcOffset(offset === 'Z' ? 0 : offset);
-    }
+    const d = offset ? dayjs().utcOffset(offset === 'Z' ? 0 : offset) : dayjs().utc();
 
     // Calculate the date based on the current date and the relative offset
     return d.add(value, unit).startOf(unit).toDate();

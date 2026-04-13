@@ -16,7 +16,7 @@ describe('date helpers', () => {
   describe('formatDate', () => {
     it('should format date correctly', () => {
       const date = new Date('2023-01-01T12:00:00Z');
-      expect(formatDate(date)).toBe('2023-01-01T12:00');
+      expect(formatDate(date)).toBe('2023-01-01T12:00+00:00');
     });
 
     it('should format date with custom format', () => {
@@ -98,11 +98,16 @@ describe('date helpers', () => {
 
     it('should parse So format (So-1D)', () => {
       const date = convertDateString('So-1D');
-      // dayjs().add(-1, 'day').startOf('day')
-      const expected = dayjs().add(-1, 'day').startOf('day').toDate();
+      const expected = dayjs().utc().add(-1, 'day').startOf('day').toDate();
       // Allow small difference due to execution time
       expect(date.getTime()).toBeCloseTo(expected.getTime(), -2); // Check roughly
-      // Actually startOf('day') sets time to 00:00:00, so it should be exact if local time matches
+    });
+
+    it('should parse So format with timezone offset (So-1D+09:00)', () => {
+      const date = convertDateString('So-1D+09:00');
+      const expected = dayjs().utcOffset('+09:00').add(-1, 'day').startOf('day').toDate();
+      // Allow small difference due to execution time
+      expect(date.getTime()).toBeCloseTo(expected.getTime(), -2); // Check roughly
     });
 
     it('should parse So format with timezone offset (So+1D+09:00)', () => {

@@ -18,7 +18,7 @@
     "preview": "vite preview",
     "shadcn": "pnpm dlx shadcn@latest add",
     "codegen": "graphql-codegen --config codegen.ts",
-    "test:integration": "WAIT_PORTS=3000 docker compose -f ../../docker-compose.yml up --no-deps -d web && node ../../utils/wait-for-services.js && vitest run integration ; docker compose -f ../../docker-compose.yml down -v"
+    "test:integration": "docker build -t @lightscope-ce/web-test -f Dockerfile ../../ && docker run -d --name web-integration-test -p 3000:3000 -e VITE_API_ENDPOINT=http://localhost:3001 -e VITE_PROXY_ENDPOINT=http://localhost:3002 -e PORT=3000 @lightscope-ce/web-test && WAIT_PORTS=3000 node ../../utils/wait-for-services.js && vitest run integration ; docker rm -f web-integration-test"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

@@ -20,12 +20,9 @@ services:
       retries: 10
 
   api:
-    image: node:22-alpine
-    working_dir: /app
-    volumes:
-      - ./packages/api:/app
-      - /app/node_modules
-    command: sh -c "npm install -g pnpm && pnpm install && pnpm --filter @lightscope-ce/api run db:push && pnpm dev"
+    build:
+      context: .
+      dockerfile: packages/api/Dockerfile
     environment:
       - DATABASE_URL=file:./prisma/dev.db
       - CLICKHOUSE_URL=http://clickhouse:8123
@@ -47,12 +44,9 @@ services:
       retries: 20
 
   proxy:
-    image: node:22-alpine
-    working_dir: /app
-    volumes:
-      - ./packages/proxy:/app
-      - /app/node_modules
-    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
+    build:
+      context: .
+      dockerfile: packages/proxy/Dockerfile
     environment:
       - CLICKHOUSE_URL=http://clickhouse:8123
       - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
@@ -73,12 +67,9 @@ services:
       retries: 20
 
   web:
-    image: node:22-alpine
-    working_dir: /app
-    volumes:
-      - ./packages/web:/app
-      - /app/node_modules
-    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev --host"
+    build:
+      context: .
+      dockerfile: packages/web/Dockerfile
     environment:
       - VITE_API_ENDPOINT=${VITE_API_ENDPOINT:-http://localhost:3001}
       - VITE_PROXY_ENDPOINT=${VITE_PROXY_ENDPOINT:-http://localhost:3002}

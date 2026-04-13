@@ -11,7 +11,7 @@
   "scripts": {
     "docker:build": "docker build -t @lightscope-ce/clickhouse:latest -t @lightscope-ce/clickhouse:$npm_package_version .",
     "test": "vitest run src --passWithNoTests",
-    "test:integration": "WAIT_PORTS=8123 docker compose -f ../../docker-compose.yml up --no-deps -d clickhouse && node ../../utils/wait-for-services.js && vitest run integration ; docker compose -f ../../docker-compose.yml down -v"
+    "test:integration": "docker build -t @lightscope-ce/clickhouse-test -f Dockerfile . && docker run -d --name clickhouse-integration-test -p 8123:8123 -p 9000:9000 -e CLICKHOUSE_USERNAME=lightscope -e CLICKHOUSE_PASSWORD=lightscope -e CLICKHOUSE_DB=lightscope --ulimit nofile=262144:262144 @lightscope-ce/clickhouse-test && WAIT_PORTS=8123 node ../../utils/wait-for-services.js && vitest run integration ; docker rm -f clickhouse-integration-test"
   },
   "devDependencies": {
     "vitest": "^4.0.18"

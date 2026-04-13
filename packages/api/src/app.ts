@@ -1,6 +1,7 @@
 import typeDefs from '@/__generated__/graphql/typeDefs';
 import resolvers from '@/graphql/resolvers';
 import processAllowedOriginsString from '@/helpers/allowedOrigins';
+import { redactError } from '@/helpers/error';
 import createContextMiddleware from '@/middlewares/context';
 import createOrganizationMiddleware from '@/middlewares/organization';
 import createUserMiddleware from '@/middlewares/user';
@@ -49,7 +50,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
   );
 
   app.onError((err, c) => {
-    console.error(err);
+    console.error(redactError(err));
     if (err instanceof SyntaxError) {
       return c.json({ error: 'Bad request: Invalid JSON' }, 400);
     }

@@ -101,7 +101,7 @@ export default function DateFilter() {
     updateUrlParams({ startDate: 'So0D', endDate: `So1D${tOffset}` });
   };
 
-  const getTabValue = () => {
+  const getCurrentTab = () => {
     const found = RELATIVE_OPTIONS_QUICK_ACCESS.find(
       (o) =>
         o.startDateString === currentStartDateString && o.endDateString === currentEndDateString
@@ -114,11 +114,10 @@ export default function DateFilter() {
     <>
       <ButtonGroup className="hidden sm:inline-flex">
         {RELATIVE_OPTIONS_QUICK_ACCESS.map((item) => {
-          const isActive = getTabValue() === item.label;
           return (
             <Button
               key={item.label}
-              variant={isActive ? 'default' : 'outline'}
+              variant={getCurrentTab() === item.label ? 'default' : 'outline'}
               onClick={() => handleTabChange(item.label)}
             >
               {item.label}
@@ -126,13 +125,15 @@ export default function DateFilter() {
           );
         })}
         <CustomDateRangeDialog
-          isActive={getTabValue() === 'custom'}
+          currentDate={{ startDate: currentStartDateString, endDate: currentEndDateString }}
+          isActive={getCurrentTab() === 'custom'}
           onApply={(start, end) => updateUrlParams({ sd: start, ed: end })}
         />
       </ButtonGroup>
       <ButtonGroup className="sm:hidden">
         <CustomDateRangeDialog
-          isActive={getTabValue() === 'custom'}
+          currentDate={{ startDate: currentStartDateString, endDate: currentEndDateString }}
+          isActive={getCurrentTab() === 'custom'}
           onApply={(start, end) => updateUrlParams({ sd: start, ed: end })}
         />
       </ButtonGroup>
@@ -147,9 +148,11 @@ type DateFilterFormValues = {
 };
 
 function CustomDateRangeDialog({
+  currentDate,
   isActive,
   onApply,
 }: {
+  currentDate: { startDate?: string; endDate?: string };
   isActive: boolean;
   onApply: (s: Date | string, e: Date | string) => void;
 }) {
@@ -158,7 +161,16 @@ function CustomDateRangeDialog({
   const isScreen1024 = useMediaQuery('(min-width: 1024px)');
   const [open, setOpen] = useState(false);
 
-  const { handleSubmit, setValue, watch } = useForm<DateFilterFormValues>();
+  const { handleSubmit, setValue, watch, reset } = useForm<DateFilterFormValues>({
+    defaultValues: {
+      startDate: currentDate.startDate || '',
+      endDate: currentDate.endDate || '',
+      presetLabel: RELATIVE_OPTIONS.find(
+        (o) =>
+          o.startDateString === currentDate.startDate && o.endDateString === currentDate.endDate
+      )?.label,
+    },
+  });
   const watchedValues = watch();
 
   const numberOfMonths = (() => {
@@ -169,11 +181,26 @@ function CustomDateRangeDialog({
   })();
 
   useEffect(() => {
-    if (open && !watchedValues.startDate) {
-      const defaultPreset = RELATIVE_OPTIONS[0];
-      handlePresetClick(defaultPreset);
+    if (open) {
+      if (currentDate.startDate || currentDate.endDate) {
+        reset({
+          startDate: currentDate.startDate || '',
+          endDate: currentDate.endDate || '',
+          presetLabel: RELATIVE_OPTIONS.find(
+            (o) =>
+              o.startDateString === currentDate.startDate && o.endDateString === currentDate.endDate
+          )?.label,
+        });
+      } else {
+        const defaultPreset = RELATIVE_OPTIONS[0];
+        reset({
+          startDate: defaultPreset.startDateString,
+          endDate: defaultPreset.endDateString,
+          presetLabel: defaultPreset.label,
+        });
+      }
     }
-  }, [open]);
+  }, [open, currentDate.startDate, currentDate.endDate, reset]);
 
   const onSubmit = (data: DateFilterFormValues) => {
     onApply(data.startDate, data.endDate);
@@ -293,7 +320,7 @@ function CustomDateRangeDialog({
                 setValue('endDate', range?.to ?? '');
                 setValue('presetLabel', undefined);
               }}
-              numberOfMonths={numberOfMonths} // 元のロジックを使用
+              numberOfMonths={numberOfMonths}
               className="w-full"
             />
           </div>

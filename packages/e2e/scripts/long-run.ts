@@ -6,7 +6,7 @@ const DURATION_SECONDS = parseInt(process.argv[2] || '60', 10);
 const INTERVAL_MS = 1000;
 const ONE_HOUR_MS = 3600000;
 
-async function sendEvent() {
+async function sendEvent(token: string) {
   const eventPayload = generatePayload({
     event_name: 'long_run_event',
     site_name: 'long-run-test',
@@ -15,8 +15,6 @@ async function sendEvent() {
   });
 
   try {
-    const org = JSON.parse(process.env.ORG_DATA || '{}');
-    const token = await generateToken(org.id as string, 'http://localhost');
     const res = await fetch(`${PROXY_URL}/events`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -79,13 +77,16 @@ async function runLongRunTest() {
   const startTime = Date.now();
   let sentCount = 0;
 
+  const org = JSON.parse(process.env.ORG_DATA || '{}');
+  const token = await generateToken(org.id as string, 'http://localhost');
+
   const timer = setInterval(() => {
     if (Date.now() - startTime >= DURATION_SECONDS * 1000) {
       clearInterval(timer);
       console.log(`Finished sending events. Total sent: ${sentCount}`);
       verifyData();
     } else {
-      sendEvent();
+      sendEvent(token);
       sentCount++;
     }
   }, INTERVAL_MS);

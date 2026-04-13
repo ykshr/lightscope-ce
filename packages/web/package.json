@@ -18,7 +18,7 @@
     "preview": "vite preview",
     "shadcn": "pnpm dlx shadcn@latest add",
     "codegen": "graphql-codegen --config codegen.ts",
-    "test:integration": "WAIT_PORTS=3000,3001,3002,8123 docker compose -f ../../docker-compose.yml up -d web && node ../../utils/wait-for-services.js && vitest run integration ; docker compose -f ../../docker-compose.yml down -v"
+    "test:integration": "WAIT_PORTS=3000 docker compose -f ../../docker-compose.yml up --no-deps -d web && node ../../utils/wait-for-services.js && vitest run integration ; docker compose -f ../../docker-compose.yml down -v"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

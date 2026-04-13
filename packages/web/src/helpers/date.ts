@@ -5,7 +5,7 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 dayjs.extend(duration);
 
-export function formatDate(date: Date, formatStr: string = 'YYYY-MM-DDTHH:mm'): string {
+export function formatDate(date: Date, formatStr: string = 'YYYY-MM-DDTHH:mmZ'): string {
   return dayjs(date).format(formatStr);
 }
 

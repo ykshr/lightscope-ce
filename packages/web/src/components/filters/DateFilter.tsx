@@ -149,7 +149,7 @@ function CustomDateRangeDialog({
 
   const formatForInput = (date?: Date) => {
     if (!date || isNaN(date.getTime())) return '';
-    return formatDate(date);
+    return formatDate(date, 'YYYY-MM-DDTHH:mm');
   };
 
   return (

@@ -9,6 +9,11 @@
     "directory": "packages/clickhouse"
   },
   "scripts": {
-    "docker:build": "docker build -t @lightscope-ce/clickhouse:latest -t @lightscope-ce/clickhouse:$npm_package_version ."
+    "docker:build": "docker build -t @lightscope-ce/clickhouse:latest -t @lightscope-ce/clickhouse:$npm_package_version .",
+    "test": "vitest run src --passWithNoTests",
+    "test:integration": "vitest run tests/integration"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.18"
   }
 }

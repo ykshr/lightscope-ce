@@ -120,8 +120,8 @@ interface FilterProps {
 export default function Filter({
   currentMetricValue,
   currentFilterValue,
-  onMetricChange = (value: string) => console.log(JSON.stringify(value)),
-  onFilterChange = (value: string) => console.log(JSON.stringify(value)),
+  onMetricChange = () => {},
+  onFilterChange = () => {},
 }: FilterProps) {
   const currentFilter = JSON.parse(currentFilterValue);
   const extendedFilterOptions =

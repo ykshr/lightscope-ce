@@ -82,10 +82,15 @@ const RELATIVE_OPTIONS = [
   },
 ];
 
+export const DEFAULT_DATE_STRING = {
+  startDateString: RELATIVE_OPTIONS_QUICK_ACCESS[0].startDateString,
+  endDateString: RELATIVE_OPTIONS_QUICK_ACCESS[0].endDateString,
+};
+
 export default function DateFilter() {
   const [searchParams] = useSearchParams();
-  const currentStartDateString = searchParams.get('sd') || undefined;
-  const currentEndDateString = searchParams.get('ed') || undefined;
+  const currentStartDateString = searchParams.get('sd') || DEFAULT_DATE_STRING.startDateString;
+  const currentEndDateString = searchParams.get('ed') || DEFAULT_DATE_STRING.endDateString;
 
   const [, updateUrlParams] = useUrlParams();
 

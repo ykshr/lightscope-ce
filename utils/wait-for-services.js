@@ -1,7 +1,9 @@
 const net = require('net');
 const http = require('http');
 
-const ports = [3000, 3001, 3002, 8123, 8080];
+const ports = process.env.WAIT_PORTS
+  ? process.env.WAIT_PORTS.split(',').map(Number)
+  : [3000, 3001, 3002, 8123, 8080];
 const timeout = 60000;
 const start = Date.now();
 
@@ -70,9 +72,14 @@ const wait = async () => {
   while (Date.now() - start < timeout) {
     const portResults = await Promise.all(ports.map(checkPort));
     if (portResults.every(Boolean)) {
-      const isClickHouseReady = await checkClickHouseReady();
-      if (isClickHouseReady) {
-        console.log('All services and ClickHouse tables are ready.');
+      if (ports.includes(8123)) {
+        const isClickHouseReady = await checkClickHouseReady();
+        if (isClickHouseReady) {
+          console.log('All services and ClickHouse tables are ready.');
+          process.exit(0);
+        }
+      } else {
+        console.log('All configured services are ready.');
         process.exit(0);
       }
     }

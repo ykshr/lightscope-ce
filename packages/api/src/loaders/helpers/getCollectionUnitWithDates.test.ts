@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   getAggregationUnit,
   getAggregationUnitWithInterval,
+  getNextAvailableDate,
   getTableUnitWithDates,
 } from './getCollectionUnitWithDates';
 
@@ -139,10 +140,52 @@ describe('getCollectionUnitWithDates', () => {
     });
   });
 
+  describe('getNextAvailableDate', () => {
+    it('ignores seconds and milliseconds and rounds to the correct interval', () => {
+      const date = new Date('2023-01-01T00:02:45.123Z');
+
+      // unitIndex 2 is 'min' (interval 5)
+      // isForward = true -> should round up from 00:02:00 to 00:05:00
+      expect(getNextAvailableDate(date, 2, true)).toEqual(new Date('2023-01-01T00:05:00.000Z'));
+      // isForward = false -> should round down from 00:02:00 to 00:00:00
+      expect(getNextAvailableDate(date, 2, false)).toEqual(new Date('2023-01-01T00:00:00.000Z'));
+    });
+
+    it('returns the same time if the date lands exactly on the interval after ignoring seconds/milliseconds', () => {
+      const date = new Date('2023-01-01T00:05:30.999Z');
+      expect(getNextAvailableDate(date, 2, true)).toEqual(new Date('2023-01-01T00:05:00.000Z'));
+      expect(getNextAvailableDate(date, 2, false)).toEqual(new Date('2023-01-01T00:05:00.000Z'));
+    });
+  });
+
   describe('getTableUnitWithDates', () => {
     it('splits correctly without aggregationUnit provided', () => {
       const start = new Date('2023-01-01T00:00:00.000Z');
       const end = new Date('2023-01-02T01:10:00.000Z');
+      const result = getTableUnitWithDates(start, end);
+
+      expect(result).toEqual([
+        {
+          unit: 'day',
+          startDate: new Date('2023-01-01T00:00:00.000Z'),
+          endDate: new Date('2023-01-02T00:00:00.000Z'),
+        },
+        {
+          unit: 'hour',
+          startDate: new Date('2023-01-02T00:00:00.000Z'),
+          endDate: new Date('2023-01-02T01:00:00.000Z'),
+        },
+        {
+          unit: 'min',
+          startDate: new Date('2023-01-02T01:00:00.000Z'),
+          endDate: new Date('2023-01-02T01:10:00.000Z'),
+        },
+      ]);
+    });
+
+    it('ignores seconds and milliseconds when splitting intervals', () => {
+      const start = new Date('2023-01-01T00:00:45.123Z'); // Effectively 00:00:00
+      const end = new Date('2023-01-02T01:10:30.999Z'); // Effectively 01:10:00
       const result = getTableUnitWithDates(start, end);
 
       expect(result).toEqual([

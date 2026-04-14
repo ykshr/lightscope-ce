@@ -71,15 +71,23 @@ const TableDataInterval: {
   min: { unit: 'minute', interval: 5 },
 };
 
-const getNextAvailableDate = (date: Date, unitIndex: number, isForward: boolean = true): Date => {
+export const getNextAvailableDate = (
+  date: Date,
+  unitIndex: number,
+  isForward: boolean = true
+): Date => {
+  // Lens collections only have data with minute or larger units, so ignore seconds and milliseconds
+  const dateToUse = new Date(date);
+  dateToUse.setSeconds(0, 0);
+
   const { unit = 'minute', interval = 5 } =
     TableDataInterval[ClickhouseTableUnits[unitIndex]] || {};
-  const dayjsUTC = dayjs(date).utc();
+  const dayjsUTC = dayjs(dateToUse).utc();
 
   const mod = dayjsUTC.get(unit) % interval;
 
   const minimumUnit = TableDataInterval[ClickhouseTableUnits[ClickhouseTableUnits.length - 1]].unit;
-  if (mod === 0 && dayjsUTC.diff(dayjsUTC.startOf(unit), minimumUnit) === 0) return date;
+  if (mod === 0 && dayjsUTC.diff(dayjsUTC.startOf(unit), minimumUnit) === 0) return dateToUse;
 
   return isForward
     ? dayjsUTC

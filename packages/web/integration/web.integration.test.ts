@@ -12,19 +12,16 @@ describe('Web Integration Test', () => {
       expect(html).toContain('<div id="root"></div>');
     });
 
-    it.each([
-      '/ranking',
-      '/article',
-      '/settings',
-      '/signin',
-      '/signup',
-    ])('should return the index HTML page for route %s', async (route) => {
-      const res = await fetch(`${WEB_URL}${route}`);
-      expect(res.status).toBe(200);
-      expect(res.headers.get('content-type')).toContain('text/html');
-      const html = await res.text();
-      expect(html).toContain('<div id="root"></div>');
-    });
+    it.each(['/ranking', '/article', '/settings', '/signin', '/signup'])(
+      'should return the index HTML page for route %s',
+      async (route) => {
+        const res = await fetch(`${WEB_URL}${route}`);
+        expect(res.status).toBe(200);
+        expect(res.headers.get('content-type')).toContain('text/html');
+        const html = await res.text();
+        expect(html).toContain('<div id="root"></div>');
+      }
+    );
 
     it('should serve static assets correctly', async () => {
       const res = await fetch(`${WEB_URL}/LittleScope.png`);
@@ -40,10 +37,13 @@ describe('Web Integration Test', () => {
   });
 
   describe('Abnormal Cases', () => {
-    it.each(['POST', 'PUT', 'DELETE', 'PATCH'])('should return 404 for unsupported HTTP methods (%s)', async (method) => {
-      const res = await fetch(`${WEB_URL}/`, { method });
-      expect(res.status).toBe(404);
-    });
+    it.each(['POST', 'PUT', 'DELETE', 'PATCH'])(
+      'should return 404 for unsupported HTTP methods (%s)',
+      async (method) => {
+        const res = await fetch(`${WEB_URL}/`, { method });
+        expect(res.status).toBe(404);
+      }
+    );
 
     it('should return index HTML as fallback for unknown routes', async () => {
       // SPA routing fallback

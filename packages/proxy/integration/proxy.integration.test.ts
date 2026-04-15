@@ -57,6 +57,7 @@ describe('Proxy Integration Test', () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${validToken}`,
           Origin: origin,
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: JSON.stringify(payload),
       });
@@ -78,6 +79,7 @@ describe('Proxy Integration Test', () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${validToken}`,
           Origin: origin,
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: JSON.stringify(payload),
       });
@@ -95,6 +97,7 @@ describe('Proxy Integration Test', () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${validToken}`,
           Origin: origin,
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: 'bad-json',
       });
@@ -110,6 +113,7 @@ describe('Proxy Integration Test', () => {
         headers: {
           'Content-Type': 'application/json',
           Origin: origin,
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: JSON.stringify(payload),
       });
@@ -124,6 +128,7 @@ describe('Proxy Integration Test', () => {
           'Content-Type': 'application/json',
           Authorization: 'Bearer invalid_token',
           Origin: origin,
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: JSON.stringify(payload),
       });
@@ -137,6 +142,7 @@ describe('Proxy Integration Test', () => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${validToken}`,
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: JSON.stringify(payload),
       });
@@ -151,6 +157,7 @@ describe('Proxy Integration Test', () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${validToken}`,
           Origin: 'https://malicious.com',
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: JSON.stringify(payload),
       });
@@ -168,6 +175,7 @@ describe('Proxy Integration Test', () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${validToken}`,
           Origin: origin,
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: JSON.stringify(payload),
       });
@@ -186,6 +194,7 @@ describe('Proxy Integration Test', () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${validToken}`,
           Origin: origin,
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: JSON.stringify(payload),
       });
@@ -204,6 +213,7 @@ describe('Proxy Integration Test', () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${validToken}`,
           Origin: origin,
+          'X-Forwarded-For': '127.0.0.1',
         },
         body: JSON.stringify(payload),
       });

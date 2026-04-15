@@ -34,13 +34,8 @@ export default class MaxmindGeo implements GeoProvider {
       if (forwardedFor) {
         return forwardedFor.split(',')[0].trim();
       }
-      try {
-        const info = getConnInfo(c);
-        return info.remote.address;
-      } catch (e) {
-        // Fallback for test environment where getConnInfo fails
-        return '127.0.0.1';
-      }
+      const info = getConnInfo(c);
+      return info.remote.address;
     })();
 
     if (!this.maxmindReader || !ip) return geo;

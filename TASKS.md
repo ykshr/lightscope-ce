@@ -13,6 +13,7 @@ The codebase currently has numerous ESLint warnings (39 warnings in `packages/we
 ## 2. Dynamic Data Integration
 There are pages currently using hardcoded sample data that need to be connected to the actual API.
 - **Task:** Replace `SAMPLE_ARTICLE` in `packages/web/src/pages/article/index.tsx` with actual data fetched from the API (likely via GraphQL).
+- **Task:** /article page should be moved from /ranking page - when user clicks each article on the ranking list it directs to the article page.
 
 ## 3. Review Generated Files & TODOs
 - **Task:** Review the `TODO` comments present in the auto-generated Prisma client files (`packages/api/src/__generated__/prisma/runtime/client.d.ts`). While these files should not be edited directly, verify that there are no underlying schema or configuration issues causing these warnings.
@@ -21,15 +22,9 @@ There are pages currently using hardcoded sample data that need to be connected 
 - **Task:** Perform a final security audit. Ensure environment variables (`ALLOWED_ORIGINS`, `JWT_SECRET`, `DATABASE_URL`, etc.) are securely and correctly configured for production, with no reliance on hardcoded fallback values.
 - **Task:** Optimize the frontend bundle size. The Vite build output currently warns about chunks larger than 500kB. Implement code-splitting using `dynamic import()` or configure `manualChunks` to improve initial load performance.
 
-## 5. Deployment Environment Configuration
-Ensure the infrastructure and CI/CD settings are robust for a secure production deployment.
-- **Task:** Review and finalize the production environment variables (e.g., strictly defining `ALLOWED_ORIGINS` for API and Proxy CORS).
-- **Task:** Verify and expand the deployment pipeline. The current `ci.yml` handles testing and building, but deployment steps (CD) should be configured if necessary.
-- **Task:** Verify that the built assets in `packages/web/dist` are served securely and efficiently in a production environment (e.g., configuring Nginx or a CDN).
-
-## 6. Increase Test Coverage
+## 5. Increase Test Coverage
 - **Task:** Increase code coverage. Although current tests pass in CI, add missing unit and integration tests, particularly for frontend components.
 - **Task:** Expand E2E test scenarios using Playwright. Ensure all critical user paths are covered, including authentication flows, data ingestion processes, and dashboard visualizations.
 
-## 7. Documentation Updates
+## 6. Documentation Updates
 - **Task:** Update `README.md` to include comprehensive instructions for production deployment, expanding beyond the current local Docker Compose setup.

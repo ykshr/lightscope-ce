@@ -6,8 +6,16 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
   const [chartData, setChartData] = useState<AreaChartDataItem[]>([]);
   const [chartConfigs, setChartConfigs] = useState<AreaCategoryConfig[]>([]);
 
-  const validateDataMap = (map: Record<string, AreaChartDataItem>, date: string | Date | number | any) => {
-    const dateString = typeof date === 'string' ? date : date instanceof Date ? date.toISOString().split('T')[0] : String(date);
+  const validateDataMap = (
+    map: Record<string, AreaChartDataItem>,
+    date: string | Date | number | any
+  ) => {
+    const dateString =
+      typeof date === 'string'
+        ? date
+        : date instanceof Date
+          ? date.toISOString().split('T')[0]
+          : String(date);
     if (!map[dateString]) map[dateString] = { date };
     return dateString;
   };

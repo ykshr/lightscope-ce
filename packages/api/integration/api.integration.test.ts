@@ -287,4 +287,107 @@ describe('API Integration Test', () => {
       expect(json.data.__typename).toBe('Query');
     });
   });
+
+  describe('GraphQL API endpoints', () => {
+    it('should return null or article for "article" query', async () => {
+      const res = await fetch(`${API_URL}/gql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: sessionCookie,
+        },
+        body: JSON.stringify({
+          query: `
+            query {
+              article(url: "https://example.com/article1") {
+                url
+                title
+                siteName
+              }
+            }
+          `,
+        }),
+      });
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.data.article).toBeDefined();
+    });
+
+    it('should execute "rank" query with valid parameters', async () => {
+      const res = await fetch(`${API_URL}/gql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: sessionCookie,
+        },
+        body: JSON.stringify({
+          query: `
+            query {
+              rank(startDate: "2023-01-01T00:00:00Z", endDate: "2023-01-31T23:59:59Z") {
+                total
+                articles {
+                  index
+                  url
+                  value
+                }
+              }
+            }
+          `,
+        }),
+      });
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      expect(json.data?.rank?.total).toBeDefined();
+      expect(json.data?.rank?.articles).toBeInstanceOf(Array);
+    });
+
+    it('should execute "trend" query with valid parameters', async () => {
+      const res = await fetch(`${API_URL}/gql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: sessionCookie,
+        },
+        body: JSON.stringify({
+          query: `
+            query {
+              trend(startDate: "2023-01-01T00:00:00Z", endDate: "2023-01-31T23:59:59Z", aggregation: { unit: DAY }) {
+                total {
+                  date
+                  value
+                }
+              }
+            }
+          `,
+        }),
+      });
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      expect(json.data?.trend?.total).toBeInstanceOf(Array);
+    });
+
+    it('should fail GraphQL validation for missing required arguments on "rank"', async () => {
+      const res = await fetch(`${API_URL}/gql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: sessionCookie,
+        },
+        body: JSON.stringify({
+          query: `
+            query {
+              rank {
+                total
+              }
+            }
+          `,
+        }),
+      });
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.errors).toBeDefined();
+    });
+  });
 });

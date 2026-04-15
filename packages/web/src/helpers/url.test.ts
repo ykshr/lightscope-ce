@@ -159,7 +159,7 @@ describe('url helpers', () => {
     it('should handle unrecognized params gracefully', () => {
       const search = '?unknown=val&cat=known';
       const result = decodeUrlParams(search);
-      expect((result as any).unknown).toBeUndefined();
+      expect((result as Record<string, unknown>).unknown).toBeUndefined();
       expect(result.category).toBe('known');
     });
   });

@@ -29,7 +29,7 @@ export default function useTrackers(organizationId: string) {
       setIsPending(true);
       try {
         const { trackers } = await fetchGet('/tracker');
-        const formattedTrackers = trackers.map((tracker: any) => ({
+        const formattedTrackers = trackers.map((tracker: Record<string, string>) => ({
           ...tracker,
           notBefore: new Date(tracker.notBefore),
           issuedAt: new Date(tracker.issuedAt),
@@ -38,8 +38,8 @@ export default function useTrackers(organizationId: string) {
           updatedAt: new Date(tracker.updatedAt),
         }));
         setTrackers(formattedTrackers);
-      } catch (err: any) {
-        setError(err || 'An error occurred');
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : String(err) || 'An error occurred');
       } finally {
         setIsPending(false);
       }

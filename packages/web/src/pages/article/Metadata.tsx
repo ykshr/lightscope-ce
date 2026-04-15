@@ -29,7 +29,7 @@ const MetaGridItem = ({
   label,
   value,
 }: {
-  icon?: any;
+  icon?: React.ElementType;
   label: string;
   value: string | string[];
 }) => (

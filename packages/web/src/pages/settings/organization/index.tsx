@@ -9,7 +9,7 @@ export default function Organization() {
 
   const { data: session } = authClient.useSession();
   const { id } = session?.user || {};
-  const me = org?.members?.find((member: any) => member.user.id === id);
+  const me = org?.members?.find((member) => member.user?.id === id);
 
   return (
     <div className="space-y-10">

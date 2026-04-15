@@ -1,4 +1,4 @@
-import { DEFAULT_DATE_STRING } from '@/components/filters/DateFilter';
+import { DEFAULT_DATE_STRING } from '@/helpers/constants/date';
 import type { FilterToQuery } from '@/types/filter';
 import { convertDateString, formatDate } from './date';
 
@@ -160,7 +160,7 @@ export function encodeUrlParams(
 
 export function decodeUrlParams(search: string): FilterToQuery {
   const params = new URLSearchParams(search);
-  const result: any = {
+  const result: Record<string, unknown> = {
     startDate: convertDateString(DEFAULT_DATE_STRING.startDateString),
     endDate: convertDateString(DEFAULT_DATE_STRING.endDateString),
   };
@@ -170,7 +170,7 @@ export function decodeUrlParams(search: string): FilterToQuery {
     if (!config) return;
 
     const { key, type, parent } = config;
-    let convertedValue: any;
+    let convertedValue: unknown;
 
     // Conversion process based on type
     switch (type) {
@@ -191,13 +191,13 @@ export function decodeUrlParams(search: string): FilterToQuery {
     }
 
     // Decide where to store (inside articleFilter or directly)
-    if (parent && !result[parent]) result[parent] = {} as any;
-    const target = parent ? result[parent] : result;
+    if (parent && !result[parent]) result[parent] = {} as Record<string, unknown>;
+    const target = (parent ? result[parent] : result) as Record<string, unknown>;
 
     // For array types, push; otherwise, assign
     if (type === 'nestedArray' || type === 'array') {
       if (!target[key]) target[key] = [];
-      target[key].push(convertedValue);
+      (target[key] as unknown[]).push(convertedValue);
     } else {
       target[key] = convertedValue;
     }

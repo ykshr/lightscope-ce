@@ -26,7 +26,7 @@ export const useGraphql = <TData, TVariables>(
 /**
  * Recursively traverses an object and converts Date types to strings
  */
-export const serializeDates = (obj: any): any => {
+export const serializeDates = (obj: unknown): unknown => {
   // Check for null or undefined
   if (obj === null || obj === undefined) {
     return obj;
@@ -44,10 +44,13 @@ export const serializeDates = (obj: any): any => {
 
   // If object, recursively process each property
   if (typeof obj === 'object') {
-    return Object.keys(obj).reduce((acc, key) => {
-      acc[key] = serializeDates(obj[key]);
-      return acc;
-    }, {} as any);
+    return Object.keys(obj).reduce(
+      (acc, key) => {
+        acc[key] = serializeDates((obj as Record<string, unknown>)[key]);
+        return acc;
+      },
+      {} as Record<string, unknown>
+    );
   }
 
   // Otherwise (string, number, boolean, etc.), return as is

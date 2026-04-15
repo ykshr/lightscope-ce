@@ -13,7 +13,7 @@ const returnMetric = (metric: string) => {
   }
 };
 
-export const metricUrlParamsToVariables = (urlParams: { [name: string]: any }) => {
+export const metricUrlParamsToVariables = (urlParams: Record<string, unknown>) => {
   const { metric = 'visits' } = urlParams;
   return {
     metric: returnMetric(metric),

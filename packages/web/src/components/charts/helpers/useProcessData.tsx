@@ -6,7 +6,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
   const [chartData, setChartData] = useState<AreaChartDataItem[]>([]);
   const [chartConfigs, setChartConfigs] = useState<AreaCategoryConfig[]>([]);
 
-  const validateDataMap = (map: { [dateString: string]: AreaChartDataItem }, date: any) => {
+  const validateDataMap = (map: Record<string, AreaChartDataItem>, date: string | Date) => {
     const dateString = typeof date === 'string' ? date : date.toISOString().split('T')[0];
     if (!map[dateString]) map[dateString] = { date };
     return dateString;

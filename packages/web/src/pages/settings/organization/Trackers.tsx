@@ -39,8 +39,8 @@ export default function Trackers({ org, me }: Props) {
       try {
         await fetchDelete(`/tracker/${tokenId}`);
         reFetchTrackers();
-      } catch (err: any) {
-        setError(err || 'An error occurred');
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : String(err) || 'An error occurred');
       } finally {
         setIsLoading(false);
       }
@@ -139,7 +139,7 @@ function NewTokenDialog({
     setIsLoading(true);
     setError('');
     try {
-      const payload: any = { origin };
+      const payload: Record<string, string> = { origin };
       if (expiresAt) {
         payload.expiresAt = new Date(expiresAt).toISOString();
       }
@@ -150,8 +150,8 @@ function NewTokenDialog({
       setError('');
       setShowDialog(false);
       reFetchTrackers();
-    } catch (err: any) {
-      setError(err || 'An error occurred');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err) || 'An error occurred');
       setIsLoading(false);
     }
   };

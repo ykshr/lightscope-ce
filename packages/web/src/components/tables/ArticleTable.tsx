@@ -16,7 +16,8 @@ import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useProcessData from './helpers/useProcessData';
-import Sort, { findCategoryOptionByValue } from './templates/Sort';
+import { findSortOptionByValue } from '@/helpers/constants/sort';
+import Sort from './templates/Sort';
 import TableBody from './templates/TableBody';
 import TableHeader from './templates/TableHeader';
 import TablePagination from './templates/TablePagination';
@@ -39,7 +40,7 @@ export default function ArticleTable({
   showAnalyticsFilter = false,
   useUrlParamsForAnalyticsFilter = false,
 }: ArticleTableProps) {
-  const [localParams, setLocalParams] = useState<{ [name: string]: any }>({});
+  const [localParams, setLocalParams] = useState<Record<string, unknown>>({});
 
   const [urlParams, updateUrlParams] = useUrlParams(localParams);
   const { startDate, endDate, articleFilter, page = 1, limit, metric = 'visits' } = urlParams;
@@ -77,7 +78,7 @@ export default function ArticleTable({
     }
   };
 
-  const currentSort = findCategoryOptionByValue(urlParams);
+  const currentSort = findSortOptionByValue(urlParams);
 
   const totalCount = data?.rank?.total;
   const startItem = (page - 1) * itemsPerPage + 1;

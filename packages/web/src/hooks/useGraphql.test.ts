@@ -61,7 +61,7 @@ describe('fetcher lib', () => {
           })
         ),
       };
-      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
+      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as unknown as Response);
 
       const { result } = renderHook(() => useGraphql('query { test }'));
 
@@ -78,7 +78,7 @@ describe('fetcher lib', () => {
           })
         ),
       };
-      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
+      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as unknown as Response);
 
       const { result } = renderHook(() => useGraphql('query { test }'));
 
@@ -96,7 +96,7 @@ describe('fetcher lib', () => {
           })
         ),
       };
-      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
+      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as unknown as Response);
 
       const { result } = renderHook(() => useGraphql('query { test }'));
 
@@ -109,7 +109,7 @@ describe('fetcher lib', () => {
         status: 500,
         text: vi.fn().mockResolvedValue(JSON.stringify({})),
       };
-      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as any);
+      vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as unknown as Response);
 
       const { result } = renderHook(() => useGraphql('query { test }'));
 

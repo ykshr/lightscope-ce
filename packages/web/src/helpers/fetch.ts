@@ -33,7 +33,7 @@ export async function fetchGet(
 
 export async function fetchPost(
   url: string,
-  body: any,
+  body: unknown,
   headers: RequestInit['headers'] = {},
   expectJson: boolean = true
 ) {

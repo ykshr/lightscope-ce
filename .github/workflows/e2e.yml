@@ -15,6 +15,9 @@ jobs:
       - name: Setup Node and pnpm
         uses: ./.github/actions/setup
 
+      - name: Run build
+        run: pnpm run build
+
       - name: Get Playwright version
         id: playwright-version
         run: echo "VERSION=$(pnpm --filter @lightscope-ce/e2e exec playwright --version | awk '{print $2}')" >> $GITHUB_ENV

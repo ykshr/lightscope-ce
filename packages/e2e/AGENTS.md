@@ -5,9 +5,9 @@ End-to-End Tests using Playwright and standard testing scripts.
 ---
 
 #### Coding Conventions
-- **Indentation**: Use 2 spaces for indentation (Prettier standard).
-- **Naming Conventions**: Use `camelCase` for functions/variables. Test files should end with `.test.ts` or `.spec.ts`.
-- **Library Restrictions**: Use Playwright for browser tests. Avoid mixing in other test runners like Jest.
+- **Rules for indentation**: Use 2 spaces for indentation (Prettier standard).
+- **Naming conventions**: Use `camelCase` for functions/variables. Test files should end with `.test.ts` or `.spec.ts`.
+- **Restrictions on libraries that should or should not be used**: Use Playwright for browser tests. Avoid mixing in other test runners like Jest.
 - **Locators**: In Playwright tests, using loose locators like `page.locator('button', { hasText: '...' }).first()` can cause timeouts by targeting hidden background elements. Use exact match structural locators like `page.getByRole('button', { name: '...', exact: true })` or chain `.filter()` methods for strict, robust element resolution.
 - **Actions**:
   - In `packages/e2e` scripts such as `long-run.ts` and `load.ts`, performance is improved by hoisting `ORG_DATA` parsing and authentication token generation (`generateToken`) outside of repetitive `setInterval` loops or high-concurrency loops to avoid redundant JSON parsing and cryptographic signing overhead.
@@ -37,9 +37,10 @@ End-to-End Tests using Playwright and standard testing scripts.
     ```
 
 #### Project Structure
+- **Explanation of key directories**:
 - `scenarios/`: Contains the specific test scenario scripts (e.g., `load`, `long-run`).
 - `tests/`: Contains the Playwright E2E test files.
-- **Guidance on code placement**: Place Playwright browser tests in `tests/` and load/smoke scripts in `scenarios/`.
+- **Guidance on where to place different types of code**: Place Playwright browser tests in `tests/` and load/smoke scripts in `scenarios/`.
 
 #### Restrictions
 - **Guardrails**:

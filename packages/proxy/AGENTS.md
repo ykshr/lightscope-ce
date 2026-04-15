@@ -12,9 +12,9 @@ Entry: `src/index.ts`
 ---
 
 #### Coding Conventions
-- **Indentation**: Use 2 spaces for indentation (Prettier standard).
-- **Naming Conventions**: `camelCase` for variables/functions, `PascalCase` for types/interfaces/classes.
-- **Library Restrictions**: Do not introduce heavy dependencies. Keep the proxy lightweight to maintain high performance.
+- **Rules for indentation**: Use 2 spaces for indentation (Prettier standard).
+- **Naming conventions**: `camelCase` for variables/functions, `PascalCase` for types/interfaces/classes.
+- **Restrictions on libraries that should or should not be used**: Do not introduce heavy dependencies. Keep the proxy lightweight to maintain high performance.
 - **Endpoint Responsibilities**: The primary role is to receive events from trackers quickly, validate them, and save them to ClickHouse. The Proxy package (`packages/proxy`) is a high-performance REST API built with Node.js and Hono, responsible for event ingestion from trackers and connected directly to ClickHouse.
 - **Input Validation**: Use Zod to strictly validate that the incoming payloads are in the correct format.
 - **Typing**: In `packages/proxy`, the `AlgorithmTypes` exported from `hono/jwt` must be used as a value (e.g., `AlgorithmTypes.HS256`) for strictly typed assignments and default parameters to avoid compilation errors like 'Type "HS256" is not assignable to type AlgorithmTypes'.
@@ -37,10 +37,11 @@ Entry: `src/index.ts`
   ```
 
 #### Project Structure
+- **Explanation of key directories**:
 - `src/index.ts`: The entry point for the Hono application.
 - `src/helpers/`: Utility functions for parsing tracker data and IP geolocation (e.g., MaxMind).
 - `src/routes/`: Route definitions for the REST API.
-- **Guidance on code placement**: Keep route definitions isolated in `src/routes/` and reusable logic in `src/helpers/`.
+- **Guidance on where to place different types of code**: Keep route definitions isolated in `src/routes/` and reusable logic in `src/helpers/`.
 
 #### Restrictions
 - **Guardrails**:

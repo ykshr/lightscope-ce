@@ -10,14 +10,15 @@
   },
   "type": "module",
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run src",
     "test:watch": "vitest",
     "dev": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint . --cache --cache-location .eslintcache",
     "preview": "vite preview",
     "shadcn": "pnpm dlx shadcn@latest add",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "test:integration": "WAIT_PORTS=3000 docker compose up -d web && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

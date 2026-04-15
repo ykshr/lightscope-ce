@@ -13,7 +13,8 @@
     "packages/*"
   ],
   "devDependencies": {
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "vitest": "^4.0.18"
   },
   "scripts": {
     "lint": "pnpm --recursive --if-present run lint",
@@ -24,7 +25,8 @@
     "ci": "pnpm run format:check && pnpm run lint && pnpm run build && pnpm run test",
     "test:e2e": "pnpm run docker:up -d && node utils/wait-for-services.js && pnpm --filter @lightscope-ce/e2e run test:e2e && pnpm run docker:down",
     "docker:up": "docker compose up --build",
-    "docker:down": "docker compose down -v"
+    "docker:down": "docker compose down -v",
+    "test:integration": "pnpm --recursive --if-present run test:integration"
   },
   "pnpm": {}
 }

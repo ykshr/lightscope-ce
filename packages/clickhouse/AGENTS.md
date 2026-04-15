@@ -5,9 +5,9 @@ This package defines the analytics data layer. It contains XML configuration fil
 ---
 
 #### Coding Conventions
-- **Indentation**: Use 2 spaces for indentation (where applicable, e.g. SQL files).
-- **Naming Conventions**: Use `snake_case` for database tables and columns.
-- **Library Restrictions**: This package relies on ClickHouse natively. Do not introduce JS/TS dependencies for schema management.
+- **Rules for indentation**: Use 2 spaces for indentation (where applicable, e.g. SQL files).
+- **Naming conventions**: Use `snake_case` for database tables and columns.
+- **Restrictions on libraries that should or should not be used**: This package relies on ClickHouse natively. Do not introduce JS/TS dependencies for schema management.
 - **Schema Safety**:
   - Schema changes must always be backward compatible.
   - Ensure that rollouts to the production environment are safe.
@@ -26,9 +26,10 @@ This package defines the analytics data layer. It contains XML configuration fil
   Typically, you will use `docker compose up -d` from the root directory to build and start the test environment. There are no automated tests isolated to just this package.
 
 #### Project Structure
+- **Explanation of key directories**:
 - `config.xml`, `users.xml`: Core configuration files for the ClickHouse server.
 - `init-db.sh` or `*.sql`: Schema definitions (tables and materialized views) initialized when the container starts.
-- **Guidance on code placement**: Place SQL migrations/init scripts alongside `init-db.sh`. Keep server configuration in XML files. In `docker-compose.yml`, the `ALLOWED_ORIGINS` environment variable for both `api` and `proxy` services must include `http://localhost:8080` and `http://127.0.0.1:8080` to support cross-origin requests from the `mock-site` used during E2E testing.
+- **Guidance on where to place different types of code**: Place SQL migrations/init scripts alongside `init-db.sh`. Keep server configuration in XML files. In `docker-compose.yml`, the `ALLOWED_ORIGINS` environment variable for both `api` and `proxy` services must include `http://localhost:8080` and `http://127.0.0.1:8080` to support cross-origin requests from the `mock-site` used during E2E testing.
 
 #### Restrictions
 - **Guardrails**:

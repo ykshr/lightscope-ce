@@ -19,6 +19,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 - **Rules for indentation**: Use 2 spaces for indentation (Prettier standard).
 - **Naming conventions**: `camelCase` for variables/functions, `PascalCase` for React components.
 - **Restrictions on libraries that should or should not be used**: Do not introduce libraries like `axios`, `redux`, or `zustand`. Use `fetch` and TanStack Query. Icons in the `packages/web` frontend application are implemented using the `@phosphor-icons/react` library. Ensure any new icon additions import from this package.
+- **Type Safety**: The `packages/web` codebase strictly avoids `@typescript-eslint/no-explicit-any`; prefer `unknown`, `Record<string, unknown>`, or specifically defined interfaces and types over `any`.
 - **Data Fetching Rules**:
   - Always use the generated GraphQL hooks (`useQuery`, `useMutation`).
   - Avoid using manual `fetch` or introducing libraries like `axios`. When modifying fetcher utility or hook error handling, always evaluate GraphQL errors (e.g., checking `json.errors`) independently from HTTP network errors (e.g., `!res.ok`), as GraphQL APIs typically return a `200 OK` status even when logical errors occur.
@@ -29,6 +30,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 - **UI and Styling Rules**:
   - Use `shadcn/ui` primitive components whenever possible.
   - Codebase convention for `packages/web` components is to use clean no-op functions `() => {}` for optional callback props' default values, ensuring no debug logging (e.g., `console.log`) remains in production code.
+  - Constants and helper functions should be extracted to separate files (e.g., `src/helpers/constants/`) to prevent `react-refresh/only-export-components` ESLint warnings in component files.
   - Use only Tailwind v4 utility classes for styling. Avoid custom CSS files or inline styles.
   - Maintain consistency with existing components and keep the added `className` props to a minimum.
   - The custom `DialogContent` component in `packages/web/src/components/ui/dialog.tsx` supports a boolean `showCloseButton` prop to optionally show or hide the default Radix close icon.
@@ -51,7 +53,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   ```bash
   pnpm --filter @lightscope-ce/web run dev
   ```
-  *(Note: In the web package (`packages/web`), the Vite development server is configured to run on port `3000` by default. When writing frontend verification scripts (e.g., Playwright screenshots), point the browser to `http://localhost:3000` instead of the Vite default port 5173.)*
+  *(Note: In the web package (`packages/web`), the Vite development server is configured to run on port `3000` by default. When writing frontend verification scripts (e.g., Playwright screenshots), point the browser to `http://localhost:3000` instead of the Vite default port 5173. The web package's `test:integration` script uses Docker Compose to run the Vite dev server on port 3000 and executes tests using Vitest. Due to Vite's SPA fallback, the dev server returns `index.html` (200 OK) for all unrecognized GET requests, including non-existent file paths. Unsupported methods like POST/PUT/DELETE return 404, while OPTIONS returns 204.)*
 - **Generate GraphQL Code (React Query hooks)**:
   ```bash
   pnpm --filter @lightscope-ce/web run codegen

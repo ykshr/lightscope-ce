@@ -45,8 +45,8 @@ export default function ArticleTable({
   const [urlParams, updateUrlParams] = useUrlParams(localParams);
   const { startDate, endDate, articleFilter, page = 1, limit, metric = 'visits' } = urlParams;
 
-  const categoryVariables = categoryUrlParamsToVariables(urlParams);
-  const metricVariables = metricUrlParamsToVariables(urlParams);
+  const categoryVariables = categoryUrlParamsToVariables(urlParams) as any;
+  const metricVariables = metricUrlParamsToVariables(urlParams) as any;
 
   const { data, isLoading } = useArticleRankQuery({
     startDate,

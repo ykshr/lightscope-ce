@@ -1,4 +1,4 @@
-export const categoryUrlParamsToVariables = (urlParams: Record<string, unknown>) => {
+export const categoryUrlParamsToVariables = (urlParams: Record<string, any>) => {
   const { category } = urlParams;
   if (!category) {
     return {

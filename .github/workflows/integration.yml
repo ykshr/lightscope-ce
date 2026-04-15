@@ -1,4 +1,4 @@
-name: CI
+name: Integration Tests
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  integration:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,14 +15,5 @@ jobs:
       - name: Setup Node and pnpm
         uses: ./.github/actions/setup
 
-      - name: Run format:check
-        run: pnpm run format:check
-
-      - name: Run lint
-        run: pnpm run lint
-
-      - name: Run build
-        run: pnpm run build
-
-      - name: Run test
-        run: pnpm run test
+      - name: Run integration tests
+        run: pnpm run test:integration

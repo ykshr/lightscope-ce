@@ -117,6 +117,7 @@ export default function PieDonutText({
                       </text>
                     );
                   }
+                  return null;
                 }}
               />
             </Pie>

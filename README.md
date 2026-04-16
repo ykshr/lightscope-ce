@@ -81,7 +81,7 @@ This will start the following services:
 You can run the following commands from the repository root:
 
 - `pnpm run format`: Automatically fixes code formatting issues using Prettier.
-- `pnpm run ci`: Runs linting, type checking, formatting checks, unit tests, and build processes across all packages. Always run this before creating a pull request to ensure there are no errors.
+- `pnpm run ci`: The root repository provides a `pnpm run ci` script that acts as the primary quality gate, sequentially running `format:check`, `lint`, `build`, and `test` across all workspace projects.
 - `pnpm run test:e2e`: Runs end-to-end tests.
 
 ## Architecture Overview

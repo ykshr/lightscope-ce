@@ -5,7 +5,7 @@ This repository is a TypeScript monorepo using `pnpm workspaces`. Please strictl
 All `AGENTS.md` files in the repository must be structured with four specific English headers: `#### Coding Conventions`, `#### Build & Test Commands`, `#### Project Structure`, and `#### Restrictions`.
 
 #### Coding Conventions
-- **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Note that Pull Request comments and repository discussions may be written in Japanese; ensure they are translated to understand the instructions accurately. When handling PR comments via `read_pr_comments`, always evaluate them against the code as it appears in the *modified* state of the pull request.
+- **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Even if user instructions or PR comments are provided in Japanese (e.g., requesting a file like 'TASKS.md'), any generated documentation files must still be written entirely in English to strictly comply with the repository's English-only documentation rule. Note that Pull Request comments and repository discussions may be written in Japanese; ensure they are translated to understand the instructions accurately. When handling PR comments via `read_pr_comments`, always evaluate them against the code as it appears in the *modified* state of the pull request.
 - **Type Safety**: Maintain strict TypeScript. The use of `any` or unsafe casting (like `as any`) is prohibited.
 - **Rules for indentation**: Use 2 spaces for indentation in TypeScript/JavaScript/JSON/YAML files (enforced by Prettier).
 - **Naming conventions**: Use `camelCase` for variables and functions. Use `PascalCase` for classes, React components, and interfaces/types.
@@ -16,6 +16,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - Security-related: `🔒 [security fix description]` + 'What', 'Risk', 'Solution'.
   - Performance improvement: `⚡ [performance improvement description]` + 'What', 'Why', 'Measured Improvement'.
   - Code health improvement: `🧹 [code health improvement description]` + 'What', 'Why', 'Verification', 'Result'.
+  - Testing improvement: `🧪 [testing improvement description]` + 'What', 'Coverage', 'Result'.
 - **Execution Plans**:
   - *Groundedness Rule*: Do not assume the existence of specific functions, methods, or API endpoints without confirming their presence in the codebase during the exploration phase.
   - *Exploration Rule*: Codebase exploration and context gathering (e.g., verifying a file's exported functions via `cat` or `grep`) must be completed before submitting a plan.

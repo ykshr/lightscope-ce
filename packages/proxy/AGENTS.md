@@ -19,6 +19,7 @@ Entry: `src/index.ts`
 - **Input Validation**: Use Zod to strictly validate that the incoming payloads are in the correct format.
 - **Typing**: In `packages/proxy`, the `AlgorithmTypes` exported from `hono/jwt` must be used as a value (e.g., `AlgorithmTypes.HS256`) for strictly typed assignments and default parameters to avoid compilation errors like 'Type "HS256" is not assignable to type AlgorithmTypes'.
 - **CORS and Authentication**: The `JwtAuth` provider in `packages/proxy` strictly validates the request's `Origin` or `Referer` header against the `origin` claim in the JWT; if both headers are missing, the provider returns `null` to prevent unauthorized tracking.
+- **CORS Config**: In `docker-compose.yml`, the `ALLOWED_ORIGINS` environment variable for both `api` and `proxy` services must include `http://localhost:8080` and `http://127.0.0.1:8080` to support cross-origin requests from the `mock-site` used during E2E testing. In `packages/api` and `packages/proxy`, the `processAllowedOriginsString` helper (located in `src/helpers/allowedOrigins.ts`) is used to parse the `ALLOWED_ORIGINS` environment variable into an array for Hono's `cors` middleware.
 
 #### Build & Test Commands
 - **How to build the project**:

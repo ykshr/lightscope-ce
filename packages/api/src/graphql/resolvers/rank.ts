@@ -34,6 +34,19 @@ const resolvers: Resolvers = {
       };
       const loader = getRankLoader(c, loaderParams);
       const data = await loader.total();
+      if (!data || data.length === 0)
+        return {
+          total: 0,
+          parameters: {
+            metric: args.metric,
+            order: args.order,
+            articleFilter: args.articleFilter,
+            startDate: args.startDate,
+            endDate: args.endDate,
+            limit: args.limit,
+            page: args.page,
+          },
+        };
       return {
         total: data[0].value,
         parameters: {

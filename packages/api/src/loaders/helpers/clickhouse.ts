@@ -5,14 +5,18 @@ export default async function <T>(
   query: string,
   query_params: any = undefined
 ): Promise<T[]> {
-  const rows = await client.query({
-    query,
-    query_params,
-    format: 'JSONEachRow',
-  });
-  const data = await rows.json<T>();
-
-  return data;
+  try {
+    const rows = await client.query({
+      query,
+      query_params,
+      format: 'JSONEachRow',
+    });
+    const data = await rows.json<T>();
+    return data;
+  } catch (error) {
+    console.error('CLICKHOUSE ERROR:', error);
+    throw error;
+  }
 }
 
 export const formatToDateTime = (date: Date) =>

@@ -47,6 +47,19 @@ const resolvers: Resolvers = {
       };
       const loader = getTrendLoader(c, loaderParams);
       const data = await loader.total<TrendAnalytics>();
+      if (!data)
+        return {
+          total: [],
+          parameters: {
+            startDate: args.startDate,
+            endDate: args.endDate,
+            articleFilter: args.articleFilter,
+            aggregation: args.aggregation,
+            limit: args.limit,
+            page: args.page,
+            metric: args.metric,
+          },
+        };
       return {
         total: data,
         parameters: {

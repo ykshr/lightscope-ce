@@ -3,4 +3,4 @@ packages/web/src/components/ui
 **/__generated__
 pnpm-lock.yaml
 .serena
-packages/e2e/storage/*
+packages/e2e/tests/storage/*

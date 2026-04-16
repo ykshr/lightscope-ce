@@ -87,7 +87,7 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
       data: { query },
     });
 
-    if (res.ok) {
+    if (res.ok()) {
       const gqlData = await res.json();
       articles = gqlData.data?.rank?.articles || [];
       const foundArticle = articles.find((a: any) => a.url.includes('index.html'));

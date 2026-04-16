@@ -1,23 +1,11 @@
 {
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
     },
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "rootDir": "src",
-    "outDir": "dist",
-    "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "incremental": true
-  },
-  "include": ["src/**/*", "generated/**/*"],
-  "exclude": ["node_modules", "dist"]
+    {
+      "path": "./tsconfig.test.json"
+    }
+  ]
 }

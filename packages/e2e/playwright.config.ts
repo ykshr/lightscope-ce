@@ -1,5 +1,5 @@
-import { WEB_URL } from '@/helpers/env';
 import { defineConfig } from '@playwright/test';
+import { WEB_URL } from './tests/helpers/env';
 
 export default defineConfig({
   testDir: 'tests',

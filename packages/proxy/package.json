@@ -11,7 +11,7 @@
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
     "start": "node dist/bundle.js",
     "dev": "tsx src/index.ts",
-    "test:integration": "WAIT_PORTS=3002 docker compose -f ../../docker-compose.yml up -d proxy && node ../../utils/wait-for-services.js && vitest run integration ; docker compose -f ../../docker-compose.yml down -v"
+    "test:integration": "WAIT_PORTS=3002 docker compose up -d proxy && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v"
   },
   "dependencies": {
     "@clickhouse/client": "^1.14.0",

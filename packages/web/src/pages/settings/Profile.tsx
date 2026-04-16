@@ -86,7 +86,10 @@ export default function Profile() {
         <CardContent className="space-y-4">
           <div className="space-y-2 pt-4">
             <Label>Theme</Label>
-            <Select value={theme} onValueChange={(val: any) => setTheme(val)}>
+            <Select
+              value={theme}
+              onValueChange={(val: 'system' | 'light' | 'dark') => setTheme(val)}
+            >
               <SelectTrigger className="w-full sm:w-[300px]">
                 <SelectValue placeholder="Select a theme" />
               </SelectTrigger>

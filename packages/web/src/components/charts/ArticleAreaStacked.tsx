@@ -7,7 +7,8 @@ import { useState } from 'react';
 import LegendItems from '../common/Legend';
 import useProcessData from './helpers/useProcessData';
 import AreaStacked from './templates/AreaStacked';
-import Filter, { findCategoryOptionByValue } from './templates/Filter';
+import { findCategoryOptionByValue } from '@/helpers/constants/category';
+import Filter from './templates/Filter';
 
 interface ArticleAreaStackedProps {
   title?: string;
@@ -24,13 +25,13 @@ export default function ArticleAreaStacked({
   showAnalyticsFilter = false,
   useUrlParamsForAnalyticsFilter = false,
 }: ArticleAreaStackedProps) {
-  const [localParams, setLocalParams] = useState<{ [name: string]: any }>({});
+  const [localParams, setLocalParams] = useState<Record<string, unknown>>({});
 
   const [urlParams, updateUrlParams] = useUrlParams(localParams);
   const { startDate, endDate, articleFilter, page = 1, limit, metric = 'visits' } = urlParams;
 
-  const categoryParams = categoryUrlParamsToVariables(urlParams);
-  const metricParams = metricUrlParamsToVariables(urlParams);
+  const categoryParams = categoryUrlParamsToVariables(urlParams) as any;
+  const metricParams = metricUrlParamsToVariables(urlParams) as any;
 
   const { data, isLoading } = useArticleTrendQuery({
     startDate,

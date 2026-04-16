@@ -30,7 +30,7 @@ export function useValidateUrlParams(allowedParams: string[]) {
   }, [searchParams, navigate]);
 }
 
-export function useUrlParams(localParams: { [name: string]: any } = {}) {
+export function useUrlParams(localParams: Record<string, unknown> = {}) {
   const [searchParams] = useSearchParams();
   const urlParams = decodeUrlParams(searchParams.toString());
   const mergedParams = { ...urlParams, ...localParams };

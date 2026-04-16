@@ -10,5 +10,5 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "../packages/tracker/src/**/*.ts"]
+  "include": ["**/*.ts", "../packages/tracker/src/**/*.ts", "integration/**/*"]
 }

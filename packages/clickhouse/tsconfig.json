@@ -8,5 +8,5 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "integration/**/*"]
 }

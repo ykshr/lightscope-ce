@@ -7,10 +7,8 @@
     "resolveJsonModule": true,
     "types": ["node"],
     "paths": {
-      "@lightscope-ce/tracker": ["../packages/tracker/src/index.ts"],
-      "@lightscope-ce/tracker/*": ["../packages/tracker/src/*"],
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "../packages/tracker/src/**/*.ts"]
+  "include": ["**/*.ts"]
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { encodeUrlParams, decodeUrlParams } from './url';
+import { encodeUrlParams, decodeUrlParams } from '@/helpers/url';
 
 describe('url helpers', () => {
   describe('encodeUrlParams', () => {

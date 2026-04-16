@@ -1,6 +1,6 @@
 import { type Payload } from '@/types';
 import { describe, expect, it } from 'vitest';
-import { createArticle, createPV } from './index';
+import { createArticle, createPV } from '@/routers/events/index';
 
 // Mock Payload data
 const mockPayload: Payload = {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { categoryUrlParamsToVariables } from './category';
+import { categoryUrlParamsToVariables } from '@/helpers/category';
 
 describe('category helpers', () => {
   describe('categoryUrlParamsToVariables', () => {

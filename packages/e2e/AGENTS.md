@@ -41,6 +41,7 @@ End-to-End Tests using Playwright and standard testing scripts.
 - `scenarios/`: Contains the specific test scenario scripts (e.g., `load`, `long-run`).
 - `tests/`: Contains the Playwright E2E test files.
 - **Guidance on where to place different types of code**: Place Playwright browser tests in `tests/` and load/smoke scripts in `scenarios/`.
+  - Unit and integration tests go in `tests/unit/` and `tests/integration/` respectively.
 
 #### Restrictions
 - **Guardrails**:

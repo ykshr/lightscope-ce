@@ -54,6 +54,7 @@ This repository does not use a build orchestrator like `turborepo` or `nx`. Plea
 - `packages/e2e/`: End-to-end tests using Playwright.
 - `packages/mock-site/`: Mock site used for E2E testing.
 - **Guidance on where to place different types of code**:
+  - Unit and integration tests go in `tests/unit/` and `tests/integration/` respectively.
   - Reusable React components go in `packages/web/src/components/`.
   - Database schema changes go in `packages/api/prisma/` and `packages/clickhouse/`.
   - Tracker logic goes in `packages/tracker/src/`.

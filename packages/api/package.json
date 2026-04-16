@@ -10,7 +10,7 @@
   },
   "type": "module",
   "scripts": {
-    "test": "vitest run src",
+    "test": "vitest run tests/unit",
     "test:watch": "vitest",
     "build": "npx prisma generate && tsc",
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",

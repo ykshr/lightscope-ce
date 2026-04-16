@@ -84,6 +84,11 @@ You can run the following commands from the repository root:
 - `pnpm run ci`: The root repository provides a `pnpm run ci` script that acts as the primary quality gate, sequentially running `format:check`, `lint`, `build`, and `test` across all workspace projects.
 - `pnpm run test:e2e`: Runs end-to-end tests.
 
+## Test Directory Structure
+
+- `tests/unit/`: Contains unit tests.
+- `tests/integration/`: Contains integration tests.
+
 ## Architecture Overview
 
 LightScope consists of four main components:

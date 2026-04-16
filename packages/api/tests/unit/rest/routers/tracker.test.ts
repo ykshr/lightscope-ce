@@ -1,7 +1,7 @@
 import { $, Bindings, Variables } from '@/types';
 import { Hono } from 'hono';
 import { describe, expect, it, vi } from 'vitest';
-import trackerApp from './tracker';
+import trackerApp from '@/rest/routers/tracker';
 
 vi.mock('hono/jwt', () => ({
   sign: vi.fn().mockResolvedValue('mocked_token'),

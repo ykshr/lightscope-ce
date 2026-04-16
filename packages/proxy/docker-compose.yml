@@ -13,9 +13,6 @@ services:
       - JWT_SECRET=${JWT_SECRET:-secret-for-dev-only-do-not-use-in-prod}
     ports:
       - '3002:3002'
-    depends_on:
-      clickhouse:
-        condition: service_healthy
     healthcheck:
       test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:3001/health']
       interval: 5s

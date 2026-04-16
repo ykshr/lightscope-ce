@@ -10,7 +10,7 @@ import {
   getStartOfNextFiveMinutes,
   getStartOfNextMinute,
   getTimeBetween,
-} from './date';
+} from '@/helpers/date';
 
 describe('date helpers', () => {
   describe('formatDate', () => {

@@ -15,6 +15,7 @@ This package contains a mock site served via Nginx for E2E testing.
 - **Explanation of key directories**:
 - `index.html`: The mock HTML page.
 - **Guidance on where to place different types of code**: Keep it simple. Static HTML goes here.
+  - Unit and integration tests go in `tests/unit/` and `tests/integration/` respectively.
 
 #### Restrictions
 - **Guardrails**:

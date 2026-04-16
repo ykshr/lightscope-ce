@@ -43,6 +43,7 @@ Entry: `src/index.ts`
 - `src/helpers/`: Utility functions for parsing tracker data and IP geolocation (e.g., MaxMind).
 - `src/routes/`: Route definitions for the REST API.
 - **Guidance on where to place different types of code**: Keep route definitions isolated in `src/routes/` and reusable logic in `src/helpers/`.
+  - Unit and integration tests go in `tests/unit/` and `tests/integration/` respectively.
 
 #### Restrictions
 - **Guardrails**:

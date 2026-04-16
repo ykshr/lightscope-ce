@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getColorForIndex, getColorsForCount } from './color';
+import { getColorForIndex, getColorsForCount } from '@/helpers/color';
 
 describe('color helpers', () => {
   describe('getColorForIndex', () => {

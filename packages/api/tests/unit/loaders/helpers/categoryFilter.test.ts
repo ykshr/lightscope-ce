@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import processCategoryFilter from './categoryFilter';
+import processCategoryFilter from '@/loaders/helpers/categoryFilter';
 
 describe('processCategoryFilter', () => {
   it('returns undefined if filter is empty', () => {

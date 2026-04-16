@@ -67,6 +67,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 - `src/resolvers/`: GraphQL resolvers. Note that the directory structure within `packages/api/src/graphql/` (including `loaders` and `resolvers`) has been migrated directly to `packages/api/src/` (e.g., `packages/api/src/resolvers`). Do not create or reference files in the legacy `graphql/*` path prefixes.
 - `src/helpers/`: Utility functions and authentication providers (e.g., `better-auth` configuration).
 - **Guidance on where to place different types of code**: GraphQL schema changes should affect `schema.graphql` and be codegen'd into `src/__generated__/`.
+  - Unit and integration tests go in `tests/unit/` and `tests/integration/` respectively.
 
 #### Restrictions
 - **Security**:

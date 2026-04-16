@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { AlgorithmTypes, sign } from 'hono/jwt';
 import { describe, expect, it } from 'vitest';
-import JwtAuth from './jwtAuth';
+import JwtAuth from '@/helpers/auth/jwtAuth';
 
 describe('JwtAuth', () => {
   const secret = 'test-secret';

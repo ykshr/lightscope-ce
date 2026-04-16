@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import processReferrer from './referrer';
+import processReferrer from '@/helpers/referrer';
 
 describe('processReferrer', () => {
   it('should return "direct" for undefined referrer', () => {

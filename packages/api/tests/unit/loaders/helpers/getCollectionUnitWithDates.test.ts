@@ -5,7 +5,7 @@ import {
   getAggregationUnitWithInterval,
   getNextAvailableDate,
   getTableUnitWithDates,
-} from './getCollectionUnitWithDates';
+} from '@/loaders/helpers/getCollectionUnitWithDates';
 
 describe('getCollectionUnitWithDates', () => {
   describe('getAggregationUnitWithInterval', () => {

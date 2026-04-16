@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { serializeDates, useGraphql } from './useGraphql';
+import { serializeDates, useGraphql } from '@/hooks/useGraphql';
 
 describe('fetcher lib', () => {
   describe('serializeDates', () => {

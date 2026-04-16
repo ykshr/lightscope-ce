@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import processArticleFilter from './articleFilter';
+import processArticleFilter from '@/loaders/helpers/articleFilter';
 
 describe('processArticleFilter', () => {
   it('returns undefined if filter is empty', () => {

@@ -34,7 +34,6 @@ const resolvers: Resolvers = {
       };
       const loader = getRankLoader(c, loaderParams);
       const data = await loader.total();
-      console.log('RANK DATA:', data);
       if (!data || data.length === 0)
         return {
           total: 0,

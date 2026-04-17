@@ -1,4 +1,4 @@
-import { JWT_ALGORITHM, JWT_SECRET, PROXY_URL } from '@/src/helpers/env';
+import { JWT_ALGORITHM, JWT_SECRET, PROXY_URL } from '@/helpers/env';
 import fs from 'fs';
 import { sign } from 'hono/jwt';
 import path from 'path';

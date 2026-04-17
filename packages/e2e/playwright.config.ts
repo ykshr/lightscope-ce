@@ -3,7 +3,7 @@ import { WEB_URL } from './tests/helpers/env';
 
 export default defineConfig({
   testDir: 'tests',
-  globalSetup: 'setup/global-setup.ts',
+  globalSetup: 'tests/setup/global-setup.ts',
   use: {
     baseURL: WEB_URL,
     storageState: 'storage/auth.json',

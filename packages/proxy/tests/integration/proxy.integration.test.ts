@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { sign, AlgorithmTypes } from 'hono/jwt';
-import { createApp } from '../src/app';
-import createContext from '../src/createContext';
+import { createApp } from '@/app';
+import createContext from '@/createContext';
+import { AlgorithmTypes, sign } from 'hono/jwt';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret-for-dev-only-do-not-use-in-prod';
 const JWT_ALGORITHM = AlgorithmTypes.HS256;

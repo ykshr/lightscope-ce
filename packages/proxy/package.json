@@ -7,7 +7,7 @@
   "scripts": {
     "test": "vitest run tests/unit",
     "test:watch": "vitest",
-    "build": "tsc",
+    "build": "tsc -b",
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
     "start": "node dist/bundle.js",
     "dev": "tsx src/index.ts",

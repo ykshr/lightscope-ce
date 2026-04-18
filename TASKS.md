@@ -15,8 +15,9 @@ There are pages currently using hardcoded sample data that need to be connected 
 - **Task:** Replace `SAMPLE_ARTICLE` in `packages/web/src/pages/article/index.tsx` with actual data fetched from the API (likely via GraphQL).
 - **Task:** /article page should be moved from /ranking page - when user clicks each article on the ranking list it directs to the article page.
 
-## 3. Review Generated Files & TODOs
+## 3. Review Generated Files & TODOs => Done
 - **Task:** Review the `TODO` comments present in the auto-generated Prisma client files (`packages/api/src/__generated__/prisma/runtime/client.d.ts`). While these files should not be edited directly, verify that there are no underlying schema or configuration issues causing these warnings.
+  - *Note:* The TODO and FIXME comments found inside the auto-generated Prisma files are inherent to the generated Prisma Client and can be safely ignored during codebase audits. There are no underlying schema or configuration issues causing them.
 
 ## 4. Security & Performance Optimization
 - **Task:** Perform a final security audit. Ensure environment variables (`ALLOWED_ORIGINS`, `JWT_SECRET`, `DATABASE_URL`, etc.) are securely and correctly configured for production, with no reliance on hardcoded fallback values.

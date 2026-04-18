@@ -21,7 +21,7 @@ The API package (`packages/api`) uses TypeScript, Hono (`@hono/graphql-server`),
 - **Prisma (SQLite)**: ORM for managing users and application metadata.
 - **ClickHouse**: Column-oriented database management system for fast analytical queries.
 - **GraphQL Codegen**: Tool for generating code from GraphQL schemas.
-## Contributing
+## Contribution
 
 Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository.
 

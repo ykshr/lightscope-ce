@@ -19,7 +19,7 @@ The tracker package (`packages/tracker`) is performance-critical and size-sensit
 
 In network-restricted or dependency-missing environments, `bun test` can be used as a fallback test runner for the tracker. To satisfy imports like `ua-parser-js`, a local `node_modules` shim (containing a minimal `index.js` and `package.json`) can be created temporarily to bypass missing installation artifacts.
 
-## Contributing
+## Contribution
 
 Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository.
 

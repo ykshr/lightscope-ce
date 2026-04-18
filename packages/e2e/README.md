@@ -82,7 +82,7 @@ pnpm --filter @lightscope-ce/e2e run test:long-run -- 120
 
 - **ClickHouse not ready:** If tests fail immediately, wait a few seconds for ClickHouse to fully start.
 - **Script not found:** Ensure `packages/tracker/dist/browser.js` exists. If not, run `pnpm --filter @lightscope-ce/tracker run build:browser`.
-## Contributing
+## Contribution
 
 Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository.
 

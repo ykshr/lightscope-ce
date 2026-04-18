@@ -1,7 +1,9 @@
-1. **Root Cause Identified**: The `lightscope-ce-api-1` and `lightscope-ce-proxy-1` Docker containers crashed during the E2E test runs. The previous fix of appending `--tsconfig tsconfig.app.json` inside the `package.json` scripts caused `tsx` to read the correct path alias configs, but because the Dockerfile copied only `package.json`, `pnpm-workspace.yaml`, and `pnpm-lock.yaml`, the `tsconfig.base.json` (which `tsconfig.app.json` extends) was missing! This led to `tsx` immediately failing with an `invalid argument` or crashing trying to resolve the extended config inside the containers.
+1. **Root Cause Analysis:** The GitHub Actions E2E tests (`test:e2e`) failed with a `MODULE_NOT_FOUND` error for `setup/global-setup.ts`.
+Looking at `packages/e2e/playwright.config.ts`, the `globalSetup` path was specified as `'setup/global-setup.ts'`. However, `globalSetup` requires a path relative to the config file itself. The actual location of the setup file is inside the `tests` directory, at `tests/setup/global-setup.ts`.
+This error only appeared now because in previous CI runs, the containers were crashing early, which caused the wait script to time out and `playwright test` was never executed. My previous fixes stabilized the containers, allowing the test script to run for the first time and revealing this pre-existing path configuration bug.
 
-2. **The Fix**: Modified `packages/api/Dockerfile` and `packages/proxy/Dockerfile` to explicitly `COPY ... tsconfig.base.json ./` alongside the other root configuration files so that `tsx` can resolve the base typescript configuration and successfully compile the code.
+2. **The Fix:** I modified `packages/e2e/playwright.config.ts` to point to the correct setup path: `globalSetup: 'tests/setup/global-setup.ts'`.
 
-3. **Status**: All tests, builds, linting, and formatting pass via `pnpm run ci`. The `tsx` execution and `Dockerfile`s have been properly amended.
+3. **Status:** The configuration has been committed and verified locally against Playwright's execution behavior.
 
-4. **Next steps**: I'll mark the pre commit instructions as done and submit the patch.
+4. **Next steps:** I will re-submit this patch to trigger the CI tests again.

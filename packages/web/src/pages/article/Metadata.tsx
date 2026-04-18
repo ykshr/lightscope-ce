@@ -1,3 +1,4 @@
+import { type ArticleQuery } from '@/__generated__/graphql';
 import { Shapes, Languages, Tag, Globe, FileText, Users } from 'lucide-react';
 import {
   Accordion,
@@ -6,23 +7,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import PublishStatus from './PublishStatus';
-
-// --- Types (Strictly DB Schema) ---
-export interface Article {
-  url: string;
-  title: string;
-  type: string; // LowCardinality(String)
-  image: string;
-  description: string;
-  site_name: string; // LowCardinality(String)
-  locale: string; // LowCardinality(String)
-  published_time: string;
-  modified_time?: string;
-  expiration_time?: string | null;
-  authors: string[]; // Array(String) -> Role/Iconなし
-  section: string; // LowCardinality(String)
-  tags: string[]; // Array(String)
-}
 
 const MetaGridItem = ({
   icon: Icon,
@@ -50,7 +34,7 @@ const MetaGridItem = ({
   </div>
 );
 
-export default function Metadata({ article }: { article: Article }) {
+export default function Metadata({ article }: { article: NonNullable<ArticleQuery['article']> }) {
   const formatDate = (dateStr?: string | null) => {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleString();
@@ -63,7 +47,7 @@ export default function Metadata({ article }: { article: Article }) {
       <div className="flex flex-col lg:flex-row gap-8 w-full">
         {/* Thumbnail */}
         <div className="w-full lg:w-80">
-          <img src={article.image} alt="Thumbnail" />
+          <img src={article.image || ''} alt="Thumbnail" />
         </div>
 
         {/* Right Content */}
@@ -73,18 +57,18 @@ export default function Metadata({ article }: { article: Article }) {
 
           {/* Status Badge */}
           <PublishStatus
-            publishedTime={article.published_time ? new Date(article.published_time) : undefined}
-            expiredTime={article.expiration_time ? new Date(article.expiration_time) : undefined}
+            publishedTime={article.publishedTime ? new Date(article.publishedTime) : undefined}
+            expiredTime={article.expirationTime ? new Date(article.expirationTime) : undefined}
           />
 
           {/* Time Grid */}
           <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-9 gap-y-2 gap-x-6">
-            <MetaGridItem label="Published Time" value={formatDate(article.published_time)} />
-            {article.modified_time && (
-              <MetaGridItem label="Modified Time" value={formatDate(article.modified_time)} />
+            <MetaGridItem label="Published Time" value={formatDate(article.publishedTime)} />
+            {article.modifiedTime && (
+              <MetaGridItem label="Modified Time" value={formatDate(article.modifiedTime)} />
             )}
-            {article.expiration_time && (
-              <MetaGridItem label="Expiration Time" value={formatDate(article.expiration_time)} />
+            {article.expirationTime && (
+              <MetaGridItem label="Expiration Time" value={formatDate(article.expirationTime)} />
             )}
           </div>
         </div>
@@ -97,14 +81,14 @@ export default function Metadata({ article }: { article: Article }) {
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-y-2">
                 {/* Column 1: DB Meta Items (Site, Locale, Section, Type) */}
-                <MetaGridItem icon={Globe} label="Site Name" value={article.site_name} />
-                <MetaGridItem icon={Languages} label="Locale" value={article.locale} />
-                <MetaGridItem icon={Shapes} label="Section" value={article.section} />
-                <MetaGridItem icon={FileText} label="Type" value={article.type} />
+                <MetaGridItem icon={Globe} label="Site Name" value={article.siteName} />
+                <MetaGridItem icon={Languages} label="Locale" value={article.locale || ''} />
+                <MetaGridItem icon={Shapes} label="Section" value={article.section || ''} />
+                <MetaGridItem icon={FileText} label="Type" value={article.type || ''} />
               </div>
               {/* Column 2: Authors & Tags */}
               {/* Authors (Multiple, Simple Text) */}
-              <MetaGridItem icon={Users} label="Authors" value={article.authors} />
+              <MetaGridItem icon={Users} label="Authors" value={article.authors || []} />
               {/* Tags */}
               <MetaGridItem icon={Tag} label="Tags" value={article.tags} />
             </div>

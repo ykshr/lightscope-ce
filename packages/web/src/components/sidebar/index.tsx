@@ -1,4 +1,4 @@
-import { LayoutDashboard, List, Newspaper } from 'lucide-react';
+import { LayoutDashboard, List } from 'lucide-react';
 import * as React from 'react';
 
 import {
@@ -59,7 +59,6 @@ export default function AppSidebar() {
           <SidebarMenu>
             <SidebarItem href="/" icon={LayoutDashboard} name="Overview" />
             <SidebarItem href="/ranking" icon={List} name="Ranking" />
-            <SidebarItem href="/article" icon={Newspaper} name="Article" />
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

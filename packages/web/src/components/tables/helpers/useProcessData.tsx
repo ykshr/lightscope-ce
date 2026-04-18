@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ArticleRankQuery } from '@/__generated__/graphql';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
 import { useEffect, useState } from 'react';
@@ -63,6 +64,9 @@ export default function useProcessData(data: ArticleRankQuery | undefined, metri
         accessorKey: 'title',
         className: 'group-hover:text-primary transition-colors cursor-pointer truncate',
         gridSpan: 5,
+        render: ({ title, url }) => (
+          <Link to={`/article?url=${encodeURIComponent(url)}`}>{title}</Link>
+        ),
       },
       {
         header: 'Published Date',

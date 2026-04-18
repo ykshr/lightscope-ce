@@ -44,6 +44,7 @@ export const PARAM_CONFIG: Record<string, KeyConfig> = {
   excludeTags: { short: 'xtg', type: 'nestedArray', parent: 'articleFilter' },
 
   // --- Sorting and Pagination ---
+  url: { short: 'url', type: 'string' },
   category: { short: 'cat', type: 'string' },
   limit: { short: 'lm', type: 'number' },
   page: { short: 'pg', type: 'number' },

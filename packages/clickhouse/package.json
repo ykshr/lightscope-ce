@@ -10,8 +10,8 @@
   },
   "scripts": {
     "docker:build": "docker build -t @lightscope-ce/clickhouse:latest -t @lightscope-ce/clickhouse:$npm_package_version .",
-    "test": "vitest run tests/unit --passWithNoTests",
-    "test:integration": "WAIT_PORTS=8123 docker compose up -d clickhouse && node ../../utils/wait-for-services.js && vitest run tests/integration ; docker compose down -v"
+    "test": "vitest run src --passWithNoTests",
+    "test:integration": "WAIT_PORTS=8123 docker compose up -d clickhouse && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v"
   },
   "devDependencies": {
     "vitest": "^4.0.18",

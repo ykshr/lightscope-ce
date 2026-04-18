@@ -28,33 +28,38 @@ export default function Article() {
   const { url } = urlParams as Record<string, unknown>;
   const { data, isLoading } = useArticleQuery({ url: String(url) }, { enabled: !!url });
 
-  if (!url)
-    return <div className="p-8 text-center text-muted-foreground">No article URL provided.</div>;
-  if (isLoading) return <Loading />;
-  if (!data?.article)
-    return <div className="p-8 text-center text-muted-foreground">Article not found.</div>;
+  let content = null;
 
-  const article = data.article;
+  if (!url) {
+    content = <div className="p-8 text-center text-muted-foreground">No article URL provided.</div>;
+  } else if (isLoading) {
+    content = <Loading />;
+  } else if (!data?.article) {
+    content = <div className="p-8 text-center text-muted-foreground">Article not found.</div>;
+  } else {
+    const article = data.article;
+    content = (
+      <>
+        {/* Main Header Card */}
+        <Metadata article={article} />
 
-  return (
-    <Page header={header}>
-      {/* Main Header Card */}
-      <Metadata article={article} />
+        <Separator />
 
-      <Separator />
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <CardTotalViews />
+          <CardUniqueUsers />
+          <CardEngagementTime />
+          <CardLiveViews />
+          <PieReferrerDomain />
+          <PieUtmCampaign />
+          <MapCountry />
+        </div>
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <CardTotalViews />
-        <CardUniqueUsers />
-        <CardEngagementTime />
-        <CardLiveViews />
-        <PieReferrerDomain />
-        <PieUtmCampaign />
-        <MapCountry />
-      </div>
+        <AreaStacked showLegend showAnalyticsFilter />
+      </>
+    );
+  }
 
-      <AreaStacked showLegend showAnalyticsFilter />
-    </Page>
-  );
+  return <Page header={header}>{content}</Page>;
 }

@@ -1,5 +1,5 @@
-import { AnalyticsTracker } from '@/index';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { AnalyticsTracker } from '@/index';
 
 // Mock ua-parser-js at the module level.
 vi.mock('ua-parser-js', () => {

@@ -2,7 +2,7 @@
 
 Based on a review of the current project state, here is a list of remaining tasks required to prepare the application for a public release.
 
-## 1. Type Safety & Linting Improvements
+## 1. Type Safety & Linting Improvements => Done
 The codebase currently has numerous ESLint warnings (39 warnings in `packages/web`) mostly related to `@typescript-eslint/no-explicit-any` and `react-refresh/only-export-components`.
 - **Task:** Resolve all `any` types across the `packages/web` application. Use strict typing for GraphQL responses and internal component state.
   - *Target Files:* `packages/web/src/components/charts/helpers/useProcessData.tsx`, `packages/web/src/components/maps/MapCountry.tsx`, etc.

@@ -15,7 +15,7 @@
     "build": "npx prisma generate && tsc -b",
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
     "start": "node dist/bundle.js",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx --tsconfig tsconfig.app.json src/index.ts",
     "codegen": "graphql-codegen --config codegen.ts",
     "db:generate": "auth generate --config ./prisma/auth.ts --output ./prisma/schema/schema.prisma --yes && prisma generate",
     "db:migrate": "prisma migrate dev",

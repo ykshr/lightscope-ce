@@ -7,6 +7,6 @@
     "types": ["node", "vitest"],
     "noEmit": true
   },
-  "include": ["tests/**/*"],
+  "include": ["tests/**/*", "src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

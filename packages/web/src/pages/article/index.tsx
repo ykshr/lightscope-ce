@@ -1,11 +1,10 @@
 import { useArticleQuery } from '@/__generated__/graphql';
-import { useUrlParams } from '@/hooks/useUrl';
-import { Loading } from '@/components/common/Loading';
 import CardEngagementTime from '@/components/cards/EngagementTime';
 import CardLiveViews from '@/components/cards/LiveViews';
 import CardTotalViews from '@/components/cards/TotalViews';
 import CardUniqueUsers from '@/components/cards/UniqueUsers';
 import AreaStacked from '@/components/charts/ArticleAreaStacked';
+import { Loading } from '@/components/common/Loading';
 import ArticleFilter from '@/components/filters/ArticleFilter';
 import DateFilter from '@/components/filters/DateFilter';
 import MapCountry from '@/components/maps/MapCountry';
@@ -13,6 +12,7 @@ import Page from '@/components/page/Page';
 import PieReferrerDomain from '@/components/pies/PieReferrerDomain';
 import PieUtmCampaign from '@/components/pies/PieUtmCampaign';
 import { Separator } from '@/components/ui/separator';
+import { useUrlParams } from '@/hooks/useUrl';
 import Metadata from './Metadata';
 
 // --- Main Component ---

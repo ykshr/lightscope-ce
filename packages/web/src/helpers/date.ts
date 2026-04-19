@@ -105,7 +105,8 @@ export function convertDateString(date: Date | string): Date {
     const duration = dayjs.duration(date);
     const ms = duration.asMilliseconds();
     if (isNaN(ms)) throw new Error('Invalid duration format');
-    return new Date(Date.now() - ms);
+    const past = new Date(Date.now() - ms);
+    return getStartOfMinute(past, 0, 5);
   }
 
   // Convert regular ISO8601 or other date strings to Date object

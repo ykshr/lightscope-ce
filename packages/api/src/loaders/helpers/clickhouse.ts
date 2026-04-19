@@ -1,14 +1,10 @@
+import { renameKeySnakeToCamel } from '@/loaders/helpers/rename';
 import { ClickHouseClient } from '@clickhouse/client';
-
-interface Options {
-  dateFields?: string[];
-}
 
 export default async function <T>(
   client: ClickHouseClient,
   query: string,
-  query_params: any = undefined,
-  options: Options = {}
+  query_params: any = undefined
 ): Promise<T[]> {
   try {
     console.debug('loaders/helpers/clickhouse.ts', query, query_params);
@@ -17,21 +13,8 @@ export default async function <T>(
       query_params,
       format: 'JSONEachRow',
     });
-
-    // Cast to any[] to allow property mutation during formatting
-    const data = (await rows.json<T>()) as any[];
-
-    if (options.dateFields && data.length > 0) {
-      data.forEach((row) => {
-        options.dateFields!.forEach((dateField) => {
-          if (row[dateField] !== undefined) {
-            row[dateField] = formatFromDateTime(row[dateField]);
-          }
-        });
-      });
-    }
-
-    return data as T[];
+    const data = await rows.json<T>();
+    return data;
   } catch (error) {
     console.error('CLICKHOUSE ERROR:', error);
     throw error;
@@ -42,15 +25,16 @@ export default async function <T>(
  * Converts ClickHouse Date/DateTime strings to Node.js ISO 8601 format.
  * ClickHouse format: "2024-01-01 12:00:00" or "2024-01-01"
  */
-const formatFromDateTime = (dateVal: any): string | null => {
-  if (!dateVal) return null;
-
-  const d = new Date(dateVal);
-
-  // Return original value if the date is invalid
-  if (isNaN(d.getTime())) return dateVal;
-
-  return d.toISOString(); // e.g., "2024-01-01T12:00:00.000Z"
+export const formatData = <T>(data: T[], dateKeys: string[] = []): T[] => {
+  const formattedData = data.map((row) => renameKeySnakeToCamel(row));
+  dateKeys.forEach((dateKey) => {
+    formattedData.forEach((row) => {
+      if (row[dateKey] && typeof row[dateKey] === 'string') {
+        row[dateKey] = row[dateKey].replace(' ', 'T') + 'Z';
+      }
+    });
+  });
+  return formattedData;
 };
 
 /**

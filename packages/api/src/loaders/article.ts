@@ -1,6 +1,5 @@
 import { Article } from '@/__generated__/graphql/resolvers';
-import query from '@/loaders/helpers/clickhouse';
-import { renameKeySnakeToCamel } from '@/loaders/helpers/rename';
+import query, { formatData } from '@/loaders/helpers/clickhouse';
 import type { Context } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 import DataLoader from 'dataloader';
@@ -75,7 +74,8 @@ async function fetchArticleByUrls(
     `;
 
   const data = await query<Article>(client, sql, { organizationId, urls });
-  const renamedData = data.map((row) => renameKeySnakeToCamel(row));
+  const dateFields = ['publishedTime', 'modifiedTime', 'expirationTime'];
+  const formattedData = formatData(data, dateFields);
 
-  return renamedData;
+  return formattedData;
 }

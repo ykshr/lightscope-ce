@@ -5,7 +5,7 @@ import {
   Metric,
 } from '@/__generated__/graphql/resolvers';
 import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
-import query, { formatToDateTime } from '@/loaders/helpers/clickhouse';
+import query, { formatData, formatToDateTime } from '@/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
@@ -191,9 +191,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
     ${limitAndOffset}
   `;
 
-  const data = await query<any>(client, sql, queryParamsObj);
-  return data.map((row: any) => ({
-    ...row,
-    date: row.date.replace(' ', 'T') + 'Z',
-  })) as (T & { url: string })[];
+  const data = await query<T & { url: string }>(client, sql, queryParamsObj);
+  const formattedData = formatData(data, ['date']);
+  return formattedData;
 }

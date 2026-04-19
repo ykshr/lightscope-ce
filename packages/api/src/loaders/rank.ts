@@ -14,7 +14,7 @@ import {
 import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
 import processArticleFilter from '@/loaders/helpers/articleFilter';
 import processCategoryFilter from '@/loaders/helpers/categoryFilter';
-import query, { formatToDateTime } from '@/loaders/helpers/clickhouse';
+import query, { formatData, formatToDateTime } from '@/loaders/helpers/clickhouse';
 import { getTableUnitWithDates } from '@/loaders/helpers/getCollectionUnitWithDates';
 import type { Context } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
@@ -134,5 +134,6 @@ async function rank(client: ClickHouseClient, organizationId: string, loaderPara
   `;
 
   const data = await query<RankAnalytics>(client, sql, queryParamsObj);
-  return data;
+  const formattedData = formatData(data);
+  return formattedData;
 }

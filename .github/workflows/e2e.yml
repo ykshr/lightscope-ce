@@ -4,6 +4,13 @@ on:
   pull_request:
     branches: ['main']
     types: [opened, synchronize, reopened]
+    paths-ignore:
+      - '**/*.md'
+      - '**/.gitignore'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   e2e:

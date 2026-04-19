@@ -69,7 +69,9 @@ async function fetchArticleByUrls(
       FROM lightscope.article
       WHERE
         organization_id_hash = cityHash64({organizationId:String})
-        AND hasAny([url_hash], arrayMap(x -> cityHash64(x), {urls:Array(String)}))
+        AND url_hash IN (
+          SELECT arrayJoin(arrayMap(x -> cityHash64(x), {urls:Array(String)}))
+        )
     `;
 
   const data = await query<Article>(client, sql, { organizationId, urls });

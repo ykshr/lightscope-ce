@@ -15,35 +15,16 @@ There are pages currently using hardcoded sample data that need to be connected 
 - **Task:** Replace `SAMPLE_ARTICLE` in `packages/web/src/pages/article/index.tsx` with actual data fetched from the API (likely via GraphQL).
 - **Task:** /article page should be moved from /ranking page - when user clicks each article on the ranking list it directs to the article page.
 
-## 3. Review Generated Files & TODOs => Done
+## 3. Review Generated Files & TODOs
 - **Task:** Review the `TODO` comments present in the auto-generated Prisma client files (`packages/api/src/__generated__/prisma/runtime/client.d.ts`). While these files should not be edited directly, verify that there are no underlying schema or configuration issues causing these warnings.
-  - *Note:* The TODO and FIXME comments found inside the auto-generated Prisma files are inherent to the generated Prisma Client and can be safely ignored during codebase audits. There are no underlying schema or configuration issues causing them.
 
 ## 4. Security & Performance Optimization
 - **Task:** Perform a final security audit. Ensure environment variables (`ALLOWED_ORIGINS`, `JWT_SECRET`, `DATABASE_URL`, etc.) are securely and correctly configured for production, with no reliance on hardcoded fallback values.
 - **Task:** Optimize the frontend bundle size. The Vite build output currently warns about chunks larger than 500kB. Implement code-splitting using `dynamic import()` or configure `manualChunks` to improve initial load performance.
 
 ## 5. Increase Test Coverage
-- **Task:** Implement comprehensive tests across all projects based on the following definitions:
-  - **Unit Test:** Function-level testing. Does not require the package to be started.
-  - **Integration Test:** Package-level testing. Requires the single target package to be started. External packages and dependencies must be mocked using stubs or drivers.
-  - **E2E Test:** Fully integrated testing involving all packages. Requires all packages to be started. Must cover comprehensive user journeys and data flows.
-
-- **Task:** Apply the definitions to each project as follows:
-  - **`packages/api`**:
-    - **Unit Tests:** Test individual resolver functions, authentication helpers, and data processing utilities.
-    - **Integration Tests:** Start the API server and test GraphQL queries and mutations against an isolated (or stubbed) test database.
-  - **`packages/web`**:
-    - **Unit Tests:** Test UI components (rendering, state changes), custom hooks, and utility functions.
-    - **Integration Tests:** Start the Vite dev server and test component interactions using mocked API responses.
-  - **`packages/proxy`**:
-    - **Unit Tests:** Test request parsing, validation logic, and data transformation helpers.
-    - **Integration Tests:** Start the Hono proxy server and test event ingestion endpoints, stubbing the actual ClickHouse database connection.
-  - **`packages/tracker`**:
-    - **Unit Tests:** Test event tracking logic, configuration parsing, and browser API wrappers without a live backend.
-    - **Integration Tests:** Test the tracker script initialization and payload generation in an isolated environment (e.g., jsdom) with a mocked proxy endpoint.
-  - **`packages/e2e`**:
-    - **E2E Tests:** Use Playwright to simulate full user journeys (authentication, data ingestion via tracker, proxy processing, API serving, and web dashboard visualization). Requires all services (`web`, `api`, `proxy`, `mock-site`, and databases) to be up and running via Docker Compose.
+- **Task:** Increase code coverage. Although current tests pass in CI, add missing unit and integration tests, particularly for frontend components.
+- **Task:** Expand E2E test scenarios using Playwright. Ensure all critical user paths are covered, including authentication flows, data ingestion processes, and dashboard visualizations.
 
 ## 6. Documentation Updates
 - **Task:** Update `README.md` to include comprehensive instructions for production deployment, expanding beyond the current local Docker Compose setup.

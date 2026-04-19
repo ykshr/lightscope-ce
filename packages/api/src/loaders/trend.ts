@@ -13,7 +13,7 @@ import {
 import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
 import processArticleFilter from '@/loaders/helpers/articleFilter';
 import processCategoryFilter from '@/loaders/helpers/categoryFilter';
-import query, { formatToDateTime } from '@/loaders/helpers/clickhouse';
+import query, { formatData, formatToDateTime } from '@/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
@@ -146,9 +146,7 @@ async function Trend<T>(
     ${limitAndOffset}
   `;
 
-  const data = await query<any>(client, sql, queryParamsObj);
-  return data.map((row: any) => ({
-    ...row,
-    date: row.date.replace(' ', 'T') + 'Z',
-  })) as T[];
+  const data = await query<T>(client, sql, queryParamsObj);
+  const formattedData = formatData(data, ['date']);
+  return formattedData;
 }

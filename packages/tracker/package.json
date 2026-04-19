@@ -11,7 +11,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc -b && pnpm build:browser",
+    "build": "tsc && pnpm build:browser",
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
     "build:browser": "esbuild src/index.ts --bundle --platform=browser --target=es2020 --outfile=dist/browser.js --format=iife --global-name=Lightscope",
     "start": "node dist/index.js",

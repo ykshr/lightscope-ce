@@ -5,7 +5,7 @@ import {
   Metric,
 } from '@/__generated__/graphql/resolvers';
 import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
-import query, { formatToDateTime } from '@/loaders/helpers/clickhouse';
+import query, { formatData, formatToDateTime } from '@/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
@@ -34,11 +34,11 @@ export default function getLoader<T extends AnalyticsBase>(
   c: Context,
   loaderParams: LoaderParams
 ): DataLoader<string, T[] | null> {
-  if (!c.var.$.loaders.has('articleAnalyticsLoader')) {
-    c.var.$.loaders.set('articleAnalyticsLoader', new Map());
+  if (!c.var.loaders.has('articleAnalyticsLoader')) {
+    c.var.loaders.set('articleAnalyticsLoader', new Map());
   }
 
-  const loaders = c.var.$.loaders.get('articleAnalyticsLoader');
+  const loaders = c.var.loaders.get('articleAnalyticsLoader');
   const loaderKey = createLoaderKey(c, loaderParams);
   if (loaders.has(loaderKey)) {
     return loaders.get(loaderKey) as DataLoader<string, T[] | null>;
@@ -191,9 +191,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
     ${limitAndOffset}
   `;
 
-  const data = await query<any>(client, sql, queryParamsObj);
-  return data.map((row: any) => ({
-    ...row,
-    date: row.date.replace(' ', 'T') + 'Z',
-  })) as (T & { url: string })[];
+  const data = await query<T & { url: string }>(client, sql, queryParamsObj);
+  const formattedData = formatData(data, ['date']);
+  return formattedData;
 }

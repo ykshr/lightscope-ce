@@ -45,8 +45,6 @@ export default async function createContext(c: Context): Promise<$> {
     password: CLICKHOUSE_PASSWORD,
   });
 
-  const loaders = new Map();
-
   const { JWT_SECRET, JWT_ALGORITHM = AlgorithmTypes.HS256 } = env(c);
   if (!JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined in the environment.');
@@ -60,7 +58,6 @@ export default async function createContext(c: Context): Promise<$> {
   return {
     auth,
     clickhouse,
-    loaders,
     prisma,
     jwt,
   };

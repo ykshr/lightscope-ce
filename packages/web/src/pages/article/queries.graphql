@@ -1,0 +1,17 @@
+query Article($url: String!) {
+  article(url: $url) {
+    url
+    title
+    type
+    image
+    description
+    siteName
+    locale
+    publishedTime
+    modifiedTime
+    expirationTime
+    authors
+    section
+    tags
+  }
+}

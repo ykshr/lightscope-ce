@@ -1,12 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "paths": {
-      "@/*": ["./tests/*"]
-    },
-    "types": ["node", "vitest"],
-    "noEmit": true
+    "types": ["node", "vitest"]
   },
-  "include": ["tests/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["tests/**/*"]
 }

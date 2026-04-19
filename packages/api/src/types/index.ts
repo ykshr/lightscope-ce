@@ -25,7 +25,6 @@ export type Bindings = {
 export type $ = {
   auth: typeof Auth;
   clickhouse: ClickHouseClient;
-  loaders: Map<string, any>;
   prisma: PrismaClient;
   jwt: {
     secret: string;
@@ -33,7 +32,13 @@ export type $ = {
   };
 };
 
-export type Variables = { user: User; organization: Organization; me: Member; $: $ };
+export type Variables = {
+  user: User;
+  organization: Organization;
+  me: Member;
+  loaders: Map<string, any>;
+  $: $;
+};
 
 export type Env = {
   Bindings: Bindings;

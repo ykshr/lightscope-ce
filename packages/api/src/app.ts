@@ -13,6 +13,7 @@ import { Context, Hono } from 'hono';
 import { env } from 'hono/adapter';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import createLoadersMiddleware from './middlewares/loaders';
 
 export function createApp(createContext: (c: Context) => Promise<$>) {
   const app = new Hono<Env>();
@@ -37,7 +38,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.all('/api/auth/*', (c) => c.var.$.auth.handler(c.req.raw));
 
-  app.use('*', createUserMiddleware(), createOrganizationMiddleware());
+  app.use('*', createUserMiddleware(), createOrganizationMiddleware(), createLoadersMiddleware());
 
   app.route('/tracker', trackerRouter);
 

@@ -812,6 +812,13 @@ export type RankTemplateFragment = { __typename?: 'Rank', categoryAge?: Array<{ 
 
 export type RankAnalyticsFragment = { __typename?: 'RankAnalytics', index: number, url: string, value: number, article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, siteName: string, publishedTime?: any | null, section?: string | null, analytics?: { __typename?: 'ArticleAnalytics', analytics?: Array<{ __typename?: 'Analytics', value: number }> | null } | null } | null };
 
+export type ArticleQueryVariables = Exact<{
+  url: Scalars['String']['input'];
+}>;
+
+
+export type ArticleQuery = { __typename?: 'Query', article?: { __typename?: 'Article', url: string, title?: string | null, type?: string | null, image?: string | null, description?: string | null, siteName: string, locale?: string | null, publishedTime?: any | null, modifiedTime?: any | null, expirationTime?: any | null, authors: Array<string>, section?: string | null, tags: Array<string> } | null };
+
 
 export const TrendAnalyticsFragmentDoc = `
     fragment TrendAnalytics on TrendAnalyticsBase {
@@ -1281,6 +1288,42 @@ export const useArticleRankQuery = <
       {
     queryKey: ['ArticleRank', variables],
     queryFn: useGraphql<ArticleRankQuery, ArticleRankQueryVariables>(ArticleRankDocument).bind(null, variables),
+    ...options
+  }
+    )};
+
+export const ArticleDocument = `
+    query Article($url: String!) {
+  article(url: $url) {
+    url
+    title
+    type
+    image
+    description
+    siteName
+    locale
+    publishedTime
+    modifiedTime
+    expirationTime
+    authors
+    section
+    tags
+  }
+}
+    `;
+
+export const useArticleQuery = <
+      TData = ArticleQuery,
+      TError = unknown
+    >(
+      variables: ArticleQueryVariables,
+      options?: Omit<UseQueryOptions<ArticleQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<ArticleQuery, TError, TData>['queryKey'] }
+    ) => {
+
+    return useQuery<ArticleQuery, TError, TData>(
+      {
+    queryKey: ['Article', variables],
+    queryFn: useGraphql<ArticleQuery, ArticleQueryVariables>(ArticleDocument).bind(null, variables),
     ...options
   }
     )};

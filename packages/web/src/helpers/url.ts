@@ -44,6 +44,7 @@ export const PARAM_CONFIG: Record<string, KeyConfig> = {
   excludeTags: { short: 'xtg', type: 'nestedArray', parent: 'articleFilter' },
 
   // --- Sorting and Pagination ---
+  url: { short: 'url', type: 'string' },
   category: { short: 'cat', type: 'string' },
   limit: { short: 'lm', type: 'number' },
   page: { short: 'pg', type: 'number' },
@@ -150,7 +151,7 @@ export function encodeUrlParams(
       case 'number':
       case 'string':
       default:
-        urlParams.set(shortKey, value.toString());
+        urlParams.set(shortKey, encodeURIComponent(value.toString()));
         break;
     }
   });
@@ -185,6 +186,9 @@ export function decodeUrlParams(search: string): FilterToQuery {
         break;
       case 'number':
         convertedValue = Number(value);
+        break;
+      case 'string':
+        convertedValue = decodeURIComponent(value);
         break;
       default:
         convertedValue = value;

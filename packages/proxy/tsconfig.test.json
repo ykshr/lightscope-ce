@@ -4,9 +4,9 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["node", "vitest"],
-    "noEmit": true
+    "noEmit": true,
+    "types": ["node", "vitest"]
   },
-  "include": ["tests/**/*", "src/**/*"],
+  "include": ["src/**/*", "tests/**/*"],
   "exclude": ["node_modules", "dist"]
 }

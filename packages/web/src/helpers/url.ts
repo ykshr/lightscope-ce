@@ -151,7 +151,7 @@ export function encodeUrlParams(
       case 'number':
       case 'string':
       default:
-        urlParams.set(shortKey, value.toString());
+        urlParams.set(shortKey, encodeURIComponent(value.toString()));
         break;
     }
   });
@@ -186,6 +186,9 @@ export function decodeUrlParams(search: string): FilterToQuery {
         break;
       case 'number':
         convertedValue = Number(value);
+        break;
+      case 'string':
+        convertedValue = decodeURIComponent(value);
         break;
       default:
         convertedValue = value;

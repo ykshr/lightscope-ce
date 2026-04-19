@@ -34,11 +34,11 @@ export default function getLoader<T extends AnalyticsBase>(
   c: Context,
   loaderParams: LoaderParams
 ): DataLoader<string, T[] | null> {
-  if (!c.var.$.loaders.has('articleAnalyticsLoader')) {
-    c.var.$.loaders.set('articleAnalyticsLoader', new Map());
+  if (!c.var.loaders.has('articleAnalyticsLoader')) {
+    c.var.loaders.set('articleAnalyticsLoader', new Map());
   }
 
-  const loaders = c.var.$.loaders.get('articleAnalyticsLoader');
+  const loaders = c.var.loaders.get('articleAnalyticsLoader');
   const loaderKey = createLoaderKey(c, loaderParams);
   if (loaders.has(loaderKey)) {
     return loaders.get(loaderKey) as DataLoader<string, T[] | null>;

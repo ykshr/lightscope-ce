@@ -5,7 +5,6 @@ import CardTotalViews from '@/components/cards/TotalViews';
 import CardUniqueUsers from '@/components/cards/UniqueUsers';
 import AreaStacked from '@/components/charts/ArticleAreaStacked';
 import { Loading } from '@/components/common/Loading';
-import ArticleFilter from '@/components/filters/ArticleFilter';
 import DateFilter from '@/components/filters/DateFilter';
 import MapCountry from '@/components/maps/MapCountry';
 import Page from '@/components/page/Page';
@@ -17,16 +16,15 @@ import Metadata from './Metadata';
 
 // --- Main Component ---
 export default function Article() {
-  const header = (
-    <>
-      <DateFilter />
-      <ArticleFilter />
-    </>
-  );
-
   const [urlParams] = useUrlParams();
   const { url } = urlParams as Record<string, unknown>;
   const { data, isLoading } = useArticleQuery({ url: String(url) }, { enabled: !!url });
+
+  const header = (
+    <>
+      <DateFilter />
+    </>
+  );
 
   let content = null;
 

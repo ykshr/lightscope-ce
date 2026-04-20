@@ -9,11 +9,12 @@ export default function CardLiveViews({ lastMins = 5 }: { lastMins?: number }) {
   const endDate = getStartOfNextMinute(now);
 
   const [urlParams] = useUrlParams();
+  const { articleFilter } = urlParams;
 
   const { data, isLoading } = useTotalViewsQuery({
     startDate,
     endDate,
-    articleFilter: urlParams.articleFilter,
+    articleFilter,
   });
 
   const value = data?.trend?.total?.[0]?.value;

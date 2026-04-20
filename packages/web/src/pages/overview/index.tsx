@@ -3,13 +3,19 @@ import CardLiveViews from '@/components/cards/LiveViews';
 import CardTotalViews from '@/components/cards/TotalViews';
 import CardUniqueUsers from '@/components/cards/UniqueUsers';
 import AreaStacked from '@/components/charts/ArticleAreaStacked';
+import ArticleFilter from '@/components/filters/ArticleFilter';
 import DateFilter from '@/components/filters/DateFilter';
 import Page from '@/components/page/Page';
 import PieReferrerDomain from '@/components/pies/PieReferrerDomain';
 import ArticleTable from '@/components/tables/ArticleTable';
 
 export default function Overview() {
-  const header = <DateFilter />;
+  const header = (
+    <>
+      <DateFilter />
+      <ArticleFilter />
+    </>
+  );
 
   return (
     <Page header={header}>

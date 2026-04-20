@@ -2,6 +2,16 @@ import { ArticleTrendQuery } from '@/__generated__/graphql';
 import { AreaCategoryConfig, AreaChartDataItem } from '@/components/charts/templates/AreaStacked';
 import { useEffect, useState } from 'react';
 
+const dateToString = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
+
 export default function useProcessData(data: ArticleTrendQuery | undefined) {
   const [chartData, setChartData] = useState<AreaChartDataItem[]>([]);
   const [chartConfigs, setChartConfigs] = useState<AreaCategoryConfig[]>([]);
@@ -11,11 +21,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
     date: string | Date | number | any
   ) => {
     const dateString =
-      typeof date === 'string'
-        ? date
-        : date instanceof Date
-          ? date.toISOString().split('T')[0]
-          : String(date);
+      typeof date === 'string' ? date : date instanceof Date ? dateToString(date) : String(date);
     if (!map[dateString]) map[dateString] = { date };
     return dateString;
   };

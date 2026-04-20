@@ -11,7 +11,7 @@ services:
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
       - PORT=3001
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
-      - JWT_SECRET=${JWT_SECRET:-secret-for-dev-only-do-not-use-in-prod}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - '3001:3001'
     healthcheck:

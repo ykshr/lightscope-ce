@@ -75,20 +75,9 @@ export default function getLoader<T extends AnalyticsBase>(
 }
 
 function createLoaderKey(c: Context, params: LoaderParams): string {
-  return JSON.stringify({
-    organizationId: c.var.organization.id,
-    tableName: params.tableName,
-    queryParams: {
-      startDate: params.queryParams.startDate,
-      endDate: params.queryParams.endDate,
-      aggregation: params.queryParams.aggregation,
-      limit: params.queryParams.limit,
-      page: params.queryParams.page,
-      siteName: params.queryParams.siteName,
-      metric: params.queryParams.metric,
-    },
-    attributes: params.attributes,
-  });
+  const q = params.queryParams;
+  const attributes = params.attributes?.join(',') ?? '';
+  return `${c.var.organization.id}:${params.tableName}:${q.startDate}:${q.endDate}:${q.aggregation}:${q.limit}:${q.page}:${q.siteName}:${q.metric}:${attributes}`;
 }
 
 async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(

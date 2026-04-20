@@ -12,9 +12,12 @@ Entry: `src/index.ts`
 ---
 
 #### Coding Conventions
-- **Rules for indentation**: Use 2 spaces for indentation (Prettier standard).
-- **Naming conventions**: `camelCase` for variables/functions, `PascalCase` for types/interfaces/classes.
-- **Restrictions on libraries that should or should not be used**: Do not introduce heavy dependencies. Keep the proxy lightweight to maintain high performance.
+- Rules for indentation:
+  - Use 2 spaces for indentation (Prettier standard).
+- Naming conventions:
+  - `camelCase` for variables/functions, `PascalCase` for types/interfaces/classes.
+- Restrictions on libraries that should or should not be used:
+  - Do not introduce heavy dependencies. Keep the proxy lightweight to maintain high performance.
 - **Endpoint Responsibilities**: The primary role is to receive events from trackers quickly, validate them, and save them to ClickHouse. The Proxy package (`packages/proxy`) is a high-performance REST API built with Node.js and Hono, responsible for event ingestion from trackers and connected directly to ClickHouse.
 - **Input Validation**: Use Zod to strictly validate that the incoming payloads are in the correct format.
 - **Typing**: In `packages/proxy`, the `AlgorithmTypes` exported from `hono/jwt` must be used as a value (e.g., `AlgorithmTypes.HS256`) for strictly typed assignments and default parameters to avoid compilation errors like 'Type "HS256" is not assignable to type AlgorithmTypes'.
@@ -22,13 +25,13 @@ Entry: `src/index.ts`
 - **CORS Config**: In `docker-compose.yml`, the `ALLOWED_ORIGINS` environment variable for both `api` and `proxy` services must include `http://localhost:8080` and `http://127.0.0.1:8080` to support cross-origin requests from the `mock-site` used during E2E testing. In `packages/api` and `packages/proxy`, the `processAllowedOriginsString` helper (located in `src/helpers/allowedOrigins.ts`) is used to parse the `ALLOWED_ORIGINS` environment variable into an array for Hono's `cors` middleware.
 
 #### Build & Test Commands
-- **How to build the project**:
-  To build or test the proxy service, use the workspace commands:
+- How to build the project:
+  - To build or test the proxy service, use the workspace commands:
   ```bash
   pnpm --filter @lightscope-ce/proxy run build
   ```
-  To build or test the proxy service (`packages/proxy`), use the workspace commands `pnpm --filter @lightscope-ce/proxy run build` and `pnpm --filter @lightscope-ce/proxy run test` respectively.
-- **How to run tests (commands and steps)**:
+  - To build or test the proxy service (`packages/proxy`), use the workspace commands `pnpm --filter @lightscope-ce/proxy run build` and `pnpm --filter @lightscope-ce/proxy run test` respectively.
+- How to run tests (commands and steps):
   ```bash
   pnpm --filter @lightscope-ce/proxy run test
   ```
@@ -38,21 +41,21 @@ Entry: `src/index.ts`
   ```
 
 #### Project Structure
-- **Explanation of key directories**:
-- `src/index.ts`: The entry point for the Hono application.
-- `src/helpers/`: Utility functions for parsing tracker data and IP geolocation (e.g., MaxMind).
-- `src/routes/`: Route definitions for the REST API.
-- **Guidance on where to place different types of code**: Keep route definitions isolated in `src/routes/` and reusable logic in `src/helpers/`.
+- Explanation of key directories:
+  - `src/index.ts`: The entry point for the Hono application.
+  - `src/helpers/`: Utility functions for parsing tracker data and IP geolocation (e.g., MaxMind).
+  - `src/routes/`: Route definitions for the REST API.
+- Guidance on where to place different types of code:
+  - Keep route definitions isolated in `src/routes/` and reusable logic in `src/helpers/`.
   - Unit and integration tests go in `tests/unit/` and `tests/integration/` respectively.
 
 #### Restrictions
-- **Guardrails**:
-  - "Do not modify this directory": Do not arbitrarily change the project structure inside `src/`.
+- Guardrails:
+  - “Do not modify this directory”: Do not arbitrarily change the project structure inside `src/`.
 - **Security**:
   - The packages 'api' and 'proxy' utilize a 'redactError' helper (in 'src/helpers/error.ts') to sanitize logs by extracting only 'name', 'message', and 'stack' from Error objects, preventing sensitive metadata exposure.
   - The API and Proxy services follow a restrictive CORS policy where the `ALLOWED_ORIGIN` environment variable (supporting comma-separated strings) must be explicitly defined; if it is missing, the CORS middleware is skipped, defaulting to the browser's Same-Origin Policy. Do not change this behavior without authorization.
   - To prevent SQL injection, you must always use parameterized queries when inserting data into ClickHouse. In ClickHouse queries using `@clickhouse/client`, parameterized variables must use the syntax `{paramName:DataType}` (e.g., `{title:String}`, `{urls:Array(String)}`) inline with the query string, passing values in the `query_params` object.
 - **Performance**:
   - Do not introduce heavy synchronous processing that would block incoming requests from trackers.
-
-  - "Do not edit this file directly": Follow project conventions and do not edit generated files manually.
+  - “Do not edit this file directly”: Follow project conventions and do not edit generated files manually.

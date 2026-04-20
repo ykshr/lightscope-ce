@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-import { Label, Pie, PieChart } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartContainer,
@@ -7,8 +5,10 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
-import { LegendItem } from '../../common/Legend';
 import { Spinner } from '@/components/ui/spinner';
+import { useMemo } from 'react';
+import { Label, Pie, PieChart } from 'recharts';
+import { LegendItem } from '../../common/Legend';
 
 const DEFAULT_COLORS = [
   'var(--chart-1)',
@@ -56,7 +56,7 @@ export default function PieDonutText({
 
       return {
         ...item,
-        fill: `var(--color-${item.id})`,
+        fill: `var(--chart-${item.id})`,
       };
     });
 

@@ -26,4 +26,19 @@ describe('formatToDateTime', () => {
     const date = new Date('2023-05-05T05:05:05.000Z');
     expect(formatToDateTime(date)).toBe('2023-05-05 05:05:05');
   });
+
+  it('should handle dates with zero milliseconds', () => {
+    const date = new Date('2023-01-01T12:34:56.000Z');
+    expect(formatToDateTime(date)).toBe('2023-01-01 12:34:56');
+  });
+
+  it('should handle dates with one millisecond', () => {
+    const date = new Date('2023-01-01T12:34:56.001Z');
+    expect(formatToDateTime(date)).toBe('2023-01-01 12:34:56');
+  });
+
+  it('should throw RangeError for invalid dates', () => {
+    const date = new Date('invalid');
+    expect(() => formatToDateTime(date)).toThrow(RangeError);
+  });
 });

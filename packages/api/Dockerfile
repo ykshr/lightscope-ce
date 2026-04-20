@@ -8,11 +8,14 @@ RUN corepack enable pnpm
 # Copy root package.json and lockfile, as well as workspace config
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
 
-# Copy package packages/api
-COPY packages/api ./packages/api
+# Copy package.json for caching
+COPY packages/api/package.json ./packages/api/
 
 # Install dependencies
 RUN pnpm install --filter @lightscope-ce/api...
+
+# Copy package source
+COPY packages/api ./packages/api
 
 # Start dev server
 WORKDIR /app/packages/api

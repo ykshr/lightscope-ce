@@ -1,6 +1,7 @@
 import { type Payload } from '@/types';
-import { describe, expect, it } from 'vitest';
-import { createArticle, createPV } from '@/routers/events/index';
+import { describe, expect, it, vi } from 'vitest';
+import eventsRouter, { createArticle, createPV } from '@/routers/events/index';
+import { Hono } from 'hono';
 
 // Mock Payload data
 const mockPayload: Payload = {
@@ -40,6 +41,93 @@ const mockPayload: Payload = {
   engagement_time: 100,
 };
 
+describe('eventsRouter', () => {
+  it('should process a valid payload and return 201', async () => {
+    const app = new Hono();
+    // Setup mock context environment expected by the router
+    app.use('*', async (c, next) => {
+      c.set('$' as any, {
+        egress: {
+          insertArticle: vi.fn().mockResolvedValue(undefined),
+          insertPV: vi.fn().mockResolvedValue(undefined),
+        },
+        geo: {
+          getGeoData: vi.fn().mockResolvedValue({
+            continent: 'NA',
+            country: 'US',
+          }),
+        },
+      });
+      c.set('tracker' as any, { organizationId: 'org_123' });
+      await next();
+    });
+    app.route('/', eventsRouter);
+
+    const res = await app.request('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mockPayload),
+    });
+
+    expect(res.status).toBe(201);
+    expect(await res.json()).toEqual({ ok: true });
+  });
+
+  it('should return 400 for invalid payload format', async () => {
+    const app = new Hono();
+    app.route('/', eventsRouter);
+
+    const res = await app.request('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ invalid: 'payload' }),
+    });
+
+    expect(res.status).toBe(400);
+    const data = (await res.json()) as any;
+    expect(data.error).toBe('Invalid payload');
+  });
+
+  it('should return 400 for SyntaxError in JSON body', async () => {
+    const app = new Hono();
+    app.route('/', eventsRouter);
+
+    const res = await app.request('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: 'invalid-json{',
+    });
+
+    expect(res.status).toBe(400);
+    const data = (await res.json()) as any;
+    expect(data.error).toBe('Bad request: Invalid JSON');
+  });
+
+  it('should throw other errors', async () => {
+    const app = new Hono();
+    app.use('*', async (c, next) => {
+      c.set('$' as any, {
+        egress: {
+          insertArticle: vi.fn().mockRejectedValue(new Error('DB Error')),
+        },
+      });
+      c.set('tracker' as any, { organizationId: 'org_123' });
+      await next();
+    });
+    app.route('/', eventsRouter);
+
+    // Hono apps catch errors silently if no explicit error handler, returning 500
+    // but the test environment setup might differ. We check the status to verify it fell through the handler
+    const res = await app.request('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mockPayload),
+    });
+
+    expect(res.status).toBe(500);
+  });
+});
+
 describe('processEvent', () => {
   describe('createArticle', () => {
     it('should create an article object from payload', () => {
@@ -66,8 +154,6 @@ describe('processEvent', () => {
     it('should use payload.url if og:url is missing', () => {
       const payload = { ...mockPayload };
       delete payload['og:url'];
-      // Note: mockPayload.url has query params, createPV strips them in PV but createArticle takes exact string
-      // The implementation uses: const url = payload['og:url'] || payload.url;
       const article = createArticle('default', payload);
       expect(article.url).toBe('https://example.com/article?utm_source=google&utm_medium=cpc');
     });
@@ -115,18 +201,6 @@ describe('processEvent', () => {
     });
 
     it('should extract query params from url', () => {
-      // payload.url has query params, but createPV prefers og:url if present.
-      // If we want to test extraction from the *active* url, we rely on the implementation logic.
-      // The implementation takes `url` (og:url || url) and parses it.
-      // mockPayload['og:url'] does NOT have params.
-      // mockPayload.url DOES have params.
-
-      // Case 1: og:url present (no params in this mock), but payload.url has params.
-      // The implementation uses `const url = payload['og:url'] || payload.url;`
-      // Then `new URL(url).searchParams`.
-      // So if og:url is used, and it has no params, query_params will be empty.
-
-      // Let's modify payload to have params in og:url for this test case
       const payloadWithParamsInOg = {
         ...mockPayload,
         'og:url': 'https://example.com/article?foo=bar&utm_source=test',
@@ -143,7 +217,6 @@ describe('processEvent', () => {
         'og:url': 'invalid-url',
         url: 'invalid-url',
       };
-      // Implementation wraps URL parsing in try/catch
       const pv = createPV('default', payload, null);
       expect(pv.query_params).toEqual({});
     });

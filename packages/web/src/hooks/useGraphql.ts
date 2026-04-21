@@ -1,4 +1,4 @@
-import { fetchPost } from '@/helpers/fetch';
+import customFetch from '@/helpers/fetch';
 
 export const useGraphql = <TData, TVariables>(
   query: string,
@@ -12,7 +12,8 @@ export const useGraphql = <TData, TVariables>(
       variables: serializedVariables,
     };
 
-    const { errors, data } = await fetchPost('/gql', body, headers);
+    const { body: responseBody } = await customFetch('POST', '/gql', { body, headers });
+    const { errors, data } = responseBody;
 
     if (errors) {
       const { message } = errors[0] || {};

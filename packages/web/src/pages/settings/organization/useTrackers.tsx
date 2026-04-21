@@ -1,4 +1,4 @@
-import { fetchGet } from '@/helpers/fetch';
+import customFetch from '@/helpers/fetch';
 import { useEffect, useState } from 'react';
 
 type Tracker = {
@@ -28,7 +28,7 @@ export default function useTrackers(organizationId: string) {
       }
       setIsPending(true);
       try {
-        const { trackers } = await fetchGet('/tracker');
+        const { body: trackers } = await customFetch('GET', '/tracker');
         const formattedTrackers = trackers.map((tracker: Record<string, string>) => ({
           ...tracker,
           notBefore: new Date(tracker.notBefore),

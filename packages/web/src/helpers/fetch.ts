@@ -1,98 +1,37 @@
 import { API_URL } from '@/helpers/env';
 
-export async function fetchGet(
+export default async function customFetch(
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   url: string,
-  headers: RequestInit['headers'] = {},
-  expectJson: boolean = true
+  options: {
+    body?: unknown;
+    headers?: RequestInit['headers'];
+    expectJson?: boolean;
+  } = {}
 ) {
   const urlToUse = new URL(url, API_URL);
-  const res = await fetch(urlToUse, {
-    method: 'GET',
+  const { body, headers, expectJson = true } = options;
+  const requestOptions: RequestInit = {
+    method,
     credentials: 'include',
     headers: {
       'Content-Type': expectJson ? 'application/json' : 'text/plain',
       ...headers,
     },
-  });
+    body: body ? JSON.stringify(body) : undefined,
+  };
+
+  const res = await fetch(urlToUse, requestOptions);
 
   const text = await res.text();
 
   if (!res.ok) {
-    if (res.status === 401) {
-      throw new Error('Not authenticated');
-    }
     throw new Error(JSON.stringify({ status: res.status, body: text }));
   }
 
-  if (!expectJson) return text;
+  if (!expectJson) return { status: res.status, body: text };
 
-  const json = JSON.parse(text);
+  if (!text) return { status: res.status };
 
-  return json;
-}
-
-export async function fetchPost(
-  url: string,
-  body: unknown,
-  headers: RequestInit['headers'] = {},
-  expectJson: boolean = true
-) {
-  const urlToUse = new URL(url, API_URL);
-  const res = await fetch(urlToUse, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': expectJson ? 'application/json' : 'text/plain',
-      ...headers,
-    },
-    body: JSON.stringify(body),
-  });
-
-  const text = await res.text();
-
-  if (!res.ok) {
-    if (res.status === 401) {
-      throw new Error('Not authenticated');
-    }
-    throw new Error(JSON.stringify({ status: res.status, body: text }));
-  }
-
-  if (!expectJson) return text;
-
-  const json = JSON.parse(text);
-
-  return json;
-}
-
-export async function fetchDelete(
-  url: string,
-  headers: RequestInit['headers'] = {},
-  expectJson: boolean = true
-) {
-  const urlToUse = new URL(url, API_URL);
-  const res = await fetch(urlToUse, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: {
-      'Content-Type': expectJson ? 'application/json' : 'text/plain',
-      ...headers,
-    },
-  });
-
-  const text = await res.text();
-
-  if (!res.ok) {
-    if (res.status === 401) {
-      throw new Error('Not authenticated');
-    }
-    throw new Error(JSON.stringify({ status: res.status, body: text }));
-  }
-
-  if (!expectJson) return text;
-
-  if (!text) return {};
-
-  const json = JSON.parse(text);
-
-  return json;
+  return { status: res.status, body: JSON.parse(text) };
 }

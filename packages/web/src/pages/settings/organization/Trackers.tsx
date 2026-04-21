@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { fetchDelete, fetchPost } from '@/helpers/fetch';
+import customFetch from '@/helpers/fetch';
 import useTrackers from '@/pages/settings/organization/useTrackers';
 import { Check, Copy, X } from 'lucide-react';
 import { useState } from 'react';
@@ -37,7 +37,7 @@ export default function Trackers({ org, me }: Props) {
       setIsLoading(true);
       setError('');
       try {
-        await fetchDelete(`/tracker/${tokenId}`);
+        await customFetch('DELETE', `/tracker/${tokenId}`);
         reFetchTrackers();
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : String(err) || 'An error occurred');
@@ -139,11 +139,11 @@ function NewTokenDialog({
     setIsLoading(true);
     setError('');
     try {
-      const payload: Record<string, string> = { origin };
+      const body: Record<string, string> = { origin };
       if (expiresAt) {
-        payload.expiresAt = new Date(expiresAt).toISOString();
+        body.expiresAt = new Date(expiresAt).toISOString();
       }
-      await fetchPost('/tracker/generate', payload);
+      await customFetch('POST', '/tracker/generate', { body });
       setIsLoading(false);
       setOrigin('');
       setExpiresAt('');

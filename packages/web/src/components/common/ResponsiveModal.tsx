@@ -16,7 +16,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-import { useIsDesktop } from '@/hooks/useMediaQuery';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
 interface ResponsiveModalProps {
@@ -44,46 +44,46 @@ export default function ResponsiveModal({
   onOpenChange,
   footer,
 }: ResponsiveModalProps) {
-  const isDesktop = useIsDesktop();
+  const isMobile = useIsMobile();
 
-  if (isDesktop) {
+  if (isMobile) {
     return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-        <DialogContent
-          className={cn(
-            'sm:max-w-[max-content] md:max-w-[70vw] max-h-[90dvh] flex flex-col',
-            dialogClassName
-          )}
-        >
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
+        <DrawerContent className={cn('max-h-[90dvh] flex flex-col', drawerClassName)}>
           {(title || description || header) && (
-            <DialogHeader>
-              {title && <DialogTitle>{title}</DialogTitle>}
-              {description && <DialogDescription>{description}</DialogDescription>}
+            <DrawerHeader className="text-left">
+              {title && <DrawerTitle>{title}</DrawerTitle>}
+              {description && <DrawerDescription>{description}</DrawerDescription>}
               {header}
-            </DialogHeader>
+            </DrawerHeader>
           )}
-          <div className="overflow-y-auto flex-1 min-h-0">{children}</div>
-          {footer && <DialogFooter>{footer}</DialogFooter>}
-        </DialogContent>
-      </Dialog>
+          <div className="px-4 pb-4 overflow-y-auto flex-1 min-h-0">{children}</div>
+          {footer && <DrawerFooter>{footer}</DrawerFooter>}
+        </DrawerContent>
+      </Drawer>
     );
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-      <DrawerContent className={cn('max-h-[90dvh] flex flex-col', drawerClassName)}>
-        {(title || description || header) && (
-          <DrawerHeader className="text-left">
-            {title && <DrawerTitle>{title}</DrawerTitle>}
-            {description && <DrawerDescription>{description}</DrawerDescription>}
-            {header}
-          </DrawerHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+      <DialogContent
+        className={cn(
+          'sm:max-w-[max-content] md:max-w-[70vw] max-h-[90dvh] flex flex-col',
+          dialogClassName
         )}
-        <div className="px-4 pb-4 overflow-y-auto flex-1 min-h-0">{children}</div>
-        {footer && <DrawerFooter>{footer}</DrawerFooter>}
-      </DrawerContent>
-    </Drawer>
+      >
+        {(title || description || header) && (
+          <DialogHeader>
+            {title && <DialogTitle>{title}</DialogTitle>}
+            {description && <DialogDescription>{description}</DialogDescription>}
+            {header}
+          </DialogHeader>
+        )}
+        <div className="overflow-y-auto flex-1 min-h-0">{children}</div>
+        {footer && <DialogFooter>{footer}</DialogFooter>}
+      </DialogContent>
+    </Dialog>
   );
 }

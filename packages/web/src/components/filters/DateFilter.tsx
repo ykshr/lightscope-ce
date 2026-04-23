@@ -1,15 +1,16 @@
-import {
-  RELATIVE_OPTIONS_QUICK_ACCESS,
-  RELATIVE_OPTIONS,
-  DEFAULT_DATE_STRING,
-} from '@/helpers/constants/date';
 import ResponsiveModal from '@/components/common/ResponsiveModal';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
+import {
+  DEFAULT_DATE_STRING,
+  RELATIVE_OPTIONS,
+  RELATIVE_OPTIONS_QUICK_ACCESS,
+} from '@/helpers/constants/date';
 import { convertDateString, formatDate, timezoneOffset as tOffset } from '@/helpers/date';
-import useMediaQuery, { useIsDesktop } from '@/hooks/useMediaQuery';
+import { useIsMobile } from '@/hooks/use-mobile';
+import useMediaQuery from '@/hooks/useMediaQuery';
 import { useUrlParams } from '@/hooks/useUrl';
 import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -90,7 +91,7 @@ function CustomDateRangeDialog({
   isActive: boolean;
   onApply: (s: Date | string, e: Date | string) => void;
 }) {
-  const isDesktop = useIsDesktop();
+  const isDesktop = !useIsMobile();
   const isScreen600 = useMediaQuery('(min-width: 600px)');
   const isScreen1024 = useMediaQuery('(min-width: 1024px)');
   const [open, setOpen] = useState(false);

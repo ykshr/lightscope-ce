@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
 import { ArticleRankQuery } from '@/__generated__/graphql';
-import { useIsDesktop } from '@/hooks/useMediaQuery';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { type Column } from '../templates/types';
 
 type ArticleData = {
@@ -19,7 +19,7 @@ type ArticleData = {
 export default function useProcessData(data: ArticleRankQuery | undefined, metric: string) {
   const [articles, setArticles] = useState<ArticleData[] | undefined>(undefined);
   const [columns, setColumns] = useState<Column<ArticleData>[]>([]);
-  const isDesktop = useIsDesktop();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const mappedArticles: ArticleData[] | undefined = data?.rank?.articles?.map(
@@ -101,10 +101,10 @@ export default function useProcessData(data: ArticleRankQuery | undefined, metri
       },
     ];
 
-    const filteredArticleColumns = articleColumns.filter((col) => !(col.hideMobile && !isDesktop));
+    const filteredArticleColumns = articleColumns.filter((col) => !(col.hideMobile && isMobile));
     setArticles(mappedArticles);
     setColumns(filteredArticleColumns);
-  }, [data, metric, isDesktop]);
+  }, [data, metric, isMobile]);
 
   return { articles, columns };
 }

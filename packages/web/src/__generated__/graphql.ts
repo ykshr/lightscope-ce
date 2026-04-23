@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { useGraphql } from '@/hooks/useGraphql';
+import { queryFetch } from '@/helpers/fetch';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1015,7 +1015,7 @@ export const useTotalEngagementTimeQuery = <
     return useQuery<TotalEngagementTimeQuery, TError, TData>(
       {
     queryKey: ['TotalEngagementTime', variables],
-    queryFn: useGraphql<TotalEngagementTimeQuery, TotalEngagementTimeQueryVariables>(TotalEngagementTimeDocument).bind(null, variables),
+    queryFn: queryFetch<TotalEngagementTimeQuery, TotalEngagementTimeQueryVariables>(TotalEngagementTimeDocument).bind(null, variables),
     ...options
   }
     )};
@@ -1047,7 +1047,7 @@ export const useTotalViewsQuery = <
     return useQuery<TotalViewsQuery, TError, TData>(
       {
     queryKey: ['TotalViews', variables],
-    queryFn: useGraphql<TotalViewsQuery, TotalViewsQueryVariables>(TotalViewsDocument).bind(null, variables),
+    queryFn: queryFetch<TotalViewsQuery, TotalViewsQueryVariables>(TotalViewsDocument).bind(null, variables),
     ...options
   }
     )};
@@ -1079,7 +1079,7 @@ export const useTotalUniqueUsersQuery = <
     return useQuery<TotalUniqueUsersQuery, TError, TData>(
       {
     queryKey: ['TotalUniqueUsers', variables],
-    queryFn: useGraphql<TotalUniqueUsersQuery, TotalUniqueUsersQueryVariables>(TotalUniqueUsersDocument).bind(null, variables),
+    queryFn: queryFetch<TotalUniqueUsersQuery, TotalUniqueUsersQueryVariables>(TotalUniqueUsersDocument).bind(null, variables),
     ...options
   }
     )};
@@ -1122,7 +1122,7 @@ export const useArticleTrendQuery = <
     return useQuery<ArticleTrendQuery, TError, TData>(
       {
     queryKey: ['ArticleTrend', variables],
-    queryFn: useGraphql<ArticleTrendQuery, ArticleTrendQueryVariables>(ArticleTrendDocument).bind(null, variables),
+    queryFn: queryFetch<ArticleTrendQuery, ArticleTrendQueryVariables>(ArticleTrendDocument).bind(null, variables),
     ...options
   }
     )};
@@ -1155,7 +1155,7 @@ export const useTotalCountryQuery = <
     return useQuery<TotalCountryQuery, TError, TData>(
       {
     queryKey: ['TotalCountry', variables],
-    queryFn: useGraphql<TotalCountryQuery, TotalCountryQueryVariables>(TotalCountryDocument).bind(null, variables),
+    queryFn: queryFetch<TotalCountryQuery, TotalCountryQueryVariables>(TotalCountryDocument).bind(null, variables),
     ...options
   }
     )};
@@ -1188,7 +1188,7 @@ export const useTotalCityQuery = <
     return useQuery<TotalCityQuery, TError, TData>(
       {
     queryKey: ['TotalCity', variables],
-    queryFn: useGraphql<TotalCityQuery, TotalCityQueryVariables>(TotalCityDocument).bind(null, variables),
+    queryFn: queryFetch<TotalCityQuery, TotalCityQueryVariables>(TotalCityDocument).bind(null, variables),
     ...options
   }
     )};
@@ -1221,7 +1221,7 @@ export const useTotalReferrerDomainQuery = <
     return useQuery<TotalReferrerDomainQuery, TError, TData>(
       {
     queryKey: ['TotalReferrerDomain', variables],
-    queryFn: useGraphql<TotalReferrerDomainQuery, TotalReferrerDomainQueryVariables>(TotalReferrerDomainDocument).bind(null, variables),
+    queryFn: queryFetch<TotalReferrerDomainQuery, TotalReferrerDomainQueryVariables>(TotalReferrerDomainDocument).bind(null, variables),
     ...options
   }
     )};
@@ -1254,7 +1254,7 @@ export const useTotalUtmCampaignQuery = <
     return useQuery<TotalUtmCampaignQuery, TError, TData>(
       {
     queryKey: ['TotalUtmCampaign', variables],
-    queryFn: useGraphql<TotalUtmCampaignQuery, TotalUtmCampaignQueryVariables>(TotalUtmCampaignDocument).bind(null, variables),
+    queryFn: queryFetch<TotalUtmCampaignQuery, TotalUtmCampaignQueryVariables>(TotalUtmCampaignDocument).bind(null, variables),
     ...options
   }
     )};
@@ -1287,7 +1287,7 @@ export const useArticleRankQuery = <
     return useQuery<ArticleRankQuery, TError, TData>(
       {
     queryKey: ['ArticleRank', variables],
-    queryFn: useGraphql<ArticleRankQuery, ArticleRankQueryVariables>(ArticleRankDocument).bind(null, variables),
+    queryFn: queryFetch<ArticleRankQuery, ArticleRankQueryVariables>(ArticleRankDocument).bind(null, variables),
     ...options
   }
     )};
@@ -1319,11 +1319,11 @@ export const useArticleQuery = <
       variables: ArticleQueryVariables,
       options?: Omit<UseQueryOptions<ArticleQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<ArticleQuery, TError, TData>['queryKey'] }
     ) => {
-
+    
     return useQuery<ArticleQuery, TError, TData>(
       {
     queryKey: ['Article', variables],
-    queryFn: useGraphql<ArticleQuery, ArticleQueryVariables>(ArticleDocument).bind(null, variables),
+    queryFn: queryFetch<ArticleQuery, ArticleQueryVariables>(ArticleDocument).bind(null, variables),
     ...options
   }
     )};

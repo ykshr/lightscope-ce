@@ -47,7 +47,7 @@ This project uses **pnpm workspaces** to manage the following packages:
    cp .env.example .env
    ```
    Review and update the `.env` file with your settings if necessary.
-   *Note:* CORS origins for the `api` and `proxy` packages are restricted via the `ALLOWED_ORIGINS` environment variable (defaults to `[]`).
+   *Note:* CORS origins for the `api` and `proxy` packages are restricted via the `ALLOWED_ORIGINS` environment variable (defaults to `[]`). In `docker-compose.yml`, the `ALLOWED_ORIGINS` environment variable for both `api` and `proxy` services must include `http://localhost:8080` and `http://127.0.0.1:8080` to support cross-origin requests from the mock-site used during E2E testing.
 
 | Variable | Description | Default |
 | :--- | :--- | :--- |
@@ -86,8 +86,9 @@ You can run the following commands from the repository root:
 
 ## Test Directory Structure
 
-- `tests/unit/`: Contains unit tests.
-- `tests/integration/`: Contains integration tests.
+- `tests/unit/`: Contains unit tests. Unit tests are function-level without package startup.
+- `tests/integration/`: Contains integration tests. Integration tests are package-level, requiring only the target package to be started with external dependencies mocked/stubbed.
+- `packages/e2e/`: End-to-end tests using Playwright. E2E tests are fully integrated tests requiring all packages to be started to cover comprehensive user journeys and data flows.
 
 ## Architecture Overview
 

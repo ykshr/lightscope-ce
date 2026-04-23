@@ -11,7 +11,7 @@ const config: CodegenConfig = {
         enumsAsConst: true,
         reactQueryVersion: 5,
         fetcher: {
-          func: '@/helpers/fetch#queryFetch',
+          func: '@/hooks/useGraphql#useGraphql',
           isReactHook: true,
         },
       },

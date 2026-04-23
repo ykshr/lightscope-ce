@@ -1,4 +1,4 @@
-import { queryFetch, serializeDates } from '@/helpers/fetch';
+import { serializeDates, useGraphql } from '@/hooks/useGraphql';
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -44,7 +44,7 @@ describe('fetcher lib', () => {
     });
   });
 
-  describe('queryFetch error handling', () => {
+  describe('useGraphql error handling', () => {
     beforeEach(() => {
       vi.clearAllMocks();
 
@@ -63,7 +63,7 @@ describe('fetcher lib', () => {
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as unknown as Response);
 
-      const { result } = renderHook(() => queryFetch('query { test }'));
+      const { result } = renderHook(() => useGraphql('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Specific GraphQL Error');
     });
@@ -80,7 +80,7 @@ describe('fetcher lib', () => {
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as unknown as Response);
 
-      const { result } = renderHook(() => queryFetch('query { test }'));
+      const { result } = renderHook(() => useGraphql('query { test }'));
 
       await expect(result.current()).rejects.toThrow(
         JSON.stringify({ status: 500, body: '{"errors":[]}' })
@@ -98,7 +98,7 @@ describe('fetcher lib', () => {
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as unknown as Response);
 
-      const { result } = renderHook(() => queryFetch('query { test }'));
+      const { result } = renderHook(() => useGraphql('query { test }'));
 
       await expect(result.current()).rejects.toThrow('Custom server error message');
     });
@@ -111,7 +111,7 @@ describe('fetcher lib', () => {
       };
       vi.mocked(globalThis.fetch).mockResolvedValue(mockFetchResponse as unknown as Response);
 
-      const { result } = renderHook(() => queryFetch('query { test }'));
+      const { result } = renderHook(() => useGraphql('query { test }'));
 
       await expect(result.current()).rejects.toThrow(JSON.stringify({ status: 500, body: '{}' }));
     });

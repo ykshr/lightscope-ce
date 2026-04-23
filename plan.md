@@ -1,8 +1,13 @@
-1. **Root Cause Identified:** The GitHub Action failed to build because the commit containing the fixes (`@/app` aliases in `proxy.integration.test.ts` and `"noEmit": true`) was NEVER pushed to the active pull request branch.
-When I manually renamed my local working branch to `jules-feature-article-dynamic-data`, the `submit` tool failed to map it to the active remote branch (`feature/dynamic-article-integration-16540754327033378747`) correctly, meaning the PR tested an outdated commit that still contained the invalid `../src/app` path causing `tsc -b` to throw `TS2307`.
+1. **Insert Memory Details into Global AGENTS.md**: Use `replace_with_git_merge_diff` to explicitly inject the `JWT_SECRET` rule in GitHub Actions workflow files and test definition rules under the appropriate headings in `AGENTS.md`. Note: The system prompt says "replace_with_git_merge_diff: Use this to perform a targeted search-and-replace to modify an existing file. The format is a Git merge diff, meaning it needs a string argument with search and replace blocks." so I will use it.
 
-2. **The Fix:** I reverted the local branch name back to `feature/dynamic-article-integration-16540754327033378747` using `git branch -m`. The codebase locally has already been verified with `@/app` in the test file, `"noEmit": true` added to the test TS configs to prevent generated test artifacts, and the E2E selector updates from the previous run.
+2. **Insert Memory Details into API AGENTS.md**: Use `replace_with_git_merge_diff` to explicitly inject the `formatToDateTime`, `for...in loop`, and test definitions rules under appropriate headings into `packages/api/AGENTS.md`.
 
-3. **Status:** All tests and builds pass cleanly on this fully integrated state. The problem was purely related to the submission branch name mismatch.
+3. **Insert Memory Details into Web AGENTS.md**: Use `replace_with_git_merge_diff` to explicitly inject the `react-refresh/only-export-components`, `@phosphor-icons/react`, and test definitions rules under appropriate headings into `packages/web/AGENTS.md`.
 
-4. **Next steps:** I will mark the pre-commit instructions as done and submit the patch (which will now successfully overwrite the PR with all the accumulated fixes).
+4. **Review Changes**: Use `run_in_bash_session` to run `git diff` to review all the applied documentation changes.
+
+5. **Run CI Checks**: Use `run_in_bash_session` to run `pnpm run ci` to ensure no documentation errors or regressions occurred.
+
+6. **Complete Pre-Commit Steps**: Complete pre-commit steps to ensure proper testing, verification, review, and reflection are done.
+
+7. **Submit Changes**: Submit the branch with an appropriate documentation update message.

@@ -7,8 +7,7 @@ import createOrganizationMiddleware from '@/middlewares/organization';
 import createUserMiddleware from '@/middlewares/user';
 import trackerRouter from '@/rest/routers/tracker';
 import { $, Env } from '@/types';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import { graphqlServer } from '@hono/graphql-server';
+import { createSchema, createYoga } from 'graphql-yoga';
 import { Context, Hono } from 'hono';
 import { env } from 'hono/adapter';
 import { cors } from 'hono/cors';
@@ -42,13 +41,14 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.route('/tracker', trackerRouter);
 
-  app.all(
-    '/gql',
-    graphqlServer({
-      schema: makeExecutableSchema({ typeDefs, resolvers }),
-      pretty: true,
-    })
-  );
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs,
+      resolvers,
+    }),
+    batching: true,
+  });
+  app.all('/gql', (c) => yoga.handle(c.req.raw, c));
 
   app.onError((err, c) => {
     console.error(redactError(err));

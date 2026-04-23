@@ -1,6 +1,6 @@
 import Sidebar from '@/components/sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import authClient from '@/helpers/auth';
+import { useSession } from '@/hooks/useSession';
 import Article from '@/pages/article';
 import SingIn from '@/pages/auth/SingIn';
 import SingUp from '@/pages/auth/SingUp';
@@ -65,7 +65,7 @@ const unauthenticatedRouter = createBrowserRouter([
 ]);
 
 function App() {
-  const { data, isPending } = authClient.useSession();
+  const { data, isPending } = useSession(0);
 
   if (isPending) return null;
 

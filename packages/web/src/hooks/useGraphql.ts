@@ -1,59 +1,63 @@
 import customFetch from '@/helpers/fetch';
+import { create, windowScheduler } from '@yornaath/batshit';
+
+type GqlKey = {
+  query: string;
+  variables?: any;
+};
+
+const gqlBatch = create<GqlKey, any>({
+  fetcher: async (keys) => {
+    const body = keys.map(({ query, variables }) => ({
+      query,
+      variables,
+    }));
+
+    const { body: responseBody } = await customFetch('POST', '/gql', { body });
+
+    return responseBody.map((res: any) => {
+      if (res.errors) {
+        return Promise.reject(new Error(res.errors[0]?.message || 'GraphQL Error'));
+      }
+      return res.data;
+    });
+  },
+
+  resolver: (key) => ({
+    query: key.query,
+    variables: key.variables,
+  }),
+
+  scheduler: windowScheduler(10),
+});
 
 export const useGraphql = <TData, TVariables>(
-  query: string,
-  headers?: RequestInit['headers']
+  query: string
 ): ((variables?: TVariables) => Promise<TData>) => {
   return async (variables?: TVariables) => {
     const serializedVariables = variables ? serializeDates(variables) : undefined;
 
-    const body = {
+    const data = await gqlBatch.fetch({
       query,
       variables: serializedVariables,
-    };
+    });
 
-    const { body: responseBody } = await customFetch('POST', '/gql', { body, headers });
-    const { errors, data } = responseBody;
-
-    if (errors) {
-      const { message } = errors[0] || {};
-      throw new Error(message || 'GraphQL Error');
-    }
-
-    return data;
+    return data as TData;
   };
 };
 
-/**
- * Recursively traverses an object and converts Date types to strings
- */
 export const serializeDates = (obj: unknown): unknown => {
-  // Check for null or undefined
-  if (obj === null || obj === undefined) {
-    return obj;
-  }
+  if (obj == null) return obj;
 
-  // If Date type, convert to string (ISO 8601 format is common)
-  if (obj instanceof Date) {
-    return obj.toISOString();
-  }
+  if (obj instanceof Date) return obj.toISOString();
 
-  // If array, recursively process each element
-  if (Array.isArray(obj)) {
-    return obj.map(serializeDates);
-  }
+  if (Array.isArray(obj)) return obj.map(serializeDates);
 
-  // If object, recursively process each property
   if (typeof obj === 'object') {
-    return Object.keys(obj).reduce(
-      (acc, key) => {
-        acc[key] = serializeDates((obj as Record<string, unknown>)[key]);
-        return acc;
-      },
-      {} as Record<string, unknown>
+    return Object.fromEntries(
+      Object.entries(obj as Record<string, unknown>).map(([k, v]) => [k, serializeDates(v)])
     );
   }
 
-  // Otherwise (string, number, boolean, etc.), return as is
   return obj;
 };

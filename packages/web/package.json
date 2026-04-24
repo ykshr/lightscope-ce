@@ -60,6 +60,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@lightscope-ce/api": "workspace:*",
     "@eslint/js": "^9.32.0",
     "@graphql-codegen/cli": "^6.1.0",
     "@graphql-codegen/typescript": "^5.0.7",

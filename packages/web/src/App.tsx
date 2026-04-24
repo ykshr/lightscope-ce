@@ -12,7 +12,9 @@ const Ranking = lazy(() => import('@/pages/ranking'));
 const Settings = lazy(() => import('@/pages/settings'));
 
 const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<div className="flex h-screen w-full items-center justify-center">Loading...</div>}>
+  <Suspense
+    fallback={<div className="flex h-screen w-full items-center justify-center">Loading...</div>}
+  >
     {children}
   </Suspense>
 );
@@ -35,19 +37,35 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <SuspenseWrapper><Overview /></SuspenseWrapper>,
+        element: (
+          <SuspenseWrapper>
+            <Overview />
+          </SuspenseWrapper>
+        ),
       },
       {
         path: '/ranking',
-        element: <SuspenseWrapper><Ranking /></SuspenseWrapper>,
+        element: (
+          <SuspenseWrapper>
+            <Ranking />
+          </SuspenseWrapper>
+        ),
       },
       {
         path: '/article',
-        element: <SuspenseWrapper><Article /></SuspenseWrapper>,
+        element: (
+          <SuspenseWrapper>
+            <Article />
+          </SuspenseWrapper>
+        ),
       },
       {
         path: '/settings',
-        element: <SuspenseWrapper><Settings /></SuspenseWrapper>,
+        element: (
+          <SuspenseWrapper>
+            <Settings />
+          </SuspenseWrapper>
+        ),
       },
       {
         path: '*',
@@ -60,11 +78,19 @@ const router = createBrowserRouter([
 const unauthenticatedRouter = createBrowserRouter([
   {
     path: '/singin',
-    element: <SuspenseWrapper><SingIn /></SuspenseWrapper>,
+    element: (
+      <SuspenseWrapper>
+        <SingIn />
+      </SuspenseWrapper>
+    ),
   },
   {
     path: '/signup',
-    element: <SuspenseWrapper><SingUp /></SuspenseWrapper>,
+    element: (
+      <SuspenseWrapper>
+        <SingUp />
+      </SuspenseWrapper>
+    ),
   },
   {
     path: '*',

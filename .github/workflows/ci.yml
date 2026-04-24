@@ -1,4 +1,4 @@
-name: CI
+name: CI & E2E
 
 on:
   pull_request:
@@ -22,16 +22,70 @@ jobs:
       - name: Setup Node and pnpm
         uses: ./.github/actions/setup
 
+      - name: Run build
+        run: pnpm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            packages/api/dist/
+            packages/api/src/__generated__/
+            packages/proxy/dist/
+            packages/tracker/dist/
+            packages/web/dist/
+            packages/web/src/__generated__/
+
+  ci:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
       - name: Run format:check
         run: pnpm run format:check
 
       - name: Run lint
         run: pnpm run lint
 
-      - name: Run build
-        run: pnpm run build
-
       - name: Run test
         run: pnpm run test
         env:
           JWT_SECRET: ci-test-secret-do-not-use-in-prod
+
+  e2e:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "VERSION=$(pnpm --filter @lightscope-ce/e2e exec playwright --version | awk '{print $2}')" >> $GITHUB_ENV
+
+      - name: Install Playwright Browsers
+        run: pnpm --filter @lightscope-ce/e2e exec playwright install --with-deps
+
+      - name: Run E2E tests
+        run: pnpm run test:e2e

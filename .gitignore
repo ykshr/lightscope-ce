@@ -40,5 +40,4 @@ packages/api/prisma/dev.db
 
 # Generated files
 packages/api/src/__generated__/
-packages/api/prisma/schema/schema.prisma
 packages/web/src/__generated__/

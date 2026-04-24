@@ -34,5 +34,3 @@ jobs:
 
       - name: Run E2E tests
         run: pnpm run test:e2e
-        env:
-          JWT_SECRET: ci-test-secret-do-not-use-in-prod

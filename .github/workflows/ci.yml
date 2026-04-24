@@ -13,7 +13,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup
+
+      - name: Run format:check
+        run: pnpm run format:check
+
+      - name: Run lint
+        run: pnpm run lint
+
   build:
+    needs: quality
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +53,7 @@ jobs:
             packages/web/dist/
             packages/web/src/__generated__/
 
-  ci:
+  test:
     needs: build
     runs-on: ubuntu-latest
 
@@ -52,12 +68,6 @@ jobs:
         with:
           name: build-artifacts
           path: packages
-
-      - name: Run format:check
-        run: pnpm run format:check
-
-      - name: Run lint
-        run: pnpm run lint
 
       - name: Run test
         run: pnpm run test

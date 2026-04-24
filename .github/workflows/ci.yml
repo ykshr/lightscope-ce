@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  quality:
+  ci-e2e:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,67 +28,13 @@ jobs:
       - name: Run lint
         run: pnpm run lint
 
-  build:
-    needs: quality
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node and pnpm
-        uses: ./.github/actions/setup
-
       - name: Run build
         run: pnpm run build
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: |
-            packages/api/dist/
-            packages/api/src/__generated__/
-            packages/proxy/dist/
-            packages/tracker/dist/
-            packages/web/dist/
-            packages/web/src/__generated__/
-
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node and pnpm
-        uses: ./.github/actions/setup
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: packages
 
       - name: Run test
         run: pnpm run test
         env:
           JWT_SECRET: ci-test-secret-do-not-use-in-prod
-
-  e2e:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node and pnpm
-        uses: ./.github/actions/setup
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: packages
 
       - name: Get Playwright version
         id: playwright-version

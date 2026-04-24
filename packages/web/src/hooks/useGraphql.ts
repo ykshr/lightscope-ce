@@ -13,7 +13,7 @@ const gqlBatch = create<GqlKey, any>({
       variables,
     }));
 
-    const { body: responseBody } = await customFetch('POST', '/gql', { body });
+    const { body: responseBody } = await customFetch('POST', '/graphql', { body });
 
     return responseBody.map((res: any) => {
       if (res.errors) {

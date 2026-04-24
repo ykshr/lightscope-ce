@@ -1,15 +1,15 @@
 import { Article, Resolvers } from '@/__generated__/graphql/resolvers';
-import getArticleLoader from '@/loaders/article';
-import { Context } from '@/types';
+import getArticleLoader from '@/graphql/loaders/article';
+import { GraphQLContext } from '@/types';
 
 export const getArticle = async (
   parent: { url?: string },
   args: { url?: string },
-  c: Context
+  cxt: GraphQLContext
 ): Promise<Article | null> => {
   const url = args.url ?? parent.url;
   if (!url) return null;
-  const loader = getArticleLoader(c);
+  const loader = getArticleLoader(cxt);
   const article = await loader.load(url);
   return article;
 };

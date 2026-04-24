@@ -48,7 +48,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
     }),
     batching: true,
   });
-  app.all('/gql', (c) => yoga.fetch(c.req.raw, c));
+  app.all('/graphql', (c) => yoga(c.req.raw, { c }));
 
   app.onError((err, c) => {
     console.error(redactError(err));

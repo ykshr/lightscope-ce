@@ -12,10 +12,10 @@ import {
   TrendAnalyticsUtm,
   TrendParameters,
 } from '@/__generated__/graphql/resolvers';
+import getTrendLoader from '@/graphql/loaders/trend';
 import { getArticle } from '@/graphql/resolvers/article';
 import { resolveRequestedAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
-import getTrendLoader from '@/loaders/trend';
-import { Context } from '@/types';
+import { GraphQLContext } from '@/types';
 import { GraphQLResolveInfo } from 'graphql';
 
 const createCategoryResolver =
@@ -23,12 +23,12 @@ const createCategoryResolver =
   async (
     parent: { parameters: TrendParameters },
     args: any,
-    c: Context,
+    cxt: GraphQLContext,
     info: GraphQLResolveInfo
   ): Promise<T[]> => {
     const attributes = resolveRequestedAttributesWithArticle(info);
 
-    const loader = getTrendLoader(c, {
+    const loader = getTrendLoader(cxt, {
       tableName,
       queryParams: { ...parent.parameters },
       attributes,
@@ -40,12 +40,12 @@ const createCategoryResolver =
 
 const resolvers: Resolvers = {
   Query: {
-    trend: async (_parent, args, c) => {
+    trend: async (_parent, args, cxt) => {
       const loaderParams = {
         tableName: 'pv',
         queryParams: args,
       };
-      const loader = getTrendLoader(c, loaderParams);
+      const loader = getTrendLoader(cxt, loaderParams);
       const data = await loader.total<TrendAnalytics>();
       if (!data)
         return {

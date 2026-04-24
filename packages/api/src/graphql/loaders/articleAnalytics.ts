@@ -4,13 +4,13 @@ import {
   AnalyticsBase,
   Metric,
 } from '@/__generated__/graphql/resolvers';
-import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
-import query, { formatData, formatToDateTime } from '@/loaders/helpers/clickhouse';
+import query, { formatData, formatToDateTime } from '@/graphql/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
-} from '@/loaders/helpers/getCollectionUnitWithDates';
-import type { Context } from '@/types';
+} from '@/graphql/loaders/helpers/getCollectionUnitWithDates';
+import { RequestAttribute } from '@/graphql/resolvers/helpers/processAttributes';
+import { GraphQLContext } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 import DataLoader from 'dataloader';
 
@@ -31,15 +31,15 @@ interface LoaderParams {
 }
 
 export default function getLoader<T extends AnalyticsBase>(
-  c: Context,
+  ctx: GraphQLContext,
   loaderParams: LoaderParams
 ): DataLoader<string, T[] | null> {
-  if (!c.var.loaders.has('articleAnalyticsLoader')) {
-    c.var.loaders.set('articleAnalyticsLoader', new Map());
+  if (!ctx.c.var.loaders.has('articleAnalyticsLoader')) {
+    ctx.c.var.loaders.set('articleAnalyticsLoader', new Map());
   }
 
-  const loaders = c.var.loaders.get('articleAnalyticsLoader');
-  const loaderKey = createLoaderKey(c, loaderParams);
+  const loaders = ctx.c.var.loaders.get('articleAnalyticsLoader');
+  const loaderKey = createLoaderKey(ctx, loaderParams);
   if (loaders.has(loaderKey)) {
     return loaders.get(loaderKey) as DataLoader<string, T[] | null>;
   }
@@ -47,8 +47,8 @@ export default function getLoader<T extends AnalyticsBase>(
   const loader = new DataLoader<string, T[] | null>(
     async (urls: readonly string[]) => {
       const analytics = await fetchArticleAnalyticsByUrls<T>(
-        c.var.$.clickhouse,
-        c.var.organization.id,
+        ctx.c.var.$.clickhouse,
+        ctx.c.var.organization.id,
         loaderParams,
         urls
       );
@@ -74,10 +74,10 @@ export default function getLoader<T extends AnalyticsBase>(
   return loader;
 }
 
-function createLoaderKey(c: Context, params: LoaderParams): string {
+function createLoaderKey(ctx: GraphQLContext, params: LoaderParams): string {
   const q = params.queryParams;
   const attributes = params.attributes?.join(',') ?? '';
-  return `${c.var.organization.id}:${params.tableName}:${q.startDate}:${q.endDate}:${q.aggregation}:${q.limit}:${q.page}:${q.siteName}:${q.metric}:${attributes}`;
+  return `${ctx.c.var.organization.id}:${params.tableName}:${q.startDate}:${q.endDate}:${q.aggregation}:${q.limit}:${q.page}:${q.siteName}:${q.metric}:${attributes}`;
 }
 
 async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(

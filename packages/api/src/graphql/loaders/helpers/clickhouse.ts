@@ -1,4 +1,4 @@
-import { renameKeySnakeToCamel } from '@/loaders/helpers/rename';
+import { renameKeySnakeToCamel } from '@/graphql/loaders/helpers/rename';
 import { ClickHouseClient } from '@clickhouse/client';
 
 export default async function <T>(

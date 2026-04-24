@@ -10,15 +10,15 @@ import {
   TrendCategoryReferrerArgs,
   TrendCategoryUtmArgs,
 } from '@/__generated__/graphql/resolvers';
-import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
-import processArticleFilter from '@/loaders/helpers/articleFilter';
-import processCategoryFilter from '@/loaders/helpers/categoryFilter';
-import query, { formatData, formatToDateTime } from '@/loaders/helpers/clickhouse';
+import processArticleFilter from '@/graphql/loaders/helpers/articleFilter';
+import processCategoryFilter from '@/graphql/loaders/helpers/categoryFilter';
+import query, { formatData, formatToDateTime } from '@/graphql/loaders/helpers/clickhouse';
 import {
   getAggregationUnitWithInterval,
   getTableUnitWithDates,
-} from '@/loaders/helpers/getCollectionUnitWithDates';
-import type { Context } from '@/types';
+} from '@/graphql/loaders/helpers/getCollectionUnitWithDates';
+import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
+import { GraphQLContext } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 
 interface LoaderParams {
@@ -35,10 +35,10 @@ interface LoaderParams {
     | TrendCategoryUtmArgs;
 }
 
-export default function getLoader(c: Context, loaderParams: LoaderParams) {
+export default function getLoader(ctx: GraphQLContext, loaderParams: LoaderParams) {
   return {
-    total: <T>() => Trend<T>(c.var.$.clickhouse, c.var.organization.id, loaderParams),
-    load: <T>() => Trend<T>(c.var.$.clickhouse, c.var.organization.id, loaderParams),
+    total: <T>() => Trend<T>(ctx.c.var.$.clickhouse, ctx.c.var.organization.id, loaderParams),
+    load: <T>() => Trend<T>(ctx.c.var.$.clickhouse, ctx.c.var.organization.id, loaderParams),
   };
 }
 

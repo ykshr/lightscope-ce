@@ -1,11 +1,11 @@
 import { AggregationUnit } from '@/__generated__/graphql/resolvers';
-import { describe, expect, it } from 'vitest';
 import {
   getAggregationUnit,
   getAggregationUnitWithInterval,
   getNextAvailableDate,
   getTableUnitWithDates,
-} from '@/loaders/helpers/getCollectionUnitWithDates';
+} from '@/graphql/loaders/helpers/getCollectionUnitWithDates';
+import { describe, expect, it } from 'vitest';
 
 describe('getCollectionUnitWithDates', () => {
   describe('getAggregationUnitWithInterval', () => {

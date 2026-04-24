@@ -1,4 +1,4 @@
-import { formatToDateTime } from '@/loaders/helpers/clickhouse';
+import { formatToDateTime } from '@/graphql/loaders/helpers/clickhouse';
 import { describe, expect, it } from 'vitest';
 
 describe('formatToDateTime', () => {

@@ -52,7 +52,7 @@ async function main() {
   `;
 
   console.log('Querying GraphQL...');
-  const gqlRes = await fetch(`${API_URL}/gql`, {
+  const gqlRes = await fetch(`${API_URL}/graphql`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',

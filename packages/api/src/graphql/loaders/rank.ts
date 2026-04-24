@@ -11,12 +11,12 @@ import {
   type RankCategoryReferrerArgs,
   type RankCategoryUtmArgs,
 } from '@/__generated__/graphql/resolvers';
+import processArticleFilter from '@/graphql/loaders/helpers/articleFilter';
+import processCategoryFilter from '@/graphql/loaders/helpers/categoryFilter';
+import query, { formatData, formatToDateTime } from '@/graphql/loaders/helpers/clickhouse';
+import { getTableUnitWithDates } from '@/graphql/loaders/helpers/getCollectionUnitWithDates';
 import { RequestAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
-import processArticleFilter from '@/loaders/helpers/articleFilter';
-import processCategoryFilter from '@/loaders/helpers/categoryFilter';
-import query, { formatData, formatToDateTime } from '@/loaders/helpers/clickhouse';
-import { getTableUnitWithDates } from '@/loaders/helpers/getCollectionUnitWithDates';
-import type { Context } from '@/types';
+import { GraphQLContext } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 
 interface LoaderParams {
@@ -33,10 +33,10 @@ interface LoaderParams {
     | RankCategoryUtmArgs;
 }
 
-export default function getLoader(c: Context, loaderParams: LoaderParams) {
+export default function getLoader(ctx: GraphQLContext, loaderParams: LoaderParams) {
   return {
-    total: () => rank(c.var.$.clickhouse, c.var.organization.id, loaderParams),
-    load: () => rank(c.var.$.clickhouse, c.var.organization.id, loaderParams),
+    total: () => rank(ctx.c.var.$.clickhouse, ctx.c.var.organization.id, loaderParams),
+    load: () => rank(ctx.c.var.$.clickhouse, ctx.c.var.organization.id, loaderParams),
   };
 }
 

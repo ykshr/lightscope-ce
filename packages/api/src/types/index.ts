@@ -46,3 +46,4 @@ export type Env = {
 };
 
 export type Context = HonoContext<Env>;
+export type GraphQLContext = { c: Context };

@@ -51,7 +51,7 @@ async function verifyData() {
   `;
 
   try {
-    const gqlRes = await fetch(`${API_URL}/gql`, {
+    const gqlRes = await fetch(`${API_URL}/graphql`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

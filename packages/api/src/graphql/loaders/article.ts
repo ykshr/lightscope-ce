@@ -1,23 +1,27 @@
 import { Article } from '@/__generated__/graphql/resolvers';
-import query, { formatData } from '@/loaders/helpers/clickhouse';
-import type { Context } from '@/types';
+import query, { formatData } from '@/graphql/loaders/helpers/clickhouse';
+import { GraphQLContext } from '@/types';
 import { ClickHouseClient } from '@clickhouse/client';
 import DataLoader from 'dataloader';
 
-export default function getLoader(c: Context): DataLoader<string, Article | null> {
-  if (!c.var.loaders.has('articleLoader')) {
-    c.var.loaders.set('articleLoader', new Map());
+export default function getLoader(ctx: GraphQLContext): DataLoader<string, Article | null> {
+  if (!ctx.c.var.loaders.has('articleLoader')) {
+    ctx.c.var.loaders.set('articleLoader', new Map());
   }
 
-  const loaders = c.var.loaders.get('articleLoader');
-  const loaderKey = createLoaderKey(c);
+  const loaders = ctx.c.var.loaders.get('articleLoader');
+  const loaderKey = createLoaderKey(ctx);
   if (loaders.has(loaderKey)) {
     return loaders.get(loaderKey) as DataLoader<string, Article | null>;
   }
 
   const loader = new DataLoader<string, Article | null>(
     async (urls: readonly string[]) => {
-      const articles = await fetchArticleByUrls(c.var.$.clickhouse, c.var.organization.id, urls);
+      const articles = await fetchArticleByUrls(
+        ctx.c.var.$.clickhouse,
+        ctx.c.var.organization.id,
+        urls
+      );
 
       const articleMap = new Map<string, Article>();
       for (const article of articles) {
@@ -35,9 +39,9 @@ export default function getLoader(c: Context): DataLoader<string, Article | null
   return loader;
 }
 
-function createLoaderKey(c: Context): string {
+function createLoaderKey(ctx: GraphQLContext): string {
   return JSON.stringify({
-    organizationId: c.var.organization.id,
+    organizationId: ctx.c.var.organization.id,
   });
 }
 

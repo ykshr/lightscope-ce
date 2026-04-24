@@ -7,10 +7,7 @@ const MOCK_SITE_URL = process.env.MOCK_SITE_URL || 'http://127.0.0.1:8080';
 
 export { API_URL, MOCK_SITE_URL, PROXY_URL, WEB_URL };
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET is not defined in the environment.');
-}
+const JWT_SECRET = process.env.JWT_SECRET || 'ci-test-secret-do-not-use-in-prod';
 const JWT_ALGORITHM = process.env.JWT_ALGORITHM || AlgorithmTypes.HS256;
 
 export { JWT_ALGORITHM, JWT_SECRET };

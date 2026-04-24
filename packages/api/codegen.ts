@@ -28,7 +28,7 @@ const config: CodegenConfig = {
     scalars: {
       DateTime: 'string',
     },
-    contextType: '@/types#Context',
+    contextType: '@/types#GraphQLContext',
   },
 };
 

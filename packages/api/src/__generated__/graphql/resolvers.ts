@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { Context } from '@/types';
+import { GraphQLContext } from '@/types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -780,25 +780,25 @@ export type ResolversParentTypes = {
   TrendParameters: TrendParameters;
 };
 
-export type AggregationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Aggregation'] = ResolversParentTypes['Aggregation']> = {
+export type AggregationResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Aggregation'] = ResolversParentTypes['Aggregation']> = {
   interval?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   unit?: Resolver<ResolversTypes['AggregationUnit'], ParentType, ContextType>;
 };
 
-export type AnalyticsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Analytics'] = ResolversParentTypes['Analytics']> = {
+export type AnalyticsResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Analytics'] = ResolversParentTypes['Analytics']> = {
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsAgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsAge'] = ResolversParentTypes['AnalyticsAge']> = {
+export type AnalyticsAgeResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['AnalyticsAge'] = ResolversParentTypes['AnalyticsAge']> = {
   age?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsAppResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsApp'] = ResolversParentTypes['AnalyticsApp']> = {
+export type AnalyticsAppResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['AnalyticsApp'] = ResolversParentTypes['AnalyticsApp']> = {
   app?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   appType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -806,11 +806,11 @@ export type AnalyticsAppResolvers<ContextType = Context, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsBase'] = ResolversParentTypes['AnalyticsBase']> = {
+export type AnalyticsBaseResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['AnalyticsBase'] = ResolversParentTypes['AnalyticsBase']> = {
   __resolveType: TypeResolveFn<'Analytics' | 'AnalyticsAge' | 'AnalyticsApp' | 'AnalyticsDevice' | 'AnalyticsGender' | 'AnalyticsGeo' | 'AnalyticsReferrer' | 'AnalyticsUtm', ParentType, ContextType>;
 };
 
-export type AnalyticsDeviceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsDevice'] = ResolversParentTypes['AnalyticsDevice']> = {
+export type AnalyticsDeviceResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['AnalyticsDevice'] = ResolversParentTypes['AnalyticsDevice']> = {
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   device?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   deviceType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -819,14 +819,14 @@ export type AnalyticsDeviceResolvers<ContextType = Context, ParentType extends R
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsGenderResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsGender'] = ResolversParentTypes['AnalyticsGender']> = {
+export type AnalyticsGenderResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['AnalyticsGender'] = ResolversParentTypes['AnalyticsGender']> = {
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   gender?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsGeoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsGeo'] = ResolversParentTypes['AnalyticsGeo']> = {
+export type AnalyticsGeoResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['AnalyticsGeo'] = ResolversParentTypes['AnalyticsGeo']> = {
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   continent?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -836,7 +836,7 @@ export type AnalyticsGeoResolvers<ContextType = Context, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsReferrerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsReferrer'] = ResolversParentTypes['AnalyticsReferrer']> = {
+export type AnalyticsReferrerResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['AnalyticsReferrer'] = ResolversParentTypes['AnalyticsReferrer']> = {
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   domain?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   referrer?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -844,7 +844,7 @@ export type AnalyticsReferrerResolvers<ContextType = Context, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AnalyticsUtmResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AnalyticsUtm'] = ResolversParentTypes['AnalyticsUtm']> = {
+export type AnalyticsUtmResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['AnalyticsUtm'] = ResolversParentTypes['AnalyticsUtm']> = {
   campaign?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   medium?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -853,7 +853,7 @@ export type AnalyticsUtmResolvers<ContextType = Context, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ArticleResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article']> = {
+export type ArticleResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article']> = {
   analytics?: Resolver<Maybe<ResolversTypes['ArticleAnalytics']>, ParentType, ContextType, RequireFields<ArticleAnalyticsArgs, 'aggregation' | 'endDate' | 'limit' | 'metric' | 'page' | 'startDate'>>;
   authors?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -870,7 +870,7 @@ export type ArticleResolvers<ContextType = Context, ParentType extends Resolvers
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
-export type ArticleAnalyticsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ArticleAnalytics'] = ResolversParentTypes['ArticleAnalytics']> = {
+export type ArticleAnalyticsResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['ArticleAnalytics'] = ResolversParentTypes['ArticleAnalytics']> = {
   analytics?: Resolver<Maybe<Array<ResolversTypes['Analytics']>>, ParentType, ContextType>;
   analyticsAge?: Resolver<Maybe<Array<ResolversTypes['AnalyticsAge']>>, ParentType, ContextType>;
   analyticsApp?: Resolver<Maybe<Array<ResolversTypes['AnalyticsApp']>>, ParentType, ContextType>;
@@ -882,7 +882,7 @@ export type ArticleAnalyticsResolvers<ContextType = Context, ParentType extends 
   parameters?: Resolver<ResolversTypes['ArticleAnalyticsParameters'], ParentType, ContextType>;
 };
 
-export type ArticleAnalyticsParametersResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ArticleAnalyticsParameters'] = ResolversParentTypes['ArticleAnalyticsParameters']> = {
+export type ArticleAnalyticsParametersResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['ArticleAnalyticsParameters'] = ResolversParentTypes['ArticleAnalyticsParameters']> = {
   aggregation?: Resolver<ResolversTypes['Aggregation'], ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   limit?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -893,7 +893,7 @@ export type ArticleAnalyticsParametersResolvers<ContextType = Context, ParentTyp
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
-export type ArticleFilterResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ArticleFilter'] = ResolversParentTypes['ArticleFilter']> = {
+export type ArticleFilterResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['ArticleFilter'] = ResolversParentTypes['ArticleFilter']> = {
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   excludeAuthors?: Resolver<Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>, ParentType, ContextType>;
   excludeLocales?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
@@ -918,7 +918,7 @@ export type ArticleFilterResolvers<ContextType = Context, ParentType extends Res
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
-export type CategoryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
+export type CategoryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
   name?: Resolver<ResolversTypes['CategoryName'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
@@ -927,13 +927,13 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
-export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type QueryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<QueryArticleArgs, 'url'>>;
   rank?: Resolver<Maybe<ResolversTypes['Rank']>, ParentType, ContextType, RequireFields<QueryRankArgs, 'endDate' | 'limit' | 'metric' | 'order' | 'page' | 'startDate'>>;
   trend?: Resolver<Maybe<ResolversTypes['Trend']>, ParentType, ContextType, RequireFields<QueryTrendArgs, 'aggregation' | 'endDate' | 'limit' | 'metric' | 'page' | 'startDate'>>;
 };
 
-export type RankResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Rank'] = ResolversParentTypes['Rank']> = {
+export type RankResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Rank'] = ResolversParentTypes['Rank']> = {
   articles?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType>;
   categoryAge?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType, Partial<RankCategoryAgeArgs>>;
   categoryApp?: Resolver<Maybe<Array<ResolversTypes['RankAnalytics']>>, ParentType, ContextType, Partial<RankCategoryAppArgs>>;
@@ -946,7 +946,7 @@ export type RankResolvers<ContextType = Context, ParentType extends ResolversPar
   total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 
-export type RankAnalyticsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RankAnalytics'] = ResolversParentTypes['RankAnalytics']> = {
+export type RankAnalyticsResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['RankAnalytics'] = ResolversParentTypes['RankAnalytics']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -954,11 +954,11 @@ export type RankAnalyticsResolvers<ContextType = Context, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type RankAnalyticsBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RankAnalyticsBase'] = ResolversParentTypes['RankAnalyticsBase']> = {
+export type RankAnalyticsBaseResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['RankAnalyticsBase'] = ResolversParentTypes['RankAnalyticsBase']> = {
   __resolveType: TypeResolveFn<'RankAnalytics', ParentType, ContextType>;
 };
 
-export type RankParametersResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RankParameters'] = ResolversParentTypes['RankParameters']> = {
+export type RankParametersResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['RankParameters'] = ResolversParentTypes['RankParameters']> = {
   articleFilter?: Resolver<Maybe<ResolversTypes['ArticleFilter']>, ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   limit?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -968,12 +968,12 @@ export type RankParametersResolvers<ContextType = Context, ParentType extends Re
   startDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
 };
 
-export type SortResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Sort'] = ResolversParentTypes['Sort']> = {
+export type SortResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Sort'] = ResolversParentTypes['Sort']> = {
   category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
   order?: Resolver<ResolversTypes['Order'], ParentType, ContextType>;
 };
 
-export type TrendResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Trend'] = ResolversParentTypes['Trend']> = {
+export type TrendResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Trend'] = ResolversParentTypes['Trend']> = {
   articles?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsArticle']>>, ParentType, ContextType, RequireFields<TrendArticlesArgs, 'top'>>;
   categoryAge?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsAge']>>, ParentType, ContextType, RequireFields<TrendCategoryAgeArgs, 'top'>>;
   categoryApp?: Resolver<Maybe<Array<ResolversTypes['TrendAnalyticsApp']>>, ParentType, ContextType, RequireFields<TrendCategoryAppArgs, 'top'>>;
@@ -986,7 +986,7 @@ export type TrendResolvers<ContextType = Context, ParentType extends ResolversPa
   total?: Resolver<Array<ResolversTypes['TrendAnalytics']>, ParentType, ContextType>;
 };
 
-export type TrendAnalyticsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalytics'] = ResolversParentTypes['TrendAnalytics']> = {
+export type TrendAnalyticsResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalytics'] = ResolversParentTypes['TrendAnalytics']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -994,7 +994,7 @@ export type TrendAnalyticsResolvers<ContextType = Context, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsAgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsAge'] = ResolversParentTypes['TrendAnalyticsAge']> = {
+export type TrendAnalyticsAgeResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalyticsAge'] = ResolversParentTypes['TrendAnalyticsAge']> = {
   age?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -1003,7 +1003,7 @@ export type TrendAnalyticsAgeResolvers<ContextType = Context, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsAppResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsApp'] = ResolversParentTypes['TrendAnalyticsApp']> = {
+export type TrendAnalyticsAppResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalyticsApp'] = ResolversParentTypes['TrendAnalyticsApp']> = {
   app?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   appType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
@@ -1013,7 +1013,7 @@ export type TrendAnalyticsAppResolvers<ContextType = Context, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsArticleResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsArticle'] = ResolversParentTypes['TrendAnalyticsArticle']> = {
+export type TrendAnalyticsArticleResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalyticsArticle'] = ResolversParentTypes['TrendAnalyticsArticle']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1021,11 +1021,11 @@ export type TrendAnalyticsArticleResolvers<ContextType = Context, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsBase'] = ResolversParentTypes['TrendAnalyticsBase']> = {
+export type TrendAnalyticsBaseResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalyticsBase'] = ResolversParentTypes['TrendAnalyticsBase']> = {
   __resolveType: TypeResolveFn<'TrendAnalytics' | 'TrendAnalyticsAge' | 'TrendAnalyticsApp' | 'TrendAnalyticsArticle' | 'TrendAnalyticsDevice' | 'TrendAnalyticsGender' | 'TrendAnalyticsGeo' | 'TrendAnalyticsReferrer' | 'TrendAnalyticsUtm', ParentType, ContextType>;
 };
 
-export type TrendAnalyticsDeviceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsDevice'] = ResolversParentTypes['TrendAnalyticsDevice']> = {
+export type TrendAnalyticsDeviceResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalyticsDevice'] = ResolversParentTypes['TrendAnalyticsDevice']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   device?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1036,7 +1036,7 @@ export type TrendAnalyticsDeviceResolvers<ContextType = Context, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsGenderResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsGender'] = ResolversParentTypes['TrendAnalyticsGender']> = {
+export type TrendAnalyticsGenderResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalyticsGender'] = ResolversParentTypes['TrendAnalyticsGender']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   gender?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1045,7 +1045,7 @@ export type TrendAnalyticsGenderResolvers<ContextType = Context, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsGeoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsGeo'] = ResolversParentTypes['TrendAnalyticsGeo']> = {
+export type TrendAnalyticsGeoResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalyticsGeo'] = ResolversParentTypes['TrendAnalyticsGeo']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   continent?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1057,7 +1057,7 @@ export type TrendAnalyticsGeoResolvers<ContextType = Context, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsReferrerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsReferrer'] = ResolversParentTypes['TrendAnalyticsReferrer']> = {
+export type TrendAnalyticsReferrerResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalyticsReferrer'] = ResolversParentTypes['TrendAnalyticsReferrer']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   domain?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1067,7 +1067,7 @@ export type TrendAnalyticsReferrerResolvers<ContextType = Context, ParentType ex
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendAnalyticsUtmResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendAnalyticsUtm'] = ResolversParentTypes['TrendAnalyticsUtm']> = {
+export type TrendAnalyticsUtmResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendAnalyticsUtm'] = ResolversParentTypes['TrendAnalyticsUtm']> = {
   article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
   campaign?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -1078,7 +1078,7 @@ export type TrendAnalyticsUtmResolvers<ContextType = Context, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TrendParametersResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrendParameters'] = ResolversParentTypes['TrendParameters']> = {
+export type TrendParametersResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['TrendParameters'] = ResolversParentTypes['TrendParameters']> = {
   aggregation?: Resolver<ResolversTypes['Aggregation'], ParentType, ContextType>;
   articleFilter?: Resolver<Maybe<ResolversTypes['ArticleFilter']>, ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -1088,7 +1088,7 @@ export type TrendParametersResolvers<ContextType = Context, ParentType extends R
   startDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
 };
 
-export type Resolvers<ContextType = Context> = {
+export type Resolvers<ContextType = GraphQLContext> = {
   Aggregation?: AggregationResolvers<ContextType>;
   Analytics?: AnalyticsResolvers<ContextType>;
   AnalyticsAge?: AnalyticsAgeResolvers<ContextType>;

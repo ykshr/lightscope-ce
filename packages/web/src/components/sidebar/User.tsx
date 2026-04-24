@@ -1,11 +1,11 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
-import authClient from '@/helpers/auth';
+import { useSession } from '@/hooks/useAuth';
 import { UserIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function User() {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session, isPending } = useSession();
   const user = session?.user;
 
   return (

@@ -1,4 +1,4 @@
-import { renameKeySnakeToCamel } from '@/loaders/helpers/rename';
+import { renameKeySnakeToCamel } from '@/graphql/loaders/helpers/rename';
 import { describe, expect, it } from 'vitest';
 
 describe('renameKeySnakeToCamel', () => {

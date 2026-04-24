@@ -11,11 +11,12 @@ import {
 } from '@/components/ui/select';
 import { useTheme } from '@/contexts/ThemeContext';
 import authClient from '@/helpers/auth';
+import { useSession } from '@/hooks/useAuth';
 import { useState } from 'react';
 
 export default function Profile() {
   const { theme, setTheme } = useTheme();
-  const { data: session } = authClient.useSession();
+  const { data: session } = useSession();
   const user = session?.user;
 
   const [newName, setNewName] = useState(user?.name || '');

@@ -1,7 +1,7 @@
 import { AnalyticsBase, ArticleAnalytics, Resolvers } from '@/__generated__/graphql/resolvers';
+import getArticleAnalyticsLoader from '@/graphql/loaders/articleAnalytics';
 import { resolveRequestedAttributes } from '@/graphql/resolvers/helpers/processAttributes';
-import getArticleAnalyticsLoader from '@/loaders/articleAnalytics';
-import type { Context } from '@/types';
+import type { GraphQLContext } from '@/types';
 import { GraphQLResolveInfo } from 'graphql';
 
 const createArticleAnalyticsResolver =
@@ -9,13 +9,13 @@ const createArticleAnalyticsResolver =
   async (
     parent: ArticleAnalytics,
     _args: any,
-    c: Context,
+    cxt: GraphQLContext,
     info: GraphQLResolveInfo
   ): Promise<T[] | null> => {
     const { startDate, endDate, aggregation, limit, page, siteName, url, metric } =
       parent.parameters;
     const attributes = resolveRequestedAttributes(info);
-    const loader = getArticleAnalyticsLoader<T>(c, {
+    const loader = getArticleAnalyticsLoader<T>(cxt, {
       tableName,
       queryParams: {
         startDate,

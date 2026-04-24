@@ -1,8 +1,8 @@
 import type { RankParameters, Resolvers } from '@/__generated__/graphql/resolvers';
+import getRankLoader from '@/graphql/loaders/rank';
 import { getArticle } from '@/graphql/resolvers/article';
 import { resolveRequestedAttributesWithArticle } from '@/graphql/resolvers/helpers/processAttributes';
-import getRankLoader from '@/loaders/rank';
-import { Context } from '@/types';
+import { GraphQLContext } from '@/types';
 import { GraphQLResolveInfo } from 'graphql';
 
 const createCategoryResolver =
@@ -10,12 +10,12 @@ const createCategoryResolver =
   async (
     parent: { parameters: RankParameters },
     args: any,
-    c: Context,
+    cxt: GraphQLContext,
     info: GraphQLResolveInfo
   ) => {
     const attributes = resolveRequestedAttributesWithArticle(info);
 
-    const loader = getRankLoader(c, {
+    const loader = getRankLoader(cxt, {
       tableName,
       queryParams: { ...parent.parameters },
       attributes,
@@ -27,12 +27,12 @@ const createCategoryResolver =
 
 const resolvers: Resolvers = {
   Query: {
-    rank: async (_parent, args, c) => {
+    rank: async (_parent, args, cxt) => {
       const loaderParams = {
         tableName: 'pv',
         queryParams: args,
       };
-      const loader = getRankLoader(c, loaderParams);
+      const loader = getRankLoader(cxt, loaderParams);
       const data = await loader.total();
       if (!data || data.length === 0)
         return {

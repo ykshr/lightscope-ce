@@ -82,7 +82,7 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
     // Start the 500ms timer
     const waitPromise = new Promise((resolve) => setTimeout(resolve, 500));
 
-    const res = await request.post(`${API_URL}/gql`, {
+    const res = await request.post(`${API_URL}/graphql`, {
       headers: { 'Content-Type': 'application/json' },
       data: { query },
     });

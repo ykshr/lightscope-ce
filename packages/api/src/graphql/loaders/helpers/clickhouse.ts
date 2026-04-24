@@ -1,4 +1,4 @@
-import { renameKeySnakeToCamel } from '@/loaders/helpers/rename';
+import { renameKeySnakeToCamel } from '@/graphql/loaders/helpers/rename';
 import { ClickHouseClient } from '@clickhouse/client';
 
 export default async function <T>(
@@ -7,7 +7,7 @@ export default async function <T>(
   query_params: any = undefined
 ): Promise<T[]> {
   try {
-    console.debug('loaders/helpers/clickhouse.ts', query, query_params);
+    // console.debug('loaders/helpers/clickhouse.ts', query, query_params);
     const rows = await client.query({
       query,
       query_params,

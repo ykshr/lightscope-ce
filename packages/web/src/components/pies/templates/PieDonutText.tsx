@@ -91,32 +91,31 @@ export default function PieDonutText({
             >
               <Label
                 content={({ viewBox }) => {
-                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
-                    return (
-                      <text
+                  if (!(viewBox && 'cx' in viewBox && 'cy' in viewBox)) return null;
+                  return (
+                    <text
+                      x={viewBox.cx}
+                      y={viewBox.cy}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                    >
+                      <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
+                        className="fill-foreground text-2xl font-bold"
                       >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-2xl font-bold"
-                        >
-                          {totalValue.toLocaleString()}
-                          {unit}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 20}
-                          className="fill-muted-foreground text-[10px] uppercase"
-                        >
-                          {centerLabel}
-                        </tspan>
-                      </text>
-                    );
-                  }
+                        {totalValue.toLocaleString()}
+                        {unit}
+                      </tspan>
+                      <tspan
+                        x={viewBox.cx}
+                        y={(viewBox.cy || 0) + 20}
+                        className="fill-muted-foreground text-[10px] uppercase"
+                      >
+                        {centerLabel}
+                      </tspan>
+                    </text>
+                  );
                 }}
               />
             </Pie>

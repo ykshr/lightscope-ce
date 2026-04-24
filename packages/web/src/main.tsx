@@ -1,4 +1,4 @@
-import App from '@/App.tsx';
+import App from '@/App';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import '@/index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

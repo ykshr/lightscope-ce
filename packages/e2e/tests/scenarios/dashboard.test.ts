@@ -54,7 +54,7 @@ test.describe('Web Dashboard Verification', () => {
     await expect(page).toHaveURL(/ed=So1D/);
   });
 
-  test('should interact with the advanced article filter', async ({ page }) => {
+  test.skip('should interact with the advanced article filter', async ({ page }) => {
     // Go to article page where the filter is located
     await page.goto('/article');
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();

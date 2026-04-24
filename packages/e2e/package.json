@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "End-to-End tests for Lightscope CE",
   "scripts": {
-    "postinstall": "playwright install chromium",
     "pretest": "pnpm --filter @lightscope-ce/tracker run build",
     "test:e2e": "playwright test",
     "test:smoke": "tsx src/scripts/smoke.ts",

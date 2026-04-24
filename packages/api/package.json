@@ -12,7 +12,7 @@
   "scripts": {
     "test": "vitest run tests/unit",
     "test:watch": "vitest",
-    "build": "pnpm run db:generate && pnpm run codegen && tsc -b",
+    "build": "npx prisma generate && pnpm run codegen && tsc -b",
     "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
     "start": "node dist/bundle.js",
     "dev": "tsx --tsconfig tsconfig.app.json src/index.ts",

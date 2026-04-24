@@ -21,7 +21,6 @@
     "test:integration": "WAIT_PORTS=3000 docker compose up -d web && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v"
   },
   "dependencies": {
-    "@lightscope-ce/api": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-avatar": "^1.1.11",
@@ -61,6 +60,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@lightscope-ce/api": "workspace:*",
     "@eslint/js": "^9.32.0",
     "@graphql-codegen/cli": "^6.1.0",
     "@graphql-codegen/typescript": "^5.0.7",

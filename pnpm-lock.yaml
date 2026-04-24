@@ -214,9 +214,6 @@ importers:
 
   packages/web:
     dependencies:
-      '@lightscope-ce/api':
-        specifier: workspace:*
-        version: link:../api
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -344,6 +341,9 @@ importers:
       '@graphql-codegen/typescript-react-query':
         specifier: ^6.1.1
         version: 6.1.2(graphql@16.13.1)
+      '@lightscope-ce/api':
+        specifier: workspace:*
+        version: link:../api
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.2.1(vite@7.3.1(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))

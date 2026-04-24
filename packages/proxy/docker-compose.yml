@@ -10,7 +10,7 @@ services:
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
       - PORT=3002
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
-      - JWT_SECRET=${JWT_SECRET}
+      - JWT_SECRET=${JWT_SECRET:-ci-test-secret-do-not-use-in-prod}
     ports:
       - '3002:3002'
     healthcheck:

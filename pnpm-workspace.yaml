@@ -6,3 +6,8 @@ packages:
   - packages/mock-site
   - packages/tracker
   - packages/web
+
+ignoreScripts: true
+ignorePnpmfile: true
+minimumReleaseAge: 10080
+preferFrozenLockfile: true

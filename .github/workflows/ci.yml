@@ -1,4 +1,4 @@
-name: CI
+name: CI & E2E
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  ci-e2e:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,3 +35,13 @@ jobs:
         run: pnpm run test
         env:
           JWT_SECRET: ci-test-secret-do-not-use-in-prod
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "VERSION=$(pnpm --filter @lightscope-ce/e2e exec playwright --version | awk '{print $2}')" >> $GITHUB_ENV
+
+      - name: Install Playwright Browsers
+        run: pnpm --filter @lightscope-ce/e2e exec playwright install --with-deps
+
+      - name: Run E2E tests
+        run: pnpm run test:e2e

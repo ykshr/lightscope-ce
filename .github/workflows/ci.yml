@@ -51,7 +51,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
-          path: .
+          path: packages
 
       - name: Run format:check
         run: pnpm run format:check
@@ -78,7 +78,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
-          path: .
+          path: packages
 
       - name: Get Playwright version
         id: playwright-version

@@ -13,7 +13,7 @@
     "test": "vitest run tests/unit",
     "test:watch": "vitest",
     "dev": "vite --host",
-    "build": "pnpm run codegen && tsc -b && vite build",
+    "build": "pnpm run codegen && tsc && vite build",
     "lint": "eslint . --cache --cache-location .eslintcache",
     "preview": "vite preview",
     "shadcn": "pnpm dlx shadcn@latest add",

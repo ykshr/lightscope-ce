@@ -1,6 +1,6 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useSession } from '@/hooks/useSession';
+import { useSession } from '@/hooks/useAuth';
 import { UserIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

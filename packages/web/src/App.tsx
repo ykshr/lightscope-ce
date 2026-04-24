@@ -1,6 +1,6 @@
 import Sidebar from '@/components/sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { useSession } from '@/hooks/useSession';
+import { useSession } from '@/hooks/useAuth';
 import Article from '@/pages/article';
 import SingIn from '@/pages/auth/SingIn';
 import SingUp from '@/pages/auth/SingUp';

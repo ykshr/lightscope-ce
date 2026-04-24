@@ -1,5 +1,5 @@
 import authClient from '@/helpers/auth';
-import { useSession } from '@/hooks/useSession';
+import { useSession } from '@/hooks/useAuth';
 import DangerZone from './DangerZone';
 import General from './General';
 import Members from './Members';

@@ -1,13 +1,23 @@
 import Sidebar from '@/components/sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { useSession } from '@/hooks/useAuth';
-import Article from '@/pages/article';
-import SingIn from '@/pages/login/SingIn';
-import SingUp from '@/pages/login/SingUp';
-import Overview from '@/pages/overview';
-import Ranking from '@/pages/ranking';
-import Settings from '@/pages/settings';
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
+
+const Article = lazy(() => import('@/pages/article'));
+const SingIn = lazy(() => import('@/pages/login/SingIn'));
+const SingUp = lazy(() => import('@/pages/login/SingUp'));
+const Overview = lazy(() => import('@/pages/overview'));
+const Ranking = lazy(() => import('@/pages/ranking'));
+const Settings = lazy(() => import('@/pages/settings'));
+
+const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => (
+  <Suspense
+    fallback={<div className="flex h-screen w-full items-center justify-center">Loading...</div>}
+  >
+    {children}
+  </Suspense>
+);
 
 const RootLayout = () => {
   return (
@@ -27,19 +37,35 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Overview />,
+        element: (
+          <SuspenseWrapper>
+            <Overview />
+          </SuspenseWrapper>
+        ),
       },
       {
         path: '/ranking',
-        element: <Ranking />,
+        element: (
+          <SuspenseWrapper>
+            <Ranking />
+          </SuspenseWrapper>
+        ),
       },
       {
         path: '/article',
-        element: <Article />,
+        element: (
+          <SuspenseWrapper>
+            <Article />
+          </SuspenseWrapper>
+        ),
       },
       {
         path: '/settings',
-        element: <Settings />,
+        element: (
+          <SuspenseWrapper>
+            <Settings />
+          </SuspenseWrapper>
+        ),
       },
       {
         path: '*',
@@ -52,11 +78,19 @@ const router = createBrowserRouter([
 const unauthenticatedRouter = createBrowserRouter([
   {
     path: '/singin',
-    element: <SingIn />,
+    element: (
+      <SuspenseWrapper>
+        <SingIn />
+      </SuspenseWrapper>
+    ),
   },
   {
     path: '/signup',
-    element: <SingUp />,
+    element: (
+      <SuspenseWrapper>
+        <SingUp />
+      </SuspenseWrapper>
+    ),
   },
   {
     path: '*',

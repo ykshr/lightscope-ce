@@ -21,7 +21,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "test:integration": "WAIT_PORTS=3001 docker compose up -d api && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v"
+    "test:integration": "WAIT_PORTS=3001 docker compose up -d api && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v",
+    "postinstall": "prisma generate && pnpm run codegen"
   },
   "dependencies": {
     "@clickhouse/client": "^1.14.0",

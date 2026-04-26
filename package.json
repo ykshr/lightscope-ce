@@ -12,9 +12,20 @@
   "workspaces": [
     "packages/*"
   ],
-  "devDependencies": {
-    "prettier": "^3.6.2",
-    "vitest": "^4.0.18"
+  "pnpm": {
+    "supportedArchitectures": {
+      "os": [
+        "linux"
+      ],
+      "cpu": [
+        "x64",
+        "arm64"
+      ],
+      "libc": [
+        "glibc",
+        "musl"
+      ]
+    }
   },
   "scripts": {
     "lint": "pnpm --recursive --if-present run lint",
@@ -28,5 +39,13 @@
     "docker:down": "docker compose down -v",
     "test:integration": "pnpm --recursive --if-present run test:integration"
   },
-  "pnpm": {}
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@vitest/coverage-v8": "^4.0.18",
+    "eslint": "^10.0.2",
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.39.0",
+    "vitest": "^4.0.18"
+  }
 }

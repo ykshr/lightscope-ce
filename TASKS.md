@@ -6,7 +6,7 @@ Based on a review of the current project state, here is a list of remaining task
 - **Task:** Optimize the frontend bundle size. The Vite build output currently warns about chunks larger than 500kB. Implement code-splitting using `dynamic import()` or configure `manualChunks` to improve initial load performance.
 
 ## 2. Increase Test Coverage
-- **Task:** Expand E2E test scenarios using Playwright. Ensure all critical user paths are covered, including authentication flows, data ingestion processes, and dashboard visualizations.
+- **Task:** Expand E2E test scenarios using Playwright. Ensure all critical user paths are covered, including authentication flows, data ingestion processes, and dashboard visualizations. (Completed)
 
 ## 3. Documentation Updates
 - **Task:** Update `README.md` to include comprehensive instructions for production deployment, expanding beyond the current local Docker Compose setup.

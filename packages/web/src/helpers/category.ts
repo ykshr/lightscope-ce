@@ -57,9 +57,7 @@ export type CategoryVariables = {
   excludeCampaigns?: string[];
 };
 
-export const categoryUrlParamsToVariables = (
-  urlParams: FilterToQuery
-): CategoryVariables | undefined => {
+export const categoryUrlParamsToVariables = (urlParams: FilterToQuery): CategoryVariables => {
   const { category } = urlParams;
   if (!category) {
     return {
@@ -165,5 +163,5 @@ export const categoryUrlParamsToVariables = (
     };
   }
 
-  return;
+  return {};
 };

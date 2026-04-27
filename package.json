@@ -9,9 +9,6 @@
     "url": "https://github.com/ykshr/lightscope-ce.git"
   },
   "packageManager": "pnpm@10.29.3",
-  "workspaces": [
-    "packages/*"
-  ],
   "pnpm": {
     "supportedArchitectures": {
       "os": [

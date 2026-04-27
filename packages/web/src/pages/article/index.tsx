@@ -26,7 +26,7 @@ export default function Article() {
     </>
   );
 
-  let content = null;
+  let content: React.ReactNode;
 
   if (!url) {
     content = <div className="p-8 text-center text-muted-foreground">No article URL provided.</div>;

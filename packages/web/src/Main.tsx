@@ -10,7 +10,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function () {
+export default function Main() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>

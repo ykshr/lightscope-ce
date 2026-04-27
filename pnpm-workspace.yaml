@@ -1,11 +1,5 @@
 packages:
-  - packages/api
-  - packages/proxy
-  - packages/clickhouse
-  - packages/e2e
-  - packages/mock-site
-  - packages/tracker
-  - packages/web
+  - packages/*
 
 ignoreScripts: true
 ignorePnpmfile: true

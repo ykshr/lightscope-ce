@@ -14,7 +14,6 @@
     "test:integration": "WAIT_PORTS=8123 docker compose up -d clickhouse && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v"
   },
   "devDependencies": {
-    "vitest": "^4.0.18",
     "@types/node": "^22.15.29"
   }
 }

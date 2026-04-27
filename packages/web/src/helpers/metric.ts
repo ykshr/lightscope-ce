@@ -1,4 +1,5 @@
 import { Metric } from '@/__generated__/graphql';
+import { FilterToQuery } from '@/types/filter';
 
 const returnMetric = (metric: string) => {
   switch (metric) {
@@ -13,7 +14,7 @@ const returnMetric = (metric: string) => {
   }
 };
 
-export const metricUrlParamsToVariables = (urlParams: Record<string, any>) => {
+export const metricUrlParamsToVariables = (urlParams: FilterToQuery) => {
   const { metric = 'visits' } = urlParams;
   return {
     metric: returnMetric(metric),

@@ -1,4 +1,65 @@
-export const categoryUrlParamsToVariables = (urlParams: Record<string, any>) => {
+import { FilterToQuery } from '@/types/filter';
+
+export type CategoryVariables = {
+  isArticles?: boolean;
+  isCategoryAge?: boolean;
+  isCategoryAgeAge?: boolean;
+  includeAges?: string[];
+  excludeAges?: string[];
+  isCategoryApp?: boolean;
+  isCategoryAppAppType?: boolean;
+  isCategoryAppApp?: boolean;
+  includeAppTypes?: string[];
+  excludeAppTypes?: string[];
+  includeApps?: string[];
+  excludeApps?: string[];
+  isCategoryDevice?: boolean;
+  isCategoryDeviceDeviceType?: boolean;
+  isCategoryDeviceDevice?: boolean;
+  includeDeviceTypes?: string[];
+  excludeDeviceTypes?: string[];
+  includeDeviceVendors?: string[];
+  excludeDeviceVendors?: string[];
+  includeDevices?: string[];
+  excludeDevices?: string[];
+  isCategoryGender?: boolean;
+  isCategoryGenderGender?: boolean;
+  includeGenders?: string[];
+  excludeGenders?: string[];
+  isCategoryGeo?: boolean;
+  isCategoryGeoContinent?: boolean;
+  isCategoryGeoCountry?: boolean;
+  isCategoryGeoSubdivision?: boolean;
+  includeContinents?: string[];
+  excludeContinents?: string[];
+  includeSubdivisions?: string[];
+  excludeSubdivisions?: string[];
+  includeCountries?: string[];
+  excludeCountries?: string[];
+  includeCities?: string[];
+  excludeCities?: string[];
+  isCategoryReferrer?: boolean;
+  isCategoryReferrerDomain?: boolean;
+  isCategoryReferrerReferrer?: boolean;
+  includeDomains?: string[];
+  excludeDomains?: string[];
+  includeReferrers?: string[];
+  excludeReferrers?: string[];
+  isCategoryUtm?: boolean;
+  isCategoryUtmSource?: boolean;
+  isCategoryUtmMedium?: boolean;
+  isCategoryUtmCampaign?: boolean;
+  includeSources?: string[];
+  excludeSources?: string[];
+  includeMediums?: string[];
+  excludeMediums?: string[];
+  includeCampaigns?: string[];
+  excludeCampaigns?: string[];
+};
+
+export const categoryUrlParamsToVariables = (
+  urlParams: FilterToQuery
+): CategoryVariables | undefined => {
   const { category } = urlParams;
   if (!category) {
     return {

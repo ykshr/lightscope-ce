@@ -30,8 +30,8 @@ export default function ArticleAreaStacked({
   const [urlParams, updateUrlParams] = useUrlParams(localParams);
   const { startDate, endDate, articleFilter, page = 1, limit, metric = 'visits' } = urlParams;
 
-  const categoryParams = categoryUrlParamsToVariables(urlParams) as any;
-  const metricParams = metricUrlParamsToVariables(urlParams) as any;
+  const categoryParams = categoryUrlParamsToVariables(urlParams);
+  const metricParams = metricUrlParamsToVariables(urlParams);
 
   const { data, isLoading } = useArticleTrendQuery({
     startDate,

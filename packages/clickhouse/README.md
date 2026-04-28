@@ -24,6 +24,3 @@ This package is typically managed through the root-level `docker-compose.yml`.
 ## Contributing
 
 Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository.
-
-
-*Note: All documentation must be written in **English**.*

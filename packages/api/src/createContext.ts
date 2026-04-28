@@ -26,7 +26,7 @@ export default async function createContext(c: Context): Promise<$> {
     emailAndPassword: {
       enabled: true,
       sendResetPassword: async ({ url }) => {
-        console.log(`Reset password url: ${url}`);
+        // TODO: Send reset password email to the user with the provided URL
       },
     },
     rateLimit: {

@@ -163,19 +163,36 @@ export class AnalyticsTracker {
    * Extract information from OpenGraph and Article meta tags
    */
   private extractOGMetadata(): OGMetadata {
+    const metaMap: Record<string, string[]> = Object.create(null);
+    const metaTags = document.getElementsByTagName('meta');
+    for (let i = 0; i < metaTags.length; i++) {
+      const el = metaTags[i];
+      const property = el.getAttribute('property');
+      const name = el.getAttribute('name');
+      const content = el.getAttribute('content');
+
+      if (!content) continue;
+
+      if (property) {
+        if (!metaMap[property]) metaMap[property] = [];
+        metaMap[property].push(content);
+      }
+      if (name && name !== property) {
+        if (!metaMap[name]) metaMap[name] = [];
+        metaMap[name].push(content);
+      }
+    }
+
     const getMeta = (props: string[]) => {
-      for (const prop of props) {
-        const el = document.querySelector(`meta[property="${prop}"], meta[name="${prop}"]`);
-        if (el) return el.getAttribute('content') || '';
+      for (let i = 0; i < props.length; i++) {
+        const val = metaMap[props[i]];
+        if (val && val.length > 0) return val[0];
       }
       return '';
     };
 
     const getMetaArray = (prop: string) => {
-      const elements = document.querySelectorAll(`meta[property="${prop}"], meta[name="${prop}"]`);
-      return Array.from(elements)
-        .map((el) => el.getAttribute('content') || '')
-        .filter(Boolean);
+      return metaMap[prop] || [];
     };
 
     return {

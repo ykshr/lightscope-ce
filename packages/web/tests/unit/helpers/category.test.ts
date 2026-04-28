@@ -1,17 +1,18 @@
 import { categoryUrlParamsToVariables } from '@/helpers/category';
+import { FilterToQuery } from '@/types/filter';
 import { describe, expect, it } from 'vitest';
 
 describe('category helpers', () => {
   describe('categoryUrlParamsToVariables', () => {
     it('should return isArticles: true if no category', () => {
-      expect(categoryUrlParamsToVariables({} as any)).toEqual({ isArticles: true });
+      expect(categoryUrlParamsToVariables({} as FilterToQuery)).toEqual({ isArticles: true });
     });
 
     it('should handle age category', () => {
       const result = categoryUrlParamsToVariables({
         category: 'age',
         includeAges: ['25-34'],
-      } as any);
+      } as FilterToQuery);
       expect(result).toEqual({
         isCategoryAge: true,
         isCategoryAgeAge: false,
@@ -21,7 +22,7 @@ describe('category helpers', () => {
     });
 
     it('should handle app category and subcategories', () => {
-      const result = categoryUrlParamsToVariables({ category: 'appApp' } as any);
+      const result = categoryUrlParamsToVariables({ category: 'appApp' } as FilterToQuery);
       expect(result).toMatchObject({
         isCategoryApp: true,
         isCategoryAppApp: true,
@@ -30,7 +31,7 @@ describe('category helpers', () => {
     });
 
     it('should handle device category', () => {
-      const result = categoryUrlParamsToVariables({ category: 'device' } as any);
+      const result = categoryUrlParamsToVariables({ category: 'device' } as FilterToQuery);
       expect(result).toMatchObject({
         isCategoryDevice: true,
       });
@@ -40,7 +41,7 @@ describe('category helpers', () => {
       const result = categoryUrlParamsToVariables({
         category: 'geoCountry',
         includeCountries: ['US'],
-      } as any);
+      } as FilterToQuery);
       expect(result).toMatchObject({
         isCategoryGeo: true,
         isCategoryGeoCountry: true,
@@ -51,7 +52,7 @@ describe('category helpers', () => {
     it('should handle referrer category', () => {
       const result = categoryUrlParamsToVariables({
         category: 'referrerDomain',
-      } as any);
+      } as FilterToQuery);
       expect(result).toMatchObject({
         isCategoryReferrer: true,
         isCategoryReferrerDomain: true,
@@ -59,7 +60,7 @@ describe('category helpers', () => {
     });
 
     it('should handle utm category', () => {
-      const result = categoryUrlParamsToVariables({ category: 'utmSource' } as any);
+      const result = categoryUrlParamsToVariables({ category: 'utmSource' } as FilterToQuery);
       expect(result).toMatchObject({
         isCategoryUtm: true,
         isCategoryUtmSource: true,
@@ -67,7 +68,7 @@ describe('category helpers', () => {
     });
 
     it('should return undefined for unknown category', () => {
-      expect(categoryUrlParamsToVariables({ category: 'unknown' } as any)).toEqual({});
+      expect(categoryUrlParamsToVariables({ category: 'unknown' } as FilterToQuery)).toEqual({});
     });
   });
 });

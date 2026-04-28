@@ -44,67 +44,71 @@ export default function User() {
   const isPending = isPendingSession || isPendingOrganizations;
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        {isPending ? (
-          <SidebarMenuButton disabled className="py-6">
-            <Skeleton className="h-8 w-8 shrink-0 rounded-lg" />
-            <div className="grid flex-1 gap-1 text-left">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-3 w-32" />
-            </div>
-          </SidebarMenuButton>
-        ) : (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton className="py-5 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                <UserIcon className="shrink-0" />
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate">{user?.name}</span>
-                  <span className="truncate text-xs">{activeOrganization?.name}</span>
-                </div>
-                <ChevronsUpDown className="ml-auto" />
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-              align="end"
-              side={isMobile ? 'top' : 'right'}
-              sideOffset={4}
-            >
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>Organization</DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuLabel>Active Organization</DropdownMenuLabel>
-                    <DropdownMenuRadioGroup
-                      value={activeOrganization?.id}
-                      onValueChange={handleSetActiveOrg}
-                    >
-                      {organizations?.map((org) => (
-                        <DropdownMenuRadioItem value={org.id}>org.name</DropdownMenuRadioItem>
-                      ))}
-                    </DropdownMenuRadioGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onSelect={() => setOpenAddDialog(true)}>
-                      <Plus className="size-4" />
-                      <div>Add new organization</div>
+    <>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          {isPending ? (
+            <SidebarMenuButton disabled className="py-6">
+              <Skeleton className="h-8 w-8 shrink-0 rounded-lg" />
+              <div className="grid flex-1 gap-1 text-left">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-32" />
+              </div>
+            </SidebarMenuButton>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton className="py-5 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                  <UserIcon className="shrink-0" />
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate">{user?.name}</span>
+                    <span className="truncate text-xs">{activeOrganization?.name}</span>
+                  </div>
+                  <ChevronsUpDown className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                align="end"
+                side={isMobile ? 'top' : 'right'}
+                sideOffset={4}
+              >
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>Organization</DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuLabel>Active Organization</DropdownMenuLabel>
+                      <DropdownMenuRadioGroup
+                        value={activeOrganization?.id}
+                        onValueChange={handleSetActiveOrg}
+                      >
+                        {organizations?.map((org) => (
+                          <DropdownMenuRadioItem value={org.id}>org.name</DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onSelect={() => setOpenAddDialog(true)}>
+                        <Plus className="size-4" />
+                        <div>Add new organization</div>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onSelect={() => navigate('/settings/organization')}>
+                        <div>Settings</div>
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                    <DropdownMenuItem onSelect={() => navigate('/settings/profile')}>
+                      <div>Profile</div>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onSelect={() => navigate('/settings/organization')}>
-                      <div>Settings</div>
-                    </DropdownMenuItem>
-                  </DropdownMenuSubContent>
-                  <DropdownMenuItem onSelect={() => navigate('/settings/profile')}>
-                    <div>Profile</div>
-                  </DropdownMenuItem>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
-              <DropdownMenuSeparator />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-      </SidebarMenuItem>
-    </SidebarMenu>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+                <DropdownMenuSeparator />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </SidebarMenuItem>
+      </SidebarMenu>
+
+      <NewOrganizationDialog open={openAddDialog} onOpenChange={setOpenAddDialog} />
+    </>
   );
 }

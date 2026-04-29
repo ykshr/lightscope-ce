@@ -1,6 +1,8 @@
+import NewOrganizationDialog from '@/components/sidebar/NewOrganizationDialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuPortal,
@@ -73,35 +75,38 @@ export default function User() {
                 side={isMobile ? 'top' : 'right'}
                 sideOffset={4}
               >
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Organization</DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuLabel>Active Organization</DropdownMenuLabel>
-                      <DropdownMenuRadioGroup
-                        value={activeOrganization?.id}
-                        onValueChange={handleSetActiveOrg}
-                      >
-                        {organizations?.map((org) => (
-                          <DropdownMenuRadioItem value={org.id}>org.name</DropdownMenuRadioItem>
-                        ))}
-                      </DropdownMenuRadioGroup>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onSelect={() => setOpenAddDialog(true)}>
-                        <Plus className="size-4" />
-                        <div>Add new organization</div>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onSelect={() => navigate('/settings/organization')}>
-                        <div>Settings</div>
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                    <DropdownMenuItem onSelect={() => navigate('/settings/profile')}>
-                      <div>Profile</div>
-                    </DropdownMenuItem>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Organization</DropdownMenuLabel>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>Active</DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuRadioGroup
+                          value={activeOrganization?.id}
+                          onValueChange={handleSetActiveOrg}
+                        >
+                          {organizations?.map((org) => (
+                            <DropdownMenuRadioItem value={org.id}>org.name</DropdownMenuRadioItem>
+                          ))}
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                  <DropdownMenuItem onSelect={() => setOpenAddDialog(true)}>
+                    <Plus className="size-4" />
+                    <div>Add new organization</div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => navigate('/settings/organization')}>
+                    <div>Settings</div>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Profile</DropdownMenuLabel>
+                  <DropdownMenuItem onSelect={() => navigate('/settings/profile')}>
+                    <div>Settings</div>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           )}

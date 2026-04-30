@@ -19,6 +19,7 @@ export default function Organization() {
       {!isPending && !org && <div>Failed to load organization.</div>}
       {!isPending && org && (
         <>
+          <h2>{org.name}</h2>
           <General org={org} me={me} />
           <Members org={org} me={me} />
           <Trackers org={org} me={me} />

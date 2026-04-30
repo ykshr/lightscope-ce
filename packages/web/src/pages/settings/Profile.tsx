@@ -50,7 +50,8 @@ export default function Profile() {
   };
 
   return (
-    <div className="space-y-10">
+    <>
+      <h1>Profile</h1>
       <Card>
         <CardHeader>
           <CardTitle>General</CardTitle>
@@ -132,6 +133,6 @@ export default function Profile() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </>
   );
 }

@@ -86,16 +86,22 @@ export default function User() {
                           onValueChange={handleSetActiveOrg}
                         >
                           {organizations?.map((org) => (
-                            <DropdownMenuRadioItem value={org.id}>org.name</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value={org.id}>{org.name}</DropdownMenuRadioItem>
                           ))}
                         </DropdownMenuRadioGroup>
+                        {organizations?.length === 0 && (
+                          <DropdownMenuItem>
+                            <div>No organizations found</div>
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onSelect={() => setOpenAddDialog(true)}>
+                          <Plus className="size-4" />
+                          <div>Add new organization</div>
+                        </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuPortal>
                   </DropdownMenuSub>
-                  <DropdownMenuItem onSelect={() => setOpenAddDialog(true)}>
-                    <Plus className="size-4" />
-                    <div>Add new organization</div>
-                  </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => navigate('/settings/organization')}>
                     <div>Settings</div>
                   </DropdownMenuItem>

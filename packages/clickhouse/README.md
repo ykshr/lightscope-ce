@@ -23,4 +23,4 @@ This package is typically managed through the root-level `docker-compose.yml`.
 2. The database will be available at `http://localhost:8123` with the default user credentials specified in your `.env` file (`CLICKHOUSE_USERNAME` and `CLICKHOUSE_PASSWORD`).
 ## Contributing
 
-Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository.
+Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. All documentation, including PR comments and generated files, must strictly adhere to the English-only rule.

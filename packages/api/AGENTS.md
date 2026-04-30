@@ -24,19 +24,19 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - `camelCase` for functions/variables, `PascalCase` for types/interfaces/classes.
 * Restrictions on libraries that should or should not be used
   - Do not use any external ORM libraries other than Prisma for relational state. Do not add raw driver clients outside of ClickHouse.
-- **Resolver Responsibilities**: Keep resolvers thin. Business logic belongs in service modules. Do not write raw SQL inside the resolver body.
-- **Input Validation**: GraphQL type definitions do not guarantee runtime validation. All external inputs must be strictly validated with Zod and normalized before use.
-- **Performance**: Always assume large datasets. Avoid loading full result sets into memory. Prefer pre-aggregated tables whenever possible.
-- **Security**:
-  - Security standards for `packages/api` mandate that sensitive secrets (e.g., `JWT_SECRET`, `DATABASE_URL`) must be explicitly configured in the environment; hardcoded fallback values are prohibited, and missing secrets must cause the request context creation to fail securely by throwing an error.
-  - Sensitive information like `JWT_SECRET` must be explicitly configured in the environment. Hardcoded fallback values are strictly prohibited, and missing secrets must cause the request context creation to fail securely by throwing an error.
-  - Do not log raw SQL errors.
-  - Do not expose internal table names to the client.
-  - Do not trust client-provided column names.
-- **Hono Context**: In `packages/api`, organization Role-Based Access Control (RBAC) relies on `c.var.me.role` (populated by the organization middleware). Roles are strictly defined as: `member` (read-only), `admin` (read, edit, token management), and `owner` (full control). Environment variables and bindings (like `JWT_SECRET`, `CLICKHOUSE_URL`) are retrieved from the Hono context using the `env(c)` function from `hono/adapter` within `createContext.ts`. Better Auth plugin objects (like `user` and `organization`) are exposed via `c.var`. Organization ID must be accessed via `c.var.organization.id` rather than assuming an `organizationId` property exists directly on the `user` object.
-- **Better Auth Plugins**: When configuring frontend Better Auth plugins (like `organizationClient()`), ensure the corresponding backend plugin (e.g., `organization()`) is actively configured in the API (`packages/api/src/helpers/auth.ts`) to avoid 404 API errors. The `NoAuth` authentication provider (`packages/api/src/helpers/auth/noAuth.ts`) returns a static anonymous user object with `id: 'anonymous'`, `role: 'admin'`, and `tenantId: 'none'`. Its `handler` method returns a 401 Unauthorized Response. When using Better Auth, the built-in rate limiting feature (`rateLimit: { enabled: true }`) defaults to in-memory storage, meaning no database schema modifications are required to enable abuse prevention for features like authentication endpoints and password resets.
-- **Helpers**: The `snakeToCamel` implementation in `packages/api/src/loaders/helpers/rename.ts` uses a module-level `Map` to cache string transformations (~7x speedup vs non-cached) and a static `SNAKE_TO_CAMEL_REGEX` constant to avoid recompilation; the version in `packages/api/src/helpers/rename.ts` also uses the static regex but lacks caching. In `packages/api/src/loaders/helpers/rename.ts`, the recursive `renameKeySnakeToCamel` function is optimized using a `for...in` loop with `Object.prototype.hasOwnProperty.call(obj, key)` to avoid the overhead of `Object.keys()` array allocations, yielding a ~15-20% performance improvement. The `formatToDateTime` utility in `packages/api/src/loaders/helpers/clickhouse.ts` converts JavaScript `Date` objects to ClickHouse-compatible 'YYYY-MM-DD HH:mm:ss' strings and is verified by unit tests in `packages/api/tests/unit/loaders/helpers/clickhouse.test.ts`. Small utility functions like 'redactError' are duplicated in both 'packages/api/src/helpers/' and 'packages/proxy/src/helpers/'. In `packages/api` and `packages/proxy`, the `processAllowedOriginsString` helper (located in `src/helpers/allowedOrigins.ts`) is used to parse the `ALLOWED_ORIGINS` environment variable into an array for Hono's `cors` middleware. The `packages/api/src/helpers/rename.ts` utility uses recursive mapped types (`SnakeToCamelObject` and `SnakeToCamelCase`) to provide strong type safety when converting snake_case database records into camelCase TypeScript objects. The `snakeToCamel` utility uses a module-level `Map` to cache string transformations, which significantly optimizes the recursive `renameKeySnakeToCamel` function for objects with many or repeated keys, resulting in measurable performance gains (~5x speedup). This utility is tested by `packages/api/src/helpers/rename.test.ts`, covering simple objects, nested structures, arrays, and edge cases.
-- **Mocking GraphQL**: When mocking `GraphQLResolveInfo` in tests, explicitly provide expected dummy properties and methods (e.g., `schema: { getType: () => null }`, `returnType: { name: 'Dummy' }`) instead of using empty objects cast as `any` (`{} as any`).
+  - **Resolver Responsibilities**: Keep resolvers thin. Business logic belongs in service modules. Do not write raw SQL inside the resolver body.
+  - **Input Validation**: GraphQL type definitions do not guarantee runtime validation. All external inputs must be strictly validated with Zod and normalized before use.
+  - **Performance**: Always assume large datasets. Avoid loading full result sets into memory. Prefer pre-aggregated tables whenever possible.
+  - **Security**:
+    - Security standards for `packages/api` mandate that sensitive secrets (e.g., `JWT_SECRET`, `DATABASE_URL`) must be explicitly configured in the environment; hardcoded fallback values are prohibited, and missing secrets must cause the request context creation to fail securely by throwing an error.
+    - Sensitive information like `JWT_SECRET` must be explicitly configured in the environment. Hardcoded fallback values are strictly prohibited, and missing secrets must cause the request context creation to fail securely by throwing an error.
+    - Do not log raw SQL errors.
+    - Do not expose internal table names to the client.
+    - Do not trust client-provided column names.
+  - **Hono Context**: In `packages/api`, organization Role-Based Access Control (RBAC) relies on `c.var.me.role` (populated by the organization middleware). Roles are strictly defined as: `member` (read-only), `admin` (read, edit, token management), and `owner` (full control). Environment variables and bindings (like `JWT_SECRET`, `CLICKHOUSE_URL`) are retrieved from the Hono context using the `env(c)` function from `hono/adapter` within `createContext.ts`. Better Auth plugin objects (like `user` and `organization`) are exposed via `c.var`. Organization ID must be accessed via `c.var.organization.id` rather than assuming an `organizationId` property exists directly on the `user` object.
+  - **Better Auth Plugins**: When configuring frontend Better Auth plugins (like `organizationClient()`), ensure the corresponding backend plugin (e.g., `organization()`) is actively configured in the API (`packages/api/src/helpers/auth.ts`) to avoid 404 API errors. The `NoAuth` authentication provider (`packages/api/src/helpers/auth/noAuth.ts`) returns a static anonymous user object with `id: 'anonymous'`, `role: 'admin'`, and `tenantId: 'none'`. Its `handler` method returns a 401 Unauthorized Response. When using Better Auth, the built-in rate limiting feature (`rateLimit: { enabled: true }`) defaults to in-memory storage, meaning no database schema modifications are required to enable abuse prevention for features like authentication endpoints and password resets.
+  - **Helpers**: The `snakeToCamel` implementation in `packages/api/src/loaders/helpers/rename.ts` uses a module-level `Map` to cache string transformations (~7x speedup vs non-cached) and a static `SNAKE_TO_CAMEL_REGEX` constant to avoid recompilation; the version in `packages/api/src/helpers/rename.ts` also uses the static regex but lacks caching. In `packages/api/src/loaders/helpers/rename.ts`, the recursive `renameKeySnakeToCamel` function is optimized using a `for...in` loop with `Object.prototype.hasOwnProperty.call(obj, key)` to avoid the overhead of `Object.keys()` array allocations, yielding a ~15-20% performance improvement. The `formatToDateTime` utility in `packages/api/src/loaders/helpers/clickhouse.ts` converts JavaScript `Date` objects to ClickHouse-compatible 'YYYY-MM-DD HH:mm:ss' strings and is verified by unit tests in `packages/api/tests/unit/loaders/helpers/clickhouse.test.ts`. Small utility functions like 'redactError' are duplicated in both 'packages/api/src/helpers/' and 'packages/proxy/src/helpers/'. In `packages/api` and `packages/proxy`, the `processAllowedOriginsString` helper (located in `src/helpers/allowedOrigins.ts`) is used to parse the `ALLOWED_ORIGINS` environment variable into an array for Hono's `cors` middleware. The `packages/api/src/helpers/rename.ts` utility uses recursive mapped types (`SnakeToCamelObject` and `SnakeToCamelCase`) to provide strong type safety when converting snake_case database records into camelCase TypeScript objects. The `snakeToCamel` utility uses a module-level `Map` to cache string transformations, which significantly optimizes the recursive `renameKeySnakeToCamel` function for objects with many or repeated keys, resulting in measurable performance gains (~5x speedup). This utility is tested by `packages/api/src/helpers/rename.test.ts`, covering simple objects, nested structures, arrays, and edge cases.
+  - **Mocking GraphQL**: When mocking `GraphQLResolveInfo` in tests, explicitly provide expected dummy properties and methods (e.g., `schema: { getType: () => null }`, `returnType: { name: 'Dummy' }`) instead of using empty objects cast as `any` (`{} as any`).
 
 #### Build & Test Commands
 * How to build the project
@@ -50,20 +50,20 @@ All `AGENTS.md` files in the repository must be structured with four specific En
     ```bash
     pnpm --filter @lightscope-ce/api run test
     ```
-- **Start Development Server**:
-  ```bash
-  pnpm --filter @lightscope-ce/api run dev
-  ```
-- **Generate GraphQL Code**:
-  Resolver types, enums, and schemas are generated into `src/__generated__/` (e.g., `graphql-resolvers.ts`, `schema.generated.graphql`) using `graphql-codegen`. Run `pnpm --filter @lightscope-ce/api run codegen` if these files are missing (e.g., causing 'Unknown file extension .graphql' errors in Node) or need updating before running the API.
-  ```bash
-  pnpm --filter @lightscope-ce/api run codegen
-  ```
-- **Generate Prisma / Auth Schema**:
-  ```bash
-  pnpm exec auth generate --config ./src/helpers/auth.ts --output ./prisma/schema/schema.prisma --yes
-  pnpm exec prisma generate
-  ```
+  - **Start Development Server**:
+    ```bash
+    pnpm --filter @lightscope-ce/api run dev
+    ```
+  - **Generate GraphQL Code**:
+    Resolver types, enums, and schemas are generated into `src/__generated__/` (e.g., `graphql-resolvers.ts`, `schema.generated.graphql`) using `graphql-codegen`. Run `pnpm --filter @lightscope-ce/api run codegen` if these files are missing (e.g., causing 'Unknown file extension .graphql' errors in Node) or need updating before running the API.
+    ```bash
+    pnpm --filter @lightscope-ce/api run codegen
+    ```
+  - **Generate Prisma / Auth Schema**:
+    ```bash
+    pnpm exec auth generate --config ./src/helpers/auth.ts --output ./prisma/schema/schema.prisma --yes
+    pnpm exec prisma generate
+    ```
 
 #### Project Structure
 * Explanation of key directories
@@ -75,10 +75,9 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - GraphQL schema changes should affect `schema.graphql` and be codegen'd into `src/__generated__/`.
   - Unit and integration tests go in `tests/unit/` and `tests/integration/` respectively.
 
-
 #### Restrictions
 * Guardrails such as:
-  * “Do not edit this file directly”
+  * "Do not edit this file directly"
     - Auto-generated files.
-  * “Do not modify this directory”
+  * "Do not modify this directory"
     - Do not modify build output directories manually.

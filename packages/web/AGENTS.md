@@ -22,25 +22,25 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - `camelCase` for variables/functions, `PascalCase` for React components.
 * Restrictions on libraries that should or should not be used
   - Do not introduce libraries like `axios`, `redux`, or `zustand`. Use `fetch` and TanStack Query. Icons in the `packages/web` frontend application are implemented using the `@phosphor-icons/react` library. Ensure any new icon additions import from this package.
-- **Type Safety**: The `packages/web` codebase strictly avoids `@typescript-eslint/no-explicit-any`; prefer `unknown`, `Record<string, unknown>`, or specifically defined interfaces and types over `any`.
-- **Data Fetching Rules**:
-  - Always use the generated GraphQL hooks (`useQuery`, `useMutation`).
-  - Avoid using manual `fetch` or introducing libraries like `axios`. When modifying fetcher utility or hook error handling, always evaluate GraphQL errors (e.g., checking `json.errors`) independently from HTTP network errors (e.g., `!res.ok`), as GraphQL APIs typically return a `200 OK` status even when logical errors occur.
-  - User organization data is queried using the `authClient` from `@/helpers/auth`, specifically via the `authClient.useListOrganizations()` hook or the async `authClient.organization.list()` method.
-- **State Management**:
-  - Use React Query for managing server state.
-  - Avoid introducing custom global stores, Redux, or Zustand.
-- **UI and Styling Rules**:
-  - Use `shadcn/ui` primitive components whenever possible.
-  - Codebase convention for `packages/web` components is to use clean no-op functions `() => {}` for optional callback props' default values, ensuring no debug logging (e.g., `console.log`) remains in production code.
-  - Constants and helper functions should be extracted to separate files (e.g., `src/helpers/constants/`) to prevent `react-refresh/only-export-components` ESLint warnings in component files.
-  - Use only Tailwind v4 utility classes for styling. Avoid custom CSS files or inline styles.
-  - Maintain consistency with existing components and keep the added `className` props to a minimum.
-  - The custom `DialogContent` component in `packages/web/src/components/ui/dialog.tsx` supports a boolean `showCloseButton` prop to optionally show or hide the default Radix close icon.
-- **Performance**:
-  - Analytics dashboards can become heavy. Do not execute intensive aggregation processing during rendering. Rely on the backend (ClickHouse) for aggregations. If necessary, use `useMemo` to memoize heavy data transformations.
-  - Performance optimization of array filtering and grouping in hot paths (e.g., loaders, utilities) can be achieved by replacing nested `.filter()` loops or `.filter(Boolean).map(...)` chains with a single-pass `for...of` loop and `Map` accumulation. This eliminates intermediate array allocations and reduces time complexity from O(n^2) to O(n).
-  - When refactoring array iterations that generate indexed keys (e.g., `param_${i}`), ensure the new logic maintains the original indexing by using the result array's current length or a manual counter to avoid breaking query parameter references.
+  - **Type Safety**: The `packages/web` codebase strictly avoids `@typescript-eslint/no-explicit-any`; prefer `unknown`, `Record<string, unknown>`, or specifically defined interfaces and types over `any`.
+  - **Data Fetching Rules**:
+    - Always use the generated GraphQL hooks (`useQuery`, `useMutation`).
+    - Avoid using manual `fetch` or introducing libraries like `axios`. When modifying fetcher utility or hook error handling, always evaluate GraphQL errors (e.g., checking `json.errors`) independently from HTTP network errors (e.g., `!res.ok`), as GraphQL APIs typically return a `200 OK` status even when logical errors occur.
+    - User organization data is queried using the `authClient` from `@/helpers/auth`, specifically via the `authClient.useListOrganizations()` hook or the async `authClient.organization.list()` method.
+  - **State Management**:
+    - Use React Query for managing server state.
+    - Avoid introducing custom global stores, Redux, or Zustand.
+  - **UI and Styling Rules**:
+    - Use `shadcn/ui` primitive components whenever possible.
+    - Codebase convention for `packages/web` components is to use clean no-op functions `() => {}` for optional callback props' default values, ensuring no debug logging (e.g., `console.log`) remains in production code.
+    - Constants and helper functions should be extracted to separate files (e.g., `src/helpers/constants/`) to prevent `react-refresh/only-export-components` ESLint warnings in component files.
+    - Use only Tailwind v4 utility classes for styling. Avoid custom CSS files or inline styles.
+    - Maintain consistency with existing components and keep the added `className` props to a minimum.
+    - The custom `DialogContent` component in `packages/web/src/components/ui/dialog.tsx` supports a boolean `showCloseButton` prop to optionally show or hide the default Radix close icon.
+  - **Performance**:
+    - Analytics dashboards can become heavy. Do not execute intensive aggregation processing during rendering. Rely on the backend (ClickHouse) for aggregations. If necessary, use `useMemo` to memoize heavy data transformations.
+    - Performance optimization of array filtering and grouping in hot paths (e.g., loaders, utilities) can be achieved by replacing nested `.filter()` loops or `.filter(Boolean).map(...)` chains with a single-pass `for...of` loop and `Map` accumulation. This eliminates intermediate array allocations and reduces time complexity from O(n^2) to O(n).
+    - When refactoring array iterations that generate indexed keys (e.g., `param_${i}`), ensure the new logic maintains the original indexing by using the result array's current length or a manual counter to avoid breaking query parameter references.
 
 #### Build & Test Commands
 * How to build the project
@@ -75,13 +75,13 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 
 #### Restrictions
 * Guardrails such as:
-  * “Do not modify this directory”
-    * Maintain the existing directory boundaries and responsibilities.
-  * “Do not edit this file directly”
-    * Do not modify hooks inside `src/hooks/__generated__/` directly as they are generated by graphql-codegen.
-- **Testing**:
-  - Use Vitest and Testing Library.
-  - The `Filter.tsx` template in `packages/web/src/components/charts/templates/` lacks dedicated unit tests; verification should involve inspecting parent components like `ArticleAreaStacked.tsx` or using manual checks.
-  - In the `packages/web` test suite, the `formatDate` helper (using `dayjs` with format `'YYYY-MM-DDTHH:mm[Z]'`) has been observed to omit the literal 'Z' in some CI environments (returning `YYYY-MM-DDTHH:mm`), necessitating test assertions to be updated to match the received output.
-  - In Vitest testing environments, use `globalThis.fetch` rather than `global.fetch`. When mocking the global fetch API, use `vi.stubGlobal('fetch', vi.fn())` or `vi.spyOn(globalThis, 'fetch')` rather than direct assignment (`globalThis.fetch = vi.fn()`) to ensure proper isolation and reset behavior across tests.
-  - Avoid full DOM mocking unless absolutely necessary.
+  * "Do not modify this directory"
+    - Maintain the existing directory boundaries and responsibilities.
+  * "Do not edit this file directly"
+    - Do not modify hooks inside `src/hooks/__generated__/` directly as they are generated by graphql-codegen.
+  - **Testing**:
+    - Use Vitest and Testing Library.
+    - The `Filter.tsx` template in `packages/web/src/components/charts/templates/` lacks dedicated unit tests; verification should involve inspecting parent components like `ArticleAreaStacked.tsx` or using manual checks.
+    - In the `packages/web` test suite, the `formatDate` helper (using `dayjs` with format `'YYYY-MM-DDTHH:mm[Z]'`) has been observed to omit the literal 'Z' in some CI environments (returning `YYYY-MM-DDTHH:mm`), necessitating test assertions to be updated to match the received output.
+    - In Vitest testing environments, use `globalThis.fetch` rather than `global.fetch`. When mocking the global fetch API, use `vi.stubGlobal('fetch', vi.fn())` or `vi.spyOn(globalThis, 'fetch')` rather than direct assignment (`globalThis.fetch = vi.fn()`) to ensure proper isolation and reset behavior across tests.
+    - Avoid full DOM mocking unless absolutely necessary.

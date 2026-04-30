@@ -13,8 +13,9 @@ export default function Organization() {
   const me = org?.members?.find((member) => member.user?.id === id);
 
   return (
-    <div className="space-y-10">
-      {isPending && <div>Loading organization...</div>}
+    <>
+      <h1>Organization</h1>
+      {isPending && <div>Loading...</div>}
       {!isPending && !org && <div>Failed to load organization.</div>}
       {!isPending && org && (
         <>
@@ -24,6 +25,6 @@ export default function Organization() {
           <DangerZone org={org} me={me} />
         </>
       )}
-    </div>
+    </>
   );
 }

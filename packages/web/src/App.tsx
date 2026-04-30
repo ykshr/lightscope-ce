@@ -10,6 +10,8 @@ const SingUp = lazy(() => import('@/pages/login/SingUp'));
 const Overview = lazy(() => import('@/pages/overview'));
 const Ranking = lazy(() => import('@/pages/ranking'));
 const Settings = lazy(() => import('@/pages/settings'));
+const SettingsProfile = lazy(() => import('@/pages/settings/Profile'));
+const SettingsOrganization = lazy(() => import('@/pages/settings/organization'));
 
 const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => (
   <Suspense
@@ -66,6 +68,24 @@ const router = createBrowserRouter([
             <Settings />
           </SuspenseWrapper>
         ),
+        children: [
+          {
+            path: 'profile',
+            element: (
+              <SuspenseWrapper>
+                <SettingsProfile />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: 'organization',
+            element: (
+              <SuspenseWrapper>
+                <SettingsOrganization />
+              </SuspenseWrapper>
+            ),
+          },
+        ],
       },
       {
         path: '*',

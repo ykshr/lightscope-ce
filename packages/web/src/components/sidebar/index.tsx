@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/sidebar';
 import { Link } from 'react-router-dom';
 
-import OrganizationSwitcher from '@/components/sidebar/Organization';
 import User from '@/components/sidebar/User';
 
 function SidebarItem(item: { href: string; icon: React.ElementType; name: string }) {
@@ -63,7 +62,6 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <OrganizationSwitcher />
         <User />
       </SidebarFooter>
       <SidebarRail />

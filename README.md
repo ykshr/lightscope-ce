@@ -23,6 +23,10 @@ This project uses **pnpm workspaces** to manage the following packages:
 
 ## Getting Started
 
+### Production Deployment
+
+For production deployment, it is required to establish baseline hardware requirements by monitoring CPU and Memory usage of the ClickHouse, API, and Proxy Docker containers under load. You should deploy the Docker services in a production environment (rather than just locally with Docker Compose).
+
 ### Prerequisites
 
 - Node.js (v20+ recommended)

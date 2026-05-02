@@ -30,6 +30,22 @@ const auth = createBetterAuth({
   database: prismaAdapter(prisma, {
     provider: 'sqlite',
   }),
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          const uuid = crypto.randomUUID();
+          await auth.api.createOrganization({
+            body: {
+              name: 'Default',
+              slug: uuid,
+              userId: user.id,
+            },
+          });
+        },
+      },
+    },
+  },
   plugins: [organization()],
 });
 

@@ -14,7 +14,7 @@ export default function Organization() {
 
   return (
     <>
-      <h1>Organization</h1>
+      <h1>Organization - {org?.name}</h1>
       {isPending && <div>Loading...</div>}
       {!isPending && !org && <div>Failed to load organization.</div>}
       {!isPending && org && (

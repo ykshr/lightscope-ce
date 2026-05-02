@@ -2,10 +2,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import authClient from '@/helpers/auth';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+
+interface AuthContext {
+  email: string;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+}
 
 export default function SingUp() {
-  const [email, setEmail] = useState('');
+  const { email, setEmail } = useOutletContext<AuthContext>();
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -19,6 +24,13 @@ export default function SingUp() {
     if (error) {
       setError(error.message || 'SingUp failed');
       return;
+    }
+
+    const { data: organizations } = await authClient.organization.list();
+    if (organizations && organizations.length > 0) {
+      await authClient.organization.setActive({
+        organizationId: organizations[0].id,
+      });
     }
 
     window.location.href = '/';

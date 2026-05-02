@@ -5,8 +5,9 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 
 const Article = lazy(() => import('@/pages/article'));
-const SingIn = lazy(() => import('@/pages/login/SingIn'));
-const SingUp = lazy(() => import('@/pages/login/SingUp'));
+const Auth = lazy(() => import('@/pages/auth'));
+const SingIn = lazy(() => import('@/pages/auth/SingIn'));
+const SingUp = lazy(() => import('@/pages/auth/SingUp'));
 const Overview = lazy(() => import('@/pages/overview'));
 const Ranking = lazy(() => import('@/pages/ranking'));
 const Settings = lazy(() => import('@/pages/settings'));
@@ -97,24 +98,30 @@ const router = createBrowserRouter([
 
 const unauthenticatedRouter = createBrowserRouter([
   {
-    path: '/singin',
-    element: (
-      <SuspenseWrapper>
-        <SingIn />
-      </SuspenseWrapper>
-    ),
-  },
-  {
-    path: '/signup',
-    element: (
-      <SuspenseWrapper>
-        <SingUp />
-      </SuspenseWrapper>
-    ),
-  },
-  {
-    path: '*',
-    element: <Navigate to="/singin" replace />,
+    errorElement: <></>,
+    element: <Auth />,
+    children: [
+      {
+        path: '/singin',
+        element: (
+          <SuspenseWrapper>
+            <SingIn />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        path: '/signup',
+        element: (
+          <SuspenseWrapper>
+            <SingUp />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        path: '*',
+        element: <Navigate to="/singin" replace />,
+      },
+    ],
   },
 ]);
 

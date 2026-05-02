@@ -26,6 +26,13 @@ export default function SingIn() {
       return;
     }
 
+    const { data: organizations } = await authClient.organization.list();
+    if (organizations && organizations.length > 0) {
+      await authClient.organization.setActive({
+        organizationId: organizations[0].id,
+      });
+    }
+
     window.location.href = '/';
   };
 

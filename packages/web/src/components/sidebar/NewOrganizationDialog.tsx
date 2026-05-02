@@ -12,21 +12,20 @@ export default function NewOrganizationDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const [name, setName] = useState('');
-  const [slug, setSlug] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const handleCreateOrg = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    const { error } = await authClient.organization.create({ name, slug });
+    const uuid = crypto.randomUUID();
+    const { error } = await authClient.organization.create({ name, slug: uuid });
     if (error) {
       setError(error.message || 'Failed to create organization');
       return;
     }
 
     setName('');
-    setSlug('');
     onOpenChange(false);
   };
 
@@ -37,18 +36,6 @@ export default function NewOrganizationDialog({
           <DialogTitle>Create an Organization</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleCreateOrg} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium" htmlFor="slug">
-              Slug (Unique ID)
-            </label>
-            <Input
-              id="slug"
-              placeholder="my-organization"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              required
-            />
-          </div>
           <div className="space-y-2">
             <label className="text-sm font-medium" htmlFor="name">
               Display Name

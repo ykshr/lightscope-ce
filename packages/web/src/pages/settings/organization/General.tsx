@@ -38,7 +38,7 @@ export default function General({ org, me }: Props) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="slug">Slug (readonly)</Label>
+          <Label htmlFor="slug">ID (readonly)</Label>
           <Input id="slug" value={org.slug} readOnly />
         </div>
         <div className="space-y-2">

@@ -10,4 +10,11 @@ export function initExitTracking(tracker: Tracker) {
       tracker.trackPageEvent('page_hidden');
     }
   });
+
+  const cleanup = () => {
+    window.removeEventListener('beforeunload', () => {});
+    document.removeEventListener('visibilitychange', () => {});
+  };
+
+  return cleanup;
 }

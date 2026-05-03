@@ -1,16 +1,15 @@
-import { Tracker } from '@/trackers/tracker';
+import type { Tracker } from '@/trackers/tracker';
 
-export function initPerformanceTracking(tracker: Tracker) {
+export function initPerformanceTracking(tracker: Tracker): () => void {
+  let observer: PerformanceObserver | undefined;
+
   if ('PerformanceObserver' in window) {
     try {
-      const observer = new PerformanceObserver((list) => {
+      observer = new PerformanceObserver((list) => {
         list.getEntries().forEach((entry: any) => {
           if (entry.entryType === 'largest-contentful-paint') {
-            tracker.sendPage('performance', {
-              event_category: 'performance',
-              event_action: 'LCP',
-              event_value: Math.round(entry.startTime),
-            });
+            const value = Math.round(entry.startTime);
+            tracker.trackPageEvent('page_performance', { event_value: value });
           }
         });
       });
@@ -18,4 +17,10 @@ export function initPerformanceTracking(tracker: Tracker) {
       observer.observe({ type: 'largest-contentful-paint', buffered: true });
     } catch {}
   }
+
+  const cleanup = () => {
+    if (observer) observer.disconnect();
+  };
+
+  return cleanup;
 }

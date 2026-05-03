@@ -50,18 +50,17 @@ export interface ElementMetadata {
   element_type: string;
 }
 
+export interface EventData {
+  event_value?: any;
+}
+
 /**
  * Analytics Payload Interface
  */
-export interface Payload extends UserAttributes, PageMetadata, Partial<ElementMetadata> {
+interface PayloadBody {
   // Event identification
   event_id: string; // String: UUID v4
   event_name: string; // String: Event name (page_view, click, heartbeat, viewability)
-
-  event_category?: string;
-  event_action?: string;
-  event_label?: string;
-  event_value?: any;
 
   // Timestamp and engagement
   event_time: string; // DateTime: 'YYYY-MM-DD HH:mm:ss' format
@@ -90,14 +89,18 @@ export interface Payload extends UserAttributes, PageMetadata, Partial<ElementMe
   query_params: Record<string, string>; // Map(String, String): URL query parameters
 }
 
+export interface PageEventPayload extends PayloadBody, UserAttributes, PageMetadata, EventData {}
+
+export interface ElementEventPayload
+  extends PayloadBody, UserAttributes, PageMetadata, ElementMetadata, EventData {}
+
 export type EventName =
   | 'page_view'
-  | 'heartbeat'
+  | 'page_engagement'
   | 'page_exit'
   | 'page_hidden'
-  | 'scroll-25'
-  | 'scroll-50'
-  | 'scroll-75'
-  | 'scroll-100'
-  | 'click'
-  | 'view';
+  | 'page_scroll'
+  | 'page_performance'
+  | 'page_error'
+  | 'element_click'
+  | 'element_view';

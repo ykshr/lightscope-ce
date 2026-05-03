@@ -1,5 +1,4 @@
 import type { Tracker } from '@/trackers/tracker';
-import type { EventName } from '@/types';
 
 export function initScrollTracking(tracker: Tracker): () => void {
   const thresholds = [25, 50, 75, 100];
@@ -11,8 +10,7 @@ export function initScrollTracking(tracker: Tracker): () => void {
     thresholds.forEach((t) => {
       if (depth >= t && !scrollTracked.has(t)) {
         scrollTracked.add(t);
-        const eventName = `scroll-${t}` as EventName;
-        tracker.trackPageEvent(eventName);
+        tracker.trackPageEvent('page_scroll', { event_value: t });
       }
     });
   };

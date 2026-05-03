@@ -9,7 +9,7 @@ export function initViewabilityTracking(tracker: Tracker): () => void {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const el = entry.target as HTMLElement;
-          tracker.trackViewability('view', el);
+          tracker.trackViewability('element_view', el);
           observer.unobserve(el);
         }
       });
@@ -40,7 +40,7 @@ export function initViewabilityTracking(tracker: Tracker): () => void {
     const target = event.target as HTMLElement;
     const clickable = target.closest(clickableString) as HTMLElement | null;
     if (clickable) {
-      tracker.trackViewability('click', clickable);
+      tracker.trackViewability('element_click', clickable);
     }
   };
 

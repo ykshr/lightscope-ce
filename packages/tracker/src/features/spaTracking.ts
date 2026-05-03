@@ -30,9 +30,11 @@ export function initSpaTracking(tracker: Tracker): () => void {
     handleUrlChange();
   };
 
-  return () => {
+  const cleanup = () => {
     window.removeEventListener('popstate', handleUrlChange);
     history.pushState = originalPushState;
     history.replaceState = originalReplaceState;
   };
+
+  return cleanup;
 }

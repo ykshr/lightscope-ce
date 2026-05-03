@@ -1,13 +1,15 @@
-import { clickableString } from '@/features/clickTracking';
 import type { Tracker } from '@/trackers/tracker';
 
+const clickableString = 'button, a, [role="button"]';
+
 export function initViewabilityTracking(tracker: Tracker): () => void {
+  // --- View Tracking ---
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const el = entry.target as HTMLElement;
-          tracker.trackElement('viewability', el);
+          tracker.trackViewability('view', el);
           observer.unobserve(el);
         }
       });
@@ -33,8 +35,22 @@ export function initViewabilityTracking(tracker: Tracker): () => void {
 
   mutationObserver.observe(document.body, { childList: true, subtree: true });
 
-  return () => {
+  // --- Click Tracking ---
+  const clickHandler = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    const clickable = target.closest(clickableString) as HTMLElement | null;
+    if (clickable) {
+      tracker.trackViewability('click', clickable);
+    }
+  };
+
+  document.addEventListener('click', clickHandler, true);
+
+  const cleanup = () => {
     observer.disconnect();
     mutationObserver.disconnect();
+    document.removeEventListener('click', clickHandler, true);
   };
+
+  return cleanup;
 }

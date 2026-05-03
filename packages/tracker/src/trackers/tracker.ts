@@ -1,4 +1,3 @@
-import { initClickTracking } from '@/features/clickTracking';
 import { initScrollTracking } from '@/features/scrollTracking';
 import { initSpaTracking } from '@/features/spaTracking';
 import { initViewabilityTracking } from '@/features/viewabilityTracking';
@@ -66,6 +65,7 @@ export class Tracker {
   private pageMetadata: PageMetadata;
   private viewabilityCleanup?: () => void;
   private spaCleanup?: () => void;
+  private scrollCleanup?: () => void;
 
   private defaultVisitTimeoutMinutes = 30;
   private defaultHeartbeatIntervalMs = 10 * 1000;
@@ -92,9 +92,8 @@ export class Tracker {
     this.pageMetadata = extractPageMetadata(pageMetadata);
 
     // Initialise tracking
-    initClickTracking(this);
     this.viewabilityCleanup = initViewabilityTracking(this);
-    initScrollTracking(this);
+    this.scrollCleanup = initScrollTracking(this);
     this.spaCleanup = initSpaTracking(this);
 
     // initExitTracking(this);
@@ -197,7 +196,11 @@ export class Tracker {
     this.sendPageEvent('page_view');
   }
 
-  public trackElement(eventName: 'viewability' | 'click', element: HTMLElement) {
+  public trackScroll(t: number) {
+    this.sendPageEvent(`scroll-${t}`);
+  }
+
+  public trackViewability(eventName: 'view' | 'click', element: HTMLElement) {
     const elementMetadata = getElementMetadata(element);
     this.sendElementEvent(eventName, elementMetadata);
   }
@@ -206,5 +209,6 @@ export class Tracker {
     if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
     if (this.viewabilityCleanup) this.viewabilityCleanup();
     if (this.spaCleanup) this.spaCleanup();
+    if (this.scrollCleanup) this.scrollCleanup();
   }
 }

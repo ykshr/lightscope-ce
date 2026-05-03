@@ -1,5 +1,7 @@
 // GTM integration layer
 
+export {};
+
 type TrackPayload = {
   event?: string;
   event_name?: string;

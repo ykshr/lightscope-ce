@@ -37,10 +37,10 @@ export function extractPageMetadata(pageMetadata: Partial<PageMetadata> = {}): P
   };
 
   return {
-    url: getMeta(['og:url']) || window.location.href,
-    title: getMeta(['og:title']) || document.title,
-    site_name: getMeta(['og:site_name']) || resolveSiteName(),
-    locale: getMeta(['og:locale']) || navigator.language,
+    url: window.location.href,
+    title: document.title,
+    site_name: resolveSiteName(),
+    locale: navigator.language,
     'og:url': getMeta(['og:url']),
     'og:title': getMeta(['og:title']),
     'og:type': getMeta(['og:type']),

@@ -6,7 +6,6 @@ import { initViewabilityTracking } from '@/features/viewabilityTracking';
 import { getElementMetadata } from '@/helpers/elementMetadata';
 import { getOrCreateVisitId, getOrCreateVisitorId } from '@/helpers/id';
 import { extractPageMetadata } from '@/helpers/pageMetadata';
-import { getQueryParams } from '@/helpers/queryParameters';
 import type {
   AnalyticsConfig,
   BrowsingAttributes,
@@ -31,7 +30,7 @@ export class Tracker {
   private lastEventTime: number;
   private lastHeartbeatTime: number;
   private heartbeatTimer: number | null = null;
-  private pageMetadata: PageMetadata;
+  private pageMetadata: Partial<PageMetadata>;
   private viewabilityCleanup?: () => void;
   private spaCleanup?: () => void;
   private scrollCleanup?: () => void;
@@ -60,7 +59,7 @@ export class Tracker {
     this.lastHeartbeatTime = Date.now();
 
     // Cache OpenGraph metadata on initialization
-    this.pageMetadata = extractPageMetadata(pageMetadata);
+    this.pageMetadata = pageMetadata;
 
     // Initialise tracking
     this.viewabilityCleanup = initViewabilityTracking(this);
@@ -82,7 +81,7 @@ export class Tracker {
     elementMetadata?: ElementMetadata
   ) {
     const now = Date.now();
-    const queryParams = getQueryParams();
+    const pageMetadata = extractPageMetadata(this.pageMetadata);
 
     const payload: PageEventPayload | ElementEventPayload = {
       event_id: crypto.randomUUID(),
@@ -102,10 +101,9 @@ export class Tracker {
       app_version: this.ua.browser.version || 'unknown',
       user_agent: navigator.userAgent,
       language: navigator.language,
-      query_params: queryParams,
       ...this.user,
       ...this.browsing,
-      ...this.pageMetadata,
+      ...pageMetadata,
       ...elementMetadata,
       ...eventData,
       created_at: new Date().toISOString().replace('T', ' ').split('.')[0],

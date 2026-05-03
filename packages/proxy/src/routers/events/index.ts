@@ -19,17 +19,24 @@ eventsRouter.post('/', async (c: Context) => {
       );
     }
     const payload: Payload = parseResult.data;
+    const eventName = payload.event_name;
+
     const egress = c.var.$.egress;
 
     const organizationId = c.var.tracker.organizationId;
-    const article = createArticle(organizationId, payload);
-    await egress.insertArticle(article);
 
-    const geo = c.var.$.geo;
-    const geoData = await geo.getGeoData(c);
+    if (eventName === 'page_view') {
+      const article = createArticle(organizationId, payload);
+      await egress.insertArticle(article);
+    }
 
-    const pv = createPV(organizationId, payload, geoData);
-    await egress.insertPV(pv);
+    if (eventName === 'page_view' || eventName === 'page_engagement') {
+      const geo = c.var.$.geo;
+      const geoData = await geo.getGeoData(c);
+
+      const pv = createPV(organizationId, payload, geoData);
+      await egress.insertPV(pv);
+    }
 
     return c.json({ ok: true }, 201);
   } catch (e: any) {
@@ -41,8 +48,8 @@ eventsRouter.post('/', async (c: Context) => {
 });
 
 export function createArticle(organization_id: string, payload: Payload): Article {
-  const url = payload['og:url'] || payload.url;
-  const site_name = payload['og:site_name'] || 'unknown';
+  const url = processUrl(payload);
+  const site_name = processSiteName(payload);
 
   return {
     organization_id,
@@ -75,13 +82,13 @@ export function createPV(
     | null
     | undefined
 ): PV {
-  const url = payload['og:url'] || payload.url;
-  const site_name = payload['og:site_name'] || 'unknown';
+  const url = processUrl(payload);
+  const site_name = processSiteName(payload);
   const event_id = payload.event_id;
 
   const query_params: Record<string, string> = {};
   try {
-    new URL(url).searchParams.forEach((value, key) => {
+    new URL(payload.url).searchParams.forEach((value, key) => {
       query_params[key] = value;
     });
   } catch (e) {
@@ -120,8 +127,19 @@ export function createPV(
     utm_medium: query_params.utm_medium,
     utm_campaign: query_params.utm_campaign,
     language: payload.language ?? undefined,
-    engagement_time: payload.engagement_time ?? 0,
+    engagement_time: payload.event_value ? Number(payload.event_value) : 0,
   };
+}
+
+function processUrl(payload: Payload) {
+  const { origin, pathname } = new URL(payload.url);
+  const urlFullPathWithoutQuery = origin + pathname;
+  const url = payload['og:url'] || urlFullPathWithoutQuery;
+  return url;
+}
+
+function processSiteName(payload: Payload) {
+  return payload['og:site_name'] || payload.site_name;
 }
 
 function formatDate(date: Date | string): string {

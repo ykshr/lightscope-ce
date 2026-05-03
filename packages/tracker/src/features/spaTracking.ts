@@ -7,16 +7,16 @@ export function initSpaTracking(tracker: Tracker): () => void {
     const currentUrl = window.location.href;
     if (currentUrl !== lastUrl) {
       lastUrl = currentUrl;
-      // URLが変わったのでメタデータを再取得してからページビューを送信
+      // Update metadata and send page view since URL changed
       tracker.updatePageMetadata();
       tracker.trackPageView();
     }
   };
 
-  // ブラウザの「戻る・進む」を検知
+  // Detect browser back/forward navigation
   window.addEventListener('popstate', handleUrlChange);
 
-  // SPAのクライアントサイドルーティング（pushState, replaceState）をフックして検知
+  // Hook into SPA client-side routing (pushState, replaceState)
   const originalPushState = history.pushState;
   const originalReplaceState = history.replaceState;
 

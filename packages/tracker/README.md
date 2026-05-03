@@ -21,4 +21,4 @@ In network-restricted or dependency-missing environments, `bun test` can be used
 
 ## Contributing
 
-Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure details, and prohibited patterns. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. All documentation, including PR comments and generated files, must strictly adhere to the English-only rule.
+Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, and project structure rules. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. All documentation, including PR comments and generated files, must strictly adhere to the English-only rule.

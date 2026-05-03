@@ -1,4 +1,4 @@
-import { AnalyticsTracker } from '@/trackers/tracker';
+import { Tracker } from '@/trackers/tracker';
 
 // --- Auto-initialization Logic ---
 if (typeof window !== 'undefined') {
@@ -14,8 +14,8 @@ if (typeof window !== 'undefined') {
     const init = () => {
       if ((window as any).LightscopeTracker) return;
 
-      const tracker = new AnalyticsTracker(endpoint, { token });
-      tracker.trackPageView();
+      const tracker = new Tracker(endpoint, { token });
+      tracker.trackPageEvent('page_view');
       (window as any).LightscopeTracker = tracker;
       console.log('Lightscope initialized.');
     };

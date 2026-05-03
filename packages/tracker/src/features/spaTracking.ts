@@ -9,7 +9,7 @@ export function initSpaTracking(tracker: Tracker): () => void {
       lastUrl = currentUrl;
       // Update metadata and send page view since URL changed
       tracker.updatePageMetadata();
-      tracker.trackPageView();
+      tracker.trackPageEvent('page_view');
     }
   };
 

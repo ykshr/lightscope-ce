@@ -1,8 +1,4 @@
-export interface ElementMetadata {
-  element_id: string;
-  element_label: string;
-  element_type: string;
-}
+import type { ElementMetadata } from '@/types';
 
 function getElementPath(el: HTMLElement): string {
   const path: string[] = [];

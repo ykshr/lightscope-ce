@@ -1,23 +1,4 @@
-// OpenGraph
-export interface PageMetadata {
-  url: string;
-  site_name: string;
-  title: string;
-  locale: string;
-  'og:url'?: string;
-  'og:title'?: string;
-  'og:type'?: string;
-  'og:image'?: string;
-  'og:description'?: string;
-  'og:site_name'?: string;
-  'og:locale'?: string;
-  'article:published_time'?: string;
-  'article:modified_time'?: string;
-  'article:expiration_time'?: string;
-  'article:authors'?: string[];
-  'article:section'?: string;
-  'article:tags'?: string[];
-}
+import type { PageMetadata } from '@/types';
 
 /**
  * Extract information from OpenGraph and Article meta tags

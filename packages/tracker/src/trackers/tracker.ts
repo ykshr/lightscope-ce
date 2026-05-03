@@ -1,55 +1,20 @@
 import { initScrollTracking } from '@/features/scrollTracking';
 import { initSpaTracking } from '@/features/spaTracking';
 import { initViewabilityTracking } from '@/features/viewabilityTracking';
+import { getElementMetadata } from '@/helpers/elementMetadata';
 import { getOrCreateVisitId, getOrCreateVisitorId } from '@/helpers/id';
-import { extractPageMetadata, PageMetadata } from '@/helpers/pageMetadata';
+import { extractPageMetadata } from '@/helpers/pageMetadata';
 import { getQueryParams } from '@/helpers/queryParameters';
-import type { AnalyticsConfig, BrowsingAttributes, UserAttributes } from '@/types';
+import type {
+  AnalyticsConfig,
+  BrowsingAttributes,
+  ElementMetadata,
+  EventName,
+  PageMetadata,
+  Payload,
+  UserAttributes,
+} from '@/types';
 import { UAParser } from 'ua-parser-js';
-import { ElementMetadata, getElementMetadata } from '../helpers/elementMetadata';
-
-/**
- * Analytics Payload Interface
- */
-interface Payload extends UserAttributes, PageMetadata {
-  // Event identification
-  event_id: string; // String: UUID v4
-  event_name: string; // String: Event name (page_view, click, heartbeat, viewability)
-
-  event_category?: string;
-  event_action?: string;
-  event_label?: string;
-  event_value?: any;
-
-  // Timestamp and engagement
-  event_time: string; // DateTime: 'YYYY-MM-DD HH:mm:ss' format
-  event_time_utc: string; // ISO8601
-  created_at: string; // DateTime: time of sending
-  engagement_time?: number; // UInt32: seconds elapsed since last event sent
-
-  // User and session information
-  visit_id: string; // String: each session (updated after 30 minutes of inactivity)
-  visitor_id: string; // String: fixed for one day
-
-  // Browsing environment (UAParser.js)
-  referrer: string; // String: referrer URL
-  user_agent: string; // String: browser UA string
-  language: string; // LowCardinality(String): browser language (e.g., ja-JP)
-  device: string; // LowCardinality(String): model name
-  device_type: string; // LowCardinality(String): desktop, mobile, tablet, etc.
-  device_vendor: string; // LowCardinality(String): Apple, Samsung, etc.
-  os: string; // LowCardinality(String): iOS, Android, Windows, etc.
-  os_version: string; // String: OS version
-  app: string; // LowCardinality(String): Browser name (Chrome, Safari, etc.)
-  app_type: string; // LowCardinality(String): 'browser' fixed
-  app_version: string; // String: Browser version
-
-  // Dynamic data
-  query_params: Record<string, string>; // Map(String, String): URL query parameters
-
-  // Event-specific extended fields
-  element_label?: string; // String: clicked button name or Viewability element name
-}
 
 export class Tracker {
   private apiEndpoint: string;
@@ -105,7 +70,10 @@ export class Tracker {
 
   // --- Sending Logic ---
 
-  private async sendEvent(eventName: string, extraData: Record<string, any> = {}) {
+  private async sendEvent(
+    eventName: EventName,
+    extraData: ElementMetadata | { engagement_time?: number } | undefined = undefined
+  ) {
     const now = Date.now();
     const queryParams = getQueryParams();
 
@@ -153,7 +121,7 @@ export class Tracker {
     }
   }
 
-  private async sendPageEvent(eventName: string) {
+  private async sendPageEvent(eventName: EventName) {
     if (eventName === 'heartbeat') {
       const now = Date.now();
       const engagementTimeSeconds = Math.floor((now - this.lastHeartbeatTime) / 1000);
@@ -166,7 +134,7 @@ export class Tracker {
     await this.sendEvent(eventName);
   }
 
-  private async sendElementEvent(eventName: string, elementMetadata: ElementMetadata) {
+  private async sendElementEvent(eventName: EventName, elementMetadata: ElementMetadata) {
     await this.sendEvent(eventName, elementMetadata);
   }
 
@@ -192,12 +160,8 @@ export class Tracker {
     this.pageMetadata = extractPageMetadata(this.pageMetadata);
   }
 
-  public trackPageView() {
-    this.sendPageEvent('page_view');
-  }
-
-  public trackScroll(t: number) {
-    this.sendPageEvent(`scroll-${t}`);
+  public trackPageEvent(eventName: EventName) {
+    this.sendPageEvent(eventName);
   }
 
   public trackViewability(eventName: 'view' | 'click', element: HTMLElement) {

@@ -1,11 +1,16 @@
-import { type Payload } from '@/types';
-import { describe, expect, it, vi } from 'vitest';
 import eventsRouter, { createArticle, createPV } from '@/routers/events/index';
+import { type Payload } from '@/types';
 import { Hono } from 'hono';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock Payload data
 const mockPayload: Payload = {
   url: 'https://example.com/article?utm_source=google&utm_medium=cpc',
+  event_name: 'page_view',
+  created_at: '2023-01-03T12:00:00Z',
+  site_name: 'Example Site',
+  title: 'Test Article',
+  locale: 'en_US',
   'og:url': 'https://example.com/article',
   'og:title': 'Test Article',
   'og:type': 'article',
@@ -158,11 +163,11 @@ describe('processEvent', () => {
       expect(article.url).toBe('https://example.com/article?utm_source=google&utm_medium=cpc');
     });
 
-    it('should default site_name to "unknown" if missing', () => {
+    it('should use site_name if og:site_name is missing', () => {
       const payload = { ...mockPayload };
       delete payload['og:site_name'];
       const article = createArticle('default', payload);
-      expect(article.site_name).toBe('unknown');
+      expect(article.site_name).toBe('Example Site');
     });
   });
 

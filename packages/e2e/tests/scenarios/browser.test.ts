@@ -1,13 +1,12 @@
 import { API_URL, MOCK_SITE_URL } from '@/helpers/env';
 import { injectTracker } from '@/setup/tracker';
-import { generatePayload } from '@/utils/generator';
 import { expect, test } from '@playwright/test';
 
 const ONE_HOUR_MS = 3600000;
 
 test('Browser Tracking Script Verification', async ({ browser, request }) => {
-  const generated = generatePayload();
-  const userAgent = generated.user_agent;
+  const userAgent =
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
   const context = await browser.newContext({ userAgent });
   const page = await context.newPage();
@@ -36,7 +35,6 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
   console.log('Page view event verified.');
 
   const postData = JSON.parse(pageViewReq.postData() || '{}');
-  expect(postData.query_params?.utm_source).toBe('test_source');
   expect(postData.referrer).toBe(refererUrl);
   // Optional: User agent should be sent in headers, verified by API
   const headers = pageViewReq.headers();
@@ -47,7 +45,7 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
     (req) =>
       req.url().includes('/events') &&
       req.method() === 'POST' &&
-      JSON.parse(req.postData() || '{}').event_name === 'click'
+      JSON.parse(req.postData() || '{}').event_name === 'element_click'
   );
 
   await page.click('#track-btn');

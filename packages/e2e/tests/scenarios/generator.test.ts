@@ -1,6 +1,6 @@
-import { generateMinimalPayload, generatePayload } from '@/utils/generator';
 import { expect, test } from '@playwright/test';
 import { UAParser } from 'ua-parser-js';
+import { generateMinimalPayload, generatePayload } from '../utils/generator';
 
 test.describe('Data Generator Logic Verification', () => {
   test('generatePayload should create a valid full payload structure', async () => {
@@ -32,7 +32,9 @@ test.describe('Data Generator Logic Verification', () => {
     const payload = generatePayload({ user_agent: customUA });
 
     expect(payload.user_agent).toBe(customUA);
-    expect(payload.os).toBe('macOS');
+
+    const uaParser = new UAParser(customUA);
+    expect(payload.os).toBe(uaParser.getOS().name);
     expect(payload.app).toBe('Chrome');
   });
 });

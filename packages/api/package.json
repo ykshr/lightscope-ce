@@ -13,7 +13,7 @@
     "test": "vitest run tests/unit",
     "test:watch": "vitest",
     "build": "prisma generate && pnpm run codegen && tsc -b",
-    "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js",
+    "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js --alias:@=./src",
     "start": "node dist/bundle.js",
     "dev": "tsx --tsconfig tsconfig.app.json src/index.ts",
     "codegen": "graphql-codegen --config codegen.ts",

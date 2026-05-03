@@ -1,4 +1,4 @@
-import { AnalyticsTracker } from '@/index';
+import { Tracker } from '@/trackers/tracker';
 import { beforeEach, describe, expect, test } from 'vitest';
 
 describe('Metadata Extraction', () => {
@@ -62,7 +62,7 @@ describe('Metadata Extraction', () => {
       return [];
     }) as any;
 
-    const tracker = new AnalyticsTracker('http://api', { token: 'token' });
+    const tracker = new Tracker('http://api', { token: 'token' });
     const metadata = (tracker as any).pageMetadata;
 
     expect(metadata['og:title']).toBe('Test Title');
@@ -84,7 +84,7 @@ describe('Metadata Extraction', () => {
       return [];
     }) as any;
 
-    const tracker = new AnalyticsTracker('http://api', { token: 'token' });
+    const tracker = new Tracker('http://api', { token: 'token' });
     const metadata = (tracker as any).pageMetadata;
 
     expect(metadata['article:authors']).toEqual(['Author 1', 'Author 2']);
@@ -102,7 +102,7 @@ describe('Metadata Extraction', () => {
       return [];
     }) as any;
 
-    const tracker = new AnalyticsTracker('http://api', { token: 'token' });
+    const tracker = new Tracker('http://api', { token: 'token' });
     const metadata = (tracker as any).pageMetadata;
 
     expect(metadata['article:authors']).toEqual(['Author 1']);
@@ -120,7 +120,7 @@ describe('Metadata Extraction', () => {
     }) as any;
 
     // This should not throw even if "toString" is a key
-    expect(() => new AnalyticsTracker('http://api', { token: 'token' })).not.toThrow();
+    expect(() => new Tracker('http://api', { token: 'token' })).not.toThrow();
   });
 
   test('should skip tags with no content or empty content', () => {
@@ -138,7 +138,7 @@ describe('Metadata Extraction', () => {
       return [];
     }) as any;
 
-    const tracker = new AnalyticsTracker('http://api', { token: 'token' });
+    const tracker = new Tracker('http://api', { token: 'token' });
     const metadata = (tracker as any).pageMetadata;
 
     expect(metadata['og:title']).toBe('Page Title');

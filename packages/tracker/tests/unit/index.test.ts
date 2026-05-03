@@ -1,5 +1,5 @@
+import { Tracker } from '@/trackers/tracker';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { AnalyticsTracker } from '@/index';
 
 // Mock ua-parser-js at the module level.
 vi.mock('ua-parser-js', () => {
@@ -16,8 +16,8 @@ vi.mock('ua-parser-js', () => {
   };
 });
 
-describe('AnalyticsTracker', () => {
-  let tracker: AnalyticsTracker;
+describe('Tracker', () => {
+  let tracker: Tracker;
   const apiEndpoint = 'https://api.example.com/events';
   const config = { token: 'test-token', heartbeat_interval_ms: 1000 };
   let store: Record<string, string> = {};
@@ -113,9 +113,9 @@ describe('AnalyticsTracker', () => {
 
   describe('Initialization & Metadata Extraction', () => {
     test('should initialize and extract metadata correctly', () => {
-      tracker = new AnalyticsTracker(apiEndpoint, config);
+      tracker = new Tracker(apiEndpoint, config);
       // Track a page view to inspect the payload
-      tracker.trackPageView();
+      tracker.trackPageEvent('page_view');
 
       const fetchCall = vi.mocked(global.fetch).mock.calls[0];
       const payload = JSON.parse(fetchCall[1]?.body as string);
@@ -129,18 +129,18 @@ describe('AnalyticsTracker', () => {
     });
 
     test('should not crash when fetch fails', () => {
-      tracker = new AnalyticsTracker(apiEndpoint, config);
+      tracker = new Tracker(apiEndpoint, config);
       global.fetch = vi.fn(() => Promise.reject(new Error('Network error'))) as any;
 
       // trackPageView does not return a Promise
-      expect(() => tracker.trackPageView()).not.toThrow();
+      expect(() => tracker.trackPageEvent('page_view')).not.toThrow();
       expect(global.fetch).toHaveBeenCalled();
     });
   });
 
   describe('ID Generation & LocalStorage', () => {
     test('should generate new visit and visitor IDs if empty', () => {
-      tracker = new AnalyticsTracker(apiEndpoint, config);
+      tracker = new Tracker(apiEndpoint, config);
 
       expect(store['analytics_visitor_id']).toBe('test-uuid-1');
       expect(store['analytics_visit_id']).toBe('test-uuid-2');
@@ -156,9 +156,9 @@ describe('AnalyticsTracker', () => {
       store['analytics_visitor_date'] = '2024-01-01'; // Same day
       store['analytics_visit_last_ts'] = new Date('2024-01-01T11:50:00Z').getTime().toString(); // 10 mins ago
 
-      tracker = new AnalyticsTracker(apiEndpoint, config);
+      tracker = new Tracker(apiEndpoint, config);
 
-      tracker.trackPageView();
+      tracker.trackPageEvent('page_view');
       const payload = JSON.parse(vi.mocked(global.fetch).mock.calls[0][1]?.body as string);
       expect(payload.visitor_id).toBe('existing-visitor');
       expect(payload.visit_id).toBe('existing-visit');
@@ -172,8 +172,8 @@ describe('AnalyticsTracker', () => {
         31 * 60 * 1000
       ).toString();
 
-      tracker = new AnalyticsTracker(apiEndpoint, config);
-      tracker.trackPageView();
+      tracker = new Tracker(apiEndpoint, config);
+      tracker.trackPageEvent('page_view');
 
       const payload = JSON.parse(vi.mocked(global.fetch).mock.calls[0][1]?.body as string);
       // UUID counter started at 1
@@ -185,8 +185,8 @@ describe('AnalyticsTracker', () => {
       store['analytics_visitor_id'] = 'existing-visitor';
       store['analytics_visitor_date'] = '2023-12-31'; // Yesterday
 
-      tracker = new AnalyticsTracker(apiEndpoint, config);
-      tracker.trackPageView();
+      tracker = new Tracker(apiEndpoint, config);
+      tracker.trackPageEvent('page_view');
 
       const payload = JSON.parse(vi.mocked(global.fetch).mock.calls[0][1]?.body as string);
       expect(payload.visitor_id).not.toBe('existing-visitor');
@@ -202,7 +202,7 @@ describe('AnalyticsTracker', () => {
         }
       });
 
-      tracker = new AnalyticsTracker(apiEndpoint, config);
+      tracker = new Tracker(apiEndpoint, config);
 
       // Create a fake target
       const target = {
@@ -225,17 +225,17 @@ describe('AnalyticsTracker', () => {
       const fetchCalls = vi.mocked(global.fetch).mock.calls;
       expect(fetchCalls.length).toBe(1);
       const payload = JSON.parse(fetchCalls[0][1]?.body as string);
-      expect(payload.event_name).toBe('click');
-      expect(payload.element_label).toBe('btn-1'); // From ID
+      expect(payload.event_name).toBe('element_click');
+      expect(payload.element_id).toBe('btn-1'); // From ID
     });
   });
 
   describe('Viewability Tracking', () => {
     test('should track viewability when element intersects', () => {
-      tracker = new AnalyticsTracker(apiEndpoint, config);
+      tracker = new Tracker(apiEndpoint, config);
       const element = { id: 'view-el', getAttribute: vi.fn(), tagName: 'DIV' } as any;
 
-      tracker.trackViewability(element, 'test-label');
+      tracker.trackViewability('element_view', element);
 
       // The second callback should be the one from trackViewability (first is observeAllClickables)
       const observerCallback =
@@ -247,8 +247,8 @@ describe('AnalyticsTracker', () => {
       const fetchCalls = vi.mocked(global.fetch).mock.calls;
       expect(fetchCalls.length).toBe(1);
       const payload = JSON.parse(fetchCalls[0][1]?.body as string);
-      expect(payload.event_name).toBe('viewability');
-      expect(payload.element_label).toBe('test-label');
+      expect(payload.event_name).toBe('element_view');
+      expect(payload.element_id).toBe('view-el');
       // Verify it stops observing (but we can't easily check unobserveMock if it's inside the fake instance scope)
       // Actually we could just check if unobserve was called on the mock instance
       // We will skip strict unobserve assertion here since the closure creates it internally
@@ -257,14 +257,14 @@ describe('AnalyticsTracker', () => {
 
   describe('Heartbeat', () => {
     test('should send heartbeat at regular intervals', () => {
-      tracker = new AnalyticsTracker(apiEndpoint, config); // interval is 1000ms
+      tracker = new Tracker(apiEndpoint, config); // interval is 1000ms
 
       vi.advanceTimersByTime(1000);
 
       const fetchCalls = vi.mocked(global.fetch).mock.calls;
       expect(fetchCalls.length).toBe(1);
       const payload = JSON.parse(fetchCalls[0][1]?.body as string);
-      expect(payload.event_name).toBe('heartbeat');
+      expect(payload.event_name).toBe('page_engagement');
 
       vi.advanceTimersByTime(1000);
       expect(vi.mocked(global.fetch).mock.calls.length).toBe(2);

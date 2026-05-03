@@ -43,7 +43,7 @@ const mockPayload: Payload = {
   age: '25-34',
   gender: 'male',
   language: 'en-US',
-  engagement_time: 100,
+  event_value: 100,
 };
 
 describe('eventsRouter', () => {
@@ -160,7 +160,7 @@ describe('processEvent', () => {
       const payload = { ...mockPayload };
       delete payload['og:url'];
       const article = createArticle('default', payload);
-      expect(article.url).toBe('https://example.com/article?utm_source=google&utm_medium=cpc');
+      expect(article.url).toBe('https://example.com/article');
     });
 
     it('should use site_name if og:site_name is missing', () => {
@@ -191,8 +191,8 @@ describe('processEvent', () => {
       expect(pv.geo_country).toBe('US');
       expect(pv.geo_subdivision).toBe('CA');
       expect(pv.geo_city).toBe('San Francisco');
-      expect(pv.utm_source).toBeUndefined();
-      expect(pv.utm_medium).toBeUndefined();
+      expect(pv.utm_source).toBe('google');
+      expect(pv.utm_medium).toBe('cpc');
       expect(pv.engagement_time).toBe(100);
     });
 
@@ -206,24 +206,23 @@ describe('processEvent', () => {
     });
 
     it('should extract query params from url', () => {
-      const payloadWithParamsInOg = {
+      const payloadWithParams = {
         ...mockPayload,
-        'og:url': 'https://example.com/article?foo=bar&utm_source=test',
+        url: 'https://example.com/article?foo=bar&utm_source=test',
       };
-      const pv = createPV('default', payloadWithParamsInOg, null);
+      const pv = createPV('default', payloadWithParams, null);
 
       expect(pv.query_params?.['foo']).toBe('bar');
       expect(pv.utm_source).toBe('test');
     });
 
-    it('should handle invalid URL gracefully', () => {
+    it('should throw an error for invalid URL', () => {
       const payload = {
         ...mockPayload,
         'og:url': 'invalid-url',
         url: 'invalid-url',
       };
-      const pv = createPV('default', payload, null);
-      expect(pv.query_params).toEqual({});
+      expect(() => createPV('default', payload, null)).toThrow('Invalid URL');
     });
   });
 });

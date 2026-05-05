@@ -138,13 +138,17 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
 
   const limitToUse = limit ?? 100;
   const pageToUse = page ?? 1;
-  const limitAndOffset = `LIMIT ${limitToUse} OFFSET ${(pageToUse - 1) * limitToUse}`;
+  const offsetToUse = (pageToUse - 1) * limitToUse;
 
   const queryParamsObj: Record<string, unknown> = {
     organizationId,
     siteName,
     urls,
+    limit: limitToUse,
+    offset: offsetToUse,
   };
+
+  const limitAndOffset = `LIMIT {limit:UInt32} OFFSET {offset:UInt32}`;
 
   const sql = `
     SELECT

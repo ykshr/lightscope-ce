@@ -38,6 +38,7 @@ export class Tracker {
   private performanceCleanup?: () => void;
 
   private defaultVisitTimeoutMinutes = 30;
+  private pendingStorageWrite = false;
   private defaultHeartbeatIntervalMs = 10 * 1000;
 
   constructor(
@@ -71,9 +72,45 @@ export class Tracker {
     // initErrorTracking(this);
 
     this.startHeartbeat();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', this.flushStorageWrite);
+    }
   }
 
   // --- Sending Logic ---
+
+  private scheduleStorageWrite() {
+    if (this.pendingStorageWrite) return;
+    this.pendingStorageWrite = true;
+
+    const write = () => {
+      if (!this.pendingStorageWrite) return;
+      try {
+        localStorage.setItem('analytics_visit_last_ts', this.lastEventTime.toString());
+      } catch (e) {
+        // Ignore quota errors
+      }
+      this.pendingStorageWrite = false;
+    };
+
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(write, { timeout: 2000 });
+    } else {
+      setTimeout(write, 100);
+    }
+  }
+
+  private flushStorageWrite = () => {
+    if (this.pendingStorageWrite) {
+      try {
+        localStorage.setItem('analytics_visit_last_ts', this.lastEventTime.toString());
+      } catch (e) {
+        // Ignore quota errors
+      }
+      this.pendingStorageWrite = false;
+    }
+  };
 
   private async sendEvent(
     eventName: EventName,
@@ -121,7 +158,7 @@ export class Tracker {
       });
 
       this.lastEventTime = now;
-      localStorage.setItem('analytics_visit_last_ts', this.lastEventTime.toString());
+      this.scheduleStorageWrite();
     } catch (e) {
       // Error handling can be added here if needed
     }
@@ -174,6 +211,10 @@ export class Tracker {
   }
 
   public destroy() {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('beforeunload', this.flushStorageWrite);
+    }
+    this.flushStorageWrite();
     if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
     if (this.viewabilityCleanup) this.viewabilityCleanup();
     if (this.spaCleanup) this.spaCleanup();

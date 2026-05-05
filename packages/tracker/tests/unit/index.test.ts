@@ -31,6 +31,11 @@ describe('Tracker', () => {
     intersectionObserverCallbacks = [];
     mutationObserverCallbacks = [];
 
+    vi.stubGlobal('history', { pushState: vi.fn(), replaceState: vi.fn() });
+    vi.stubGlobal(
+      'requestIdleCallback',
+      vi.fn((cb) => cb())
+    );
     vi.stubGlobal('window', {
       location: {
         hostname: 'example.com',
@@ -41,11 +46,13 @@ describe('Tracker', () => {
       setInterval: vi.fn((cb, ms) => setInterval(cb, ms)),
       clearInterval: vi.fn((id) => clearInterval(id)),
       addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
     });
 
     vi.stubGlobal('document', {
       title: 'Test Page Title',
       referrer: 'https://referrer.com',
+      getElementsByTagName: vi.fn((tag) => []),
       querySelector: vi.fn((selector) => {
         if (selector.includes('og:title')) return { getAttribute: () => 'OG Title' };
         if (selector.includes('og:site_name')) return { getAttribute: () => 'OG Site Name' };

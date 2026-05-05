@@ -32,7 +32,10 @@ describe('Tracker', () => {
     mutationObserverCallbacks = [];
 
     vi.stubGlobal('history', { pushState: vi.fn(), replaceState: vi.fn() });
-    vi.stubGlobal('requestIdleCallback', vi.fn((cb) => cb()));
+    vi.stubGlobal(
+      'requestIdleCallback',
+      vi.fn((cb) => cb())
+    );
     vi.stubGlobal('window', {
       location: {
         hostname: 'example.com',

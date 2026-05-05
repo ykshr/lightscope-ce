@@ -1,5 +1,5 @@
 import { Tracker } from '@/trackers/tracker';
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 describe('Metadata Extraction', () => {
   beforeEach(() => {
@@ -10,6 +10,11 @@ describe('Metadata Extraction', () => {
     };
     global.localStorage = localStorageMock as any;
 
+    vi.stubGlobal(
+      'requestIdleCallback',
+      vi.fn((cb) => cb())
+    );
+    vi.stubGlobal('history', { pushState: () => {}, replaceState: () => {} });
     vi.stubGlobal('window', {
       location: {
         hostname: 'example.com',
@@ -23,7 +28,7 @@ describe('Metadata Extraction', () => {
       crypto: {
         randomUUID: () => 'uuid',
       },
-    };
+    });
 
     vi.stubGlobal('document', {
       title: 'Page Title',
@@ -33,19 +38,25 @@ describe('Metadata Extraction', () => {
       currentScript: {
         getAttribute: () => null,
       },
-    } as any;
+    } as any);
 
     vi.stubGlobal('navigator', { language: 'en-US' });
 
-    vi.stubGlobal('IntersectionObserver', class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    } as any;
-    vi.stubGlobal('MutationObserver', class {
-      observe() {}
-      disconnect() {}
-    } as any;
+    vi.stubGlobal(
+      'IntersectionObserver',
+      class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      } as any
+    );
+    vi.stubGlobal(
+      'MutationObserver',
+      class {
+        observe() {}
+        disconnect() {}
+      } as any
+    );
   });
 
   test('should extract basic metadata', () => {

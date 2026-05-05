@@ -1,6 +1,7 @@
 import { PrismaClient } from '@/__generated__/prisma/client';
 import processAllowedOriginsString from '@/helpers/allowedOrigins';
 import { $ } from '@/types';
+import type { Auth } from '@/types/auth';
 import { createClient as createClickHouseClient } from '@clickhouse/client';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { betterAuth as createBetterAuth } from 'better-auth';
@@ -129,7 +130,7 @@ export default async function createContext(c: Context): Promise<$> {
   };
 
   return {
-    auth: auth as any,
+    auth: auth as Auth,
     clickhouse,
     prisma,
     jwt,

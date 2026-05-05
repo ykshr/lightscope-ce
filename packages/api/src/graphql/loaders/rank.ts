@@ -93,7 +93,12 @@ async function rank(client: ClickHouseClient, organizationId: string, loaderPara
 
   const limitToUse = limit ?? 100;
   const pageToUse = page ?? 1;
-  const limitAndOffset = `LIMIT ${limitToUse} OFFSET ${(pageToUse - 1) * limitToUse}`;
+  const offsetToUse = (pageToUse - 1) * limitToUse;
+
+  queryParamsObj.limit = limitToUse;
+  queryParamsObj.offset = offsetToUse;
+
+  const limitAndOffset = `LIMIT {limit:UInt32} OFFSET {offset:UInt32}`;
 
   const sql = `
     SELECT

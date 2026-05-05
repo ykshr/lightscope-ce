@@ -107,9 +107,18 @@ async function Trend<T>(
 
   const limitToUse = limit ?? 100;
   const pageToUse = page ?? 1;
-  const limitAndOffset = `LIMIT ${limitToUse} OFFSET ${(pageToUse - 1) * limitToUse}`;
+  const offsetToUse = (pageToUse - 1) * limitToUse;
 
-  const categoryLimitStr = top != null && top > 0 ? `LIMIT ${top} BY date` : '';
+  queryParamsObj.limit = limitToUse;
+  queryParamsObj.offset = offsetToUse;
+
+  const limitAndOffset = `LIMIT {limit:UInt32} OFFSET {offset:UInt32}`;
+
+  let categoryLimitStr = '';
+  if (top != null && top > 0) {
+    queryParamsObj.top = top;
+    categoryLimitStr = `LIMIT {top:UInt32} BY date`;
+  }
 
   const sql = `
     SELECT

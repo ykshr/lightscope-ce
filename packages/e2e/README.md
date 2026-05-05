@@ -15,7 +15,6 @@ This directory contains the E2E test suite using Playwright and standard testing
    Run the following from the workspace root:
    ```bash
    pnpm install
-   pnpm --filter @lightscope-ce/e2e run postinstall
    ```
 
 2. **Build the Tracker Package:**

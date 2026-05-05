@@ -5,7 +5,7 @@ This package contains the GraphQL API service for LightScope, built with Hono an
 ## Scripts
 
 - `pnpm run dev`: Start the development server using `tsx`.
-- `pnpm run build`: Generate the Prisma client and build the project using `tsc`.
+- `pnpm run build`: Generate the Prisma client, run GraphQL codegen, and build the project using `tsc -b`.
 - `pnpm run start`: Start the production server from the `dist` directory.
 - `pnpm run codegen`: Generate TypeScript types and resolver signatures from the GraphQL schema.
 - `pnpm run db:generate`: Generate Better Auth schema and Prisma client (uses `pnpm exec auth generate` and `pnpm exec prisma generate` under the hood).

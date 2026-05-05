@@ -17,7 +17,6 @@ export default class JwtAuth implements AuthProvider {
     const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
 
     if (!token) {
-      console.log('JwtAuth: No token provided');
       return null;
     }
 

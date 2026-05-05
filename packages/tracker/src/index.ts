@@ -112,6 +112,7 @@ export class AnalyticsTracker {
   private lastEventTime: number;
   private heartbeatTimer: number | null = null;
   private pageMetadata: OGMetadata;
+  private idleHandle: number | null = null;
 
   private defaultHeartbeatIntervalMs = 10 * 1000;
 
@@ -139,6 +140,11 @@ export class AnalyticsTracker {
 
     this.initGlobalEventListeners();
     this.startHeartbeat();
+
+    // Ensure last timestamp is persisted when user leaves
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', () => this.persistLastEventTime());
+    }
   }
 
   /**
@@ -268,8 +274,33 @@ export class AnalyticsTracker {
       sid = crypto.randomUUID();
       localStorage.setItem(key, sid);
     }
-    localStorage.setItem(tsKey, now.toString());
+
+    // Update in-memory state and schedule deferred persist
+    this.lastEventTime = now;
+    this.schedulePersistLastEventTime();
+
     return sid;
+  }
+
+  // --- Persistence Logic ---
+
+  private persistLastEventTime() {
+    localStorage.setItem('analytics_visit_last_ts', this.lastEventTime.toString());
+  }
+
+  private schedulePersistLastEventTime() {
+    if (this.idleHandle !== null) return;
+
+    const persist = () => {
+      this.persistLastEventTime();
+      this.idleHandle = null;
+    };
+
+    if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
+      this.idleHandle = window.requestIdleCallback(persist, { timeout: 2000 }) as any;
+    } else {
+      this.idleHandle = window.setTimeout(persist, 200) as any;
+    }
   }
 
   // --- Sending Logic ---
@@ -292,7 +323,7 @@ export class AnalyticsTracker {
     });
 
     this.lastEventTime = Date.now();
-    localStorage.setItem('analytics_visit_last_ts', this.lastEventTime.toString());
+    this.schedulePersistLastEventTime();
 
     try {
       await fetch(this.apiEndpoint, {

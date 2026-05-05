@@ -41,7 +41,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 #### Build & Test Commands
 * How to build the project
   - Run `pnpm --filter @lightscope-ce/api run build`.
-  - To ensure `@prisma/client` types are available during CI builds where `node_modules` are freshly installed, the `build` script in `package.json` must explicitly generate the Prisma client before running the TypeScript compiler (e.g., `"build": "npx prisma generate && tsc"`).
+  - To ensure `@prisma/client` types are available during CI builds where `node_modules` are freshly installed, the `build` script in `package.json` must explicitly generate the Prisma client before running the TypeScript compiler (e.g., `"build": "npx prisma generate && pnpm run codegen && tsc -b"`).
 * How to run tests (commands and steps)
   - Run Tests (Vitest):
     *Note: In environments where pnpm metadata fetching is restricted, bun test can be used as a reliable alternative for executing Vitest-based tests in packages/api.*

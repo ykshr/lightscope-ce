@@ -48,6 +48,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   pnpm --filter @lightscope-ce/web run build
   ```
   - To build or test the web frontend (`packages/web`), use the workspace commands `pnpm --filter @lightscope-ce/web run build` and `pnpm --filter @lightscope-ce/web run test` respectively.
+  - Code generation must be handled prior to compilation (e.g., `"build": "pnpm run codegen && tsc -b && vite build"`).
 * How to run tests (commands and steps)
   - **Test Definitions**: Unit tests are function-level without package startup. Integration tests are package-level, requiring only the target package to be started with external dependencies mocked/stubbed. E2E tests are fully integrated tests requiring all packages to be started to cover comprehensive user journeys and data flows.
   ```bash

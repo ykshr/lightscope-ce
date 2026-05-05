@@ -10,7 +10,7 @@ describe('Metadata Extraction', () => {
     };
     global.localStorage = localStorageMock as any;
 
-    global.window = {
+    vi.stubGlobal('window', {
       location: {
         hostname: 'example.com',
         pathname: '/test',
@@ -23,9 +23,9 @@ describe('Metadata Extraction', () => {
       crypto: {
         randomUUID: () => 'uuid',
       },
-    } as any;
+    };
 
-    global.document = {
+    vi.stubGlobal('document', {
       title: 'Page Title',
       location: global.window.location,
       addEventListener: () => {},
@@ -35,14 +35,14 @@ describe('Metadata Extraction', () => {
       },
     } as any;
 
-    global.navigator = { language: 'en-US' } as any;
+    vi.stubGlobal('navigator', { language: 'en-US' });
 
-    global.IntersectionObserver = class {
+    vi.stubGlobal('IntersectionObserver', class {
       observe() {}
       unobserve() {}
       disconnect() {}
     } as any;
-    global.MutationObserver = class {
+    vi.stubGlobal('MutationObserver', class {
       observe() {}
       disconnect() {}
     } as any;

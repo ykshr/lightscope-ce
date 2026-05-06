@@ -49,17 +49,17 @@ const auth = createBetterAuth({
   plugins: [organization()],
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID || 'dummy',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'dummy',
+      clientId: 'dummy',
+      clientSecret: 'dummy',
     },
     microsoft: {
-      clientId: process.env.MICROSOFT_CLIENT_ID || 'dummy',
-      clientSecret: process.env.MICROSOFT_CLIENT_SECRET || 'dummy',
+      clientId: 'dummy',
+      clientSecret: 'dummy',
     },
     apple: {
-      clientId: process.env.APPLE_CLIENT_ID || 'dummy',
-      clientSecret: process.env.APPLE_CLIENT_SECRET || 'dummy',
-      appBundleIdentifier: process.env.APPLE_APP_BUNDLE_IDENTIFIER,
+      clientId: 'dummy',
+      clientSecret: 'dummy',
+      appBundleIdentifier: 'dummy',
     },
   },
 });

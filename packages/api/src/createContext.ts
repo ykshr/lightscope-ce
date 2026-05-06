@@ -1,7 +1,7 @@
 import { PrismaClient } from '@/__generated__/prisma/client';
 import processAllowedOriginsString from '@/helpers/allowedOrigins';
+import { generateAppleClientSecret } from '@/helpers/apple';
 import { $ } from '@/types';
-import type { Auth } from '@/types/auth';
 import { createClient as createClickHouseClient } from '@clickhouse/client';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { betterAuth as createBetterAuth } from 'better-auth';
@@ -10,25 +10,6 @@ import { organization } from 'better-auth/plugins';
 import { Context } from 'hono';
 import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
-import { importPKCS8, SignJWT } from 'jose';
-
-async function generateAppleClientSecret(
-  clientId: string,
-  teamId: string,
-  keyId: string,
-  privateKey: string
-) {
-  const key = await importPKCS8(privateKey, 'ES256');
-  const now = Math.floor(Date.now() / 1000);
-  return new SignJWT({})
-    .setProtectedHeader({ alg: 'ES256', kid: keyId })
-    .setIssuer(teamId)
-    .setSubject(clientId)
-    .setAudience('https://appleid.apple.com')
-    .setIssuedAt(now)
-    .setExpirationTime(now + 180 * 24 * 60 * 60)
-    .sign(key);
-}
 
 export default async function createContext(c: Context): Promise<$> {
   const { DATABASE_URL, ALLOWED_ORIGINS } = env(c);
@@ -130,7 +111,7 @@ export default async function createContext(c: Context): Promise<$> {
   };
 
   return {
-    auth: auth as Auth,
+    auth,
     clickhouse,
     prisma,
     jwt,

@@ -1,6 +1,7 @@
 import { PrismaClient } from '@/__generated__/prisma/client';
 import processAllowedOriginsString from '@/helpers/allowedOrigins';
 import { $ } from '@/types';
+import type { Auth } from '@/types/auth';
 import { createClient as createClickHouseClient } from '@clickhouse/client';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { betterAuth as createBetterAuth } from 'better-auth';
@@ -9,6 +10,25 @@ import { organization } from 'better-auth/plugins';
 import { Context } from 'hono';
 import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
+import { importPKCS8, SignJWT } from 'jose';
+
+async function generateAppleClientSecret(
+  clientId: string,
+  teamId: string,
+  keyId: string,
+  privateKey: string
+) {
+  const key = await importPKCS8(privateKey, 'ES256');
+  const now = Math.floor(Date.now() / 1000);
+  return new SignJWT({})
+    .setProtectedHeader({ alg: 'ES256', kid: keyId })
+    .setIssuer(teamId)
+    .setSubject(clientId)
+    .setAudience('https://appleid.apple.com')
+    .setIssuedAt(now)
+    .setExpirationTime(now + 180 * 24 * 60 * 60)
+    .sign(key);
+}
 
 export default async function createContext(c: Context): Promise<$> {
   const { DATABASE_URL, ALLOWED_ORIGINS } = env(c);
@@ -20,6 +40,29 @@ export default async function createContext(c: Context): Promise<$> {
     url: DATABASE_URL,
   });
   const prisma = new PrismaClient({ adapter });
+
+  const {
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    MICROSOFT_CLIENT_ID,
+    MICROSOFT_CLIENT_SECRET,
+    APPLE_CLIENT_ID,
+    APPLE_TEAM_ID,
+    APPLE_KEY_ID,
+    APPLE_PRIVATE_KEY,
+    APPLE_APP_BUNDLE_IDENTIFIER,
+  } = env(c);
+
+  const appleClientSecret =
+    APPLE_CLIENT_ID && APPLE_TEAM_ID && APPLE_KEY_ID && APPLE_PRIVATE_KEY
+      ? await generateAppleClientSecret(
+          APPLE_CLIENT_ID,
+          APPLE_TEAM_ID,
+          APPLE_KEY_ID,
+          APPLE_PRIVATE_KEY
+        )
+      : undefined;
+
   const trustedOrigins = processAllowedOriginsString(ALLOWED_ORIGINS);
   const auth = createBetterAuth({
     trustedOrigins,
@@ -52,6 +95,21 @@ export default async function createContext(c: Context): Promise<$> {
       },
     },
     plugins: [organization()],
+    socialProviders: {
+      google: {
+        clientId: GOOGLE_CLIENT_ID || 'dummy',
+        clientSecret: GOOGLE_CLIENT_SECRET || 'dummy',
+      },
+      microsoft: {
+        clientId: MICROSOFT_CLIENT_ID || 'dummy',
+        clientSecret: MICROSOFT_CLIENT_SECRET || 'dummy',
+      },
+      apple: {
+        clientId: APPLE_CLIENT_ID || 'dummy',
+        clientSecret: appleClientSecret || 'dummy',
+        appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER,
+      },
+    },
   });
 
   const { CLICKHOUSE_URL, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } = env(c);
@@ -72,7 +130,7 @@ export default async function createContext(c: Context): Promise<$> {
   };
 
   return {
-    auth,
+    auth: auth as Auth,
     clickhouse,
     prisma,
     jwt,

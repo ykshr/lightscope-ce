@@ -36,6 +36,14 @@ export default function SingIn() {
     window.location.href = '/';
   };
 
+  const handleSocialSignIn = async (provider: 'google' | 'apple' | 'microsoft') => {
+    setError(null);
+    const { error } = await authClient.signIn.social({ provider, callbackURL: '/' });
+    if (error) {
+      setError(error.message || `Sign in with ${provider} failed`);
+    }
+  };
+
   return (
     <div className="flex h-screen w-full items-center justify-center bg-background">
       <div className="w-full max-w-md p-8 space-y-6 bg-card rounded-xl shadow-lg border border-border">
@@ -84,7 +92,43 @@ export default function SingIn() {
           </Button>
         </form>
 
-        <div className="text-center text-sm">
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={() => handleSocialSignIn('google')}
+          >
+            Sign in with Google
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={() => handleSocialSignIn('apple')}
+          >
+            Sign in with Apple
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={() => handleSocialSignIn('microsoft')}
+          >
+            Sign in with Microsoft
+          </Button>
+        </div>
+
+        <div className="text-center text-sm mt-4">
           Don't have an account?{' '}
           <button onClick={() => navigate('/signup')} className="text-primary hover:underline">
             SingUp

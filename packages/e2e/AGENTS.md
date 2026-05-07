@@ -11,13 +11,6 @@ End-to-End Tests using Playwright and standard testing scripts.
   - Use `camelCase` for functions/variables. Test files should end with `.test.ts` or `.spec.ts`.
 * Restrictions on libraries that should or should not be used
   - Use Playwright for browser tests. Avoid mixing in other test runners like Jest.
-- **Locators**: In Playwright tests, using loose locators like `page.locator('button', { hasText: '...' }).first()` can cause timeouts by targeting hidden background elements. Use exact match structural locators like `page.getByRole('button', { name: '...', exact: true })` or chain `.filter()` methods for strict, robust element resolution.
-- **Actions**:
-  - In `packages/e2e` scripts such as `long-run.ts` and `load.ts`, performance is improved by hoisting `ORG_DATA` parsing and authentication token generation (`generateToken`) outside of repetitive `setInterval` loops or high-concurrency loops to avoid redundant JSON parsing and cryptographic signing overhead.
-  - Always wait for the React application to fully mount and hydrate (e.g., `await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();`) before attempting click actions on interactive elements like buttons, to prevent test timeouts caused by interacting with unhydrated DOM nodes.
-  - If Playwright tests fail with 'element is outside of the viewport' timeouts on buttons inside modals or Dialog components (e.g., Radix UI), `.click({ force: true })` may still fail. Use `.dispatchEvent('click')` on the locator to completely bypass Playwright's coordinate and visibility checks in headless mode.
-- **Authentication**: When making API requests (e.g., to `/gql` or `/events`) in E2E tests, you must include an `Authorization` header matching the `NO_AUTH_TOKEN` (default `Bearer dGhpcyBpcyBhbiBhbm9ueW1vdXMgdXNlcg==`) to successfully pass the API's `NoAuthProvider` middleware.
-- **Constants**: The magic number `3600000` (representing one hour in milliseconds) is frequently used for date range calculations in E2E scenarios (`packages/e2e/scenarios/`). It should be extracted to a named constant like `ONE_HOUR_MS` to improve readability and maintainability.
 
 #### Build & Test Commands
 * How to build the project
@@ -54,5 +47,3 @@ End-to-End Tests using Playwright and standard testing scripts.
     * Do not alter `utils/wait-for-services.js` unless fixing service readiness logic.
   * “Do not modify this directory”
     * Maintain the existing directory boundaries and responsibilities.
-  - **Polling Loops Anti-Pattern**: To optimize E2E polling loops and avoid the 'Synchronous Await in Loop' anti-pattern, start the retry interval timer (e.g., `setTimeout` Promise) before the asynchronous check (e.g., `fetch`). Only `await` the timer if the check fails and the loop needs to repeat, allowing network latency to overlap with the wait time without penalizing immediate success on the first attempt.
-  - **Service Readiness**: The script `utils/wait-for-services.js` checks if Docker services are ready before running E2E tests. For HTTP services, it must perform actual `http.get` requests expecting a 200 OK status, rather than just `net.Socket` TCP connects, to prevent race conditions.

@@ -25,8 +25,6 @@ This project uses **pnpm workspaces** to manage the following packages:
 
 ### Production Deployment
 
-For production deployment, it is required to establish baseline hardware requirements by monitoring CPU and Memory usage of the ClickHouse, API, and Proxy Docker containers under load. You should deploy the Docker services in a production environment (rather than just locally with Docker Compose).
-
 ### Prerequisites
 
 - Node.js (v20+ recommended)
@@ -51,7 +49,6 @@ For production deployment, it is required to establish baseline hardware require
    cp .env.example .env
    ```
    Review and update the `.env` file with your settings if necessary.
-   *Note:* CORS origins for the `api` and `proxy` packages are restricted via the `ALLOWED_ORIGINS` environment variable (defaults to `[]`). In `docker-compose.yml`, the `ALLOWED_ORIGINS` environment variable for both `api` and `proxy` services must include `http://localhost:8080` and `http://127.0.0.1:8080` to support cross-origin requests from the mock-site used during E2E testing.
 
 | Variable | Description | Default |
 | :--- | :--- | :--- |
@@ -77,8 +74,6 @@ This will start the following services:
 - **Proxy**: `http://localhost:3001`
 - **Web Dashboard**: `http://localhost:3000`
 - **Mock Site**: `http://localhost:8080`
-
-*Note:* If Docker Compose fails to pull the ClickHouse image, it may be due to Docker Hub unauthenticated pull rate limits. Please log in or try again later.
 
 ### Available Scripts
 

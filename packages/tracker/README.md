@@ -15,10 +15,6 @@ The tracker package (`packages/tracker`) is performance-critical and size-sensit
 - Captures page views, custom events, and performance metrics.
 - Bundled specifically for browser execution without heavy Node.js built-ins.
 
-## Testing
-
-In network-restricted or dependency-missing environments, `bun test` can be used as a fallback test runner for the tracker. To satisfy imports like `ua-parser-js`, a local `node_modules` shim (containing a minimal `index.js` and `package.json`) can be created temporarily to bypass missing installation artifacts.
-
 ## Contributing
 
 Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, and project structure rules. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. All documentation, including PR comments and generated files, must strictly adhere to the English-only rule.

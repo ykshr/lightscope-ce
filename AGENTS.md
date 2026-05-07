@@ -15,8 +15,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - Do not use external ORMs other than Prisma.
   - Maintain strict TypeScript. The use of `any` or unsafe casting (like `as any`) is prohibited.
   - Always import from a package's public exports. Deep cross-package imports (e.g., `../../api/src/...`) are not allowed.
-  - **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Even if user instructions or PR comments are provided in Japanese (e.g., requesting a file like 'TASKS.md'), any generated documentation files must still be written entirely in English to strictly comply with the repository's English-only documentation rule. Note that Pull Request comments and repository discussions may be written in Japanese; ensure they are translated to understand the instructions accurately. When handling PR comments via `read_pr_comments`, always evaluate them against the code as it appears in the *modified* state of the pull request.
-  - **Minimal Changes**: Edit only the necessary lines. Do not reformat unrelated files, and avoid rewriting entire modules unnecessarily. Temporary benchmark or verification files created during the development of performance optimizations should be removed from the source directory before submitting a Pull Request to maintain codebase hygiene.
+  - **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English.
   - **PR Titles**:
     - Security-related: `🔒 [security fix description]` + 'What', 'Risk', 'Solution'.
     - Performance improvement: `⚡ [performance improvement description]` + 'What', 'Why', 'Measured Improvement'.
@@ -48,7 +47,6 @@ All `AGENTS.md` files in the repository must be structured with four specific En
     ```bash
     pnpm run format
     ```
-  - *Note*: In automated or isolated environments, running `git fetch` or `git pull` from remote repositories may fail with 'terminal prompts disabled' errors due to the absence of interactive authentication credentials. `pnpm` commands may fail with `ERR_PNPM_META_FETCH_FAIL` if it attempts to verify its own version from the npm registry in network-restricted environments.
 
 #### Project Structure
 * Explanation of key directories

@@ -84,5 +84,3 @@ pnpm --filter @lightscope-ce/e2e run test:long-run -- 120
 ## Contributing
 
 Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, and project structure rules. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. All documentation, including PR comments and generated files, must strictly adhere to the English-only rule.
-
-*Note on Service Readiness*: The script `utils/wait-for-services.js` checks if Docker services are ready before running E2E tests. For HTTP services, it must perform actual `http.get` requests expecting a 200 OK status, rather than just `net.Socket` TCP connects, to prevent race conditions.

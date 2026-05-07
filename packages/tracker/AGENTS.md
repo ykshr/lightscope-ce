@@ -26,7 +26,6 @@ This package is extremely performance-critical and highly sensitive to bundle si
     pnpm --filter @lightscope-ce/tracker run build:browser
     ```
 * How to run tests (commands and steps)
-  In network-restricted or dependency-missing environments, `bun test` can be used as a fallback test runner for the tracker. To satisfy imports like `ua-parser-js`, a local `node_modules` shim (containing a minimal `index.js` and `package.json`) can be created temporarily to bypass missing installation artifacts. In network-restricted environments where `pnpm` and `node_modules` are unavailable, pure logic utilities can be verified using a standalone `.js` script executed via `node`, provided the code does not rely on external dependencies.
 
 #### Project Structure
 * Explanation of key directories

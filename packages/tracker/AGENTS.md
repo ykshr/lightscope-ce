@@ -12,8 +12,8 @@ This package is extremely performance-critical and highly sensitive to bundle si
   - `camelCase` for variables/functions.
 * Restrictions on libraries that should or should not be used
   - The tracker package must not include heavy dependencies, React, or large libraries. Do not use Node.js specific APIs (like `fs`, `path`, etc.).
-- **Browser Environment**: Rely on global objects like `window`, `document`, and `navigator`. Ensure the script works natively in browser environments.
-- **Backward Compatibility**: Do not change public function signatures, event formats, or payload shapes without explicit instruction.
+  - **Browser Environment**: Rely on global objects like `window`, `document`, and `navigator`. Ensure the script works natively in browser environments.
+  - **Backward Compatibility**: Do not change public function signatures, event formats, or payload shapes without explicit instruction.
 
 #### Build & Test Commands
 * How to build the project

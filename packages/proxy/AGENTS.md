@@ -18,8 +18,8 @@ Entry: `src/index.ts`
   - `camelCase` for variables/functions, `PascalCase` for types/interfaces/classes.
 * Restrictions on libraries that should or should not be used
   - Do not introduce heavy dependencies. Keep the proxy lightweight to maintain high performance.
-- **Endpoint Responsibilities**: The primary role is to receive events from trackers quickly, validate them, and save them to ClickHouse. The Proxy package (`packages/proxy`) is a high-performance REST API built with Node.js and Hono, responsible for event ingestion from trackers and connected directly to ClickHouse.
-- **Input Validation**: Use Zod to strictly validate that the incoming payloads are in the correct format.
+  - **Endpoint Responsibilities**: The primary role is to receive events from trackers quickly, validate them, and save them to ClickHouse. The Proxy package (`packages/proxy`) is a high-performance REST API built with Node.js and Hono, responsible for event ingestion from trackers and connected directly to ClickHouse.
+  - **Input Validation**: Use Zod to strictly validate that the incoming payloads are in the correct format.
 
 #### Build & Test Commands
 * How to build the project
@@ -32,7 +32,7 @@ Entry: `src/index.ts`
   ```bash
   pnpm --filter @lightscope-ce/proxy run test
   ```
-- **Start Development Server**:
+  - **Start Development Server**:
   ```bash
   pnpm --filter @lightscope-ce/proxy run dev
   ```

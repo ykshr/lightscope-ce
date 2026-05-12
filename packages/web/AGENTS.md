@@ -48,11 +48,11 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   ```bash
   pnpm --filter @lightscope-ce/web run test
   ```
-- **Start Development Server**:
+  - **Start Development Server**:
   ```bash
   pnpm --filter @lightscope-ce/web run dev
   ```
-- **Generate GraphQL Code (React Query hooks)**:
+  - **Generate GraphQL Code (React Query hooks)**:
   ```bash
   pnpm --filter @lightscope-ce/web run codegen
   ```

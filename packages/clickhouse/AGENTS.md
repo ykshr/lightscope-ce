@@ -11,13 +11,13 @@ This package defines the analytics data layer. It contains XML configuration fil
   - Use `snake_case` for database tables and columns.
 * Restrictions on libraries that should or should not be used
   - This package relies on ClickHouse natively. Do not introduce JS/TS dependencies for schema management.
-- **Schema Safety**:
-  - Schema changes must always be backward compatible.
-  - Ensure that rollouts to the production environment are safe.
-  - Never remove existing columns that are used by the API.
-- **Materialized Views Rules**:
-  - If making changes, consider the impact on data flow and ensure there is no data loss.
-  - Verify that the correct aggregation logic is maintained.
+  - **Schema Safety**:
+    - Schema changes must always be backward compatible.
+    - Ensure that rollouts to the production environment are safe.
+    - Never remove existing columns that are used by the API.
+  - **Materialized Views Rules**:
+    - If making changes, consider the impact on data flow and ensure there is no data loss.
+    - Verify that the correct aggregation logic is maintained.
 
 #### Build & Test Commands
 * How to build the project

@@ -51,13 +51,33 @@ export const allKeysUsedInCategoryOptions = Array.from(
   new Set<string>(categoryOptions.flatMap((option) => Object.keys(option.value)))
 ).sort();
 
+const preprocessedOptions = categoryOptions.map((option, index) => {
+  const value = { ...option.value } as Record<string, unknown>;
+  const keys = Object.keys(value).sort();
+
+  for (const key of keys) {
+    const val = value[key];
+    if (Array.isArray(val)) {
+      value[key] = [...val].sort();
+    }
+  }
+
+  return {
+    sortedKeys: keys,
+    value,
+    index,
+  };
+});
+
 export const findCategoryOptionByValue = (value: Record<string, unknown>) => {
   const categoryKeys = Object.keys(value)
     .filter((key) => allKeysUsedInCategoryOptions.includes(key))
     .sort();
 
-  const foundOption = categoryOptions.find((option) => {
-    const optionKeys = Object.keys(option.value).sort();
+  const sortedInputArrays = new Map<unknown[], unknown[]>();
+
+  const foundOption = preprocessedOptions.find((option) => {
+    const { sortedKeys: optionKeys } = option;
     if (categoryKeys.length !== optionKeys.length) {
       return false;
     }
@@ -72,8 +92,14 @@ export const findCategoryOptionByValue = (value: Record<string, unknown>) => {
         if (val1.length !== val2.length) {
           return false;
         }
-        const sortedVal1 = [...val1].sort();
-        const sortedVal2 = [...val2].sort();
+
+        let sortedVal1 = sortedInputArrays.get(val1);
+        if (!sortedVal1) {
+          sortedVal1 = [...val1].sort();
+          sortedInputArrays.set(val1, sortedVal1);
+        }
+
+        const sortedVal2 = val2; // Already sorted in preprocessedOptions
         for (let j = 0; j < sortedVal1.length; j++) {
           if (sortedVal1[j] !== sortedVal2[j]) {
             return false;
@@ -88,7 +114,9 @@ export const findCategoryOptionByValue = (value: Record<string, unknown>) => {
     return true;
   });
 
-  if (foundOption) return foundOption;
+  if (foundOption) {
+    return categoryOptions[foundOption.index];
+  }
 
   return {
     label: 'Custom',

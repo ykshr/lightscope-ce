@@ -45,4 +45,4 @@ Run these from the `packages/web` directory, or use `pnpm --filter @lightscope-c
 3. Open your browser at `http://localhost:3000`.
 ## Contributing
 
-Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, and project structure rules. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. All documentation, including PR comments and generated files, must strictly adhere to the English-only rule.
+Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, and project structure rules. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository, and must explicitly state that all documentation must be written in English. All documentation, including PR comments and generated files, must strictly adhere to the English-only rule.

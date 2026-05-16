@@ -53,5 +53,7 @@ Entry: `src/index.ts`
   * “Do not modify this directory”
     - Do not arbitrarily change the project structure inside `src/`.
   - **Security**:
+    - Sensitive secrets must be explicitly configured in the environment; hardcoded fallback values in source code, test helpers, or `docker-compose.yml` files are prohibited, and missing secrets must cause the application or test environment to fail securely by throwing an error.
+    - The package follows a convention where `AuthProvider` implementations return `null` silently for missing credentials to minimize log noise, while `console.error` is reserved for logging actionable validation or verification failures (e.g., origin mismatches, invalid JWT payloads).
   - **Performance**:
     - Do not introduce heavy synchronous processing that would block incoming requests from trackers.

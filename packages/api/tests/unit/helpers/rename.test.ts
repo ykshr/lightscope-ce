@@ -83,4 +83,25 @@ describe('renameKeySnakeToCamel', () => {
     expect(renameKeySnakeToCamel({})).toEqual({});
     expect(renameKeySnakeToCamel([])).toEqual([]);
   });
+
+  it('should handle keys with numbers', () => {
+    const input = { user_1_name: 'John', item_64_id: 'abc' };
+    const expected = { user_1Name: 'John', item_64Id: 'abc' };
+    expect(renameKeySnakeToCamel(input)).toEqual(expected);
+  });
+
+  it('should handle leading and trailing underscores', () => {
+    const input = { _id: 1, name_: 'A', _internal_code_: 'X' };
+    // _([a-z]) matches _i -> I, _c -> C.
+    // _id -> Id, name_ -> name_, _internal_code_ -> InternalCode_
+    const expected = { Id: 1, name_: 'A', InternalCode_: 'X' };
+    expect(renameKeySnakeToCamel(input)).toEqual(expected);
+  });
+
+  it('should handle consecutive underscores', () => {
+    const input = { user__name: 'John' };
+    // user__name -> user_Name
+    const expected = { user_Name: 'John' };
+    expect(renameKeySnakeToCamel(input)).toEqual(expected);
+  });
 });

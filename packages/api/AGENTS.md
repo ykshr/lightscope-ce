@@ -28,8 +28,9 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - **Input Validation**: GraphQL type definitions do not guarantee runtime validation. All external inputs must be strictly validated with Zod and normalized before use.
   - **Performance**: Always assume large datasets. Avoid loading full result sets into memory. Prefer pre-aggregated tables whenever possible.
   - **Security**:
-    - Sensitive information like `JWT_SECRET` must be explicitly configured in the environment. Hardcoded fallback values are strictly prohibited, and missing secrets must cause the request context creation to fail securely by throwing an error.
+    - Sensitive information like `JWT_SECRET` must be explicitly configured in the environment. Hardcoded fallback values are strictly prohibited, and missing secrets must cause the request context creation to fail securely by throwing an error. Security standards for the `better-auth` configuration (located in `src/createContext.ts` and `src/types/auth.ts`) prohibit logging the sensitive password reset `url` within the `sendResetPassword` callback to prevent token leakage in system logs.
     - Do not log raw SQL errors.
+    - ClickHouse queries in `packages/api/src/graphql/loaders/` must use parameter binding for `LIMIT`, `OFFSET`, and `LIMIT BY` clauses using the `{name:Type}` syntax (e.g., `{limit:UInt32}`) to prevent SQL injection; corresponding values should be stored in a `queryParamsObj` passed to the database client helper.
     - Do not expose internal table names to the client.
     - Do not trust client-provided column names.
 
@@ -56,7 +57,8 @@ All `AGENTS.md` files in the repository must be structured with four specific En
     ```
   - **Generate Prisma / Auth Schema**:
     ```bash
-    pnpm exec auth generate --config ./src/helpers/auth.ts --output ./prisma/schema/schema.prisma --yes
+    # The `db:generate` script uses a dedicated configuration file at `./prisma/auth.ts` with a dummy Prisma client (e.g., `const dummyPrisma = {} as any`). This separates it from the main application auth logic to prevent 'module not found' circular dependencies when running `auth generate` before the Prisma client is generated.
+    pnpm exec auth generate --config ./prisma/auth.ts --output ./prisma/schema/schema.prisma --yes
     pnpm exec prisma generate
     ```
 

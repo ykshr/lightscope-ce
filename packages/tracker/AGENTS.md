@@ -12,6 +12,7 @@ This package is extremely performance-critical and highly sensitive to bundle si
   - `camelCase` for variables/functions.
 * Restrictions on libraries that should or should not be used
   - The tracker package must not include heavy dependencies, React, or large libraries. Do not use Node.js specific APIs (like `fs`, `path`, etc.).
+  - **Testing**: When mocking DOM globals (e.g., `document.getElementsByTagName`) in Vitest tests for the `tracker` package, the return value must be cast to `HTMLCollectionOf<Element>` (or `as any`) to satisfy the TypeScript compiler during project builds.
   - **Browser Environment**: Rely on global objects like `window`, `document`, and `navigator`. Ensure the script works natively in browser environments.
   - **Backward Compatibility**: Do not change public function signatures, event formats, or payload shapes without explicit instruction.
 

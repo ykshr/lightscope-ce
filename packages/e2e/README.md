@@ -83,4 +83,4 @@ pnpm --filter @lightscope-ce/e2e run test:long-run -- 120
 - **Script not found:** Ensure `packages/tracker/dist/browser.js` exists. If not, run `pnpm --filter @lightscope-ce/tracker run build:browser`.
 ## Contributing
 
-Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, and project structure rules. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. All documentation, including PR comments and generated files, must strictly adhere to the English-only rule.
+Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, and project structure rules. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository, and must explicitly state that all documentation must be written in English. All documentation, including PR comments and generated files, must strictly adhere to the English-only rule.

@@ -12,6 +12,7 @@ End-to-End Tests using Playwright and standard testing scripts.
 * Restrictions on libraries that should or should not be used
   - Use Playwright for browser tests. Avoid mixing in other test runners like Jest.
   - **Locators**: In Playwright tests, prefer exact match structural locators like `page.getByRole('button', { name: '...', exact: true })` or chained `.filter()` methods over loose locators (e.g., `page.locator().first()`) to avoid timeouts from targeting hidden background elements.
+  - `postinstall` scripts are strictly prohibited in the `e2e` package.
 
 #### Build & Test Commands
 * How to build the project

@@ -17,9 +17,10 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - Maintain strict TypeScript. The use of `any` or unsafe casting (like `as any`) is prohibited.
   - Always import from a package's public exports. Deep cross-package imports (e.g., `../../api/src/...`) are not allowed.
   - To adhere to monorepo restrictions against deep cross-package imports, small utility functions like `redactError` are duplicated in both `packages/api/src/helpers/` and `packages/proxy/src/helpers/`.
-  - **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Even if user instructions or PR comments are provided in other languages (e.g., Japanese, or phrases like 'როგორ'), any generated documentation files must still be translated to and written entirely in English to strictly comply with this rule.
+  - The repository enforces strict pnpm security configurations: exact versioning (`save-exact=true` in `.npmrc`), and workspace-level security settings (`ignoreScripts: true`, `ignorePnpmfile: true`, `minimumReleaseAge: 10080`, `preferFrozenLockfile: true` in `pnpm-workspace.yaml`).
+  - **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Even if user instructions or PR comments are provided in other languages (e.g., Japanese, or non-English phrases), any generated documentation files must still be translated to and written entirely in English to strictly comply with this rule.
   - **PR Titles**:
-    - Security-related: `🔒 [security fix description]` + 'What', 'Risk', 'Solution'.
+    - Security-related: `🔓 [security fix description]` + 'What', 'Risk', 'Solution'. Security-related pull requests must explicitly document the vulnerability addressed, the potential risk, and the implementation strategy in the description.
     - Performance improvement: `⚡ [performance improvement description]` + 'What', 'Why', 'Measured Improvement'.
     - Code health improvement: `🧹 [code health improvement description]` + 'What', 'Why', 'Verification', 'Result'.
     - Testing improvement: `🧪 [testing improvement description]` + 'What', 'Coverage', 'Result'.
@@ -31,11 +32,14 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 #### Build & Test Commands
 * How to build the project
   - Run `pnpm run build` in the respective package or `pnpm run ci` from the root to build and test everything.
+  - If workspace commands like `pnpm run ci` or `pnpm run lint` fail with `ERR_MODULE_NOT_FOUND` for standard dependencies (e.g., `@eslint/js`), ensure `pnpm install` is executed in the root directory to sync the lockfile and download missing packages.
+  - Discrepancies between the root `package.json` and the root `importers: .` section of `pnpm-lock.yaml` trigger `ERR_PNPM_OUTDATED_LOCKFILE` in CI environments enforcing `--frozen-lockfile`. These discrepancies must be resolved by syncing the lockfile via `pnpm install` or aligning the `package.json` with the existing lockfile state.
   - **System Dependencies**: When installing Playwright system dependencies, run `pnpm --filter @lightscope-ce/e2e exec playwright install --with-deps` after `pnpm install`.
   - **Prettier Failback**: Prettier can be executed using `bun x prettier` when `pnpm run format` is blocked by network issues.
   - **CI Fallbacks**: In network-restricted environments where `pnpm` version verification fails with `ERR_PNPM_META_FETCH_FAIL`, use `node --check <filepath>` for syntax validation and `npx prettier --check <filepath>` for formatting verification as alternative CI checks.
   - **PackageManager Synchronization**: To synchronize the `pnpm` version with the workspace's `packageManager` configuration in Dockerfiles or CI environments, use `corepack enable pnpm`.
 * How to run tests (commands and steps)
+  - The GitHub CI check suite enforces TypeScript compilation (`tsc -b`) on test files; tests must use project-standard frameworks (Vitest) and avoid runtime-specific modules like `bun:test` to prevent build failures.
   - **Run CI/CD Checks**: To run comprehensive repository-wide CI checks (including linting, type checking, unit tests, and formatting), execute the command `pnpm run ci` from the workspace root. Always run this before marking a task as complete.
   - The root repository provides a `pnpm run ci` script that acts as the primary quality gate, sequentially running `format:check`, `lint`, `build`, and `test` across all workspace projects.
   - To comply with security standards that prohibit hardcoded secret fallbacks, the `JWT_SECRET` environment variable must be explicitly defined in GitHub Actions workflow files (`.github/workflows/ci.yml` and `.github/workflows/e2e.yml`) for any steps executing integration or E2E tests.
@@ -79,3 +83,4 @@ All `AGENTS.md` files in the repository must be structured with four specific En
     - TODO and FIXME comments found inside the auto-generated Prisma files (e.g., `packages/api/src/__generated__/prisma/runtime/client.d.ts`) are inherent to the generated Prisma Client and can be safely ignored during codebase audits.
   * “Do not modify this directory”
     - Do not modify build output directories manually.
+  - Do not leave temporary scratchpad scripts (e.g., .sh, .js, .py files) used for text processing or validation in the working directory when finalizing code or committing changes. Always clean up garbage files to avoid codebase pollution.

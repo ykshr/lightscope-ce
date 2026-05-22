@@ -17,7 +17,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - Maintain strict TypeScript. The use of `any` or unsafe casting (like `as any`) is prohibited.
   - Always import from a package's public exports. Deep cross-package imports (e.g., `../../api/src/...`) are not allowed.
   - To adhere to monorepo restrictions against deep cross-package imports, small utility functions like `redactError` are duplicated in both `packages/api/src/helpers/` and `packages/proxy/src/helpers/`.
-  - **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Even if user instructions or PR comments are provided in other languages (e.g., Japanese, or phrases like 'როგორ'), any generated documentation files must still be translated to and written entirely in English to strictly comply with this rule.
+  - **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Even if user instructions or PR comments are provided in other languages (e.g., Japanese, or phrases like 'how'), any generated documentation files must still be translated to and written entirely in English to strictly comply with this rule.
   - **PR Titles**:
     - Security-related: `🔒 [security fix description]` + 'What', 'Risk', 'Solution'.
     - Performance improvement: `⚡ [performance improvement description]` + 'What', 'Why', 'Measured Improvement'.

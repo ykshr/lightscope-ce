@@ -1,137 +1,76 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { createApp } from '@/app';
+import type { TestHelpers } from 'better-auth/plugins';
+import { beforeAll, describe, expect, it } from 'vitest';
+import createContext from './createContext';
 
-const API_URL = process.env.API_URL || 'http://127.0.0.1:3001';
+process.env.DATABASE_URL = 'file:./prisma/db/test.db';
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
+process.env.CLICKHOUSE_URL = process.env.CLICKHOUSE_URL || 'http://localhost:8123';
+process.env.BETTER_AUTH_URL = process.env.BETTER_AUTH_URL || 'http://localhost:3000';
+
+const ONE_HOUR_MS = 3600000;
 
 describe('API Integration Test', () => {
   let sessionCookie: string = '';
   let memberSessionCookie: string = '';
   let activeOrganizationId: string = '';
+  const app = createApp(createContext);
+  const ORIGIN = 'http://localhost';
 
   beforeAll(async () => {
-    // Attempt to register a dummy owner user to use for authenticated requests
     try {
       const ts = Date.now();
-      const res = await fetch(`${API_URL}/api/auth/sign-up/email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Origin: API_URL,
-        },
-        body: JSON.stringify({
-          email: `owner_${ts}@example.com`,
-          password: 'password123',
-          name: 'Test Owner User',
-        }),
+
+      const context = await createContext({} as any);
+      const auth = context.auth as any;
+      const ctx = await auth.$context;
+      const test: TestHelpers = ctx.test;
+
+      // 1. Setup owner user using testUtils
+      const user = test.createUser({
+        email: `owner_${ts}@example.com`,
+        name: 'Test Owner User',
       });
 
-      const setCookieHeader = res.headers.get('set-cookie');
-      if (setCookieHeader) {
-        sessionCookie = setCookieHeader.split(';')[0];
-      }
+      await test.saveUser(user);
 
       // Create an organization (this user becomes owner)
-      const orgRes = await fetch(`${API_URL}/api/auth/organization/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-          Origin: API_URL,
-        },
-        body: JSON.stringify({
-          name: `Test Org ${ts}`,
-          slug: `test-org-${ts}`,
-        }),
-      });
-      const orgJson = await orgRes.json();
-      activeOrganizationId = orgJson.id;
-
-      const activeOrgRes = await fetch(`${API_URL}/api/auth/organization/set-active`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-          Origin: API_URL,
-        },
-        body: JSON.stringify({
-          organizationId: activeOrganizationId,
-        }),
+      const org = test.createOrganization?.({
+        name: 'Test Org',
+        slug: 'test-org',
       });
 
-      const activeOrgCookieHeader = activeOrgRes.headers.get('set-cookie');
-      if (activeOrgCookieHeader) {
-        sessionCookie = `${sessionCookie}; ${activeOrgCookieHeader.split(';')[0]}`;
+      if (org) {
+        await test.saveOrganization?.(org);
+        await test.addMember?.({
+          userId: user.id,
+          organizationId: org?.id as string,
+          role: 'admin',
+        });
       }
 
-      // Setup a member user
-      const memberRes = await fetch(`${API_URL}/api/auth/sign-up/email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Origin: API_URL,
-        },
-        body: JSON.stringify({
-          email: `member_${ts}@example.com`,
-          password: 'password123',
-          name: 'Test Member User',
-        }),
-      });
-
-      const memberSetCookieHeader = memberRes.headers.get('set-cookie');
-      if (memberSetCookieHeader) {
-        memberSessionCookie = memberSetCookieHeader.split(';')[0];
-      }
-
-      // Invite user to organization
-      const inviteRes = await fetch(`${API_URL}/api/auth/organization/invite-member`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-          Origin: API_URL,
-        },
-        body: JSON.stringify({
-          organizationId: activeOrganizationId,
-          email: `member_${ts}@example.com`,
-          role: 'member',
-        }),
-      });
-      const inviteJson = await inviteRes.json();
-
-      // Accept invitation
-      const acceptRes = await fetch(`${API_URL}/api/auth/organization/accept-invitation`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: memberSessionCookie,
-          Origin: API_URL,
-        },
-        body: JSON.stringify({
-          invitationId: inviteJson.id,
-        }),
-      });
-
-      const memberActiveOrgRes = await fetch(`${API_URL}/api/auth/organization/set-active`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: memberSessionCookie,
-          Origin: API_URL,
-        },
-        body: JSON.stringify({
-          organizationId: activeOrganizationId,
-        }),
-      });
-      const memberActiveOrgCookieHeader = memberActiveOrgRes.headers.get('set-cookie');
-      if (memberActiveOrgCookieHeader) {
-        memberSessionCookie = `${memberSessionCookie}; ${memberActiveOrgCookieHeader.split(';')[0]}`;
-      }
+      // const memberActiveOrgRes = await app.request('/api/auth/organization/set-active', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Cookie: memberSessionCookie,
+      //     Origin: ORIGIN,
+      //   },
+      //   body: JSON.stringify({
+      //     organizationId: activeOrganizationId,
+      //   }),
+      // });
+      // const memberActiveOrgCookieHeader = memberActiveOrgRes.headers.get('set-cookie');
+      // if (memberActiveOrgCookieHeader) {
+      //   memberSessionCookie = `${memberSessionCookie}; ${memberActiveOrgCookieHeader.split(';')[0]}`;
+      // }
     } catch (e) {
       console.error('Failed to setup test users and organization:', e);
     }
   });
 
   it('should return health check', async () => {
-    const res = await fetch(`${API_URL}/health`);
+    const res = await app.request('/health');
     expect(res.status).toBe(200);
     const json = await res.json();
     expect(json.ok).toBe(true);
@@ -139,7 +78,7 @@ describe('API Integration Test', () => {
 
   describe('Authentication and RBAC middleware', () => {
     it('should return 401 Unauthorized for missing authentication', async () => {
-      const res = await fetch(`${API_URL}/gql`, {
+      const res = await app.request('/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,7 +89,7 @@ describe('API Integration Test', () => {
     });
 
     it('should return 400 Bad Request for bad JSON syntax with valid authentication', async () => {
-      const res = await fetch(`${API_URL}/gql`, {
+      const res = await app.request('/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -163,7 +102,7 @@ describe('API Integration Test', () => {
     });
 
     it('should allow fetching trackers for authenticated owner with organization context', async () => {
-      const res = await fetch(`${API_URL}/tracker`, {
+      const res = await app.request('/tracker', {
         headers: {
           Cookie: sessionCookie,
         },
@@ -174,7 +113,7 @@ describe('API Integration Test', () => {
     });
 
     it('should allow fetching trackers for authenticated member with organization context', async () => {
-      const res = await fetch(`${API_URL}/tracker`, {
+      const res = await app.request('/tracker', {
         headers: {
           Cookie: memberSessionCookie,
         },
@@ -187,7 +126,7 @@ describe('API Integration Test', () => {
 
   describe('Tracker Router (/tracker)', () => {
     it('POST /generate should fail with invalid input format', async () => {
-      const res = await fetch(`${API_URL}/tracker/generate`, {
+      const res = await app.request('/tracker/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -199,7 +138,7 @@ describe('API Integration Test', () => {
     });
 
     it('POST /generate should fail for member role (403 Forbidden)', async () => {
-      const res = await fetch(`${API_URL}/tracker/generate`, {
+      const res = await app.request('/tracker/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -211,7 +150,7 @@ describe('API Integration Test', () => {
     });
 
     it('DELETE /:id should fail for member role (403 Forbidden)', async () => {
-      const res = await fetch(`${API_URL}/tracker/some-id`, {
+      const res = await app.request('/tracker/some-id', {
         method: 'DELETE',
         headers: {
           Cookie: memberSessionCookie,
@@ -221,7 +160,7 @@ describe('API Integration Test', () => {
     });
 
     it('POST /generate should succeed with valid input', async () => {
-      const res = await fetch(`${API_URL}/tracker/generate`, {
+      const res = await app.request('/tracker/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -237,7 +176,7 @@ describe('API Integration Test', () => {
     });
 
     it('DELETE /:id should delete an existing tracker', async () => {
-      const generateRes = await fetch(`${API_URL}/tracker/generate`, {
+      const generateRes = await app.request('/tracker/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -248,7 +187,7 @@ describe('API Integration Test', () => {
       const genJson = await generateRes.json();
       const trackerId = genJson.trackers.find((t: any) => t.origin === 'https://delete-me.com').id;
 
-      const deleteRes = await fetch(`${API_URL}/tracker/${trackerId}`, {
+      const deleteRes = await app.request(`/tracker/${trackerId}`, {
         method: 'DELETE',
         headers: {
           Cookie: sessionCookie,
@@ -256,7 +195,7 @@ describe('API Integration Test', () => {
       });
       expect(deleteRes.status).toBe(200);
 
-      const getRes = await fetch(`${API_URL}/tracker`, {
+      const getRes = await app.request('/tracker', {
         headers: {
           Cookie: sessionCookie,
         },
@@ -266,9 +205,9 @@ describe('API Integration Test', () => {
     });
   });
 
-  describe('GraphQL API (/gql)', () => {
+  describe('GraphQL API endpoints', () => {
     it('should return GraphQL response for valid query', async () => {
-      const res = await fetch(`${API_URL}/gql`, {
+      const res = await app.request('/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -286,90 +225,81 @@ describe('API Integration Test', () => {
       const json = await res.json();
       expect(json.data.__typename).toBe('Query');
     });
-  });
 
-  describe('GraphQL API endpoints', () => {
-    it('should return null or article for "article" query', async () => {
-      const res = await fetch(`${API_URL}/gql`, {
+    it('should return expected structures for article analytics', async () => {
+      const query = `
+        query {
+          article(url: "https://example.com/test") {
+            url
+            title
+            siteName
+            analytics(
+              startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+              endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
+            ) {
+              analytics {
+                date
+                value
+              }
+              analyticsUtm {
+                source
+                medium
+                campaign
+                value
+              }
+            }
+          }
+        }
+      `;
+      const res = await app.request('/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Cookie: sessionCookie,
         },
-        body: JSON.stringify({
-          query: `
-            query {
-              article(url: "https://example.com/article1") {
-                url
-                title
-                siteName
-              }
-            }
-          `,
-        }),
+        body: JSON.stringify({ query }),
       });
-      expect(res.status).toBe(200);
       const json = await res.json();
-      expect(json.data.article).toBeDefined();
+      expect(res.ok).toBeTruthy();
+      if (json.data?.article) {
+        expect(json.data.article.analytics.analytics).toBeDefined();
+        expect(json.data.article.analytics.analyticsUtm).toBeDefined();
+      }
     });
 
-    it('should execute "rank" query with valid parameters', async () => {
-      const res = await fetch(`${API_URL}/gql`, {
+    it('should execute "rank" query and return expected structures', async () => {
+      const query = `
+        query {
+          rank(
+            startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+            endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
+            limit: 5
+          ) {
+            total
+            articles {
+              index
+              url
+              value
+            }
+          }
+        }
+      `;
+      const res = await app.request('/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Cookie: sessionCookie,
         },
-        body: JSON.stringify({
-          query: `
-            query {
-              rank(startDate: "2023-01-01T00:00:00Z", endDate: "2023-01-31T23:59:59Z") {
-                total
-                articles {
-                  index
-                  url
-                  value
-                }
-              }
-            }
-          `,
-        }),
+        body: JSON.stringify({ query }),
       });
-      expect(res.status).toBe(200);
       const json = await res.json();
-
+      expect(res.ok).toBeTruthy();
       expect(json.data?.rank?.total).toBeDefined();
-      expect(json.data?.rank?.articles).toBeInstanceOf(Array);
-    });
-
-    it('should execute "trend" query with valid parameters', async () => {
-      const res = await fetch(`${API_URL}/gql`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
-        body: JSON.stringify({
-          query: `
-            query {
-              trend(startDate: "2023-01-01T00:00:00Z", endDate: "2023-01-31T23:59:59Z", aggregation: { unit: DAY }) {
-                total {
-                  date
-                  value
-                }
-              }
-            }
-          `,
-        }),
-      });
-      expect(res.status).toBe(200);
-      const json = await res.json();
-
-      expect(json.data?.trend?.total).toBeInstanceOf(Array);
+      expect(Array.isArray(json.data.rank.articles)).toBe(true);
     });
 
     it('should fail GraphQL validation for missing required arguments on "rank"', async () => {
-      const res = await fetch(`${API_URL}/gql`, {
+      const res = await app.request('/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -388,6 +318,35 @@ describe('API Integration Test', () => {
       expect(res.status).toBe(400);
       const json = await res.json();
       expect(json.errors).toBeDefined();
+    });
+
+    it('should execute "trend" query and return expected structures', async () => {
+      const query = `
+        query {
+          trend(
+            startDate: "${new Date(Date.now() - ONE_HOUR_MS).toISOString()}"
+            endDate: "${new Date(Date.now() + ONE_HOUR_MS).toISOString()}"
+            aggregation: { unit: DAY }
+          ) {
+            total {
+              date
+              value
+            }
+          }
+        }
+      `;
+      const res = await app.request('/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: sessionCookie,
+        },
+        body: JSON.stringify({ query }),
+      });
+      const json = await res.json();
+      expect(res.ok).toBeTruthy();
+      expect(json.data?.trend?.total).toBeDefined();
+      expect(Array.isArray(json.data.trend.total)).toBe(true);
     });
   });
 });

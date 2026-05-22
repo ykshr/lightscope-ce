@@ -1,12 +1,11 @@
 import { PrismaClient } from '@/__generated__/prisma/client';
 import processAllowedOriginsString from '@/helpers/allowedOrigins';
-import { generateAppleClientSecret } from '@/helpers/apple';
 import { $ } from '@/types';
 import { createClient as createClickHouseClient } from '@clickhouse/client';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { betterAuth as createBetterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { organization } from 'better-auth/plugins';
+import { organization, testUtils } from 'better-auth/plugins';
 import { Context } from 'hono';
 import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
@@ -21,18 +20,6 @@ export default async function createContext(c: Context): Promise<$> {
     url: DATABASE_URL,
   });
   const prisma = new PrismaClient({ adapter });
-
-  const {
-    GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET,
-    MICROSOFT_CLIENT_ID,
-    MICROSOFT_CLIENT_SECRET,
-    APPLE_CLIENT_ID,
-    APPLE_TEAM_ID,
-    APPLE_KEY_ID,
-    APPLE_PRIVATE_KEY,
-    APPLE_APP_BUNDLE_IDENTIFIER,
-  } = env(c);
 
   const trustedOrigins = processAllowedOriginsString(ALLOWED_ORIGINS);
   const auth = createBetterAuth({
@@ -65,28 +52,7 @@ export default async function createContext(c: Context): Promise<$> {
         },
       },
     },
-    plugins: [organization()],
-    socialProviders: {
-      google: {
-        clientId: GOOGLE_CLIENT_ID || 'dummy',
-        clientSecret: GOOGLE_CLIENT_SECRET || 'dummy',
-      },
-      microsoft: {
-        clientId: MICROSOFT_CLIENT_ID || 'dummy',
-        clientSecret: MICROSOFT_CLIENT_SECRET || 'dummy',
-      },
-      apple: {
-        clientId: APPLE_CLIENT_ID || 'dummy',
-        clientSecret:
-          (await generateAppleClientSecret(
-            APPLE_CLIENT_ID,
-            APPLE_TEAM_ID,
-            APPLE_KEY_ID,
-            APPLE_PRIVATE_KEY
-          )) || 'dummy',
-        appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER,
-      },
-    },
+    plugins: [organization(), testUtils()],
   });
 
   const { CLICKHOUSE_URL, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } = env(c);
@@ -107,7 +73,7 @@ export default async function createContext(c: Context): Promise<$> {
   };
 
   return {
-    auth,
+    auth: auth as any,
     clickhouse,
     prisma,
     jwt,

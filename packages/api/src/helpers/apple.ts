@@ -1,11 +1,12 @@
 import { importPKCS8, SignJWT } from 'jose';
 
 export async function generateAppleClientSecret(
-  clientId: string,
-  teamId: string,
-  keyId: string,
-  privateKey: string
+  clientId?: string,
+  teamId?: string,
+  keyId?: string,
+  privateKey?: string
 ) {
+  if (!clientId || !teamId || !keyId || !privateKey) return undefined;
   const key = await importPKCS8(privateKey, 'ES256');
   const now = Math.floor(Date.now() / 1000);
   return new SignJWT({})

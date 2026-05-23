@@ -11,11 +11,8 @@ process.env.BETTER_AUTH_URL = process.env.BETTER_AUTH_URL || 'http://localhost:3
 const ONE_HOUR_MS = 3600000;
 
 describe('API Integration Test', () => {
-  let sessionCookie: string = '';
-  let memberSessionCookie: string = '';
-  let activeOrganizationId: string = '';
+  const headers = new Headers({ 'Content-Type': 'application/json' });
   const app = createApp(createContext);
-  const ORIGIN = 'http://localhost';
 
   beforeAll(async () => {
     try {
@@ -34,36 +31,27 @@ describe('API Integration Test', () => {
 
       await test.saveUser(user);
 
+      const { headers: betterAuthHeaders } = await test.login({ userId: user.id });
+      betterAuthHeaders.forEach((value, key) => headers.set(key, value));
+
       // Create an organization (this user becomes owner)
       const org = test.createOrganization?.({
         name: 'Test Org',
         slug: 'test-org',
       });
+      if (!org) throw new Error('Failed to create organization');
 
-      if (org) {
-        await test.saveOrganization?.(org);
-        await test.addMember?.({
-          userId: user.id,
-          organizationId: org?.id as string,
-          role: 'admin',
-        });
-      }
+      await test.saveOrganization?.(org);
+      await test.addMember?.({
+        userId: user.id,
+        organizationId: org?.id as string,
+        role: 'admin',
+      });
 
-      // const memberActiveOrgRes = await app.request('/api/auth/organization/set-active', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Cookie: memberSessionCookie,
-      //     Origin: ORIGIN,
-      //   },
-      //   body: JSON.stringify({
-      //     organizationId: activeOrganizationId,
-      //   }),
-      // });
-      // const memberActiveOrgCookieHeader = memberActiveOrgRes.headers.get('set-cookie');
-      // if (memberActiveOrgCookieHeader) {
-      //   memberSessionCookie = `${memberSessionCookie}; ${memberActiveOrgCookieHeader.split(';')[0]}`;
-      // }
+      await auth.api.setActiveOrganization({
+        headers,
+        body: { organizationId: org.id },
+      });
     } catch (e) {
       console.error('Failed to setup test users and organization:', e);
     }
@@ -80,9 +68,6 @@ describe('API Integration Test', () => {
     it('should return 401 Unauthorized for missing authentication', async () => {
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({ query: '{ __typename }' }),
       });
       expect(res.status).toBe(401);
@@ -91,10 +76,7 @@ describe('API Integration Test', () => {
     it('should return 400 Bad Request for bad JSON syntax with valid authentication', async () => {
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
+        headers,
         body: 'invalid-json',
       });
       expect(res.status).toBe(400); // Bad Request from JSON parsing
@@ -103,9 +85,7 @@ describe('API Integration Test', () => {
 
     it('should allow fetching trackers for authenticated owner with organization context', async () => {
       const res = await app.request('/tracker', {
-        headers: {
-          Cookie: sessionCookie,
-        },
+        headers,
       });
       expect(res.status).toBe(200);
       const json = await res.json();
@@ -114,9 +94,7 @@ describe('API Integration Test', () => {
 
     it('should allow fetching trackers for authenticated member with organization context', async () => {
       const res = await app.request('/tracker', {
-        headers: {
-          Cookie: memberSessionCookie,
-        },
+        headers,
       });
       expect(res.status).toBe(200);
       const json = await res.json();
@@ -128,10 +106,7 @@ describe('API Integration Test', () => {
     it('POST /generate should fail with invalid input format', async () => {
       const res = await app.request('/tracker/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
+        headers,
         body: JSON.stringify({ origin: 'not-a-url' }),
       });
       expect(res.status).toBe(400);
@@ -140,10 +115,7 @@ describe('API Integration Test', () => {
     it('POST /generate should fail for member role (403 Forbidden)', async () => {
       const res = await app.request('/tracker/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: memberSessionCookie,
-        },
+        headers,
         body: JSON.stringify({ origin: 'https://example.com' }),
       });
       expect(res.status).toBe(403);
@@ -152,9 +124,7 @@ describe('API Integration Test', () => {
     it('DELETE /:id should fail for member role (403 Forbidden)', async () => {
       const res = await app.request('/tracker/some-id', {
         method: 'DELETE',
-        headers: {
-          Cookie: memberSessionCookie,
-        },
+        headers,
       });
       expect(res.status).toBe(403);
     });
@@ -162,10 +132,7 @@ describe('API Integration Test', () => {
     it('POST /generate should succeed with valid input', async () => {
       const res = await app.request('/tracker/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
+        headers,
         body: JSON.stringify({ origin: 'https://example.com' }),
       });
       expect(res.status).toBe(200);
@@ -178,10 +145,7 @@ describe('API Integration Test', () => {
     it('DELETE /:id should delete an existing tracker', async () => {
       const generateRes = await app.request('/tracker/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
+        headers,
         body: JSON.stringify({ origin: 'https://delete-me.com' }),
       });
       const genJson = await generateRes.json();
@@ -189,16 +153,12 @@ describe('API Integration Test', () => {
 
       const deleteRes = await app.request(`/tracker/${trackerId}`, {
         method: 'DELETE',
-        headers: {
-          Cookie: sessionCookie,
-        },
+        headers,
       });
       expect(deleteRes.status).toBe(200);
 
       const getRes = await app.request('/tracker', {
-        headers: {
-          Cookie: sessionCookie,
-        },
+        headers,
       });
       const getJson = await getRes.json();
       expect(getJson.trackers.find((t: any) => t.id === trackerId)).toBeUndefined();
@@ -209,10 +169,7 @@ describe('API Integration Test', () => {
     it('should return GraphQL response for valid query', async () => {
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
+        headers,
         body: JSON.stringify({
           query: `
             query TestQuery {
@@ -253,10 +210,7 @@ describe('API Integration Test', () => {
       `;
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
+        headers,
         body: JSON.stringify({ query }),
       });
       const json = await res.json();
@@ -286,10 +240,7 @@ describe('API Integration Test', () => {
       `;
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
+        headers,
         body: JSON.stringify({ query }),
       });
       const json = await res.json();
@@ -301,10 +252,7 @@ describe('API Integration Test', () => {
     it('should fail GraphQL validation for missing required arguments on "rank"', async () => {
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
+        headers,
         body: JSON.stringify({
           query: `
             query {
@@ -337,10 +285,7 @@ describe('API Integration Test', () => {
       `;
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: sessionCookie,
-        },
+        headers,
         body: JSON.stringify({ query }),
       });
       const json = await res.json();

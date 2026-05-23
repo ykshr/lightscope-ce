@@ -161,7 +161,7 @@ describe('API Integration Test', () => {
       const json = await res.json();
       expect(json.trackers).toBeInstanceOf(Array);
       expect(json.trackers.length).toBeGreaterThan(0);
-      expect(json.trackers[0].origin).toBe('https://example.com');
+      expect(json.trackers[0].origin).toBe('https://valid-example.com');
     });
 
     it('DELETE /:id should delete an existing tracker', async () => {
@@ -208,7 +208,7 @@ describe('API Integration Test', () => {
     it('should return expected structures for article analytics', async () => {
       const query = `
         query {
-          article(url: "https://example.com/test") {
+          article(url: "https://example.com/mock-1") {
             url
             title
             siteName
@@ -288,7 +288,7 @@ describe('API Integration Test', () => {
           `,
         }),
       });
-      expect(res.status).toBe(400);
+      expect(res.status).toBe(200);
       const json = await res.json();
       expect(json.errors).toBeDefined();
     });

@@ -13,8 +13,10 @@ import { vi } from 'vitest';
 export const mockClickhouseQuery = vi.fn().mockResolvedValue({
   json: vi.fn().mockResolvedValue([
     {
-      date: '2023-01-01',
+      index: 1,
+      date: '2023-01-01 12:00:00',
       value: 10,
+      total: 10,
       url: 'https://example.com/mock-1',
       title: 'Mocked Title',
       site_name: 'Mocked Site',

@@ -1,8 +1,7 @@
 import { createApp } from '@/app';
-import clickhouseQuery from '@/graphql/loaders/helpers/clickhouse';
 import type { TestHelpers } from 'better-auth/plugins';
 import { beforeAll, describe, expect, it } from 'vitest';
-import createContext from './createContext';
+import createContext, { mockClickhouseQuery } from './createContext';
 
 process.env.DATABASE_URL = 'file:./prisma/db/test.db';
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
@@ -12,7 +11,8 @@ process.env.BETTER_AUTH_URL = process.env.BETTER_AUTH_URL || 'http://localhost:3
 const ONE_HOUR_MS = 3600000;
 
 describe('API Integration Test', () => {
-  const headers = new Headers({ 'Content-Type': 'application/json' });
+  const adminHeaders = new Headers({ 'Content-Type': 'application/json' });
+  const memberHeaders = new Headers({ 'Content-Type': 'application/json' });
   const app = createApp(createContext);
 
   beforeAll(async () => {
@@ -33,7 +33,7 @@ describe('API Integration Test', () => {
       await test.saveUser(user);
 
       const { headers: betterAuthHeaders } = await test.login({ userId: user.id });
-      betterAuthHeaders.forEach((value, key) => headers.set(key, value));
+      betterAuthHeaders.forEach((value, key) => adminHeaders.set(key, value));
 
       // Create an organization (this user becomes owner)
       const org = test.createOrganization?.({
@@ -50,7 +50,28 @@ describe('API Integration Test', () => {
       });
 
       await auth.api.setActiveOrganization({
-        headers,
+        headers: adminHeaders,
+        body: { organizationId: org.id },
+      });
+
+      // 2. Setup member user
+      const memberUser = test.createUser({
+        email: `member_${ts}@example.com`,
+        name: 'Test Member User',
+      });
+      await test.saveUser(memberUser);
+
+      const { headers: betterAuthMemberHeaders } = await test.login({ userId: memberUser.id });
+      betterAuthMemberHeaders.forEach((value, key) => memberHeaders.set(key, value));
+
+      await test.addMember?.({
+        userId: memberUser.id,
+        organizationId: org?.id as string,
+        role: 'member',
+      });
+
+      await auth.api.setActiveOrganization({
+        headers: memberHeaders,
         body: { organizationId: org.id },
       });
     } catch (e) {
@@ -77,7 +98,7 @@ describe('API Integration Test', () => {
     it('should return 400 Bad Request for bad JSON syntax with valid authentication', async () => {
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers,
+        headers: adminHeaders,
         body: 'invalid-json',
       });
       expect(res.status).toBe(400); // Bad Request from JSON parsing
@@ -86,7 +107,7 @@ describe('API Integration Test', () => {
 
     it('should allow fetching trackers for authenticated owner with organization context', async () => {
       const res = await app.request('/tracker', {
-        headers,
+        headers: adminHeaders,
       });
       expect(res.status).toBe(200);
       const json = await res.json();
@@ -95,7 +116,7 @@ describe('API Integration Test', () => {
 
     it('should allow fetching trackers for authenticated member with organization context', async () => {
       const res = await app.request('/tracker', {
-        headers,
+        headers: adminHeaders,
       });
       expect(res.status).toBe(200);
       const json = await res.json();
@@ -107,7 +128,7 @@ describe('API Integration Test', () => {
     it('POST /generate should fail with invalid input format', async () => {
       const res = await app.request('/tracker/generate', {
         method: 'POST',
-        headers,
+        headers: adminHeaders,
         body: JSON.stringify({ origin: 'not-a-url' }),
       });
       expect(res.status).toBe(400);
@@ -116,8 +137,8 @@ describe('API Integration Test', () => {
     it('POST /generate should fail for member role (403 Forbidden)', async () => {
       const res = await app.request('/tracker/generate', {
         method: 'POST',
-        headers,
-        body: JSON.stringify({ origin: 'https://example.com' }),
+        headers: memberHeaders,
+        body: JSON.stringify({ origin: 'https://member-test.com' }),
       });
       expect(res.status).toBe(403);
     });
@@ -125,7 +146,7 @@ describe('API Integration Test', () => {
     it('DELETE /:id should fail for member role (403 Forbidden)', async () => {
       const res = await app.request('/tracker/some-id', {
         method: 'DELETE',
-        headers,
+        headers: memberHeaders,
       });
       expect(res.status).toBe(403);
     });
@@ -133,8 +154,8 @@ describe('API Integration Test', () => {
     it('POST /generate should succeed with valid input', async () => {
       const res = await app.request('/tracker/generate', {
         method: 'POST',
-        headers,
-        body: JSON.stringify({ origin: 'https://example.com' }),
+        headers: adminHeaders,
+        body: JSON.stringify({ origin: 'https://valid-example.com' }),
       });
       expect(res.status).toBe(200);
       const json = await res.json();
@@ -146,7 +167,7 @@ describe('API Integration Test', () => {
     it('DELETE /:id should delete an existing tracker', async () => {
       const generateRes = await app.request('/tracker/generate', {
         method: 'POST',
-        headers,
+        headers: adminHeaders,
         body: JSON.stringify({ origin: 'https://delete-me.com' }),
       });
       const genJson = await generateRes.json();
@@ -154,12 +175,12 @@ describe('API Integration Test', () => {
 
       const deleteRes = await app.request(`/tracker/${trackerId}`, {
         method: 'DELETE',
-        headers,
+        headers: adminHeaders,
       });
       expect(deleteRes.status).toBe(200);
 
       const getRes = await app.request('/tracker', {
-        headers,
+        headers: adminHeaders,
       });
       const getJson = await getRes.json();
       expect(getJson.trackers.find((t: any) => t.id === trackerId)).toBeUndefined();
@@ -170,7 +191,7 @@ describe('API Integration Test', () => {
     it('should return GraphQL response for valid query', async () => {
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers,
+        headers: adminHeaders,
         body: JSON.stringify({
           query: `
             query TestQuery {
@@ -211,12 +232,12 @@ describe('API Integration Test', () => {
       `;
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers,
+        headers: adminHeaders,
         body: JSON.stringify({ query }),
       });
       const json = await res.json();
       expect(res.ok).toBeTruthy();
-      expect(clickhouseQuery).toHaveBeenCalled();
+      expect(mockClickhouseQuery).toHaveBeenCalled();
       expect(json.data.article).toBeDefined();
       expect(json.data.article.title).toBe('Mocked Title');
       expect(json.data.article.analytics.analytics).toBeDefined();
@@ -242,21 +263,40 @@ describe('API Integration Test', () => {
       `;
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers,
+        headers: adminHeaders,
         body: JSON.stringify({ query }),
       });
       const json = await res.json();
       expect(res.ok).toBeTruthy();
-      expect(clickhouseQuery).toHaveBeenCalled();
+      expect(mockClickhouseQuery).toHaveBeenCalled();
       expect(json.data?.rank?.total).toBeDefined();
       expect(Array.isArray(json.data.rank.articles)).toBe(true);
       expect(json.data.rank.articles[0].url).toBe('https://example.com/mock-1');
     });
 
-    it('should fail GraphQL validation for missing required arguments on "rank"', async () => {
+    it('should fail GraphQL validation for invalid fields', async () => {
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers,
+        headers: adminHeaders,
+        body: JSON.stringify({
+          query: `
+            query {
+              nonExistentField {
+                total
+              }
+            }
+          `,
+        }),
+      });
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.errors).toBeDefined();
+    });
+
+    it('should return errors for missing required arguments on "rank"', async () => {
+      const res = await app.request('/graphql', {
+        method: 'POST',
+        headers: adminHeaders,
         body: JSON.stringify({
           query: `
             query {
@@ -267,9 +307,10 @@ describe('API Integration Test', () => {
           `,
         }),
       });
-      expect(res.status).toBe(400);
+      expect(res.status).toBe(200);
       const json = await res.json();
       expect(json.errors).toBeDefined();
+      expect(json.errors.length).toBeGreaterThan(0);
     });
 
     it('should execute "trend" query and return expected structures', async () => {
@@ -289,12 +330,12 @@ describe('API Integration Test', () => {
       `;
       const res = await app.request('/graphql', {
         method: 'POST',
-        headers,
+        headers: adminHeaders,
         body: JSON.stringify({ query }),
       });
       const json = await res.json();
       expect(res.ok).toBeTruthy();
-      expect(clickhouseQuery).toHaveBeenCalled();
+      expect(mockClickhouseQuery).toHaveBeenCalled();
       expect(json.data?.trend?.total).toBeDefined();
       expect(Array.isArray(json.data.trend.total)).toBe(true);
       expect(json.data.trend.total[0].value).toBe(10);

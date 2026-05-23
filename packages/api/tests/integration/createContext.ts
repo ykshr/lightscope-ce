@@ -10,6 +10,21 @@ import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
 import { vi } from 'vitest';
 
+export const mockClickhouseQuery = vi.fn().mockResolvedValue({
+  json: vi.fn().mockResolvedValue([
+    {
+      date: '2023-01-01',
+      value: 10,
+      url: 'https://example.com/mock-1',
+      title: 'Mocked Title',
+      site_name: 'Mocked Site',
+      source: 'google',
+      medium: 'organic',
+      campaign: 'test',
+    },
+  ]),
+});
+
 export default async function createContext(c: Context): Promise<$> {
   const { DATABASE_URL, ALLOWED_ORIGINS } = env(c);
   if (!DATABASE_URL) {
@@ -56,7 +71,7 @@ export default async function createContext(c: Context): Promise<$> {
   });
 
   const clickhouse = {
-    query: vi.fn().mockResolvedValue({ json: vi.fn().mockResolvedValue([]) }),
+    query: mockClickhouseQuery,
   };
 
   const { JWT_SECRET, JWT_ALGORITHM = AlgorithmTypes.HS256 } = env(c);

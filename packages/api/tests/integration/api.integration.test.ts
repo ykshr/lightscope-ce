@@ -1,4 +1,5 @@
 import { createApp } from '@/app';
+import clickhouseQuery from '@/graphql/loaders/helpers/clickhouse';
 import type { TestHelpers } from 'better-auth/plugins';
 import { beforeAll, describe, expect, it } from 'vitest';
 import createContext from './createContext';
@@ -215,10 +216,11 @@ describe('API Integration Test', () => {
       });
       const json = await res.json();
       expect(res.ok).toBeTruthy();
-      if (json.data?.article) {
-        expect(json.data.article.analytics.analytics).toBeDefined();
-        expect(json.data.article.analytics.analyticsUtm).toBeDefined();
-      }
+      expect(clickhouseQuery).toHaveBeenCalled();
+      expect(json.data.article).toBeDefined();
+      expect(json.data.article.title).toBe('Mocked Title');
+      expect(json.data.article.analytics.analytics).toBeDefined();
+      expect(json.data.article.analytics.analyticsUtm).toBeDefined();
     });
 
     it('should execute "rank" query and return expected structures', async () => {
@@ -245,8 +247,10 @@ describe('API Integration Test', () => {
       });
       const json = await res.json();
       expect(res.ok).toBeTruthy();
+      expect(clickhouseQuery).toHaveBeenCalled();
       expect(json.data?.rank?.total).toBeDefined();
       expect(Array.isArray(json.data.rank.articles)).toBe(true);
+      expect(json.data.rank.articles[0].url).toBe('https://example.com/mock-1');
     });
 
     it('should fail GraphQL validation for missing required arguments on "rank"', async () => {
@@ -290,8 +294,10 @@ describe('API Integration Test', () => {
       });
       const json = await res.json();
       expect(res.ok).toBeTruthy();
+      expect(clickhouseQuery).toHaveBeenCalled();
       expect(json.data?.trend?.total).toBeDefined();
       expect(Array.isArray(json.data.trend.total)).toBe(true);
+      expect(json.data.trend.total[0].value).toBe(10);
     });
   });
 });

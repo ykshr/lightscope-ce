@@ -4,6 +4,7 @@
   "description": "End-to-End tests for Lightscope CE",
   "scripts": {
     "pretest": "pnpm --filter @lightscope-ce/tracker run build",
+    "test": "vitest run tests",
     "test:e2e": "playwright test",
     "test:smoke": "tsx src/scripts/smoke.ts",
     "test:load": "tsx src/scripts/load.ts",

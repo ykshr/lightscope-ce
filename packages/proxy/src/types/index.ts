@@ -41,14 +41,11 @@ export const PayloadSchema = z
     event_id: z.string(),
     event_name: z.string(),
     event_value: z.any().optional().nullable(),
-
     event_time: z.string(), // ISO8601
     event_time_utc: z.string(), // ISO8601
     created_at: z.string(), // ISO8601
-
     visit_id: z.string(),
     visitor_id: z.string(),
-
     referrer: z.string().optional().nullable(),
     user_agent: z.string(),
     language: z.string().optional().nullable(),
@@ -60,13 +57,10 @@ export const PayloadSchema = z
     app: z.string().optional().nullable(),
     app_type: z.string().optional().nullable(),
     app_version: z.string().optional().nullable(),
-
     query_params: z.record(z.string()).optional().nullable(),
-
     user_id: z.string().optional().nullable(),
     age: z.string().optional().nullable(),
     gender: z.string().optional().nullable(),
-
     url: z.string().url(),
     site_name: z.string(),
     title: z.string(),
@@ -84,11 +78,9 @@ export const PayloadSchema = z
     'article:authors': z.array(z.string()).optional().nullable(),
     'article:section': z.string().optional().nullable(),
     'article:tags': z.array(z.string()).optional().nullable(),
-
     element_id: z.string().optional().nullable(),
     element_label: z.string().optional().nullable(),
     element_type: z.string().optional().nullable(),
-
     ip: z.string().optional().nullable(),
   })
   .passthrough();

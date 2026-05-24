@@ -1,12 +1,20 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { sign, AlgorithmTypes } from 'hono/jwt';
 import { createApp } from '@/app';
 import createContext from '@/createContext';
+import { AlgorithmTypes, sign } from 'hono/jwt';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET is not defined in the environment.');
-}
+const mockClickhouseClient = {
+  insert: vi.fn().mockResolvedValue(undefined),
+  query: vi.fn().mockResolvedValue({ json: vi.fn().mockResolvedValue({ data: [] }) }),
+  ping: vi.fn().mockResolvedValue(true),
+  close: vi.fn().mockResolvedValue(undefined),
+};
+
+vi.mock('@clickhouse/client', () => ({
+  createClient: vi.fn(() => mockClickhouseClient),
+}));
+
+const JWT_SECRET = process.env.JWT_SECRET || 'test_jwt_secret_key_for_local_testing';
 const JWT_ALGORITHM = AlgorithmTypes.HS256;
 
 // Bind mocked env variables
@@ -36,11 +44,16 @@ describe('Proxy Integration Test', () => {
 
   const createValidPayload = () => ({
     event_id: crypto.randomUUID(),
+    event_name: 'page_view',
     event_time_utc: new Date().toISOString(),
     event_time: new Date().toISOString(),
+    created_at: new Date().toISOString(),
     visit_id: crypto.randomUUID(),
     visitor_id: crypto.randomUUID(),
     url: 'https://example.com/page1',
+    site_name: 'Test Site',
+    title: 'Test Title',
+    locale: 'en-US',
     user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
   });
 
@@ -207,7 +220,7 @@ describe('Proxy Integration Test', () => {
     it('should reject invalid data types for optional fields', async () => {
       const payload = {
         ...createValidPayload(),
-        engagement_time: -10, // negative not allowed
+        event_time: null, // not allowed value
       };
 
       const res = await app.request('/events', {

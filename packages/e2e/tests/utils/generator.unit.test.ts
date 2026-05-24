@@ -1,9 +1,9 @@
-import { expect, test } from '@playwright/test';
 import { UAParser } from 'ua-parser-js';
-import { generateMinimalPayload, generatePayload } from '../utils/generator';
+import { describe, expect, test } from 'vitest';
+import { generateMinimalPayload, generatePayload } from './generator';
 
-test.describe('Data Generator Logic Verification', () => {
-  test('generatePayload should create a valid full payload structure', async () => {
+describe('Data Generator Logic Verification', () => {
+  test('generatePayload should create a valid full payload structure', () => {
     const payload = generatePayload();
     expect(payload.event_id).toBeDefined();
     expect(payload.user_agent).toBeDefined();
@@ -19,14 +19,14 @@ test.describe('Data Generator Logic Verification', () => {
     }
   });
 
-  test('generateMinimalPayload should create a payload with required fields', async () => {
+  test('generateMinimalPayload should create a payload with required fields', () => {
     const payload = generateMinimalPayload();
     expect(payload.event_id).toBeDefined();
     expect(payload.url).toBeDefined();
     expect(payload.user_agent).toBeDefined();
   });
 
-  test('generatePayload should allow overrides', async () => {
+  test('generatePayload should allow overrides', () => {
     const customUA =
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
     const payload = generatePayload({ user_agent: customUA });

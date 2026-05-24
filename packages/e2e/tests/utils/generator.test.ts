@@ -1,8 +1,8 @@
-import { expect, test } from '@playwright/test';
 import { UAParser } from 'ua-parser-js';
-import { generateMinimalPayload, generatePayload } from '../utils/generator';
+import { describe, expect, test } from 'vitest';
+import { generateMinimalPayload, generatePayload } from './generator';
 
-test.describe('Data Generator Logic Verification', () => {
+describe('Data Generator Logic Verification', () => {
   test('generatePayload should create a valid full payload structure', async () => {
     const payload = generatePayload();
     expect(payload.event_id).toBeDefined();

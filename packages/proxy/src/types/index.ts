@@ -41,9 +41,9 @@ export const PayloadSchema = z
     event_id: z.string(),
     event_name: z.string(),
     event_value: z.any().optional().nullable(),
-    event_time: z.string().datetime(), // ISO8601
-    event_time_utc: z.string().datetime(), // ISO8601
-    created_at: z.string().datetime(), // ISO8601
+    event_time: z.string(), // ISO8601
+    event_time_utc: z.string(), // ISO8601
+    created_at: z.string(), // ISO8601
     visit_id: z.string(),
     visitor_id: z.string(),
     referrer: z.string().optional().nullable(),

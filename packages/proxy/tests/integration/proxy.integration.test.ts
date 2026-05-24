@@ -220,7 +220,7 @@ describe('Proxy Integration Test', () => {
     it('should reject invalid data types for optional fields', async () => {
       const payload = {
         ...createValidPayload(),
-        event_time: '', // not allowed value
+        event_time: null, // not allowed value
       };
 
       const res = await app.request('/events', {

@@ -20,7 +20,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - The repository enforces strict pnpm security configurations: exact versioning (`save-exact=true` in `.npmrc`), and workspace-level security settings (`ignoreScripts: true`, `ignorePnpmfile: true`, `minimumReleaseAge: 10080`, `preferFrozenLockfile: true` in `pnpm-workspace.yaml`).
   - **Language**: Write all code, comments, and commit messages in concise and intuitive English. All documentation, including `AGENTS.md` and `README.md` files, must be written entirely in English. Even if user instructions or PR comments are provided in other languages (e.g., Japanese, or non-English phrases), any generated documentation files must still be translated to and written entirely in English to strictly comply with this rule.
   - **PR Titles**:
-    - Security-related: `🔓 [security fix description]` + 'What', 'Risk', 'Solution'. Security-related pull requests must explicitly document the vulnerability addressed, the potential risk, and the implementation strategy in the description.
+    - Security-related: `🔒 [security fix description]` + 'What', 'Risk', 'Solution'. Security-related pull requests must explicitly document the vulnerability addressed, the potential risk, and the implementation strategy in the description.
     - Performance improvement: `⚡ [performance improvement description]` + 'What', 'Why', 'Measured Improvement'.
     - Code health improvement: `🧹 [code health improvement description]` + 'What', 'Why', 'Verification', 'Result'.
     - Testing improvement: `🧪 [testing improvement description]` + 'What', 'Coverage', 'Result'.
@@ -40,6 +40,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - **PackageManager Synchronization**: To synchronize the `pnpm` version with the workspace's `packageManager` configuration in Dockerfiles or CI environments, use `corepack enable pnpm`.
 * How to run tests (commands and steps)
   - The GitHub CI check suite enforces TypeScript compilation (`tsc -b`) on test files; tests must use project-standard frameworks (Vitest) and avoid runtime-specific modules like `bun:test` to prevent build failures.
+  - When using `bun test` across workspace packages (including `web`, `api`, or `tracker`) in restricted environments where `pnpm` fails, the `@/` path alias defined in `vitest.config.ts` may fail to resolve; relative paths are recommended fallbacks for verification, provided imports are reverted to `@/` before submission.
   - **Run CI/CD Checks**: To run comprehensive repository-wide CI checks (including linting, type checking, unit tests, and formatting), execute the command `pnpm run ci` from the workspace root. Always run this before marking a task as complete.
   - The root repository provides a `pnpm run ci` script that acts as the primary quality gate, sequentially running `format:check`, `lint`, `build`, and `test` across all workspace projects.
   - To comply with security standards that prohibit hardcoded secret fallbacks, the `JWT_SECRET` environment variable must be explicitly defined in GitHub Actions workflow files (`.github/workflows/ci.yml` and `.github/workflows/e2e.yml`) for any steps executing integration or E2E tests.

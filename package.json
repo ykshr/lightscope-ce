@@ -9,21 +9,6 @@
     "url": "https://github.com/ykshr/lightscope-ce.git"
   },
   "packageManager": "pnpm@10.29.3",
-  "pnpm": {
-    "supportedArchitectures": {
-      "os": [
-        "linux"
-      ],
-      "cpu": [
-        "x64",
-        "arm64"
-      ],
-      "libc": [
-        "glibc",
-        "musl"
-      ]
-    }
-  },
   "scripts": {
     "lint": "pnpm --recursive --if-present run lint",
     "test": "pnpm --recursive --if-present run test",

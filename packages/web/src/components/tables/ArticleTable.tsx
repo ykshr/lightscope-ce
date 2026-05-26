@@ -59,7 +59,7 @@ export default function ArticleTable({
   });
 
   const { articles, columns } = useProcessData(data, metric);
-  console.log(articles);
+
   const onMetricChange = (value: string) => {
     const nextValue = { metric: value };
     if (useUrlParamsForAnalyticsFilter) {

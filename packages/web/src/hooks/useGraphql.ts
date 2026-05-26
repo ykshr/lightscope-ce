@@ -2,31 +2,30 @@ import customFetch from '@/helpers/fetch';
 import { create, windowScheduler } from '@yornaath/batshit';
 
 type GqlKey = {
+  id: string;
   query: string;
   variables?: any;
 };
 
-const gqlBatch = create<GqlKey, any>({
+const gqlBatch = create<any, GqlKey>({
   fetcher: async (keys) => {
-    const body = keys.map(({ query, variables }) => ({
+    const requestBody = keys.map(({ query, variables = {} }) => ({
       query,
       variables,
     }));
 
-    const { body: responseBody } = await customFetch('POST', '/graphql', { body });
-
-    return responseBody.map((res: any) => {
-      if (res.errors) {
-        return Promise.reject(new Error(res.errors[0]?.message || 'GraphQL Error'));
-      }
-      return res.data;
+    const { body: responseBody } = await customFetch('POST', '/graphql', {
+      body: requestBody,
     });
+    return keys.map((key, index) => ({
+      id: key.id,
+      result: (responseBody as any[])[index],
+    }));
   },
 
-  resolver: (key) => ({
-    query: key.query,
-    variables: key.variables,
-  }),
+  resolver: (items: any[], query) => {
+    return items.find((item) => item.id === query.id)?.result;
+  },
 
   scheduler: windowScheduler(10),
 });
@@ -36,8 +35,10 @@ export const useGraphql = <TData, TVariables>(
 ): ((variables?: TVariables) => Promise<TData>) => {
   return async (variables?: TVariables) => {
     const serializedVariables = variables ? serializeDates(variables) : undefined;
+    const id = crypto.randomUUID();
 
-    const data = await gqlBatch.fetch({
+    const { data } = await gqlBatch.fetch({
+      id,
       query,
       variables: serializedVariables,
     });

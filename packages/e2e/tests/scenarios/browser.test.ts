@@ -4,16 +4,16 @@ import { expect, test } from '@playwright/test';
 
 const ONE_HOUR_MS = 3600000;
 
-test('Browser Tracking Script Verification', async ({ browser, request }) => {
+test('Browser Tracking Script Verification', async ({ browser, request, page }) => {
   const userAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
   const context = await browser.newContext({ userAgent });
-  const page = await context.newPage();
-  page.on('console', (msg) => console.log('BROWSER LOG:', msg.text()));
+  const articlePage = await context.newPage();
+  articlePage.on('console', (msg) => console.log('BROWSER LOG:', msg.text()));
 
   // 1. Navigate to the page and verify Page View event sent
-  const pageViewPromise = page.waitForRequest(
+  const pageViewPromise = articlePage.waitForRequest(
     (req) =>
       req.url().includes('/events') &&
       req.method() === 'POST' &&
@@ -23,12 +23,12 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
   const utmParams = '?utm_source=test_source&utm_medium=test_medium&utm_campaign=test_campaign';
   const refererUrl = 'https://example.com/referrer-page';
 
-  await page.goto(`${MOCK_SITE_URL}/index.html${utmParams}`, {
+  await articlePage.goto(`${MOCK_SITE_URL}/index.html${utmParams}`, {
     referer: refererUrl,
   });
 
   const org = JSON.parse(process.env.ORG_DATA || '{}');
-  await injectTracker(page, org.id as string, MOCK_SITE_URL);
+  await injectTracker(articlePage, org.id as string, MOCK_SITE_URL);
 
   const pageViewReq = await pageViewPromise;
   expect(pageViewReq).toBeTruthy();
@@ -41,14 +41,14 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
   expect(headers['user-agent']).toBe(userAgent);
 
   // 2. Click button
-  const clickPromise = page.waitForRequest(
+  const clickPromise = articlePage.waitForRequest(
     (req) =>
       req.url().includes('/events') &&
       req.method() === 'POST' &&
       JSON.parse(req.postData() || '{}').event_name === 'element_click'
   );
 
-  await page.click('#track-btn');
+  await articlePage.click('#track-btn');
   const clickReq = await clickPromise;
   expect(clickReq).toBeTruthy();
   console.log('Click event verified.');
@@ -69,6 +69,9 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
         articles {
           url
           value
+          article {
+            title
+          }
         }
       }
     }
@@ -87,8 +90,9 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
 
     if (res.ok()) {
       const gqlData = await res.json();
+      console.log(JSON.stringify(gqlData));
       articles = gqlData.data?.rank?.articles || [];
-      const foundArticle = articles.find((a: any) => a.url.includes('index.html'));
+      const foundArticle = articles.find((a: any) => a.url.includes(`${MOCK_SITE_URL}/index.html`));
       if (foundArticle) {
         found = true;
         break;
@@ -103,4 +107,15 @@ test('Browser Tracking Script Verification', async ({ browser, request }) => {
 
   expect(found).toBeTruthy();
   console.log('Data verification successful in GraphQL.');
+
+  // 4. Verify on Web Dashboard
+  console.log('Verifying data on Web Dashboard...');
+  await page.goto('/ranking');
+  const rows = page.locator('table[data-slot="table"] tbody tr');
+  const targetRow = rows.filter({
+    has: page.locator('td').nth(2).filter({ hasText: 'E2E Test Article Title' }),
+  });
+  await expect(targetRow.locator('td').nth(6)).toHaveText('1');
+
+  console.log('Data verification successful on Web Dashboard.');
 });

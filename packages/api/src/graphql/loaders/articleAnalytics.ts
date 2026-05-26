@@ -75,9 +75,8 @@ export default function getLoader<T extends AnalyticsBase>(
 }
 
 function createLoaderKey(ctx: GraphQLContext, params: LoaderParams): string {
-  const q = params.queryParams;
   const attributes = params.attributes?.join(',') ?? '';
-  return `${ctx.c.var.organization.id}:${params.tableName}:${q.startDate}:${q.endDate}:${q.aggregation}:${q.limit}:${q.page}:${q.siteName}:${q.metric}:${attributes}`;
+  return `${ctx.c.var.organization.id}:${params.tableName}:${JSON.stringify(params.queryParams)}:${attributes}`;
 }
 
 async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
@@ -171,7 +170,7 @@ async function fetchArticleAnalyticsByUrls<T extends AnalyticsBase>(
         WHERE
           organization_id_hash = cityHash64({organizationId:String})
           AND site_name = {siteName:String}
-          AND url_hash IN (arrayMap(x -> cityHash64(x), {urls:Array(String)}))
+          AND has(arrayMap(x -> cityHash64(x), {urls:Array(String)}), url_hash)
           AND (
             toDateTime({${startParam}:String}) <= date
             AND date < toDateTime({${endParam}:String})

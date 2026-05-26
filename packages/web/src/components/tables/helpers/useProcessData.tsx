@@ -50,10 +50,10 @@ export default function useProcessData(data: ArticleRankQuery | undefined, metri
         header: 'Image',
         accessorKey: 'image',
         gridSpan: 2,
-        render: ({ image }) => (
+        render: ({ title, image }) => (
           <img
             src={image || '/placeholder-article.png'}
-            alt="No image"
+            alt={`Article image for ${title}`}
             className="object-cover rounded-md"
           />
         ),

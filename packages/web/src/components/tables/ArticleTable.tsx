@@ -10,13 +10,13 @@ import {
 } from '@/components/ui/card';
 import { Table } from '@/components/ui/table';
 import { categoryUrlParamsToVariables } from '@/helpers/category';
+import { findSortOptionByValue } from '@/helpers/constants/sort';
 import { metricUrlParamsToVariables } from '@/helpers/metric';
 import { useUrlParams } from '@/hooks/useUrl';
 import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useProcessData from './helpers/useProcessData';
-import { findSortOptionByValue } from '@/helpers/constants/sort';
 import Sort from './templates/Sort';
 import TableBody from './templates/TableBody';
 import TableHeader from './templates/TableHeader';

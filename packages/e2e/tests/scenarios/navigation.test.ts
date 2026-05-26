@@ -1,7 +1,7 @@
 import { WEB_URL } from '@/helpers/env';
 import { expect, test } from '@playwright/test';
 
-test.describe('Web Dashboard Verification', () => {
+test.describe('Navigation', () => {
   test('should load the overview page and display key metrics', async ({ page }) => {
     await page.goto('/');
 

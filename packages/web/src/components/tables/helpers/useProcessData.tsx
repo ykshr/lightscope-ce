@@ -24,7 +24,7 @@ export default function useProcessData(data: ArticleRankQuery | undefined, metri
   useEffect(() => {
     const mappedArticles: ArticleData[] | undefined = data?.rank?.articles?.map(
       ({ index, url, value, article }) => ({
-        id: index,
+        id: index + 1,
         value,
         url,
         image: article?.image || '/placeholders/article.png',

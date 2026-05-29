@@ -154,7 +154,7 @@ test.describe('Analytics', () => {
     });
 
     // Verify all columns in the ranking table based on the exact metadata values
-    await expect(targetRow.locator('td').nth(0)).toHaveText(/\d+/); // Rank (Dynamic)
+    await expect(targetRow.locator('td').nth(0)).toHaveText('1'); // Rank (Dynamic)
     await expect(targetRow.locator('td').nth(1).locator('img')).toHaveAttribute(
       'src',
       'http://localhost:3000/fixtures/test-image.jpg'

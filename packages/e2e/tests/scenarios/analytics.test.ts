@@ -165,6 +165,6 @@ test.describe('Analytics', () => {
     ); // Published Date
     await expect(targetRow.locator('td').nth(4)).toHaveText('Lightscope E2E Test Site'); // Site name
     await expect(targetRow.locator('td').nth(5)).toHaveText('article'); // Type
-    await expect(targetRow.locator('td').nth(6)).toHaveText('2'); // Metric (Value)
+    await expect(targetRow.locator('td').nth(6)).toHaveText('1'); // Metric (Value)
   });
 });

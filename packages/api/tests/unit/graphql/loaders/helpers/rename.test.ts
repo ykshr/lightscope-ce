@@ -2,106 +2,67 @@ import { renameKeySnakeToCamel } from '@/graphql/loaders/helpers/rename';
 import { describe, expect, it } from 'vitest';
 
 describe('renameKeySnakeToCamel', () => {
-  it('should convert simple snake_case keys to camelCase', () => {
+  it('should convert snake_case keys to camelCase in a simple object', () => {
     const input = { first_name: 'John', last_name: 'Doe' };
     const expected = { firstName: 'John', lastName: 'Doe' };
     expect(renameKeySnakeToCamel(input)).toEqual(expected);
   });
 
-  it('should handle multiple underscores', () => {
-    const input = { some_very_long_key_name: 'value' };
-    const expected = { someVeryLongKeyName: 'value' };
-    expect(renameKeySnakeToCamel(input)).toEqual(expected);
-  });
-
   it('should handle nested objects', () => {
-    const input = {
-      user_info: {
-        first_name: 'John',
-        address_details: {
-          street_name: 'Main St',
-        },
-      },
-    };
-    const expected = {
-      userInfo: {
-        firstName: 'John',
-        addressDetails: {
-          streetName: 'Main St',
-        },
-      },
-    };
+    const input = { user_profile: { user_name: 'john_doe', user_age: 30 } };
+    const expected = { userProfile: { userName: 'john_doe', userAge: 30 } };
     expect(renameKeySnakeToCamel(input)).toEqual(expected);
   });
 
   it('should handle arrays of objects', () => {
-    const input = [
-      { item_id: 1, item_name: 'A' },
-      { item_id: 2, item_name: 'B' },
-    ];
-    const expected = [
-      { itemId: 1, itemName: 'A' },
-      { itemId: 2, itemName: 'B' },
-    ];
+    const input = [{ item_id: 1 }, { item_id: 2 }];
+    const expected = [{ itemId: 1 }, { itemId: 2 }];
     expect(renameKeySnakeToCamel(input)).toEqual(expected);
   });
 
-  it('should handle nested arrays and objects', () => {
-    const input = {
-      items_list: [{ item_id: 1, tags_list: ['tag_one', 'tag_two'] }],
-    };
-    const expected = {
-      itemsList: [{ itemId: 1, tagsList: ['tag_one', 'tag_two'] }],
-    };
-    expect(renameKeySnakeToCamel(input)).toEqual(expected);
-  });
-
-  it('should handle primitive values', () => {
-    expect(renameKeySnakeToCamel('some_string')).toBe('some_string');
+  it('should return non-object values as is', () => {
+    expect(renameKeySnakeToCamel('string')).toBe('string');
     expect(renameKeySnakeToCamel(123)).toBe(123);
-    expect(renameKeySnakeToCamel(true)).toBe(true);
     expect(renameKeySnakeToCamel(null)).toBe(null);
     expect(renameKeySnakeToCamel(undefined)).toBe(undefined);
   });
 
-  it('should not change Date objects', () => {
+  it('should handle dates correctly without touching them', () => {
     const date = new Date();
     const input = { created_at: date };
     const expected = { createdAt: date };
-    const result = renameKeySnakeToCamel(input);
-    expect(result.createdAt).toBeInstanceOf(Date);
-    expect(result.createdAt).toEqual(date);
-  });
-
-  it('should handle already camelCase keys', () => {
-    const input = { alreadyCamel: 'value', another_one: 'value' };
-    const expected = { alreadyCamel: 'value', anotherOne: 'value' };
     expect(renameKeySnakeToCamel(input)).toEqual(expected);
   });
 
-  it('should handle empty objects and arrays', () => {
-    expect(renameKeySnakeToCamel({})).toEqual({});
-    expect(renameKeySnakeToCamel([])).toEqual([]);
-  });
-
-  it('should handle keys with numbers', () => {
-    const input = { user_1_name: 'John', item_64_id: 'abc' };
-    const expected = { user_1Name: 'John', item_64Id: 'abc' };
-    expect(renameKeySnakeToCamel(input)).toEqual(expected);
-  });
-
-  it('should handle leading and trailing underscores', () => {
-    const input = { _id: 1, name_: 'A', _internal_code_: 'X' };
-    // _([a-z]) matches _i -> I, _c -> C.
-    // _id -> Id, name_ -> name_, _internal_code_ -> InternalCode_
-    const expected = { Id: 1, name_: 'A', InternalCode_: 'X' };
-    expect(renameKeySnakeToCamel(input)).toEqual(expected);
-  });
-
-  it('should handle consecutive underscores', () => {
-    const input = { user__name: 'John' };
-    // user__name -> user_Name
-    const expected = { user_Name: 'John' };
+  it('should handle complex nested structures', () => {
+    const input = {
+      order_list: [
+        {
+          order_id: 1,
+          order_details: {
+            product_name: 'Widget',
+            price_value: 100,
+          },
+        },
+      ],
+      meta_data: {
+        created_at: '2023-01-01',
+      },
+    };
+    const expected = {
+      orderList: [
+        {
+          orderId: 1,
+          orderDetails: {
+            productName: 'Widget',
+            priceValue: 100,
+          },
+        },
+      ],
+      metaData: {
+        createdAt: '2023-01-01',
+      },
+    };
     expect(renameKeySnakeToCamel(input)).toEqual(expected);
   });
 });

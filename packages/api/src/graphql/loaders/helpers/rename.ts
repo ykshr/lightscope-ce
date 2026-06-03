@@ -1,3 +1,17 @@
+type SnakeToCamelCase<S extends string> = S extends `${infer T}_${infer U}`
+  ? `${T}${Capitalize<SnakeToCamelCase<U>>}`
+  : S;
+
+export type SnakeToCamelObject<T> = T extends Date
+  ? T
+  : T extends Array<infer U>
+    ? Array<SnakeToCamelObject<U>>
+    : T extends object
+      ? {
+          [K in keyof T as SnakeToCamelCase<Extract<K, string>>]: SnakeToCamelObject<T[K]>;
+        }
+      : T;
+
 const cache = new Map<string, string>();
 const SNAKE_TO_CAMEL_REGEX = /_([a-z])/g;
 
@@ -9,21 +23,24 @@ const snakeToCamel = (str: string): string => {
   return result;
 };
 
-export function renameKeySnakeToCamel(obj: any): any {
+export function renameKeySnakeToCamel<T>(obj: T): SnakeToCamelObject<T> {
   if (Array.isArray(obj)) {
-    return obj.map((item) => renameKeySnakeToCamel(item));
+    return obj.map((item) => renameKeySnakeToCamel(item)) as SnakeToCamelObject<T>;
   } else if (obj !== null && typeof obj === 'object') {
     if (obj instanceof Date) {
-      return obj;
+      return obj as SnakeToCamelObject<T>;
     }
-    const newObj: any = {};
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        const camelKey = snakeToCamel(key);
-        newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
-      }
+    const newObj: Record<string, unknown> = {};
+    const keys = Object.keys(obj);
+    for (const key of keys) {
+      const camelKey = snakeToCamel(key);
+      newObj[camelKey] = renameKeySnakeToCamel((obj as Record<string, unknown>)[key]);
     }
-    return newObj;
+    return newObj as SnakeToCamelObject<T>;
   }
-  return obj;
+  return obj as SnakeToCamelObject<T>;
 }
+
+export const camelToSnake = (str: string): string => {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+};

@@ -122,20 +122,22 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       const dateString = validateDataMap(chartDataMap, date);
       chartDataMap[dateString][id] = value;
     });
-    data?.trend?.categoryGeo?.forEach(({ date, value, continent, country, subdivision }) => {
-      const id = returnIdCategoryGeo(continent, country, subdivision);
-      if (!id) return;
-      const dateString = validateDataMap(chartDataMap, date);
-      chartDataMap[dateString][id] = value;
-    });
+    data?.trend?.categoryGeo?.forEach(
+      ({ date, value, geoContinent, geoCountry, geoSubdivision }) => {
+        const id = returnIdCategoryGeo(geoContinent, geoCountry, geoSubdivision);
+        if (!id) return;
+        const dateString = validateDataMap(chartDataMap, date);
+        chartDataMap[dateString][id] = value;
+      }
+    );
     data?.trend?.categoryReferrer?.forEach(({ date, value, domain, referrer }) => {
       const id = returnIdCategoryReferrer(domain, referrer);
       if (!id) return;
       const dateString = validateDataMap(chartDataMap, date);
       chartDataMap[dateString][id] = value;
     });
-    data?.trend?.categoryUtm?.forEach(({ date, value, source, medium, campaign }) => {
-      const id = returnIdCategoryUtm(source, medium, campaign);
+    data?.trend?.categoryUtm?.forEach(({ date, value, utmSource, utmMedium, utmCampaign }) => {
+      const id = returnIdCategoryUtm(utmSource, utmMedium, utmCampaign);
       if (!id) return;
       const dateString = validateDataMap(chartDataMap, date);
       chartDataMap[dateString][id] = value;
@@ -187,8 +189,8 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
-    data?.total?.categoryGeo?.forEach(({ value, continent, country, subdivision }) => {
-      const id = returnIdCategoryGeo(continent, country, subdivision);
+    data?.total?.categoryGeo?.forEach(({ value, geoContinent, geoCountry, geoSubdivision }) => {
+      const id = returnIdCategoryGeo(geoContinent, geoCountry, geoSubdivision);
       if (!id) return;
       chartConfigMap[id] = {
         id,
@@ -205,8 +207,8 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
-    data?.total?.categoryUtm?.forEach(({ value, source, medium, campaign }) => {
-      const id = returnIdCategoryUtm(source, medium, campaign);
+    data?.total?.categoryUtm?.forEach(({ value, utmSource, utmMedium, utmCampaign }) => {
+      const id = returnIdCategoryUtm(utmSource, utmMedium, utmCampaign);
       if (!id) return;
       chartConfigMap[id] = {
         id,

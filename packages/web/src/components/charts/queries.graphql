@@ -41,24 +41,24 @@ query ArticleTrend(
   $excludeDevices: [String!]
   $includeGenders: [String!]
   $excludeGenders: [String!]
-  $includeContinents: [String!]
-  $excludeContinents: [String!]
-  $includeSubdivisions: [String!]
-  $excludeSubdivisions: [String!]
-  $includeCountries: [String!]
-  $excludeCountries: [String!]
-  $includeCities: [String!]
-  $excludeCities: [String!]
+  $includeGeoContinents: [String!]
+  $excludeGeoContinents: [String!]
+  $includeGeoSubdivisions: [String!]
+  $excludeGeoSubdivisions: [String!]
+  $includeGeoCountries: [String!]
+  $excludeGeoCountries: [String!]
+  $includeGeoCities: [String!]
+  $excludeGeoCities: [String!]
   $includeDomains: [String!]
   $excludeDomains: [String!]
   $includeReferrers: [String!]
   $excludeReferrers: [String!]
-  $includeSources: [String!]
-  $excludeSources: [String!]
-  $includeMediums: [String!]
-  $excludeMediums: [String!]
-  $includeCampaigns: [String!]
-  $excludeCampaigns: [String!]
+  $includeUtmSources: [String!]
+  $excludeUtmSources: [String!]
+  $includeUtmMediums: [String!]
+  $excludeUtmMediums: [String!]
+  $includeUtmCampaigns: [String!]
+  $excludeUtmCampaigns: [String!]
 ) {
   trend(
     startDate: $startDate
@@ -117,19 +117,19 @@ fragment TrendTemplate on Trend {
     gender @include(if: $isCategoryGenderGender)
   }
   categoryGeo(
-    includeContinents: $includeContinents
-    excludeContinents: $excludeContinents
-    includeSubdivisions: $includeSubdivisions
-    excludeSubdivisions: $excludeSubdivisions
-    includeCountries: $includeCountries
-    excludeCountries: $excludeCountries
-    includeCities: $includeCities
-    excludeCities: $excludeCities
+    includeGeoContinents: $includeGeoContinents
+    excludeGeoContinents: $excludeGeoContinents
+    includeGeoSubdivisions: $includeGeoSubdivisions
+    excludeGeoSubdivisions: $excludeGeoSubdivisions
+    includeGeoCountries: $includeGeoCountries
+    excludeGeoCountries: $excludeGeoCountries
+    includeGeoCities: $includeGeoCities
+    excludeGeoCities: $excludeGeoCities
   ) @include(if: $isCategoryGeo) {
     ...TrendAnalytics
-    continent @include(if: $isCategoryGeoContinent)
-    country @include(if: $isCategoryGeoCountry)
-    subdivision @include(if: $isCategoryGeoSubdivision)
+    geoContinent @include(if: $isCategoryGeoContinent)
+    geoCountry @include(if: $isCategoryGeoCountry)
+    geoSubdivision @include(if: $isCategoryGeoSubdivision)
   }
   categoryReferrer(
     includeDomains: $includeDomains
@@ -142,17 +142,17 @@ fragment TrendTemplate on Trend {
     referrer @include(if: $isCategoryReferrerReferrer)
   }
   categoryUtm(
-    includeSources: $includeSources
-    excludeSources: $excludeSources
-    includeMediums: $includeMediums
-    excludeMediums: $excludeMediums
-    includeCampaigns: $includeCampaigns
-    excludeCampaigns: $excludeCampaigns
+    includeUtmSources: $includeUtmSources
+    excludeUtmSources: $excludeUtmSources
+    includeUtmMediums: $includeUtmMediums
+    excludeUtmMediums: $excludeUtmMediums
+    includeUtmCampaigns: $includeUtmCampaigns
+    excludeUtmCampaigns: $excludeUtmCampaigns
   ) @include(if: $isCategoryUtm) {
     ...TrendAnalytics
-    source @include(if: $isCategoryUtmSource)
-    medium @include(if: $isCategoryUtmMedium)
-    campaign @include(if: $isCategoryUtmCampaign)
+    utmSource @include(if: $isCategoryUtmSource)
+    utmMedium @include(if: $isCategoryUtmMedium)
+    utmCampaign @include(if: $isCategoryUtmCampaign)
   }
   total @include(if: $isArticles) {
     ...TrendAnalytics

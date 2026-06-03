@@ -7,7 +7,7 @@ query TotalCountry($startDate: DateTime!, $endDate: DateTime!, $articleFilter: A
     metric: VISITS_VIEWS
   ) {
     categoryGeo {
-      country
+      geoCountry
       value
     }
   }
@@ -17,7 +17,7 @@ query TotalCity(
   $startDate: DateTime!
   $endDate: DateTime!
   $articleFilter: ArticleFilterInput
-  $country: String!
+  $geoCountry: String!
 ) {
   trend(
     startDate: $startDate
@@ -26,8 +26,8 @@ query TotalCity(
     aggregation: { unit: TOTAL }
     metric: VISITS_VIEWS
   ) {
-    categoryGeo(includeCountries: [$country]) {
-      city
+    categoryGeo(includeGeoCountries: [$geoCountry]) {
+      geoCity
       value
     }
   }

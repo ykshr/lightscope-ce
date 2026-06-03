@@ -30,7 +30,7 @@ query TotalUtmCampaign(
     metric: VISITS_VIEWS
   ) {
     categoryUtm {
-      campaign
+      utmCampaign
       value
     }
   }

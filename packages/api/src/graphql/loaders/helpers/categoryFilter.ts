@@ -89,10 +89,10 @@ export default function processCategoryFilter(
   processCondition(buildCondition<string>(filter, 'DeviceTypes', 'device_type'));
   processCondition(buildCondition<string>(filter, 'DeviceVendors', 'device_vendor'));
   processCondition(buildCondition<string>(filter, 'Genders', 'gender'));
-  processCondition(buildCondition<string>(filter, 'Continents', 'geo_continent'));
-  processCondition(buildCondition<string>(filter, 'Subdivisions', 'geo_subdivision'));
-  processCondition(buildCondition<string>(filter, 'Countries', 'geo_country'));
-  processCondition(buildCondition<string>(filter, 'Cities', 'geo_city'));
+  processCondition(buildCondition<string>(filter, 'GeoContinents', 'geo_continent'));
+  processCondition(buildCondition<string>(filter, 'GeoSubdivisions', 'geo_subdivision'));
+  processCondition(buildCondition<string>(filter, 'GeoCountries', 'geo_country'));
+  processCondition(buildCondition<string>(filter, 'GeoCities', 'geo_city'));
   processCondition(buildCondition<string>(filter, 'Domains', 'domain_hash', true));
   processCondition(buildCondition<string>(filter, 'Referrers', 'referrer_hash', true));
   processCondition(buildCondition<string>(filter, 'UtmSources', 'utm_source'));

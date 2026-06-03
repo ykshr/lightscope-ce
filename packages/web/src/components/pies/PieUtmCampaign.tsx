@@ -15,7 +15,7 @@ export default function PieUtmCampaign() {
   const campaigns =
     data?.trend?.categoryUtm?.filter(
       (item): item is { campaign: string; value: number } =>
-        typeof item.campaign === 'string' && typeof item.value === 'number'
+        typeof item.utmCampaign === 'string' && typeof item.value === 'number'
     ) ?? [];
 
   const totalValue = campaigns.reduce((acc, curr) => acc + curr.value, 0);

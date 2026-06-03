@@ -4,8 +4,8 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
+import { getColorForIndex } from '@/helpers/color';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
-import { getColorForIndex } from '../../../helpers/color';
 
 export interface AreaChartDataItem {
   [key: string]: string | number;
@@ -33,25 +33,16 @@ export default function AreaStacked({
   xAxisKey,
   tickFormatter,
 }: GenericStackedAreaChartProps) {
-  const config: ChartConfig = Object.fromEntries(
-    categories.map((item, index) => {
-      const itemColor = item.color || getColorForIndex(index);
-
-      return [
-        item.id,
-        {
-          label: item.label,
-          color: itemColor,
-        },
-      ];
-    })
-  );
-
-  const areas = categories.map((item) => ({
-    ...item,
-    fill: `var(--chart-${item.id})`,
-  }));
-
+  const areas = categories.map((item, index) => {
+    const itemColor = item.color || getColorForIndex(index);
+    return {
+      ...item,
+      color: itemColor,
+      fill: itemColor,
+    };
+  });
+  const config: ChartConfig = Object.fromEntries(areas.map((area) => [area.id, area]));
+  console.log(data);
   return (
     <ChartContainer config={config} className="mx-auto aspect-square w-full max-h-[250px]">
       <AreaChart

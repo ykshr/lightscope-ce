@@ -58,12 +58,12 @@ export const RELATIVE_OPTIONS = [
   },
   {
     label: 'Past 7 days',
-    startDateString: `P7D${tOffset}`,
+    startDateString: `So-7D${tOffset}`,
     endDateString: `So1D${tOffset}`,
   },
   {
     label: 'Past 30 days',
-    startDateString: `P30D${tOffset}`,
+    startDateString: `So-30D${tOffset}`,
     endDateString: `So1D${tOffset}`,
   },
 ];

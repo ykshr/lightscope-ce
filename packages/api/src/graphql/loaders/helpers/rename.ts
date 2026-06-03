@@ -27,3 +27,7 @@ export function renameKeySnakeToCamel(obj: any): any {
   }
   return obj;
 }
+
+export const camelToSnake = (str: string): string => {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+};

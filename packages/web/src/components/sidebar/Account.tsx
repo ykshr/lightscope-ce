@@ -27,7 +27,7 @@ import { ChevronsUpDown, Plus, UserIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function User() {
+export default function Account() {
   const navigate = useNavigate();
   const { isMobile } = useSidebar();
   const { data: session, isPending: isPendingSession } = useSession();
@@ -41,6 +41,7 @@ export default function User() {
   const handleSetActiveOrg = async (organizationId: string | null) => {
     if (!organizationId) return;
     await authClient.organization.setActive({ organizationId });
+    navigate(0);
   };
 
   const isPending = isPendingSession || isPendingOrganizations;

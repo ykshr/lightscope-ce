@@ -114,8 +114,39 @@ test.describe('Analytics', () => {
     await context.close();
   });
 
-  test('should display ingested data on Web Dashboard', async ({ page }) => {
-    console.log('Verifying data on Web Dashboard...');
+  test('should display ingested data on overview', async ({ page }) => {
+    await page.goto('/');
+
+    // 1. Articles Table: Wait for the table header to be loaded
+    await expect(page.locator('text=Ranking').first()).toBeVisible();
+
+    // Verify that the ingested test data (article title) is displayed in the table
+    const targetRow = page
+      .locator('table[data-slot="table"] tbody tr')
+      .filter({ hasText: 'E2E Test Article Title' });
+    await expect(targetRow.first()).toBeVisible();
+
+    // 2. Stats Row: Verify that each stats card is loaded and displays numerical data
+    const statCards = ['Total Page Views', 'Unique Users', 'Engagement Time', 'Realtime Visitors'];
+    for (const title of statCards) {
+      const titleLocator = page.locator(`text=${title}`).first();
+      await expect(titleLocator).toBeVisible();
+
+      // Traverse up to the parent Card element (e.g., shadcn/ui Card) and verify it contains some numbers
+      const cardLocator = titleLocator.locator(
+        'xpath=ancestor::div[contains(@class, "border") or contains(@class, "rounded")][1]'
+      );
+      await expect(cardLocator).toContainText(/\d+|N\/A/);
+    }
+
+    // 3. Charts Section: Verify that AreaStacked and PieReferrerDomain charts are rendered
+    // Recharts generates a recharts-wrapper class upon rendering, so we use this as a reference for verification
+    const charts = page.locator('.recharts-wrapper');
+    await expect(charts.first()).toBeVisible();
+    await expect(charts.nth(1)).toBeVisible();
+  });
+
+  test('should display ingested data on ranking', async ({ page }) => {
     await page.goto('/ranking');
     const rows = page.locator('table[data-slot="table"] tbody tr');
     const targetRow = rows.filter({
@@ -123,7 +154,7 @@ test.describe('Analytics', () => {
     });
 
     // Verify all columns in the ranking table based on the exact metadata values
-    await expect(targetRow.locator('td').nth(0)).toHaveText(/\d+/); // Rank (Dynamic)
+    await expect(targetRow.locator('td').nth(0)).toHaveText('1'); // Rank (Dynamic)
     await expect(targetRow.locator('td').nth(1).locator('img')).toHaveAttribute(
       'src',
       'http://localhost:3000/fixtures/test-image.jpg'
@@ -135,7 +166,5 @@ test.describe('Analytics', () => {
     await expect(targetRow.locator('td').nth(4)).toHaveText('Lightscope E2E Test Site'); // Site name
     await expect(targetRow.locator('td').nth(5)).toHaveText('article'); // Type
     await expect(targetRow.locator('td').nth(6)).toHaveText('1'); // Metric (Value)
-
-    console.log('Data verification successful on Web Dashboard.');
   });
 });

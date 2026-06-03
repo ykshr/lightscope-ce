@@ -1,3 +1,4 @@
+import { LegendItem } from '@/components/common/Legend';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartContainer,
@@ -6,17 +7,9 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { Spinner } from '@/components/ui/spinner';
+import { getColorForIndex } from '@/helpers/color';
 import { useMemo } from 'react';
 import { Label, Pie, PieChart } from 'recharts';
-import { LegendItem } from '../../common/Legend';
-
-const DEFAULT_COLORS = [
-  'var(--chart-1)',
-  'var(--chart-2)',
-  'var(--chart-3)',
-  'var(--chart-4)',
-  'var(--chart-5)',
-];
 
 export interface ChartDataItem {
   id: string; // identifier (e.g., 'search')
@@ -31,7 +24,6 @@ interface GenericDonutChartProps {
   isLoading?: boolean;
   data: ChartDataItem[];
   centerLabel: string;
-  unit?: string;
 }
 
 export default function PieDonutText({
@@ -40,14 +32,17 @@ export default function PieDonutText({
   isLoading,
   data,
   centerLabel,
-  unit = '',
 }: GenericDonutChartProps) {
+  const totalValue = useMemo(() => {
+    return data.reduce((acc, curr) => acc + curr.value, 0);
+  }, [data]);
+
   const { config, chartData } = useMemo(() => {
     const generatedConfig: ChartConfig = {};
 
     const formatted = data.map((item, index) => {
       // if no color provided, assign from default colors
-      const itemColor = item.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+      const itemColor = item.color || getColorForIndex(index);
 
       generatedConfig[item.id] = {
         label: item.label,
@@ -56,15 +51,12 @@ export default function PieDonutText({
 
       return {
         ...item,
-        fill: `var(--chart-${item.id})`,
+        pct: item.value / totalValue,
+        fill: itemColor,
       };
     });
 
     return { config: generatedConfig, chartData: formatted };
-  }, [data]);
-
-  const totalValue = useMemo(() => {
-    return data.reduce((acc, curr) => acc + curr.value, 0);
   }, [data]);
 
   return (
@@ -105,7 +97,6 @@ export default function PieDonutText({
                         className="fill-foreground text-2xl font-bold"
                       >
                         {totalValue.toLocaleString()}
-                        {unit}
                       </tspan>
                       <tspan
                         x={viewBox.cx}
@@ -127,8 +118,9 @@ export default function PieDonutText({
             <LegendItem
               key={item.id}
               label={item.label}
-              value={`${item.value.toLocaleString()}${unit}`}
-              color={config[item.id].color || DEFAULT_COLORS[DEFAULT_COLORS.length - 1]}
+              value={item.value}
+              pct={item.pct}
+              color={item.fill}
             />
           ))}
         </div>

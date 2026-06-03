@@ -1,13 +1,13 @@
-import { describe, it, expect } from 'vitest';
 import { getColorForIndex, getColorsForCount } from '@/helpers/color';
+import { describe, expect, it } from 'vitest';
 
 describe('color helpers', () => {
   describe('getColorForIndex', () => {
     it('should return colors from the palette', () => {
       const color0 = getColorForIndex(0);
       const color1 = getColorForIndex(1);
-      expect(color0).toContain('var(--chart-blue-');
-      expect(color1).toContain('var(--chart-blue-');
+      expect(color0).toContain('var(--chart-1');
+      expect(color1).toContain('var(--chart-2');
       expect(color0).not.toBe(color1);
     });
 

@@ -7,17 +7,44 @@ dayjs.extend(dayjsPluginUTC);
 const ClickhouseTableUnits = ['day', 'hour', 'min'] as const;
 type ClickhouseTableUnit = (typeof ClickhouseTableUnits)[number];
 
-export function getAggregationUnit(startDate: Date, endDate: Date): AggregationUnit {
-  const timeDiff = endDate.getTime() - startDate.getTime();
-  const daysDiff = timeDiff / (1000 * 3600 * 24);
+interface AggregationOption {
+  unit: AggregationUnit;
+  interval: number;
+  mins: number; // 分換算した値
+}
 
-  if (daysDiff <= 1) {
-    return AggregationUnit.Minute;
-  } else if (daysDiff <= 7) {
-    return AggregationUnit.Hour;
-  } else {
-    return AggregationUnit.Day;
+const AGGREGATION_OPTIONS: AggregationOption[] = [
+  { unit: AggregationUnit.Minute, interval: 1, mins: 1 },
+  { unit: AggregationUnit.Minute, interval: 5, mins: 5 },
+  { unit: AggregationUnit.Minute, interval: 15, mins: 15 },
+  { unit: AggregationUnit.Minute, interval: 30, mins: 30 },
+  { unit: AggregationUnit.Hour, interval: 1, mins: 60 },
+  { unit: AggregationUnit.Hour, interval: 4, mins: 240 },
+  { unit: AggregationUnit.Hour, interval: 12, mins: 720 },
+  { unit: AggregationUnit.Day, interval: 1, mins: 1440 },
+  { unit: AggregationUnit.Day, interval: 7, mins: 10080 }, // 1 week
+  { unit: AggregationUnit.Month, interval: 1, mins: 43200 }, // 1 month
+];
+
+function getDynamicAggregation(startDate: Date, endDate: Date, targetPoints = 200) {
+  const totalMins = (endDate.getTime() - startDate.getTime()) / 1000 / 60;
+  const minIntervalMins = 5;
+
+  const idealMinsPerPoint = totalMins / targetPoints;
+  let selected = AGGREGATION_OPTIONS.find((opt) => opt.mins >= idealMinsPerPoint);
+
+  if (!selected) {
+    selected = AGGREGATION_OPTIONS[AGGREGATION_OPTIONS.length - 1];
   }
+
+  if (selected.mins < minIntervalMins) {
+    return { unit: AggregationUnit.Minute, interval: 5 };
+  }
+
+  return {
+    unit: selected.unit,
+    interval: selected.interval,
+  };
 }
 
 export function getAggregationUnitWithInterval(
@@ -28,11 +55,7 @@ export function getAggregationUnitWithInterval(
   if (!aggregation || aggregation.unit === AggregationUnit.Total)
     return { unit: AggregationUnit.Total, interval: 0 };
   if (aggregation.unit === AggregationUnit.Auto) {
-    const mins = (endDate.getTime() - startDate.getTime()) / 1000 / 60;
-    if (mins < 60 * 24 * 1) return { unit: AggregationUnit.Minute, interval: 5 };
-    if (mins < 60 * 24 * 7) return { unit: AggregationUnit.Hour, interval: 1 };
-    if (mins < 60 * 24 * 365) return { unit: AggregationUnit.Day, interval: 1 };
-    return { unit: AggregationUnit.Month, interval: 1 };
+    return getDynamicAggregation(startDate, endDate);
   }
   if (!aggregation.interval) {
     switch (aggregation.unit) {

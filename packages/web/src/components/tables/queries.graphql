@@ -28,24 +28,24 @@ query ArticleRank(
   $excludeDevices: [String!]
   $includeGenders: [String!]
   $excludeGenders: [String!]
-  $includeContinents: [String!]
-  $excludeContinents: [String!]
-  $includeSubdivisions: [String!]
-  $excludeSubdivisions: [String!]
-  $includeCountries: [String!]
-  $excludeCountries: [String!]
-  $includeCities: [String!]
-  $excludeCities: [String!]
+  $includeGeoContinents: [String!]
+  $excludeGeoContinents: [String!]
+  $includeGeoSubdivisions: [String!]
+  $excludeGeoSubdivisions: [String!]
+  $includeGeoCountries: [String!]
+  $excludeGeoCountries: [String!]
+  $includeGeoCities: [String!]
+  $excludeGeoCities: [String!]
   $includeDomains: [String!]
   $excludeDomains: [String!]
   $includeReferrers: [String!]
   $excludeReferrers: [String!]
-  $includeSources: [String!]
-  $excludeSources: [String!]
-  $includeMediums: [String!]
-  $excludeMediums: [String!]
-  $includeCampaigns: [String!]
-  $excludeCampaigns: [String!]
+  $includeUtmSources: [String!]
+  $excludeUtmSources: [String!]
+  $includeUtmMediums: [String!]
+  $excludeUtmMediums: [String!]
+  $includeUtmCampaigns: [String!]
+  $excludeUtmCampaigns: [String!]
 ) {
   rank(
     startDate: $startDate
@@ -88,14 +88,14 @@ fragment RankTemplate on Rank {
     ...RankAnalytics
   }
   categoryGeo(
-    includeContinents: $includeContinents
-    excludeContinents: $excludeContinents
-    includeSubdivisions: $includeSubdivisions
-    excludeSubdivisions: $excludeSubdivisions
-    includeCountries: $includeCountries
-    excludeCountries: $excludeCountries
-    includeCities: $includeCities
-    excludeCities: $excludeCities
+    includeGeoContinents: $includeGeoContinents
+    excludeGeoContinents: $excludeGeoContinents
+    includeGeoSubdivisions: $includeGeoSubdivisions
+    excludeGeoSubdivisions: $excludeGeoSubdivisions
+    includeGeoCountries: $includeGeoCountries
+    excludeGeoCountries: $excludeGeoCountries
+    includeGeoCities: $includeGeoCities
+    excludeGeoCities: $excludeGeoCities
   ) @include(if: $isCategoryGeo) {
     ...RankAnalytics
   }
@@ -108,12 +108,12 @@ fragment RankTemplate on Rank {
     ...RankAnalytics
   }
   categoryUtm(
-    includeSources: $includeSources
-    excludeSources: $excludeSources
-    includeMediums: $includeMediums
-    excludeMediums: $excludeMediums
-    includeCampaigns: $includeCampaigns
-    excludeCampaigns: $excludeCampaigns
+    includeUtmSources: $includeUtmSources
+    excludeUtmSources: $excludeUtmSources
+    includeUtmMediums: $includeUtmMediums
+    excludeUtmMediums: $excludeUtmMediums
+    includeUtmCampaigns: $includeUtmCampaigns
+    excludeUtmCampaigns: $excludeUtmCampaigns
   ) @include(if: $isCategoryUtm) {
     ...RankAnalytics
   }

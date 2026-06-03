@@ -1,9 +1,9 @@
 const DEFAULT_COLORS = [
-  'var(--chart-blue-1)',
-  'var(--chart-blue-2)',
-  'var(--chart-blue-3)',
-  'var(--chart-blue-4)',
-  'var(--chart-blue-5)',
+  'var(--chart-1)',
+  'var(--chart-2)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
 ];
 
 export function getColorForIndex(index: number): string {

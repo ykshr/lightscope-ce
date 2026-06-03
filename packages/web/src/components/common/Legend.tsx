@@ -59,8 +59,8 @@ export function LegendItem({
           <div className="flex items-center gap-2 mr-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
             <span className="text-sm text-muted-foreground">{label}</span>
+            {valueLabel && <span className="text-sm text-muted-foreground">{valueLabel}</span>}
           </div>
-          {valueLabel && <span className="text-sm text-muted-foreground">{valueLabel}</span>}
         </>
       )}
     </div>

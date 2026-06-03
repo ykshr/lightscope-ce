@@ -68,7 +68,7 @@ export default function MapCountry() {
   const countries = useMemo(() => {
     return (
       dataCountries?.trend?.categoryGeo
-        ?.filter((d): d is typeof d & { country: string } => !!d.country)
+        ?.filter((d): d is typeof d & { country: string } => !!d.geoCountry)
         .map((d) => ({
           id: i18n.alpha2ToNumeric(d.country),
           name: i18n.getName(d.country, 'en'),
@@ -84,13 +84,13 @@ export default function MapCountry() {
       startDate,
       endDate,
       articleFilter,
-      country: selectedCountry?.code || '',
+      geoCountry: selectedCountry?.code || '',
     },
     { enabled: !!selectedCountry }
   );
   const cities =
     dataCities?.trend?.categoryGeo
-      ?.filter((d): d is typeof d & { city: string } => !!d.city)
+      ?.filter((d): d is typeof d & { city: string } => !!d.geoCity)
       .map((d) => ({ name: d.city, value: d.value, count: d.value })) || [];
 
   const projection = d3.geoMercator().scale(120).translate([400, 280]);

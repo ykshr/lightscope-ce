@@ -1,6 +1,5 @@
 import { AggregationUnit } from '@/__generated__/graphql/resolvers';
 import {
-  getAggregationUnit,
   getAggregationUnitWithInterval,
   getNextAvailableDate,
   getTableUnitWithDates,
@@ -22,32 +21,58 @@ describe('getCollectionUnitWithDates', () => {
     });
 
     describe('Auto', () => {
-      it('returns Minute with interval 5 for < 1 day', () => {
+      it('returns Minute interval 5 for short periods (e.g., 1 hour)', () => {
         const start = new Date('2023-01-01T00:00:00.000Z');
-        const end = new Date('2023-01-01T23:59:00.000Z');
-        const result = getAggregationUnitWithInterval(start, end, { unit: AggregationUnit.Auto });
+        const end = new Date('2023-01-01T01:00:00.000Z'); // 60 mins -> 0.3 mins/point -> selected 1 min -> forced to 5 mins
+        const result = getAggregationUnitWithInterval(start, end, {
+          unit: AggregationUnit.Auto,
+        });
         expect(result).toEqual({ unit: AggregationUnit.Minute, interval: 5 });
       });
 
-      it('returns Hour with interval 1 for < 7 days', () => {
+      it('returns Minute interval 15 for medium periods (e.g., 2 days)', () => {
         const start = new Date('2023-01-01T00:00:00.000Z');
-        const end = new Date('2023-01-07T23:59:00.000Z');
-        const result = getAggregationUnitWithInterval(start, end, { unit: AggregationUnit.Auto });
+        const end = new Date('2023-01-03T00:00:00.000Z'); // 2880 mins -> 14.4 mins/point -> selected 15 mins
+        const result = getAggregationUnitWithInterval(start, end, {
+          unit: AggregationUnit.Auto,
+        });
+        expect(result).toEqual({ unit: AggregationUnit.Minute, interval: 15 });
+      });
+
+      it('returns Hour interval 1 for 1 week period', () => {
+        const start = new Date('2023-01-01T00:00:00.000Z');
+        const end = new Date('2023-01-08T00:00:00.000Z'); // 10080 mins -> 50.4 mins/point -> selected 1 hour
+        const result = getAggregationUnitWithInterval(start, end, {
+          unit: AggregationUnit.Auto,
+        });
         expect(result).toEqual({ unit: AggregationUnit.Hour, interval: 1 });
       });
 
-      it('returns Day with interval 1 for < 365 days', () => {
-        const start = new Date('2023-01-01T00:00:00.000Z');
-        const end = new Date('2023-12-31T23:59:00.000Z');
-        const result = getAggregationUnitWithInterval(start, end, { unit: AggregationUnit.Auto });
-        expect(result).toEqual({ unit: AggregationUnit.Day, interval: 1 });
+      it('returns Month interval 1 for very large periods (e.g., 20 years)', () => {
+        const start = new Date('2000-01-01T00:00:00.000Z');
+        const end = new Date('2020-01-01T00:00:00.000Z');
+        const result = getAggregationUnitWithInterval(start, end, {
+          unit: AggregationUnit.Auto,
+        });
+        expect(result).toEqual({ unit: AggregationUnit.Month, interval: 1 });
       });
 
-      it('returns Month with interval 1 for >= 365 days', () => {
+      it('returns Minute interval 5 for zero duration (start equals end)', () => {
         const start = new Date('2023-01-01T00:00:00.000Z');
-        const end = new Date('2024-01-01T00:00:00.000Z');
-        const result = getAggregationUnitWithInterval(start, end, { unit: AggregationUnit.Auto });
-        expect(result).toEqual({ unit: AggregationUnit.Month, interval: 1 });
+        const end = new Date('2023-01-01T00:00:00.000Z');
+        const result = getAggregationUnitWithInterval(start, end, {
+          unit: AggregationUnit.Auto,
+        });
+        expect(result).toEqual({ unit: AggregationUnit.Minute, interval: 5 });
+      });
+
+      it('returns Minute interval 5 for negative duration (start after end)', () => {
+        const start = new Date('2023-01-02T00:00:00.000Z');
+        const end = new Date('2023-01-01T00:00:00.000Z');
+        const result = getAggregationUnitWithInterval(start, end, {
+          unit: AggregationUnit.Auto,
+        });
+        expect(result).toEqual({ unit: AggregationUnit.Minute, interval: 5 });
       });
     });
 
@@ -101,42 +126,6 @@ describe('getCollectionUnitWithDates', () => {
         interval: 2,
       });
       expect(result).toEqual({ unit: AggregationUnit.Hour, interval: 2 });
-    });
-  });
-
-  describe('getAggregationUnit', () => {
-    it('returns Minute for <= 1 day difference', () => {
-      const start = new Date('2023-01-01T00:00:00.000Z');
-      expect(getAggregationUnit(start, new Date('2023-01-02T00:00:00.000Z'))).toBe(
-        AggregationUnit.Minute
-      );
-      expect(getAggregationUnit(start, new Date('2023-01-01T12:00:00.000Z'))).toBe(
-        AggregationUnit.Minute
-      );
-      expect(getAggregationUnit(start, start)).toBe(AggregationUnit.Minute);
-      expect(getAggregationUnit(new Date('2023-01-02T00:00:00.000Z'), start)).toBe(
-        AggregationUnit.Minute
-      );
-    });
-
-    it('returns Hour for <= 7 days difference (> 1 day)', () => {
-      const start = new Date('2023-01-01T00:00:00.000Z');
-      expect(getAggregationUnit(start, new Date('2023-01-02T00:00:00.001Z'))).toBe(
-        AggregationUnit.Hour
-      );
-      expect(getAggregationUnit(start, new Date('2023-01-08T00:00:00.000Z'))).toBe(
-        AggregationUnit.Hour
-      );
-    });
-
-    it('returns Day for > 7 days difference', () => {
-      const start = new Date('2023-01-01T00:00:00.000Z');
-      expect(getAggregationUnit(start, new Date('2023-01-08T00:00:00.001Z'))).toBe(
-        AggregationUnit.Day
-      );
-      expect(getAggregationUnit(start, new Date('2023-01-31T00:00:00.000Z'))).toBe(
-        AggregationUnit.Day
-      );
     });
   });
 

@@ -56,7 +56,7 @@ export default function PieDonutText({
 
       return {
         ...item,
-        fill: `var(--chart-${item.id})`,
+        fill: itemColor,
       };
     });
 

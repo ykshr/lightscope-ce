@@ -49,7 +49,7 @@ export default function AreaStacked({
 
   const areas = categories.map((item) => ({
     ...item,
-    fill: `var(--chart-${item.id})`,
+    fill: item.color,
   }));
 
   return (

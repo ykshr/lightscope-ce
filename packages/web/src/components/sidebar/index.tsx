@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Link } from 'react-router-dom';
 
-import User from '@/components/sidebar/User';
+import Account from '@/components/sidebar/Account';
 
 function SidebarItem(item: { href: string; icon: React.ElementType; name: string }) {
   const isActive = typeof window !== 'undefined' && window.location.pathname === item.href;
@@ -62,7 +62,7 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <User />
+        <Account />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

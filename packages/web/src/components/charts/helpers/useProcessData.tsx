@@ -20,9 +20,8 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
     map: Record<string, AreaChartDataItem>,
     date: string | Date | number | any
   ) => {
-    const dateString =
-      typeof date === 'string' ? date : date instanceof Date ? dateToString(date) : String(date);
-    if (!map[dateString]) map[dateString] = { date };
+    const dateString = dateToString(new Date(date));
+    if (!map[dateString]) map[dateString] = { date: dateString };
     return dateString;
   };
 

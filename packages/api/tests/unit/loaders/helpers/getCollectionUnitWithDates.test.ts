@@ -1,6 +1,5 @@
 import { AggregationUnit } from '@/__generated__/graphql/resolvers';
 import {
-  getAggregationUnit,
   getAggregationUnitWithInterval,
   getNextAvailableDate,
   getTableUnitWithDates,
@@ -101,42 +100,6 @@ describe('getCollectionUnitWithDates', () => {
         interval: 2,
       });
       expect(result).toEqual({ unit: AggregationUnit.Hour, interval: 2 });
-    });
-  });
-
-  describe('getAggregationUnit', () => {
-    it('returns Minute for <= 1 day difference', () => {
-      const start = new Date('2023-01-01T00:00:00.000Z');
-      expect(getAggregationUnit(start, new Date('2023-01-02T00:00:00.000Z'))).toBe(
-        AggregationUnit.Minute
-      );
-      expect(getAggregationUnit(start, new Date('2023-01-01T12:00:00.000Z'))).toBe(
-        AggregationUnit.Minute
-      );
-      expect(getAggregationUnit(start, start)).toBe(AggregationUnit.Minute);
-      expect(getAggregationUnit(new Date('2023-01-02T00:00:00.000Z'), start)).toBe(
-        AggregationUnit.Minute
-      );
-    });
-
-    it('returns Hour for <= 7 days difference (> 1 day)', () => {
-      const start = new Date('2023-01-01T00:00:00.000Z');
-      expect(getAggregationUnit(start, new Date('2023-01-02T00:00:00.001Z'))).toBe(
-        AggregationUnit.Hour
-      );
-      expect(getAggregationUnit(start, new Date('2023-01-08T00:00:00.000Z'))).toBe(
-        AggregationUnit.Hour
-      );
-    });
-
-    it('returns Day for > 7 days difference', () => {
-      const start = new Date('2023-01-01T00:00:00.000Z');
-      expect(getAggregationUnit(start, new Date('2023-01-08T00:00:00.001Z'))).toBe(
-        AggregationUnit.Day
-      );
-      expect(getAggregationUnit(start, new Date('2023-01-31T00:00:00.000Z'))).toBe(
-        AggregationUnit.Day
-      );
     });
   });
 

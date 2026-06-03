@@ -27,6 +27,10 @@ This package is extremely performance-critical and highly sensitive to bundle si
     pnpm --filter @lightscope-ce/tracker run build:browser
     ```
 * How to run tests (commands and steps)
+  - Run Tests:
+    ```bash
+    pnpm --filter @lightscope-ce/tracker run test
+    ```
 
 #### Project Structure
 * Explanation of key directories

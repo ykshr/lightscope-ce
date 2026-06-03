@@ -4,8 +4,8 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
+import { getColorForIndex } from '@/helpers/color';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
-import { getColorForIndex } from '../../../helpers/color';
 
 export interface AreaChartDataItem {
   [key: string]: string | number;

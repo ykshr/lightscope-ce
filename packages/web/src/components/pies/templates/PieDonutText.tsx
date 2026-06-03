@@ -1,3 +1,4 @@
+import { LegendItem } from '@/components/common/Legend';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartContainer,
@@ -6,17 +7,9 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { Spinner } from '@/components/ui/spinner';
+import { getColorForIndex } from '@/helpers/color';
 import { useMemo } from 'react';
 import { Label, Pie, PieChart } from 'recharts';
-import { LegendItem } from '../../common/Legend';
-
-const DEFAULT_COLORS = [
-  'var(--chart-1)',
-  'var(--chart-2)',
-  'var(--chart-3)',
-  'var(--chart-4)',
-  'var(--chart-5)',
-];
 
 export interface ChartDataItem {
   id: string; // identifier (e.g., 'search')
@@ -49,7 +42,7 @@ export default function PieDonutText({
 
     const formatted = data.map((item, index) => {
       // if no color provided, assign from default colors
-      const itemColor = item.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+      const itemColor = item.color || getColorForIndex(index);
 
       generatedConfig[item.id] = {
         label: item.label,
@@ -127,7 +120,7 @@ export default function PieDonutText({
               label={item.label}
               value={item.value}
               pct={item.pct}
-              color={config[item.id].color || DEFAULT_COLORS[DEFAULT_COLORS.length - 1]}
+              color={item.fill}
             />
           ))}
         </div>

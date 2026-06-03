@@ -1,5 +1,5 @@
+import { renameKeySnakeToCamel } from '@/graphql/loaders/helpers/rename';
 import { describe, expect, it } from 'vitest';
-import { renameKeySnakeToCamel } from '@/helpers/rename';
 
 describe('renameKeySnakeToCamel', () => {
   it('should convert simple snake_case keys to camelCase', () => {

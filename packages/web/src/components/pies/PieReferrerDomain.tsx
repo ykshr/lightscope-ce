@@ -18,12 +18,10 @@ export default function PieReferrerDomain() {
         typeof item.domain === 'string' && typeof item.value === 'number'
     ) ?? [];
 
-  const totalValue = domains.reduce((acc, curr) => acc + curr.value, 0);
-
   const trafficData: ChartDataItem[] = domains.map((item) => ({
     id: item.domain,
     label: item.domain,
-    value: (item.value / totalValue) * 100,
+    value: item.value,
   }));
 
   return (
@@ -31,8 +29,7 @@ export default function PieReferrerDomain() {
       title="Referrer Domains"
       isLoading={isLoading}
       data={trafficData}
-      centerLabel="Total"
-      unit="%"
+      centerLabel="Visits"
     />
   );
 }

@@ -18,12 +18,10 @@ export default function PieUtmCampaign() {
         typeof item.utmCampaign === 'string' && typeof item.value === 'number'
     ) ?? [];
 
-  const totalValue = campaigns.reduce((acc, curr) => acc + curr.value, 0);
-
   const trafficData: ChartDataItem[] = campaigns.map((item) => ({
     id: item.utmCampaign,
     label: item.utmCampaign,
-    value: (item.value / totalValue) * 100,
+    value: item.value,
   }));
 
   return (
@@ -31,8 +29,7 @@ export default function PieUtmCampaign() {
       title="UTM Campaign"
       isLoading={isLoading}
       data={trafficData}
-      centerLabel="Total"
-      unit="%"
+      centerLabel="Visits"
     />
   );
 }

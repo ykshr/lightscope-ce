@@ -31,7 +31,6 @@ interface GenericDonutChartProps {
   isLoading?: boolean;
   data: ChartDataItem[];
   centerLabel: string;
-  unit?: string;
 }
 
 export default function PieDonutText({
@@ -40,8 +39,11 @@ export default function PieDonutText({
   isLoading,
   data,
   centerLabel,
-  unit = '',
 }: GenericDonutChartProps) {
+  const totalValue = useMemo(() => {
+    return data.reduce((acc, curr) => acc + curr.value, 0);
+  }, [data]);
+
   const { config, chartData } = useMemo(() => {
     const generatedConfig: ChartConfig = {};
 
@@ -56,15 +58,12 @@ export default function PieDonutText({
 
       return {
         ...item,
+        pct: item.value / totalValue,
         fill: itemColor,
       };
     });
 
     return { config: generatedConfig, chartData: formatted };
-  }, [data]);
-
-  const totalValue = useMemo(() => {
-    return data.reduce((acc, curr) => acc + curr.value, 0);
   }, [data]);
 
   return (
@@ -105,7 +104,6 @@ export default function PieDonutText({
                         className="fill-foreground text-2xl font-bold"
                       >
                         {totalValue.toLocaleString()}
-                        {unit}
                       </tspan>
                       <tspan
                         x={viewBox.cx}
@@ -127,7 +125,8 @@ export default function PieDonutText({
             <LegendItem
               key={item.id}
               label={item.label}
-              value={`${item.value.toLocaleString()}${unit}`}
+              value={item.value}
+              pct={item.pct}
               color={config[item.id].color || DEFAULT_COLORS[DEFAULT_COLORS.length - 1]}
             />
           ))}

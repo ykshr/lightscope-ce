@@ -1,4 +1,3 @@
-import { categoryOptions, allKeysUsedInCategoryOptions } from '@/helpers/constants/category';
 import {
   Select,
   SelectContent,
@@ -6,12 +5,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { allKeysUsedInCategoryOptions, categoryOptions } from '@/helpers/constants/category';
+import { urlParamValue } from '@/helpers/url';
 
 interface FilterProps {
   currentMetricValue: string;
   currentFilterValue: string;
   onMetricChange?: (value: string) => void;
-  onFilterChange?: (value: string) => void;
+  onFilterChange?: (value: Record<string, urlParamValue>) => void;
 }
 
 export default function Filter({
@@ -35,7 +36,7 @@ export default function Filter({
       ...parsedValue,
     };
 
-    onFilterChange(JSON.stringify(nextValue));
+    onFilterChange(nextValue);
   };
 
   return (

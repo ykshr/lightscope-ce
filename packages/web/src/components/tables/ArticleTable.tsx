@@ -12,6 +12,7 @@ import { Table } from '@/components/ui/table';
 import { categoryUrlParamsToVariables } from '@/helpers/category';
 import { findSortOptionByValue } from '@/helpers/constants/sort';
 import { metricUrlParamsToVariables } from '@/helpers/metric';
+import { urlParamValue } from '@/helpers/url';
 import { useUrlParams } from '@/hooks/useUrl';
 import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
@@ -69,8 +70,7 @@ export default function ArticleTable({
     }
   };
 
-  const onSortChange = (value: string) => {
-    const nextValue = JSON.parse(value);
+  const onSortChange = (nextValue: Record<string, urlParamValue>) => {
     if (useUrlParamsForAnalyticsFilter) {
       updateUrlParams(nextValue);
     } else {

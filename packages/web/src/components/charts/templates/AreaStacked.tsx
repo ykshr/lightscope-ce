@@ -42,7 +42,7 @@ export default function AreaStacked({
     };
   });
   const config: ChartConfig = Object.fromEntries(areas.map((area) => [area.id, area]));
-  console.log(data);
+
   return (
     <ChartContainer config={config} className="mx-auto aspect-square w-full max-h-[250px]">
       <AreaChart

@@ -1,4 +1,3 @@
-import { sortOptions, allKeysUsedInSortOptions } from '@/helpers/constants/sort';
 import {
   Select,
   SelectContent,
@@ -6,19 +5,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { allKeysUsedInSortOptions, sortOptions } from '@/helpers/constants/sort';
+import { urlParamValue } from '@/helpers/url';
 
 interface SortProps {
   currentMetricValue: string;
   currentSortValue: string;
   onMetricChange?: (value: string) => void;
-  onSortChange?: (value: string) => void;
+  onSortChange?: (value: Record<string, urlParamValue>) => void;
 }
 
 export default function Sort({
   currentMetricValue,
   currentSortValue,
-  onMetricChange = (value: string) => console.log(JSON.stringify(value)),
-  onSortChange = (value: string) => console.log(JSON.stringify(value)),
+  onMetricChange = () => {},
+  onSortChange = () => {},
 }: SortProps) {
   const currentSort = JSON.parse(currentSortValue);
   const extenedSortOptions =
@@ -35,7 +36,7 @@ export default function Sort({
       ...parsedValue,
     };
 
-    onSortChange(JSON.stringify(nextValue));
+    onSortChange(nextValue);
   };
 
   return (

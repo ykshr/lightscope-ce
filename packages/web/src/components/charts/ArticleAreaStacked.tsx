@@ -1,13 +1,14 @@
 import { useArticleTrendQuery } from '@/__generated__/graphql';
+import LegendItems from '@/components/common/Legend';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { categoryUrlParamsToVariables } from '@/helpers/category';
+import { findCategoryOptionByValue } from '@/helpers/constants/category';
 import { metricUrlParamsToVariables } from '@/helpers/metric';
+import { urlParamValue } from '@/helpers/url';
 import { useUrlParams } from '@/hooks/useUrl';
 import { useState } from 'react';
-import LegendItems from '../common/Legend';
 import useProcessData from './helpers/useProcessData';
 import AreaStacked from './templates/AreaStacked';
-import { findCategoryOptionByValue } from '@/helpers/constants/category';
 import Filter from './templates/Filter';
 
 interface ArticleAreaStackedProps {
@@ -32,7 +33,7 @@ export default function ArticleAreaStacked({
 
   const categoryParams = categoryUrlParamsToVariables(urlParams);
   const metricParams = metricUrlParamsToVariables(urlParams);
-
+  console.log({ categoryParams });
   const { data, isLoading } = useArticleTrendQuery({
     startDate,
     endDate,
@@ -54,8 +55,7 @@ export default function ArticleAreaStacked({
     }
   };
 
-  const onFilterChange = (value: string) => {
-    const nextValue = JSON.parse(value);
+  const onFilterChange = (nextValue: Record<string, urlParamValue>) => {
     if (useUrlParamsForAnalyticsFilter) {
       updateUrlParams(nextValue);
     } else {

@@ -56,13 +56,13 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
   };
 
   const returnIdCategoryGeo = (
-    continent: string | null | undefined,
-    country: string | null | undefined,
-    subdivision: string | null | undefined
+    geoContinent: string | null | undefined,
+    geoCountry: string | null | undefined,
+    geoSubdivision: string | null | undefined
   ) => {
-    if (subdivision) return subdivision;
-    if (country) return country;
-    if (continent) return continent;
+    if (geoSubdivision) return geoSubdivision;
+    if (geoCountry) return geoCountry;
+    if (geoContinent) return geoContinent;
     return;
   };
 
@@ -76,12 +76,12 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
   };
 
   const returnIdCategoryUtm = (
-    source: string | null | undefined,
-    medium: string | null | undefined,
-    campaign: string | null | undefined
+    utmSource: string | null | undefined,
+    utmMedium: string | null | undefined,
+    utmCampaign: string | null | undefined
   ) => {
-    if (source || medium || campaign) {
-      return `${source || ''} ${medium || ''} ${campaign || ''}`.trim();
+    if (utmSource || utmMedium || utmCampaign) {
+      return `${utmSource || ''} ${utmMedium || ''} ${utmCampaign || ''}`.trim();
     }
     return;
   };
@@ -148,7 +148,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id.charAt(0).toUpperCase() + id.slice(1),
+        label: id,
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -157,7 +157,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id.charAt(0).toUpperCase() + id.slice(1),
+        label: id,
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -166,7 +166,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id.charAt(0).toUpperCase() + id.slice(1),
+        label: id,
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -175,7 +175,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id.charAt(0).toUpperCase() + id.slice(1),
+        label: id,
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -184,7 +184,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id.charAt(0).toUpperCase() + id.slice(1),
+        label: id,
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -193,7 +193,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id.charAt(0).toUpperCase() + id.slice(1),
+        label: id,
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -202,7 +202,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id.charAt(0).toUpperCase() + id.slice(1),
+        label: id,
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -211,7 +211,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id.charAt(0).toUpperCase() + id.slice(1),
+        label: id,
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });

@@ -20,7 +20,7 @@ export default function PieReferrerDomain() {
 
   const trafficData: ChartDataItem[] = domains.map((item) => ({
     id: item.domain,
-    label: item.domain,
+    label: item.domain || 'no name',
     value: item.value,
   }));
 

@@ -20,7 +20,7 @@ export default function PieUtmCampaign() {
 
   const trafficData: ChartDataItem[] = campaigns.map((item) => ({
     id: item.utmCampaign,
-    label: item.utmCampaign,
+    label: item.utmCampaign || 'no name',
     value: item.value,
   }));
 

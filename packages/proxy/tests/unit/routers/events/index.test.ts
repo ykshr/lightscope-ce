@@ -43,7 +43,7 @@ const mockPayload: Payload = {
   age: '25-34',
   gender: 'male',
   language: 'en-US',
-  event_value: 100,
+  engagement_time: 100,
 };
 
 describe('eventsRouter', () => {

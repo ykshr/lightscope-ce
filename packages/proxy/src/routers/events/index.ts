@@ -96,7 +96,7 @@ export function createPV(
     // Should not happen if payload validation passes url check
   }
 
-  const processedReferrer = processReferrer(payload.referrer ?? undefined);
+  const processedReferrer = processReferrer(payload.referrer);
 
   return {
     organization_id,
@@ -104,21 +104,21 @@ export function createPV(
     event_id,
     url,
     event_time: formatDate(payload.event_time_utc),
-    user_id: payload.user_id ?? undefined,
-    visit_id: payload.visit_id ?? undefined,
-    visitor_id: payload.visitor_id ?? undefined,
+    user_id: payload.user_id,
+    visit_id: payload.visit_id,
+    visitor_id: payload.visitor_id,
     referrer: processedReferrer.referrer,
     domain: processedReferrer.domain,
-    device: payload.device ?? undefined,
-    device_type: payload.device_type ?? undefined,
-    device_vendor: payload.device_vendor ?? undefined,
-    os: payload.os ?? undefined,
-    os_version: payload.os_version ?? undefined,
-    app: payload.app ?? undefined,
-    app_type: payload.app_type ?? undefined,
-    app_version: payload.app_version ?? undefined,
-    age: payload.age ?? undefined,
-    gender: payload.gender ?? undefined,
+    device: payload.device,
+    device_type: payload.device_type,
+    device_vendor: payload.device_vendor,
+    os: payload.os,
+    os_version: payload.os_version,
+    app: payload.app,
+    app_type: payload.app_type,
+    app_version: payload.app_version,
+    age: payload.age,
+    gender: payload.gender,
     geo_continent: geoData?.continent,
     geo_country: geoData?.country,
     geo_subdivision: geoData?.subdivision,
@@ -127,8 +127,8 @@ export function createPV(
     utm_source: query_params.utm_source,
     utm_medium: query_params.utm_medium,
     utm_campaign: query_params.utm_campaign,
-    language: payload.language ?? undefined,
-    engagement_time: payload.event_value ? Number(payload.event_value) : 0,
+    language: payload.language,
+    engagement_time: Number(payload.engagement_time ?? 0),
   };
 }
 

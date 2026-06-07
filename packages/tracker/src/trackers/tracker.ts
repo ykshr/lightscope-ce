@@ -182,7 +182,7 @@ export class Tracker {
     this.heartbeatTimer = window.setInterval(() => {
       const now = Date.now();
       const engagementTimeSeconds = Math.floor((now - this.lastHeartbeatTime) / 1000);
-      this.sendPageEvent('page_engagement', { event_value: engagementTimeSeconds });
+      this.sendPageEvent('page_engagement', { engagement_time: engagementTimeSeconds });
       this.lastHeartbeatTime = Date.now();
     }, this.config.heartbeat_interval_ms);
   }

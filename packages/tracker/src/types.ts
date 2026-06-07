@@ -52,6 +52,7 @@ export interface ElementMetadata {
 
 export interface EventData {
   event_value?: any;
+  engagement_time?: number;
 }
 
 /**

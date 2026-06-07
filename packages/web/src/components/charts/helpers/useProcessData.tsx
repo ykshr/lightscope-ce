@@ -148,7 +148,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id,
+        label: id || 'no name',
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -157,7 +157,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id,
+        label: id || 'no name',
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -166,7 +166,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id,
+        label: id || 'no name',
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -175,7 +175,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id,
+        label: id || 'no name',
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -184,7 +184,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id,
+        label: id || 'no name',
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -193,7 +193,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id,
+        label: id || 'no name',
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -202,7 +202,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id,
+        label: id || 'no name',
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });
@@ -211,7 +211,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       if (!id) return;
       chartConfigMap[id] = {
         id,
-        label: id,
+        label: id || 'no name',
         total: (chartConfigMap[id]?.total || 0) + value,
       };
     });

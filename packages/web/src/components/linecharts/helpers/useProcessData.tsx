@@ -1,5 +1,8 @@
 import { ArticleTrendQuery } from '@/__generated__/graphql';
-import { AreaCategoryConfig, AreaChartDataItem } from '@/components/charts/templates/AreaStacked';
+import {
+  AreaCategoryConfig,
+  AreaChartDataItem,
+} from '@/components/areastacked/templates/AreaStacked';
 import { useEffect, useState } from 'react';
 
 const dateToString = (date: Date) => {

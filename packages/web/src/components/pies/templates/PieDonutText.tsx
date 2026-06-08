@@ -120,6 +120,7 @@ export default function PieDonutText({
               label={item.label}
               value={item.value}
               pct={item.pct}
+              pctToFixed={0}
               color={item.fill}
             />
           ))}

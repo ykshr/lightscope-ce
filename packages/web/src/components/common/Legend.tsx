@@ -36,19 +36,21 @@ export function LegendItem({
   label,
   value,
   pct,
+  pctToFixed = 2,
   isLoading,
 }: {
   color: string;
   label: string;
   value?: number | string;
   pct?: number;
+  pctToFixed?: number;
   isLoading?: boolean;
 }) {
   const valueLabel = (() => {
     if (value !== undefined && pct !== undefined)
-      return `${value.toLocaleString()} (${(pct * 100).toFixed(2)}%)`;
+      return `${value.toLocaleString()} (${(pct * 100).toFixed(pctToFixed)}%)`;
     if (value !== undefined) return `${value.toLocaleString()}`;
-    if (pct !== undefined) return `${(pct * 100).toFixed(2)}%`;
+    if (pct !== undefined) return `${(pct * 100).toFixed(pctToFixed)}%`;
     return null;
   })();
 

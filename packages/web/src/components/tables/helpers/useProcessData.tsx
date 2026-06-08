@@ -38,7 +38,7 @@ export default function useProcessData(data: ArticleRankQuery | undefined, metri
 
     const classNameTime = 'inline-flex items-left';
     const classNameLabel =
-      'inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium border border-border';
+      'inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium border border-border overflow-x-scroll';
     const articleColumns: Column<ArticleData>[] = [
       {
         header: 'Rank',
@@ -50,11 +50,14 @@ export default function useProcessData(data: ArticleRankQuery | undefined, metri
         header: 'Image',
         accessorKey: 'image',
         gridSpan: 2,
-        render: ({ title, image }) => (
+        className: 'flex items-center justify-center',
+        render: ({ image }) => (
           <img
-            src={image || '/placeholder-article.png'}
-            alt={`Article image for ${title}`}
-            className="object-cover rounded-md"
+            src={image}
+            className="max-h-[3em]"
+            onError={(e) => {
+              e.currentTarget.src = '/LittleScope_logo.png';
+            }}
           />
         ),
         hideMobile: true,

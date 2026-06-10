@@ -23,7 +23,18 @@ export default function Profile() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState('');
 
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+
   const isChanged = newName !== user?.name;
+
+  // Using the session context which includes accounts based on our new useSession
+  const hasCredentialAccount = session?.session?.accounts?.some(
+    (account) => account.providerId === 'email-password'
+  );
 
   const handleUpdate = async () => {
     setIsUpdating(true);
@@ -35,6 +46,25 @@ export default function Profile() {
       setError(error.message || 'Failed to update');
     }
     setIsUpdating(false);
+  };
+
+  const handleUpdatePassword = async () => {
+    setIsUpdatingPassword(true);
+    setPasswordError('');
+    setPasswordSuccess('');
+    const { error } = await authClient.changePassword({
+      currentPassword,
+      newPassword,
+      revokeOtherSessions: true,
+    });
+    if (error) {
+      setPasswordError(error.message || 'Failed to update password');
+    } else {
+      setPasswordSuccess('Password updated successfully');
+      setCurrentPassword('');
+      setNewPassword('');
+    }
+    setIsUpdatingPassword(false);
   };
 
   const handleLogout = async () => {
@@ -79,6 +109,48 @@ export default function Profile() {
           {error && <span className="text-xs text-destructive">{error}</span>}
         </CardContent>
       </Card>
+
+      {hasCredentialAccount && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Password</CardTitle>
+            <CardDescription>Change your password.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="currentPassword">Current Password</Label>
+              <Input
+                id="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                readOnly={isUpdatingPassword}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">New Password</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                readOnly={isUpdatingPassword}
+              />
+            </div>
+            <div className="flex gap-2 items-center justify-end">
+              <Button
+                size="sm"
+                disabled={!currentPassword || !newPassword || isUpdatingPassword}
+                onClick={handleUpdatePassword}
+              >
+                Update Password
+              </Button>
+            </div>
+            {passwordError && <span className="text-xs text-destructive">{passwordError}</span>}
+            {passwordSuccess && <span className="text-xs text-green-600">{passwordSuccess}</span>}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

@@ -81,7 +81,7 @@ export default function ArticleTable({
   const currentSort = findSortOptionByValue(urlParams);
 
   const totalCount = data?.rank?.total;
-  const startItem = (page - 1) * itemsPerPage + 1;
+  const startItem = Math.min((page - 1) * itemsPerPage + 1, totalCount || 0);
   const endItem = Math.min(page * itemsPerPage, totalCount || 0);
 
   return (

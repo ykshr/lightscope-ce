@@ -111,6 +111,9 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@lightscope-ce/sdk-config':
+        specifier: workspace:*
+        version: link:../sdk/config
       '@types/node':
         specifier: ^22.15.29
         version: 22.19.15
@@ -120,6 +123,9 @@ importers:
 
   packages/clickhouse:
     devDependencies:
+      '@lightscope-ce/sdk-config':
+        specifier: workspace:*
+        version: link:../sdk/config
       '@types/node':
         specifier: ^22.15.29
         version: 22.19.15
@@ -129,6 +135,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.3.0
         version: 10.3.0
+      '@lightscope-ce/sdk-config':
+        specifier: workspace:*
+        version: link:../sdk/config
       '@lightscope-ce/tracker':
         specifier: workspace:*
         version: link:../tracker
@@ -180,9 +189,24 @@ importers:
         specifier: ^3.21.4
         version: 3.25.76
     devDependencies:
+      '@lightscope-ce/sdk-config':
+        specifier: workspace:*
+        version: link:../sdk/config
       '@types/node':
         specifier: ^22.15.29
         version: 22.19.15
+
+  packages/sdk/config:
+    dependencies:
+      '@eslint/js':
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.2.1(jiti@2.6.1))
+      globals:
+        specifier: ^16.3.0
+        version: 16.5.0
+      typescript-eslint:
+        specifier: ^8.39.0
+        version: 8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.8.3)
 
   packages/tracker:
     dependencies:
@@ -190,6 +214,9 @@ importers:
         specifier: ^2.0.7
         version: 2.0.9
     devDependencies:
+      '@lightscope-ce/sdk-config':
+        specifier: workspace:*
+        version: link:../sdk/config
       '@types/node':
         specifier: ^22.15.29
         version: 22.19.15
@@ -323,6 +350,9 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     devDependencies:
+      '@lightscope-ce/sdk-config':
+        specifier: workspace:*
+        version: link:../sdk/config
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.2.1(vite@7.3.1(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))

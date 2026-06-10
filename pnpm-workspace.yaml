@@ -1,5 +1,6 @@
 packages:
   - packages/*
+  - packages/sdk/*
 
 ignoreScripts: true
 ignorePnpmfile: true

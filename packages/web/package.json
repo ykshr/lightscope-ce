@@ -66,6 +66,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@lightscope-ce/sdk-config": "workspace:*",
     "@tailwindcss/vite": "^4.1.11",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",

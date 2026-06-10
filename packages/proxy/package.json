@@ -23,6 +23,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@lightscope-ce/sdk-config": "workspace:*",
     "@types/node": "^22.15.29"
   }
 }

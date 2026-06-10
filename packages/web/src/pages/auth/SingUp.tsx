@@ -108,7 +108,7 @@ export default function SingUp() {
             className="w-full"
             onClick={() => handleSocialSignIn('google')}
           >
-            Sign in with Google
+            Sign up with Google
           </Button>
           <Button
             type="button"
@@ -116,7 +116,7 @@ export default function SingUp() {
             className="w-full"
             onClick={() => handleSocialSignIn('apple')}
           >
-            Sign in with Apple
+            Sign up with Apple
           </Button>
           <Button
             type="button"
@@ -124,7 +124,7 @@ export default function SingUp() {
             className="w-full"
             onClick={() => handleSocialSignIn('microsoft')}
           >
-            Sign in with Microsoft
+            Sign up with Microsoft
           </Button>
         </div>
 

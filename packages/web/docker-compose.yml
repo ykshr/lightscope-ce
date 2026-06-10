@@ -4,8 +4,8 @@ services:
       context: ../..
       dockerfile: packages/web/Dockerfile
     environment:
-      - VITE_API_ENDPOINT=${VITE_API_ENDPOINT:-http://localhost:3001}
-      - VITE_PROXY_ENDPOINT=${VITE_PROXY_ENDPOINT:-http://localhost:3002}
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:3001}
+      - VITE_PROXY_URL=${VITE_PROXY_URL:-http://localhost:3002}
       - PORT=3000
     ports:
       - '3000:3000'

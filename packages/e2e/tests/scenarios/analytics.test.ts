@@ -157,7 +157,7 @@ test.describe('Analytics', () => {
     await expect(targetRow.locator('td').nth(0)).toHaveText('1'); // Rank (Dynamic)
     await expect(targetRow.locator('td').nth(1).locator('img')).toHaveAttribute(
       'src',
-      'http://localhost:3000/fixtures/test-image.jpg'
+      /\/LittleScope_logo\.png$/
     ); // Image
     await expect(targetRow.locator('td').nth(2).locator('a')).toHaveText('E2E Test Article Title'); // Title
     await expect(targetRow.locator('td').nth(3)).toHaveText(

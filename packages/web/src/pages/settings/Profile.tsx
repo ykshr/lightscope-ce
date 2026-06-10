@@ -32,9 +32,7 @@ export default function Profile() {
   const [passwordSuccess, setPasswordSuccess] = useState('');
 
   const isChanged = newName !== user?.name;
-  const hasEmailPassword = accounts?.some(
-    (account: any) => account.providerId === 'credential' || account.providerId === 'email-password'
-  );
+  const hasEmailPassword = accounts?.some((account) => account.providerId === 'credential');
 
   const handleUpdate = async () => {
     setIsUpdating(true);

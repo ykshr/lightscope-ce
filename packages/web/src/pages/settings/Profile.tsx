@@ -11,19 +11,28 @@ import {
 } from '@/components/ui/select';
 import { useTheme } from '@/contexts/ThemeContext';
 import authClient from '@/helpers/auth';
-import { useSession } from '@/hooks/useAuth';
+import { useAccounts, useSession } from '@/hooks/useAuth';
 import { useState } from 'react';
 
 export default function Profile() {
   const { theme, setTheme } = useTheme();
   const { data: session } = useSession();
+  const { data: accounts } = useAccounts();
   const user = session?.user;
 
   const [newName, setNewName] = useState(user?.name || '');
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState('');
 
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+
   const isChanged = newName !== user?.name;
+  const hasEmailPassword = accounts?.some((account) => account.providerId === 'credential');
 
   const handleUpdate = async () => {
     setIsUpdating(true);
@@ -35,6 +44,34 @@ export default function Profile() {
       setError(error.message || 'Failed to update');
     }
     setIsUpdating(false);
+  };
+
+  const handleChangePassword = async () => {
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
+
+    setIsChangingPassword(true);
+    setPasswordError('');
+    setPasswordSuccess('');
+
+    const { error } = await authClient.changePassword({
+      newPassword,
+      currentPassword,
+      revokeOtherSessions: true,
+    });
+
+    if (error) {
+      setPasswordError(error.message || 'Failed to change password');
+    } else {
+      setPasswordSuccess('Password changed successfully');
+      setCurrentPassword('');
+      setPassword('');
+      setConfirmPassword('');
+    }
+
+    setIsChangingPassword(false);
   };
 
   const handleLogout = async () => {
@@ -79,6 +116,60 @@ export default function Profile() {
           {error && <span className="text-xs text-destructive">{error}</span>}
         </CardContent>
       </Card>
+
+      {hasEmailPassword && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Security</CardTitle>
+            <CardDescription>Change your password.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="currentPassword">Current Password</Label>
+              <Input
+                id="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                disabled={isChangingPassword}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">New Password</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isChangingPassword}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={isChangingPassword}
+              />
+            </div>
+            <div className="flex gap-2 items-center justify-end">
+              <Button
+                size="sm"
+                disabled={
+                  !currentPassword || !newPassword || !confirmPassword || isChangingPassword
+                }
+                onClick={handleChangePassword}
+              >
+                Change Password
+              </Button>
+            </div>
+            {passwordError && <span className="text-xs text-destructive">{passwordError}</span>}
+            {passwordSuccess && <span className="text-xs text-green-500">{passwordSuccess}</span>}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

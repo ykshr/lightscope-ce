@@ -2,7 +2,7 @@ import { ArticleTrendQuery } from '@/__generated__/graphql';
 import {
   AreaCategoryConfig,
   AreaChartDataItem,
-} from '@/components/areastacked/templates/AreaStacked';
+} from '@/components/linecharts/templates/AreaStacked';
 import { useEffect, useState } from 'react';
 
 const dateToString = (date: Date) => {

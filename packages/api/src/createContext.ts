@@ -12,7 +12,7 @@ import { env } from 'hono/adapter';
 import { AlgorithmTypes } from 'hono/jwt';
 
 export default async function createContext(c: Context): Promise<$> {
-  const { DATABASE_URL, ALLOWED_ORIGINS } = env(c);
+  const { DATABASE_URL } = env(c);
   if (!DATABASE_URL) {
     throw new Error('DATABASE_URL is not defined in the environment.');
   }
@@ -34,7 +34,8 @@ export default async function createContext(c: Context): Promise<$> {
     APPLE_APP_BUNDLE_IDENTIFIER,
   } = env(c);
 
-  const trustedOrigins = processAllowedOriginsString(ALLOWED_ORIGINS);
+  const { API_ALLOWED_ORIGINS } = env(c);
+  const trustedOrigins = processAllowedOriginsString(API_ALLOWED_ORIGINS);
   const auth = createBetterAuth({
     trustedOrigins,
     emailAndPassword: {
@@ -95,9 +96,10 @@ export default async function createContext(c: Context): Promise<$> {
     },
   });
 
-  const { CLICKHOUSE_URL, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD } = env(c);
+  const { CLICKHOUSE_URL, CLICKHOUSE_USERNAME, CLICKHOUSE_PASSWORD, CLICKHOUSE_DB } = env(c);
   const clickhouse = createClickHouseClient({
     url: CLICKHOUSE_URL,
+    database: CLICKHOUSE_DB,
     username: CLICKHOUSE_USERNAME,
     password: CLICKHOUSE_PASSWORD,
   });

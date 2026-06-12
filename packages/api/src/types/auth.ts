@@ -21,7 +21,8 @@ const auth = createBetterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
-    sendResetPassword: async ({ user }) => {
+    sendResetPassword: async ({ url }) => {
+      // TODO: Send reset password email to the user with the provided URL
       console.log(`Password reset requested for user: ${user.email}`);
     },
   },

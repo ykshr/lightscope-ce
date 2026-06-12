@@ -47,21 +47,6 @@ const auth = createBetterAuth({
     },
   },
   plugins: [organization()],
-  socialProviders: {
-    google: {
-      clientId: 'dummy',
-      clientSecret: 'dummy',
-    },
-    microsoft: {
-      clientId: 'dummy',
-      clientSecret: 'dummy',
-    },
-    apple: {
-      clientId: 'dummy',
-      clientSecret: 'dummy',
-      appBundleIdentifier: 'dummy',
-    },
-  },
 });
 
 export default auth;

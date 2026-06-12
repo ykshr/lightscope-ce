@@ -67,25 +67,41 @@ export default async function createContext(c: Context): Promise<$> {
     },
     plugins: [organization()],
     socialProviders: {
-      google: {
-        clientId: GOOGLE_CLIENT_ID || 'dummy',
-        clientSecret: GOOGLE_CLIENT_SECRET || 'dummy',
-      },
-      microsoft: {
-        clientId: MICROSOFT_CLIENT_ID || 'dummy',
-        clientSecret: MICROSOFT_CLIENT_SECRET || 'dummy',
-      },
-      apple: {
-        clientId: APPLE_CLIENT_ID || 'dummy',
-        clientSecret:
-          (await generateAppleClientSecret(
-            APPLE_CLIENT_ID,
-            APPLE_TEAM_ID,
-            APPLE_KEY_ID,
-            APPLE_PRIVATE_KEY
-          )) || 'dummy',
-        appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER,
-      },
+      ...(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET
+        ? {
+            google: {
+              clientId: GOOGLE_CLIENT_ID,
+              clientSecret: GOOGLE_CLIENT_SECRET,
+            },
+          }
+        : {}),
+      ...(MICROSOFT_CLIENT_ID && MICROSOFT_CLIENT_SECRET
+        ? {
+            microsoft: {
+              clientId: MICROSOFT_CLIENT_ID,
+              clientSecret: MICROSOFT_CLIENT_SECRET,
+            },
+          }
+        : {}),
+      ...(APPLE_CLIENT_ID &&
+      APPLE_TEAM_ID &&
+      APPLE_KEY_ID &&
+      APPLE_PRIVATE_KEY &&
+      APPLE_APP_BUNDLE_IDENTIFIER
+        ? {
+            apple: {
+              clientId: APPLE_CLIENT_ID,
+              clientSecret:
+                (await generateAppleClientSecret(
+                  APPLE_CLIENT_ID,
+                  APPLE_TEAM_ID,
+                  APPLE_KEY_ID,
+                  APPLE_PRIVATE_KEY
+                )) || '',
+              appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER,
+            },
+          }
+        : {}),
     },
   });
 

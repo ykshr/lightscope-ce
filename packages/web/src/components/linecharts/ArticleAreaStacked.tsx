@@ -33,7 +33,6 @@ export default function ArticleAreaStacked({
 
   const categoryParams = categoryUrlParamsToVariables(urlParams);
   const metricParams = metricUrlParamsToVariables(urlParams);
-  console.log({ categoryParams });
   const { data, isLoading } = useArticleTrendQuery({
     startDate,
     endDate,

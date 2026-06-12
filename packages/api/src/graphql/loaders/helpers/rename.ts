@@ -17,17 +17,22 @@ export function renameKeySnakeToCamel(obj: any): any {
       return obj;
     }
     const newObj: any = {};
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        const camelKey = snakeToCamel(key);
-        newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
-      }
+    for (const key of Object.keys(obj)) {
+      const camelKey = snakeToCamel(key);
+      newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
     }
     return newObj;
   }
   return obj;
 }
 
+const camelToSnakeCache = new Map<string, string>();
+const CAMEL_TO_SNAKE_REGEX = /[A-Z]/g;
+
 export const camelToSnake = (str: string): string => {
-  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+  const cached = camelToSnakeCache.get(str);
+  if (cached !== undefined) return cached;
+  const result = str.replace(CAMEL_TO_SNAKE_REGEX, (letter) => `_${letter.toLowerCase()}`);
+  camelToSnakeCache.set(str, result);
+  return result;
 };

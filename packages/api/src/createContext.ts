@@ -39,8 +39,14 @@ export default async function createContext(c: Context): Promise<$> {
     trustedOrigins,
     emailAndPassword: {
       enabled: true,
+      requireEmailVerification: false,
       sendResetPassword: async ({ url }) => {
         // TODO: Send reset password email to the user with the provided URL
+      },
+    },
+    emailVerification: {
+      sendVerificationEmail: async ({ user, url, token }, request) => {
+        // TODO: Send verification email to the user with the provided URL
       },
     },
     rateLimit: {

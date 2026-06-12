@@ -27,6 +27,8 @@ export const mockClickhouseQuery = vi.fn().mockResolvedValue({
   ]),
 });
 
+export const mockSendResetPassword = vi.fn();
+
 export default async function createContext(c: Context): Promise<$> {
   const { DATABASE_URL, ALLOWED_ORIGINS } = env(c);
   if (!DATABASE_URL) {
@@ -43,9 +45,7 @@ export default async function createContext(c: Context): Promise<$> {
     trustedOrigins,
     emailAndPassword: {
       enabled: true,
-      sendResetPassword: async ({ url }) => {
-        // TODO: Send reset password email to the user with the provided URL
-      },
+      sendResetPassword: mockSendResetPassword,
     },
     rateLimit: {
       enabled: true,

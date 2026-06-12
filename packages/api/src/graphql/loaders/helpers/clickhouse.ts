@@ -26,15 +26,21 @@ export default async function <T>(
  * ClickHouse format: "2024-01-01 12:00:00" or "2024-01-01"
  */
 export const formatData = <T>(data: T[], dateKeys: string[] = []): T[] => {
-  const formattedData = data.map((row) => renameKeySnakeToCamel(row));
-  dateKeys.forEach((dateKey) => {
-    formattedData.forEach((row) => {
-      if (row[dateKey] && typeof row[dateKey] === 'string') {
-        row[dateKey] = row[dateKey].replace(' ', 'T') + 'Z';
+  if (dateKeys.length === 0) {
+    return data.map((row) => renameKeySnakeToCamel(row));
+  }
+
+  return data.map((row) => {
+    const formattedRow = renameKeySnakeToCamel(row);
+    for (let i = 0; i < dateKeys.length; i++) {
+      const dateKey = dateKeys[i];
+      const val = formattedRow[dateKey];
+      if (val && typeof val === 'string') {
+        formattedRow[dateKey] = val.replace(' ', 'T') + 'Z';
       }
-    });
+    }
+    return formattedRow;
   });
-  return formattedData;
 };
 
 /**

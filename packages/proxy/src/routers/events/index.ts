@@ -9,7 +9,6 @@ eventsRouter.post('/', async (c: Context) => {
   try {
     const body = await c.req.json();
     const parseResult = PayloadSchema.safeParse(body);
-    console.log(JSON.stringify(parseResult));
     if (!parseResult.success) {
       return c.json(
         {

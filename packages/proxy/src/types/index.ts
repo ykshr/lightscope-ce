@@ -7,15 +7,16 @@ import { z } from 'zod';
 
 export type Bindings = {
   JWT_SECRET: string;
-  JWT_ALGORITHM: AlgorithmTypes;
+  JWT_ALGORITHM?: AlgorithmTypes;
   CLICKHOUSE_URL: string;
   CLICKHOUSE_USERNAME: string;
   CLICKHOUSE_PASSWORD: string;
+  CLICKHOUSE_DB: string;
   CLICKHOUSE_INSERT_BATCH_SIZE: number;
   CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS: number;
   CLICKHOUSE_INSERT_MAX_TRY: number;
   MAXMIND_DB_PATH: string;
-  ALLOWED_ORIGINS?: string;
+  PROXY_ALLOWED_ORIGINS?: string;
 };
 
 export type $ = {

@@ -1,6 +1,6 @@
 import { redactError } from '@/helpers/error';
 import type { Article, PV } from '@/types';
-import { ClickHouseClient, createClient } from '@clickhouse/client';
+import { ClickHouseClient, createClient as createClickHouseClient } from '@clickhouse/client';
 import { EgressProvider } from './index';
 
 type ClickHouseEgressConfig = {
@@ -10,6 +10,7 @@ type ClickHouseEgressConfig = {
   clickhouseUrl?: string;
   clickhouseUsername?: string;
   clickhousePassword?: string;
+  clickhouseDb?: string;
 };
 
 export default class ClickHouseEgress implements EgressProvider {
@@ -28,14 +29,16 @@ export default class ClickHouseEgress implements EgressProvider {
       clickhouseUrl,
       clickhouseUsername,
       clickhousePassword,
+      clickhouseDb,
     } = config;
     if (!isNaN(Number(insertBatchSize))) this.insertBatchSize = Number(insertBatchSize);
     if (!isNaN(Number(insertFlushIntervalMs)))
       this.insertFlushIntervalMs = Number(insertFlushIntervalMs);
     if (!isNaN(Number(insertMaxTry))) this.insertMaxTry = Number(insertMaxTry);
 
-    this.client = createClient({
+    this.client = createClickHouseClient({
       url: clickhouseUrl,
+      database: clickhouseDb,
       username: clickhouseUsername,
       password: clickhousePassword,
     });
@@ -51,7 +54,7 @@ export default class ClickHouseEgress implements EgressProvider {
     while (tryCount < this.insertMaxTry) {
       try {
         await this.client.insert({
-          table: table,
+          table,
           values: buffers,
           format: 'JSONEachRow',
         });
@@ -68,14 +71,14 @@ export default class ClickHouseEgress implements EgressProvider {
     if (flush || Object.keys(this.articleBuffers).length >= this.insertBatchSize) {
       const articlesToInsert = Object.values(this.articleBuffers);
       this.articleBuffers = {};
-      await this.insert('lightscope.article', articlesToInsert);
+      await this.insert('article', articlesToInsert);
     }
 
     // PV
     if (flush || this.pvBuffers.length >= this.insertBatchSize) {
       const pvsToInsert = [...this.pvBuffers];
       this.pvBuffers.length = 0;
-      await this.insert('lightscope.pv_raw', pvsToInsert);
+      await this.insert('pv_raw', pvsToInsert);
     }
   }
 

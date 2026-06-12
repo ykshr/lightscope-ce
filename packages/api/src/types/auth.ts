@@ -20,8 +20,14 @@ const auth = createBetterAuth({
   trustedOrigins,
   emailAndPassword: {
     enabled: true,
-    sendResetPassword: async ({ url }) => {
-      // TODO: Send reset password email to the user with the provided URL
+    requireEmailVerification: false,
+    sendResetPassword: async ({ user }) => {
+      console.log(`Password reset requested for user: ${user.email}`);
+    },
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url, token }, request) => {
+      // TODO: Send verification email to the user with the provided URL
     },
   },
   rateLimit: {

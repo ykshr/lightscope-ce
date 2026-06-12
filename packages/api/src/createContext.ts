@@ -39,14 +39,8 @@ export default async function createContext(c: Context): Promise<$> {
     trustedOrigins,
     emailAndPassword: {
       enabled: true,
-      requireEmailVerification: false,
       sendResetPassword: async ({ url }) => {
         // TODO: Send reset password email to the user with the provided URL
-      },
-    },
-    emailVerification: {
-      sendVerificationEmail: async ({ user, url, token }, request) => {
-        // TODO: Send verification email to the user with the provided URL
       },
     },
     rateLimit: {
@@ -74,23 +68,23 @@ export default async function createContext(c: Context): Promise<$> {
     plugins: [organization()],
     socialProviders: {
       google: {
-        clientId: GOOGLE_CLIENT_ID || '',
-        clientSecret: GOOGLE_CLIENT_SECRET || '',
+        clientId: GOOGLE_CLIENT_ID || 'dummy',
+        clientSecret: GOOGLE_CLIENT_SECRET || 'dummy',
       },
       microsoft: {
-        clientId: MICROSOFT_CLIENT_ID || '',
-        clientSecret: MICROSOFT_CLIENT_SECRET || '',
+        clientId: MICROSOFT_CLIENT_ID || 'dummy',
+        clientSecret: MICROSOFT_CLIENT_SECRET || 'dummy',
       },
       apple: {
-        clientId: APPLE_CLIENT_ID || '',
+        clientId: APPLE_CLIENT_ID || 'dummy',
         clientSecret:
           (await generateAppleClientSecret(
             APPLE_CLIENT_ID,
             APPLE_TEAM_ID,
             APPLE_KEY_ID,
             APPLE_PRIVATE_KEY
-          )) || '',
-        appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER || '',
+          )) || 'dummy',
+        appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER,
       },
     },
   });

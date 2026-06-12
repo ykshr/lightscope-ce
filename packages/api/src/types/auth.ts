@@ -49,17 +49,17 @@ const auth = createBetterAuth({
   plugins: [organization()],
   socialProviders: {
     google: {
-      clientId: '',
-      clientSecret: '',
+      clientId: 'dummy',
+      clientSecret: 'dummy',
     },
     microsoft: {
-      clientId: '',
-      clientSecret: '',
+      clientId: 'dummy',
+      clientSecret: 'dummy',
     },
     apple: {
-      clientId: '',
-      clientSecret: '',
-      appBundleIdentifier: '',
+      clientId: 'dummy',
+      clientSecret: 'dummy',
+      appBundleIdentifier: 'dummy',
     },
   },
 });

@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+// reference should be here in order to provide test:{} object without an error
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -53,8 +53,8 @@ export default defineConfig(({ mode }) => {
       globals: true,
       environment: 'jsdom',
       env: {
-        VITE_API_URL: env.VITE_API_URL,
-        VITE_PROXY_URL: env.VITE_PROXY_URL,
+        VITE_API_URL: 'http://localhost:3001',
+        VITE_PROXY_URL: 'http://localhost:3002',
       },
     },
   };

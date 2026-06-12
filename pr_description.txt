@@ -1,8 +1,0 @@
-💡 **What:** The optimization implemented
-Added a caching mechanism for `camelToSnake` string conversion using a `Map`, similar to the cache in `snakeToCamel`. Also pulled the regex out of the function into a constant to prevent reallocation on every function call. Test suites were added to `rename.test.ts` to assert that correct mapping works perfectly and efficiently retrieves cached outcomes.
-
-🎯 **Why:** The performance problem it solves
-The `camelToSnake` string conversion function relied entirely on executing standard `String.prototype.replace()` regex logic on each individual call. Since this conversion function is called for every key on nested data payloads sent over network requests and processing pipelines, the CPU load can become a bottleneck. Caching avoids duplicate regex execution, minimizing processing overhead drastically.
-
-📊 **Measured Improvement:**
-Using a custom benchmark on 10M iterative executions (10,000 passes over an array of 1,000 uniquely structured camelCase strings), baseline performance averaged around ~9952ms. With the cache map in place to remember prior resolutions, execution time dropped significantly to ~173ms on the same sample size — rendering string conversion more than 50x faster.

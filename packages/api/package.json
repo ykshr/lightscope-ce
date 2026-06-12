@@ -38,7 +38,7 @@
     "@prisma/client": "^7.5.0",
     "@prisma/client-runtime-utils": "^7.5.0",
     "@prisma/config": "^7.5.0",
-    "better-auth": "^1.5.5",
+    "better-auth": "^1.6.14",
     "dataloader": "^2.2.3",
     "dayjs": "^1.11.19",
     "graphql": "^16.12.0",

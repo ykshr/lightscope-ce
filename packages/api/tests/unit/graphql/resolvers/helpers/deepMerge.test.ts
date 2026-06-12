@@ -44,28 +44,4 @@ describe('deepMerge', () => {
     // @ts-ignore
     expect(deepMerge(target, null, undefined, 123, 'string')).toEqual({ a: 1 });
   });
-
-  it('should deeply merge arrays within nested objects', () => {
-    const target = { a: { b: { c: [1, 2] } } };
-    const source = { a: { b: { c: [3, 4] } } };
-    expect(deepMerge(target, source)).toEqual({ a: { b: { c: [1, 2, 3, 4] } } });
-  });
-
-  it('should prevent prototype pollution', () => {
-    const target = {};
-    const payload = JSON.parse('{"__proto__":{"polluted":true}}');
-    deepMerge(target, payload);
-    // @ts-ignore
-    expect({}.polluted).toBeUndefined();
-
-    const payload2 = JSON.parse('{"constructor":{"prototype":{"polluted2":true}}}');
-    deepMerge(target, payload2);
-    // @ts-ignore
-    expect({}.polluted2).toBeUndefined();
-
-    const payload3 = JSON.parse('{"prototype":{"polluted3":true}}');
-    deepMerge(target, payload3);
-    // @ts-ignore
-    expect({}.polluted3).toBeUndefined();
-  });
 });

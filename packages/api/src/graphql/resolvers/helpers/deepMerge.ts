@@ -14,10 +14,6 @@ export default function deepMerge<T extends Record<string, any>>(target: T, ...s
       }
 
       Object.keys(source).forEach((key) => {
-        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
-          return;
-        }
-
         const targetValue = acc[key];
         const sourceValue = source[key];
 

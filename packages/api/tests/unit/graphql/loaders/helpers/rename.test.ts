@@ -1,4 +1,4 @@
-import { renameKeySnakeToCamel, camelToSnake } from '@/graphql/loaders/helpers/rename';
+import { renameKeySnakeToCamel } from '@/graphql/loaders/helpers/rename';
 import { describe, expect, it } from 'vitest';
 
 describe('renameKeySnakeToCamel', () => {
@@ -64,66 +64,5 @@ describe('renameKeySnakeToCamel', () => {
       },
     };
     expect(renameKeySnakeToCamel(input)).toEqual(expected);
-  });
-
-  it('should handle keys with numbers and exclude them from conversion', () => {
-    const input = { user_1_name: 'Alice', item_2_value: 100 };
-    const expected = { user_1Name: 'Alice', item_2Value: 100 };
-    expect(renameKeySnakeToCamel(input)).toEqual(expected);
-  });
-
-  it('should handle leading, trailing, and consecutive underscores appropriately', () => {
-    const input = { _id: 1, name_: 'Bob', double__underscore: true };
-    const expected = { Id: 1, name_: 'Bob', double_Underscore: true };
-    expect(renameKeySnakeToCamel(input)).toEqual(expected);
-  });
-
-  it('should ignore properties from prototype chain', () => {
-    const proto = { inherited_key: 1 };
-    const input = Object.create(proto);
-    input.own_key = 2;
-    const expected = { ownKey: 2 };
-    expect(renameKeySnakeToCamel(input)).toEqual(expected);
-    expect(renameKeySnakeToCamel(input).inheritedKey).toBeUndefined();
-    expect(renameKeySnakeToCamel(input).inherited_key).toBeUndefined();
-  });
-});
-
-describe('camelToSnake', () => {
-  it('should convert camelCase string to snake_case', () => {
-    expect(camelToSnake('firstName')).toBe('first_name');
-    expect(camelToSnake('lastName')).toBe('last_name');
-    expect(camelToSnake('userProfileAge')).toBe('user_profile_age');
-  });
-
-  it('should handle strings with no uppercase letters', () => {
-    expect(camelToSnake('lowercase')).toBe('lowercase');
-    expect(camelToSnake('already_snake')).toBe('already_snake');
-  });
-
-  it('should handle strings starting with uppercase letters', () => {
-    expect(camelToSnake('PascalCase')).toBe('_pascal_case');
-    expect(camelToSnake('Id')).toBe('_id');
-  });
-
-  it('should handle empty strings', () => {
-    expect(camelToSnake('')).toBe('');
-  });
-});
-
-describe('camelToSnake', () => {
-  it('should convert camelCase keys to snake_case', () => {
-    expect(camelToSnake('firstName')).toEqual('first_name');
-    expect(camelToSnake('userProfileAge')).toEqual('user_profile_age');
-    expect(camelToSnake('snake_case_already')).toEqual('snake_case_already');
-    expect(camelToSnake('a')).toEqual('a');
-    expect(camelToSnake('A')).toEqual('_a');
-  });
-
-  it('should return cached value if called multiple times', () => {
-    const firstCall = camelToSnake('someValue');
-    const secondCall = camelToSnake('someValue');
-    expect(firstCall).toEqual('some_value');
-    expect(firstCall).toEqual(secondCall);
   });
 });

@@ -1,4 +1,4 @@
-import { renameKeySnakeToCamel } from '@/graphql/loaders/helpers/rename';
+import { renameKeySnakeToCamel, camelToSnake } from '@/graphql/loaders/helpers/rename';
 import { describe, expect, it } from 'vitest';
 
 describe('renameKeySnakeToCamel', () => {
@@ -64,5 +64,22 @@ describe('renameKeySnakeToCamel', () => {
       },
     };
     expect(renameKeySnakeToCamel(input)).toEqual(expected);
+  });
+});
+
+describe('camelToSnake', () => {
+  it('should convert camelCase keys to snake_case', () => {
+    expect(camelToSnake('firstName')).toEqual('first_name');
+    expect(camelToSnake('userProfileAge')).toEqual('user_profile_age');
+    expect(camelToSnake('snake_case_already')).toEqual('snake_case_already');
+    expect(camelToSnake('a')).toEqual('a');
+    expect(camelToSnake('A')).toEqual('_a');
+  });
+
+  it('should return cached value if called multiple times', () => {
+    const firstCall = camelToSnake('someValue');
+    const secondCall = camelToSnake('someValue');
+    expect(firstCall).toEqual('some_value');
+    expect(firstCall).toEqual(secondCall);
   });
 });

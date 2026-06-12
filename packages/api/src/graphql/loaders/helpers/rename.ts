@@ -28,6 +28,13 @@ export function renameKeySnakeToCamel(obj: any): any {
   return obj;
 }
 
+const camelToSnakeCache = new Map<string, string>();
+const CAMEL_TO_SNAKE_REGEX = /[A-Z]/g;
+
 export const camelToSnake = (str: string): string => {
-  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+  const cached = camelToSnakeCache.get(str);
+  if (cached !== undefined) return cached;
+  const result = str.replace(CAMEL_TO_SNAKE_REGEX, (letter) => `_${letter.toLowerCase()}`);
+  camelToSnakeCache.set(str, result);
+  return result;
 };

@@ -17,11 +17,9 @@ export function renameKeySnakeToCamel(obj: any): any {
       return obj;
     }
     const newObj: any = {};
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        const camelKey = snakeToCamel(key);
-        newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
-      }
+    for (const key of Object.keys(obj)) {
+      const camelKey = snakeToCamel(key);
+      newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
     }
     return newObj;
   }

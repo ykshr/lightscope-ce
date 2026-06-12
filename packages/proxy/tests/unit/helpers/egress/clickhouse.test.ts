@@ -1,6 +1,6 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import ClickHouseEgress from '@/helpers/egress/clickhouse';
 import { createClient } from '@clickhouse/client';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@clickhouse/client', () => ({
   createClient: vi.fn().mockReturnValue({
@@ -71,7 +71,7 @@ describe('ClickHouseEgress', () => {
     await egress.insertArticle(article2);
     expect(clientMock.insert).toHaveBeenCalledTimes(1);
     expect(clientMock.insert).toHaveBeenCalledWith({
-      table: 'article',
+      table: 'lightscope.article',
       values: [article1, article2],
       format: 'JSONEachRow',
     });
@@ -90,7 +90,7 @@ describe('ClickHouseEgress', () => {
     await egress.insertPV(pv2);
     expect(clientMock.insert).toHaveBeenCalledTimes(1);
     expect(clientMock.insert).toHaveBeenCalledWith({
-      table: 'pv_raw',
+      table: 'lightscope.pv_raw',
       values: [pv1, pv2],
       format: 'JSONEachRow',
     });

@@ -2,15 +2,14 @@ import createContext from '@/createContext';
 import { serve } from '@hono/node-server';
 import { createApp } from './app';
 
-// @ts-ignore
-const PROXY_PORT = process.env.PROXY_PORT ? parseInt(process.env.PROXY_PORT, 10) : 3002;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3002;
 
 const app = createApp(createContext);
 
 serve(
   {
     fetch: app.fetch,
-    port: PROXY_PORT,
+    port: PORT,
   },
   (info) => {
     console.log(`insert server listening on ${info.port}`);

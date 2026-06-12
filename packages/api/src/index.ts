@@ -2,15 +2,14 @@ import { createApp } from '@/app';
 import createContext from '@/createContext';
 import { serve } from '@hono/node-server';
 
-// @ts-ignore
-const API_PORT = process.env.API_PORT ? parseInt(process.env.API_PORT, 10) : 3001;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 const app = createApp(createContext);
 
 serve(
   {
     fetch: app.fetch,
-    port: API_PORT,
+    port: PORT,
   },
   (info) => {
     console.log(`api server listening on ${info.port}`);

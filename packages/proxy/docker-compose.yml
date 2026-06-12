@@ -4,13 +4,18 @@ services:
       context: ../..
       dockerfile: packages/proxy/Dockerfile
     environment:
-      - CLICKHOUSE_URL=http://clickhouse:8123
+      - PROXY_PORT=3002
+      - PROXY_ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
+      - JWT_SECRET=${JWT_SECRET:-ci-test-secret-do-not-use-in-prod}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - CLICKHOUSE_URL=${CLICKHOUSE_URL:-http://clickhouse:8123}
       - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
-      - PORT=3002
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
-      - JWT_SECRET=${JWT_SECRET:-ci-test-secret-do-not-use-in-prod}
+      - CLICKHOUSE_INSERT_BATCH_SIZE=${CLICKHOUSE_INSERT_BATCH_SIZE:-1000}
+      - CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS=${CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS:-200}
+      - CLICKHOUSE_INSERT_MAX_TRY=${CLICKHOUSE_INSERT_MAX_TRY:-3}
+      - MAXMIND_DB_PATH=${MAXMIND_DB_PATH:-data/GeoLite2-City.mmdb}
     ports:
       - '3002:3002'
     healthcheck:

@@ -17,11 +17,13 @@ export default async function createContext(c: Context): Promise<$> {
     CLICKHOUSE_URL,
     CLICKHOUSE_USERNAME,
     CLICKHOUSE_PASSWORD,
+    CLICKHOUSE_DB,
     CLICKHOUSE_INSERT_BATCH_SIZE,
     CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS,
     CLICKHOUSE_INSERT_MAX_TRY,
   } = env(c);
   const egress = new ClickHouseEgress({
+    clickhouseDb: CLICKHOUSE_DB,
     clickhouseUrl: CLICKHOUSE_URL,
     clickhouseUsername: CLICKHOUSE_USERNAME,
     clickhousePassword: CLICKHOUSE_PASSWORD,

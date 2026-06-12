@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
 import { createApp } from '@/app';
 import { env } from 'hono/adapter';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock env from hono/adapter to inject env variables in tests
 vi.mock('hono/adapter', async () => {
@@ -34,7 +34,7 @@ describe('App', () => {
     });
 
     it('should set CORS headers if ALLOWED_ORIGINS matches', async () => {
-      vi.mocked(env).mockReturnValue({ ALLOWED_ORIGINS: 'http://example.com' });
+      vi.mocked(env).mockReturnValue({ PROXY_ALLOWED_ORIGINS: 'http://example.com' });
       const mockCreateContext = vi.fn().mockResolvedValue({});
       const app = createApp(mockCreateContext);
 
@@ -53,7 +53,7 @@ describe('App', () => {
     });
 
     it('should NOT set CORS headers if ALLOWED_ORIGINS does NOT match', async () => {
-      vi.mocked(env).mockReturnValue({ ALLOWED_ORIGINS: 'http://example.com' });
+      vi.mocked(env).mockReturnValue({ PROXY_ALLOWED_ORIGINS: 'http://example.com' });
       const mockCreateContext = vi.fn().mockResolvedValue({});
       const app = createApp(mockCreateContext);
       app.get('/test-cors', (c) => c.json({ ok: true }));

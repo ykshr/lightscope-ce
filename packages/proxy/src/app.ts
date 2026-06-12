@@ -14,8 +14,8 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.use('*', logger());
   app.use('*', async (c, next) => {
-    const { ALLOWED_ORIGINS } = env(c);
-    const origins = processAllowedOriginsString(ALLOWED_ORIGINS);
+    const { PROXY_ALLOWED_ORIGINS } = env(c);
+    const origins = processAllowedOriginsString(PROXY_ALLOWED_ORIGINS);
     if (!origins) return next();
 
     const corsMiddlewareHandler = cors({

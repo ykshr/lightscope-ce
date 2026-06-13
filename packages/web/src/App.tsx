@@ -8,6 +8,8 @@ const Article = lazy(() => import('@/pages/article'));
 const Auth = lazy(() => import('@/pages/auth'));
 const SingIn = lazy(() => import('@/pages/auth/SingIn'));
 const SingUp = lazy(() => import('@/pages/auth/SingUp'));
+const ForgetPassword = lazy(() => import('@/pages/auth/ForgetPassword'));
+const ResetPassword = lazy(() => import('@/pages/auth/ResetPassword'));
 const Overview = lazy(() => import('@/pages/overview'));
 const Ranking = lazy(() => import('@/pages/ranking'));
 const Settings = lazy(() => import('@/pages/settings'));
@@ -114,6 +116,22 @@ const unauthenticatedRouter = createBrowserRouter([
         element: (
           <SuspenseWrapper>
             <SingUp />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        path: '/forget-password',
+        element: (
+          <SuspenseWrapper>
+            <ForgetPassword />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        path: '/reset-password',
+        element: (
+          <SuspenseWrapper>
+            <ResetPassword />
           </SuspenseWrapper>
         ),
       },

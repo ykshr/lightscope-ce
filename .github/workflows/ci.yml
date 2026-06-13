@@ -33,8 +33,6 @@ jobs:
 
       - name: Run test
         run: pnpm run test
-        env:
-          JWT_SECRET: ci-test-secret-do-not-use-in-prod
 
       - name: Get Playwright version
         id: playwright-version

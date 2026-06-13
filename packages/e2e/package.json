@@ -3,15 +3,13 @@
   "version": "0.0.1",
   "description": "End-to-End tests for Lightscope CE",
   "scripts": {
-    "pretest": "pnpm --filter @lightscope-ce/tracker run build",
-    "test": "vitest run tests",
+    "pretest:e2e": "pnpm --filter @lightscope-ce/tracker run build",
     "test:e2e": "playwright test",
-    "test:smoke": "tsx src/scripts/smoke.ts",
     "test:load": "tsx src/scripts/load.ts",
     "test:long-run": "tsx src/scripts/long-run.ts",
-    "codegen": "playwright codegen",
+    "test:monitor": "tsx src/scripts/monitor.ts",
     "test:seed": "tsx src/scripts/seed.ts",
-    "test:monitor": "tsx src/scripts/monitor.ts"
+    "test:smoke": "tsx src/scripts/smoke.ts"
   },
   "devDependencies": {
     "@clickhouse/client": "^1.18.2",

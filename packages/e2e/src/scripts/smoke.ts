@@ -1,7 +1,8 @@
-import { API_URL, PROXY_URL } from '@/helpers/env';
 import { generateToken } from '@/setup/tracker';
 import { generatePayload } from '@/utils/generator';
 
+const API_URL = process.env.API_URL || 'http://localhost:3000';
+const PROXY_URL = process.env.PROXY_URL || 'http://localhost:3001';
 const ONE_HOUR_MS = 3600000;
 
 async function main() {

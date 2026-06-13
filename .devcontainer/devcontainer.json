@@ -1,7 +1,10 @@
 {
   "name": "LightScope CE Development",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "args": {
+      "NODE_VERSION": "22-bookworm"
+    }
   },
 
   "customizations": {
@@ -11,16 +14,18 @@
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
         "vitest.explorer",
-        "ms-playwright.playwright"
+        "ms-playwright.playwright",
+        "ms-azuretools.vscode-docker",
+        "Prisma.prisma"
       ]
     }
   },
 
   "features": {
-    // "ghcr.io/devcontainers/features/docker-in-docker:2": { "moby": false }
+    "ghcr.io/devcontainers/features/docker-in-docker:2": { "moby": false }
   },
 
   "postCreateCommand": "pnpm install && pnpm --filter @lightscope-ce/e2e exec playwright install --with-deps",
 
-  "forwardPorts": [3000, 9229]
+  "forwardPorts": [3000, 3001, 3002, 5173, 8080, 8123, 9000, 9229]
 }

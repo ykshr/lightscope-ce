@@ -75,3 +75,14 @@
   2. For ClickHouse: Add SQL scripts to `packages/clickhouse/` and update initialization configurations.
 * **Validation**: Restart local docker containers `docker compose down -v && docker compose up -d --build`.
 * **Common Mistakes**: Forgetting to reset integration test databases.
+
+## Create new skill
+* **Preconditions**: Understand the repository architecture and conventions from existing `.ai/skill/*.md` files.
+* **Steps**:
+  1. Identify the pattern, rule, or architectural constraint to be documented.
+  2. Decide which `.ai/skill/*.md` file it belongs in (e.g., `CODING_PATTERNS.md` for code snippets, `ANTI_PATTERNS.md` for mistakes, `TASK_RECIPES.md` for step-by-step guides).
+  3. Ensure the rule is evidence-based and already exists in the repository. Provide real file paths or snippets as evidence.
+  4. Write the new skill strictly in English, following the headers and format established in the target file.
+  5. Update `PROMPT.md` if the overarching instructions for AI agents need to reflect this new capability or constraint.
+* **Validation**: Read the updated `.ai/skill/*.md` file to verify formatting. Run `pnpm run format` to ensure Prettier compliance.
+* **Common Mistakes**: Inventing a generic best practice that is not actually used in the LightScope CE codebase. Not providing explicit evidence.

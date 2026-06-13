@@ -256,6 +256,7 @@ Step-by-step implementation guides.
 
 Create recipes for:
 
+* Create new skill
 * Add API endpoint
 * Add shared package
 * Add UI component

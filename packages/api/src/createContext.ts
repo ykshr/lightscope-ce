@@ -41,12 +41,12 @@ export default async function createContext(c: Context): Promise<$> {
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: false,
-      sendResetPassword: async ({ url }) => {
-        // TODO: Send reset password email to the user with the provided URL
+      sendResetPassword: async ({ user }) => {
+        console.log(`Password reset requested for user: ${user.email}`);
       },
     },
     emailVerification: {
-      sendVerificationEmail: async ({ user, url, token }, request) => {
+      sendVerificationEmail: async ({ user: _user, url: _url, token: _token }, _request) => {
         // TODO: Send verification email to the user with the provided URL
       },
     },

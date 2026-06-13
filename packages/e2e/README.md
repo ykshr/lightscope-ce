@@ -57,16 +57,7 @@ Verifies the actual client-side tracking script (`packages/tracker`) running in 
 pnpm --filter @lightscope-ce/e2e run test:e2e
 ```
 
-### 3. Load Test
-
-Sends a high volume of events concurrently to test API performance.
-- Default: 100 concurrent requests for 5 seconds.
-
-```bash
-pnpm --filter @lightscope-ce/e2e run test:load
-```
-
-### 4. Long Running Test
+### 3. Long Running Test
 
 Sends events periodically over a duration to verify stability.
 - Default: 1 event/sec for 60 seconds.
@@ -77,10 +68,41 @@ pnpm --filter @lightscope-ce/e2e run test:long-run
 pnpm --filter @lightscope-ce/e2e run test:long-run -- 120
 ```
 
+## Performance & Scalability Validation
+
+These scripts validate application performance under varying data volumes. Ensure services are running before execution.
+
+### Large-Scale Data Seeding
+
+Injects millions of mock event records (batches of 100k, 1M total) into the ClickHouse database to simulate a heavily used application.
+
+```bash
+pnpm --filter @lightscope-ce/e2e run test:seed
+```
+
+### API & Proxy Load Testing
+
+Uses `autocannon` to perform a high-concurrency load test.
+- Measures the response times and throughput (RPS) of the GraphQL API.
+- Measures the ingestion performance against the proxy REST API.
+
+```bash
+pnpm --filter @lightscope-ce/e2e run test:load
+```
+
+### Resource Utilization Monitoring
+
+While running load tests, run this script to continuously monitor the CPU and Memory usage of the ClickHouse, API, and Proxy Docker containers via `pidusage`.
+
+```bash
+pnpm --filter @lightscope-ce/e2e run test:monitor
+```
+
 ## Troubleshooting
 
 - **ClickHouse not ready:** If tests fail immediately, wait a few seconds for ClickHouse to fully start.
 - **Script not found:** Ensure `packages/tracker/dist/browser.js` exists. If not, run `pnpm --filter @lightscope-ce/tracker run build:browser`.
+
 ## Contributing
 
 Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure rules, and restrictions. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. It is strictly required that all documentation must be written in English. All documentation, including PR comments, `AGENTS.md`, `README.md`, and generated files, must strictly adhere to the English-only rule.

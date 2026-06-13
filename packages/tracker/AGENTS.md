@@ -27,6 +27,7 @@ This package is extremely performance-critical and highly sensitive to bundle si
     pnpm --filter @lightscope-ce/tracker run build:browser
     ```
 * How to run tests (commands and steps)
+  - If a package like `packages/tracker` is missing a `test` script in its `package.json`, run individual test files by navigating into the package directory (`cd packages/tracker`) and executing `pnpm exec vitest run <path-to-test>` to ensure proper resolution of local configuration.
   - Run Tests:
     ```bash
     pnpm --filter @lightscope-ce/tracker run test

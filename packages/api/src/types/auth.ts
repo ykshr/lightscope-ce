@@ -30,6 +30,11 @@ const auth = createBetterAuth({
       // TODO: Send verification email to the user with the provided URL
     },
   },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url, token }, request) => {
+      // TODO: Send verification email to the user with the provided URL
+    },
+  },
   rateLimit: {
     enabled: true,
   },

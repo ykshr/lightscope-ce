@@ -6,7 +6,7 @@ services:
     environment:
       - PROXY_PORT=3002
       - PROXY_ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
-      - JWT_SECRET=${JWT_SECRET:-ci-test-secret-do-not-use-in-prod}
+      - JWT_SECRET=${JWT_SECRET}
       - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
       - CLICKHOUSE_URL=${CLICKHOUSE_URL:-http://clickhouse:8123}
       - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}

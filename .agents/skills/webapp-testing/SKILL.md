@@ -1,0 +1,72 @@
+---
+name: webapp-testing
+description: AI Assistant instructions for interacting with and testing local web applications using Playwright.
+license: Complete terms in LICENSE.txt
+---
+
+# Web Application Testing Skill for AI Assistants
+
+This document provides instructions for AI assistants (like Gemini CLI, GitHub Copilot, Cursor, etc.) on how to test local web applications, verify frontend functionality, and automate UI interactions using Playwright in this repository.
+
+## 🎯 Your Objective
+When tasked with web application testing, UI verification, or browser automation, your goal is to write and execute concise Python Playwright scripts using the provided helper tools.
+
+## 🛠️ Tooling & Scripts
+This toolkit provides helper scripts in `scripts/`. Do NOT rewrite these helpers or ingest them into your context window. Treat them as black-box CLI tools.
+- `scripts/with_server.py`: A wrapper script to manage the lifecycle of local development servers (e.g., Vite, Next.js, Hono) while running your Playwright script. Run `python .agents/skills/webapp-testing/scripts/with_server.py --help` for usage details.
+
+## 🧠 Execution Strategy
+
+### 1. Assessment & Preparation
+- **Static Pages:** If the target is static HTML, read the file directly to find selectors.
+- **Dynamic Apps:** If the target is a dynamic application (e.g., React, API backend) that needs a server, use `with_server.py` to start the server(s) alongside your script. 
+
+### 2. Reconnaissance-Then-Action Pattern
+For dynamic web applications, NEVER guess DOM selectors based on source code alone. Rendered DOM often differs significantly from source code (e.g., dynamic classes, injected elements). 
+Follow these steps:
+1.  **Navigate & Wait:** Write a script to navigate to the page and critically, wait for `networkidle`.
+2.  **Inspect:** Use `page.screenshot(path='/tmp/inspect.png', full_page=True)` or `page.content()` to verify the rendered state.
+3.  **Identify:** Extract correct selectors (`text=`, `role=`, CSS selectors) from the empirical results.
+4.  **Execute:** Write the final interaction logic using these confirmed selectors.
+
+### 3. Writing the Playwright Script
+Keep your Playwright scripts minimal and synchronous (`sync_playwright`). Do not include server startup logic inside the Python code.
+
+**Template:**
+```python
+from playwright.sync_api import sync_playwright
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True) # Always headless
+    page = browser.new_page()
+    page.goto('http://localhost:5173')
+    
+    # ⚠️ CRITICAL: Always wait for JS execution on dynamic apps
+    page.wait_for_load_state('networkidle') 
+    
+    # --- Reconnaissance or Action Logic Here ---
+    
+    browser.close()
+```
+
+### 4. Running the Automation
+Suggest or run the automation script using the wrapper to handle server processes automatically.
+
+**Example: Single Server (e.g., frontend only)**
+```bash
+python .agents/skills/webapp-testing/scripts/with_server.py \
+  --server "pnpm --filter @lightscope-ce/web run dev" --port 5173 \
+  -- python your_automation_script.py
+```
+
+**Example: Multiple Servers (e.g., frontend + backend API)**
+```bash
+python .agents/skills/webapp-testing/scripts/with_server.py \
+  --server "pnpm --filter @lightscope-ce/api run dev" --port 3000 \
+  --server "pnpm --filter @lightscope-ce/web run dev" --port 5173 \
+  -- python your_automation_script.py
+```
+
+## ⚠️ Important Pitfalls to Avoid
+- **Skipping Wait States:** ❌ Inspecting the DOM or interacting before `networkidle` is reached on a dynamic app will result in flaky tests and missing elements. Always `wait_for_load_state('networkidle')`.
+- **Reinventing the Wheel:** ❌ Do not write complex server startup, polling, or cleanup logic in your Playwright script. ✅ Use `with_server.py` which handles process trees, port polling, and cleanup gracefully.

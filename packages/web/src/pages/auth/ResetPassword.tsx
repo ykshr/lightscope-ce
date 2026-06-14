@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -9,6 +10,7 @@ export default function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -25,14 +27,17 @@ export default function ResetPassword() {
     e.preventDefault();
     setError(null);
     setSuccess(false);
+    setIsLoading(true);
 
     if (!token) {
       setError('Invalid or missing reset token.');
+      setIsLoading(false);
       return;
     }
 
     if (newPassword !== confirmPassword) {
       setError('Passwords do not match');
+      setIsLoading(false);
       return;
     }
 
@@ -43,6 +48,7 @@ export default function ResetPassword() {
 
     if (error) {
       setError(error.message || 'Failed to reset password');
+      setIsLoading(false);
       return;
     }
 
@@ -101,7 +107,8 @@ export default function ResetPassword() {
 
             {error && <div className="text-sm text-destructive">{error}</div>}
 
-            <Button type="submit" className="w-full" disabled={!token}>
+            <Button type="submit" className="w-full" disabled={!token || isLoading}>
+              {isLoading ? <Spinner className="mr-2" /> : null}
               Reset Password
             </Button>
           </form>

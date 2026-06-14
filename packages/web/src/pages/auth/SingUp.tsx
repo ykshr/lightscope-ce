@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import React, { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -13,16 +14,19 @@ export default function SingUp() {
   const { email, setEmail } = useOutletContext<AuthContext>();
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSingUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
 
     const { error } = await authClient.signUp.email({ name: email, email, password });
     if (error) {
       setError(error.message || 'SingUp failed');
+      setIsLoading(false);
       return;
     }
 
@@ -87,7 +91,8 @@ export default function SingUp() {
 
           {error && <div className="text-sm text-destructive">{error}</div>}
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? <Spinner className="mr-2" /> : null}
             Create Account
           </Button>
         </form>

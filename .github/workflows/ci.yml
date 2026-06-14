@@ -7,7 +7,7 @@ on:
     paths-ignore:
       - '**/*.md'
       - '**/.gitignore'
-      - '.agents'
+      - '.agents/**/*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

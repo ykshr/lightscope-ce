@@ -4,7 +4,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import createContext, { mockClickhouseQuery } from './createContext';
 
 process.env.DATABASE_URL = 'file:./prisma/db/test.db';
-process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET is not defined in the environment.');
+}
 process.env.CLICKHOUSE_URL = process.env.CLICKHOUSE_URL || 'http://localhost:8123';
 process.env.BETTER_AUTH_URL = process.env.BETTER_AUTH_URL || 'http://localhost:3000';
 

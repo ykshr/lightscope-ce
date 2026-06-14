@@ -14,7 +14,10 @@ vi.mock('@clickhouse/client', () => ({
   createClient: vi.fn(() => mockClickhouseClient),
 }));
 
-const JWT_SECRET = process.env.JWT_SECRET || 'ci-test-secret-do-not-use-in-prod';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET is not defined in the environment.');
+}
 const JWT_ALGORITHM = AlgorithmTypes.HS256;
 
 // Bind mocked env variables

@@ -23,6 +23,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 * Restrictions on libraries that should or should not be used
   - Do not introduce libraries like `axios`, `redux`, or `zustand`. Use `fetch` and TanStack Query.
   - **Type Safety**: The `packages/web` codebase strictly avoids `@typescript-eslint/no-explicit-any`; prefer `unknown`, `Record<string, unknown>`, or specifically defined interfaces and types over `any`.
+    - The `FilterToQuery` type in `packages/web/src/types/filter.ts` requires mandatory `startDate` and `endDate` fields; utility functions and unit tests (e.g., `category.test.ts`, `metric.test.ts`) using this type must provide valid `Date` objects to avoid TypeScript compilation errors.
   - **Data Fetching Rules**:
     - Always use the generated GraphQL hooks (`useQuery`, `useMutation`).
     - Avoid using manual `fetch` or introducing libraries like `axios`. When modifying fetcher utility or hook error handling, always evaluate GraphQL errors (e.g., checking `json.errors`) independently from HTTP network errors (e.g., `!res.ok`), as GraphQL APIs typically return a `200 OK` status even when logical errors occur.

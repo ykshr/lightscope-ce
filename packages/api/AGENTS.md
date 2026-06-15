@@ -41,6 +41,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 * How to run tests (commands and steps)
   - Run Tests (Vitest):
     *Note: In environments where pnpm metadata fetching is restricted, bun test can be used as a reliable alternative for executing Vitest-based tests in packages/api.*
+    - **Database Integration**: In `packages/api`, the `test:integration` script automatically provisions a local SQLite test database (`file:./prisma/db/test.db`), runs `prisma migrate reset --force`, and executes tests within the `tests/integration/` directory using Vitest.
     - **Test Definitions**: Unit tests are function-level without package startup. Integration tests are package-level, requiring only the target package to be started with external dependencies mocked/stubbed. E2E tests are fully integrated tests requiring all packages to be started to cover comprehensive user journeys and data flows.
 
     ```bash

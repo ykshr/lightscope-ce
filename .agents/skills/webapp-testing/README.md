@@ -64,3 +64,7 @@ python .agents/skills/webapp-testing/scripts/with_server.py \
 ## ⚠️ Important Pitfalls to Avoid
 - **Skipping Wait States:** ❌ Inspecting the DOM or interacting before `networkidle` is reached on a dynamic app will result in flaky tests and missing elements. Always `wait_for_load_state('networkidle')`.
 - **Reinventing the Wheel:** ❌ Do not write complex server startup, polling, or cleanup logic in your Playwright script. ✅ Use `with_server.py` which handles process trees, port polling, and cleanup gracefully.
+
+## Contributing
+
+Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure rules, and restrictions. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. It is strictly required that all documentation must be written in English. All documentation, including PR comments, `AGENTS.md`, `README.md`, and generated files, must strictly adhere to the English-only rule.

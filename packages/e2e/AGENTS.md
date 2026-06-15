@@ -23,6 +23,7 @@ End-to-End Tests using Playwright and standard testing scripts.
     pnpm --filter @lightscope-ce/e2e run test:smoke
     ```
   - **Browser Verification (Playwright)**:
+    - When verifying frontend changes locally using Playwright, start the Vite dev server in the background via `pnpm --filter @lightscope-ce/web run dev > web.log 2>&1 &`, and check the log file to determine the dynamically assigned port (e.g., 3000, 3001, 3002) before running the screenshot script.
     ```bash
     pnpm --filter @lightscope-ce/e2e run test:e2e
     ```

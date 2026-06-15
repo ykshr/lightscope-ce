@@ -1,0 +1,3 @@
+## 2025-06-15 - Add label associations to complex inputs
+**Learning:** Complex inputs like `TagInput` and `LogicalInput` often build upon native HTML `<input>` elements. Because they are wrapped in custom component abstractions, developers sometimes omit the basic `<input id>` to `<label htmlFor>` connection, resulting in poor accessibility for screen readers and preventing users from clicking the label to focus the input.
+**Action:** Use React's `useId()` hook to generate unique identifiers within these custom input components and explicitly map the `id` to the `<input>` and `htmlFor` to the `<Label>` to ensure a11y compliance and standard label behavior.

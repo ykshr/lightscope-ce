@@ -3,7 +3,7 @@ import {
   AreaCategoryConfig,
   AreaChartDataItem,
 } from '@/components/linecharts/templates/AreaStacked';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 const dateToString = (date: Date) => {
   const year = date.getFullYear();
@@ -16,9 +16,6 @@ const dateToString = (date: Date) => {
 };
 
 export default function useProcessData(data: ArticleTrendQuery | undefined) {
-  const [chartData, setChartData] = useState<AreaChartDataItem[]>([]);
-  const [chartConfigs, setChartConfigs] = useState<AreaCategoryConfig[]>([]);
-
   const validateDataMap = (
     map: Record<string, AreaChartDataItem>,
     date: string | Date | number | any
@@ -89,7 +86,8 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
     return;
   };
 
-  useEffect(() => {
+  // ⚡ Bolt Optimization: Use useMemo instead of useState + useEffect to prevent unnecessary re-renders when data changes
+  const { chartData, chartConfigs } = useMemo(() => {
     const chartConfigMap: { [id: string]: AreaCategoryConfig } = {};
     const chartDataMap: { [dateString: string]: AreaChartDataItem } = {};
 
@@ -219,8 +217,10 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
       };
     });
 
-    setChartData(Object.values(chartDataMap));
-    setChartConfigs(Object.values(chartConfigMap));
+    return {
+      chartData: Object.values(chartDataMap),
+      chartConfigs: Object.values(chartConfigMap),
+    };
   }, [data]);
 
   return { chartData, chartConfigs };

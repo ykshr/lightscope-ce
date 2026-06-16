@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import Badge from '../common/Badge';
@@ -11,6 +11,7 @@ interface TagInputProps {
 
 export default function TagInput({ label, value = [], onChange }: TagInputProps) {
   const [inputValue, setInputValue] = useState('');
+  const inputId = useId();
 
   const addTag = () => {
     const trimmedValue = inputValue.trim();
@@ -26,11 +27,12 @@ export default function TagInput({ label, value = [], onChange }: TagInputProps)
 
   return (
     <div className="flex flex-col gap-3 w-full">
-      {label && <Label>{label}</Label>}
+      {label && <Label htmlFor={inputId}>{label}</Label>}
 
       {/* Input area */}
       <div className="flex gap-2 justify-center items-center">
         <input
+          id={inputId}
           className="flex-1 px-3 py-2 border rounded-lg"
           placeholder="New..."
           value={inputValue}

@@ -1,36 +1,38 @@
 # File: .ai/skill/AI_AGENT_RULES.md
 
-## Before Writing Code
-* **Checklist:**
-  * [ ] Have I performed codebase exploration (e.g., `cat`, `grep`) to verify the existence of assumed functions and endpoints?
-  * [ ] Have I read the `AGENTS.md` and `README.md` files in the relevant directories?
-  * [ ] Is my execution plan linear, granular, and specific?
+### Before Writing Code
 
-## Before Editing Existing Code
-* **Checklist:**
-  * [ ] Am I editing a source file and not a generated build artifact (e.g., `__generated__`, `dist`)?
-  * [ ] If restructuring documentation (`AGENTS.md`, `README.md`), am I preserving existing guidelines safely nested under new headings rather than overwriting them?
-  * [ ] Will my changes introduce a deep cross-package import? (If yes, reconsider).
+- [ ] Read `AGENTS.md` and `README.md` if available in the current directory scope.
+- [ ] Understand the dependency boundaries of the specific package (`web`, `api`, `proxy`, `tracker`).
+- [ ] Locate the appropriate testing location (`tests/unit/`, `tests/integration/`) for the targeted changes.
+- [ ] Ensure that no existing codebase pattern solves the problem already. Priority is given to consistency over idealized architecture.
 
-## Before Creating New Files
-* **Checklist:**
-  * [ ] Are unit tests placed in `tests/unit/` rather than alongside source files in `src/`?
-  * [ ] Are filenames using appropriate casing (`camelCase` for utilities, `PascalCase` for React components)?
-  * [ ] Does the new file adhere strictly to the English-only rule for code and comments?
+### Before Editing Existing Code
 
-## Before Finishing Task
-* **Checklist:**
-  * [ ] Have I run Prettier to format my changes? (`pnpm exec prettier --write <filepath>` or `pnpm run format` from root).
-  * [ ] Have I verified my changes by running the specific test file? (`pnpm --filter <package> run test <path-to-test>`).
-  * [ ] Have I cleaned up any temporary scratchpad files (`.sh`, `.js`, etc.)?
-  * [ ] Have I run `pnpm run ci` from the workspace root to ensure all quality gates pass?
+- [ ] Use `grep` or `list_files` to find the exact source file.
+- [ ] Check if the file is an auto-generated artifact (e.g., inside a `dist`, `build`, or generated Prisma directory). Edit the source, not the artifact.
+- [ ] Review any existing `TODO` or `FIXME` comments around the code block.
 
-## Forbidden Actions
-* **Deep Cross-Package Imports:** Do not import files using paths like `../../api/src/...`. Use public package exports or duplicate small utility functions.
-* **Hardcoded Secret Fallbacks:** Do not use `|| 'secret'` or `:-secret`. Missing secrets must trigger a secure failure.
-* **Bypassing ClickHouse Parameter Binding:** Do not use template string interpolation for dynamic variables in ClickHouse queries. Always use `{name:Type}`.
-* **Modifying Generated Files:** Do not edit files in `__generated__` directories. Handle code generation via build steps.
-* **Using Non-English Text:** Do not include non-English phrases in code, comments, documentation, or commit messages. Translate them to English.
-* **Using `vitest` globally:** The global `vitest` command is unavailable. Always use `pnpm --filter <package> run test`.
-* **Adding Heavy Dependencies to Tracker:** Do not introduce large libraries to `packages/tracker`. It must remain native and lightweight.
-* **Modifying `package.json` without updating Lockfile:** Do not leave `package.json` and `pnpm-lock.yaml` out of sync. Always run `pnpm install` after modifying dependencies.
+### Before Creating New Files
+
+- [ ] Follow existing project structures (e.g., UI components to `packages/web/src/components/`, API to `packages/api/src/`).
+- [ ] Ensure that new files adhere to Prettier configurations (single quotes).
+- [ ] Do not create generic configuration files or abstractions that deviate from the established framework (Vite, Hono, etc.).
+
+### Before Finishing Task
+
+- [ ] Verify functionality via appropriate testing or bash script outputs.
+- [ ] Run `pnpm run format` (or `pnpm exec prettier --write <filepath>`) to automatically fix formatting.
+- [ ] Run the CI suite via `pnpm run ci` from the repository root to ensure formatting, linting, building, and tests pass.
+- [ ] Delete any temporary scratchpad scripts used for validation.
+- [ ] Complete `pre_commit_instructions`.
+
+### Forbidden Actions
+
+- **Bypassing existing abstractions:** Do not introduce new libraries (like generic fetch wrappers) if an existing one (like TanStack Query or native fetch) is mandated.
+- **Introducing new frameworks:** Do not install or depend on unverified packages without checking `package.json`.
+- **Violating dependency boundaries:** Do not perform deep cross-package relative imports (e.g., importing `packages/api/src/helpers/...` directly into `packages/web/...`). Use `workspace:*` dependencies where permitted.
+- **Leaving scratchpads:** Do not leave `.sh`, `.py`, or `.js` garbage files.
+- **Ignoring secret constraints:** Never add `|| 'fallback'` for sensitive parameters like `JWT_SECRET`.
+- **Modifying artifacts:** Do not edit files that explicitly indicate they are auto-generated.
+- **Inventing conventions:** Do not invent coding patterns that cannot be verified in the repository. Explicitly state "Pattern not found in repository" if needed.

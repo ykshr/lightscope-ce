@@ -1,77 +1,67 @@
 # File: .ai/skill/TASK_RECIPES.md
 
-## Create new skill
-* **Preconditions:** You need to document a new architectural pattern or AI agent rule.
+## Create New Skill
+* **Preconditions:** You are instructed to create an AI Agent skill or rule.
 * **Steps:**
-  1. Identify the relevant file in `.ai/skill/` (e.g., `CODING_PATTERNS.md` or `ANTI_PATTERNS.md`).
-  2. Write the new rule strictly in English.
-  3. Provide an evidence-based repository example.
-  4. Ensure the overarching generator `PROMPT.md` is updated if necessary.
-* **Validation:** Read the modified file to ensure formatting is correct and the rule is clear.
-* **Common Mistakes:** Inventing rules without repository evidence; using non-English text.
+  1. Identify the relevant `.ai/skill/*.md` file (`ARCHITECTURE.md`, `CODING_PATTERNS.md`, `TASK_RECIPES.md`, `AI_AGENT_RULES.md`, `ANTI_PATTERNS.md`).
+  2. Write the rule strictly in English.
+  3. Include evidence-based examples from the repository to back up the rule.
+* **Validation:** Run `list_files` or `read_file` to confirm the target file exists and contains the updated changes.
+* **Common Mistakes:** Describing generic best practices instead of verifying repository-specific patterns.
 
-## Add API endpoint
-* **Preconditions:** Clear understanding of whether it belongs in `packages/api` (GraphQL) or `packages/proxy` (REST).
+## Add API Endpoint
+* **Preconditions:** Understanding whether the endpoint serves client data (use GraphQL in `packages/api`) or ingests external tracker events (use REST in `packages/proxy`).
 * **Steps:**
-  1. Add the route/resolver in the appropriate package.
-  2. If querying ClickHouse, use strict parameter binding `{name:Type}`.
-  3. Ensure types are exported and codegen is run if modifying GraphQL schema.
-* **Validation:** Run unit tests for the specific package (`pnpm --filter <package> test`).
-* **Common Mistakes:** Leaking secrets in logs; failing to use parameter binding for ClickHouse queries.
+  1. Add the loader logic in `packages/api/src/graphql/loaders/` or `proxy` equivalent.
+  2. Map the data structure and handle authentication boundaries (Better Auth).
+  3. Write a corresponding unit test in `packages/api/tests/unit/...` or `integration/...`.
+* **Validation:** Run `pnpm --filter <package> run test` and manually invoke endpoint using a REST or GraphQL client.
+* **Common Mistakes:** Not using parameter binding in SQL queries; exposing hardcoded secrets; failing to mock dependencies properly in unit tests.
 
-## Add shared package
-* **Preconditions:** Code needs to be shared across boundaries.
-* **Steps:**
-  1. Pattern not found in repository. Do not create new shared packages; the monorepo relies on explicit boundaries. Duplicate small utilities (like `redactError`) instead of deep cross-package imports.
-* **Validation:** Verify `pnpm-workspace.yaml` still reflects the correct structure.
-* **Common Mistakes:** Creating complex shared libraries that introduce coupling.
+## Add Shared Package
+Pattern not found in repository.
 
-## Add UI component
-* **Preconditions:** Need a new reusable UI element.
+## Add UI Component
+* **Preconditions:** Understand the Tailwind v4 and shadcn/ui setup in `packages/web`.
 * **Steps:**
-  1. Create the component in `packages/web/src/components/`.
-  2. Use Tailwind CSS v4 for styling.
-  3. Use Radix UI primitives if applicable.
-* **Validation:** Run `pnpm --filter @lightscope-ce/web run lint` and `pnpm run format`.
-* **Common Mistakes:** Adding heavy dependencies instead of using existing shadcn/Radix primitives.
+  1. Determine if a shadcn/ui component already exists or needs upgrading (`pnpm dlx shadcn diff`).
+  2. Place generic UI elements in `packages/web/src/components/ui/`.
+  3. Ensure screen reader accessibility using React's `useId()` hook for linking inputs to labels.
+* **Validation:** Run `pnpm --filter @lightscope-ce/web run lint` and `pnpm --filter @lightscope-ce/web run build`.
+* **Common Mistakes:** Overcomplicating derived state via `useState` + `useEffect` instead of `useMemo`.
 
-## Add database query
-* **Preconditions:** Need to fetch new analytical data.
+## Add Database Query
+* **Preconditions:** Know if the target is ClickHouse (Analytics) or SQLite (Prisma, State).
 * **Steps:**
-  1. Locate the appropriate loader in `packages/api/src/graphql/loaders/`.
-  2. Write the ClickHouse query using `{param:Type}` binding for ALL dynamic inputs.
-  3. Pass `query_params` object to the client helper.
-* **Validation:** Run the query locally against the ClickHouse Docker container.
-* **Common Mistakes:** Using string interpolation (`${value}`) for `LIMIT` or `OFFSET`.
+  1. Write the query logic in the respective loader or Prisma client module.
+  2. Apply SQL parameter binding using the `{name:Type}` format for ClickHouse queries.
+* **Validation:** Execute the target test file to hit the mocked or integration database.
+* **Common Mistakes:** Hardcoding `LIMIT` or `OFFSET` directly into template strings.
 
-## Add test
-* **Preconditions:** New feature implemented or bug fixed.
+## Add Test
+* **Preconditions:** Identify the type of test (unit vs integration vs e2e).
 * **Steps:**
-  1. Create the test file in `tests/unit/` or `tests/integration/` of the relevant package.
-  2. Use Vitest. Mock globals securely (e.g., `vi.stubGlobal` for browser globals in the tracker).
-  3. If testing Prisma, ensure the integration test resets the test DB (`test.db`).
-* **Validation:** Run `pnpm --filter <package> run test <path-to-test>`.
-* **Common Mistakes:** Using `bun:test` instead of Vitest; forgetting `vi.unstubAllGlobals()`.
+  1. Place unit tests inside `tests/unit/` of the corresponding package.
+  2. Use `@/` path alias when importing source files.
+  3. Use Vitest `vi.stubGlobal` for DOM interactions.
+* **Validation:** Run `pnpm --filter <package> run test <filepath>`.
+* **Common Mistakes:** Using `bun:test` instead of `vitest`; executing the global `vitest` command instead of the `pnpm --filter` script.
 
-## Add environment variable
-* **Preconditions:** New configuration required.
+## Add Environment Variable
+* **Preconditions:** Locate `.env.example` and the respective `package.json` environments.
 * **Steps:**
-  1. Add the variable to `.env.example`.
-  2. If used in tests, explicitly define it in GitHub Actions workflow files (`.github/workflows/*.yml`) to avoid secret fallbacks.
-* **Validation:** Check that the application throws a secure error if the variable is missing at runtime.
-* **Common Mistakes:** Using `process.env.VAR || 'fallback_secret'`.
+  1. Add the variable to `.env.example` and GitHub Actions workflow files (`.github/workflows/ci.yml`).
+  2. Implement an explicit secure failure check (throw Error) if the variable is missing.
+* **Validation:** Run `pnpm run ci` to verify the missing variable does not break CI.
+* **Common Mistakes:** Providing a hardcoded fallback (e.g., `process.env.VAR || 'secret'`).
 
-## Add background job
-* **Preconditions:** Need asynchronous processing.
-* **Steps:**
-  1. Pattern not found in repository.
-* **Validation:** N/A.
-* **Common Mistakes:** Introducing external job queues (like Redis/Bull) without architectural approval.
+## Add Background Job
+Pattern not found in repository.
 
-## Add migration
-* **Preconditions:** Schema changes required.
+## Add Migration
+* **Preconditions:** For ClickHouse, modify the SQL schema files. For SQLite, modify the Prisma schema.
 * **Steps:**
-  1. For SQLite/Prisma: Update `packages/api/prisma/schema/schema.prisma` and run `pnpm --filter @lightscope-ce/api run db:migrate`.
-  2. For ClickHouse: Add SQL file to `packages/clickhouse/src/sql/`.
-* **Validation:** Ensure Prisma generates the client correctly; verify ClickHouse starts up with the new schema in Docker.
-* **Common Mistakes:** Modifying auto-generated Prisma files directly.
+  1. Add a migration file in `packages/clickhouse/` or run `npx prisma migrate dev` in `packages/api/`.
+  2. Validate changes locally.
+* **Validation:** Run `pnpm run test:integration` inside `packages/api` which will reset and apply `test.db`.
+* **Common Mistakes:** Editing generated code manually (e.g., Prisma client type defs).

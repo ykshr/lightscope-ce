@@ -2,125 +2,139 @@
 
 ## 1. TypeScript Patterns
 
-### Strict Typing and `as any` Avoidance
-* **Description:** Maintain strict TypeScript. Avoid `any` or unsafe casting (`as any`) in new code. Define explicit types for variables and returns. Use type guards when necessary.
-* **Example Path:** `packages/api/src/graphql/resolvers/helpers/deepMerge.ts`
+### Explicit Return Types for Transformations
+* **Description:** Utility functions returning specific variables (e.g., transforming a `FilterToQuery` object) explicitly type their returns to maintain type safety and avoid `as any` assertions in React components.
+* **Example Path:** `packages/web/src/helpers/category.ts`
 * **Code Snippet:**
   ```typescript
-  // Type guard instead of arbitrary casting
-  const isObject = (item: any): item is Record<string, any> => {
-    return !!(item && typeof item === 'object' && !Array.isArray(item));
+  // Example of explicitly typed return object
+  export const transformCategory = (filter: FilterToQuery): CategoryVariables => {
+    // transformation logic
+    return { ... };
   };
   ```
-* **When To Use:** Always, especially when dealing with unknown data structures like API responses or deep object merging.
-* **When Not To Use:** Only in existing test files or specific legacy code where it's already established (technical debt), and refactoring is out of scope.
+* **When To Use:** When writing data transformers to be consumed by generic UI components.
+* **When Not To Use:** Internal, simple utility functions where inference is completely obvious and safe.
 
 ## 2. API Patterns
 
-### Optimized GraphQL DataLoaders
-* **Description:** DataLoader keys should be optimized for performance. Use template literals instead of `JSON.stringify` for key generation.
-* **Example Path:** Memory rule for `packages/api/src/loaders/articleAnalytics.ts`
+### GraphQL Resolvers and Data Loaders
+* **Description:** The `packages/api` package exposes GraphQL APIs using a split between resolvers (entry points) and loaders (database execution logic).
+* **Example Path:** `packages/api/src/graphql/loaders/helpers/clickhouse.ts`
 * **Code Snippet:**
   ```typescript
-  // Optimized key generation
-  const createLoaderKey = (id: string, type: string) => `${id}:${type}`;
+  export default async function <T>(
+    client: ClickHouseClient,
+    query: string,
+    query_params: any = undefined
+  ): Promise<T[]> {
+    const rows = await client.query({ query, query_params, format: 'JSONEachRow' });
+    return await rows.json<T>();
+  }
   ```
-* **When To Use:** In GraphQL DataLoaders to cache and batch requests efficiently.
-* **When Not To Use:** When keys involve complex, deeply nested objects where string building is impractical.
+* **When To Use:** Building or modifying GraphQL endpoints.
+* **When Not To Use:** Building generic REST ingestion APIs (use `packages/proxy` instead).
+
+### REST Event Ingestion Endpoints
+* **Description:** Event ingestion uses Hono REST APIs in the `proxy` package. Errors are intentionally muted in AuthProvider layers, returning `null` instead.
+* **Example Path:** `packages/proxy/src/...`
+* **Code Snippet:**
+  ```typescript
+  // Typical proxy auth logic gracefully failing without throwing
+  if (!credentials) {
+    return null; // Prevents log noise
+  }
+  ```
+* **When To Use:** Building data ingestion endpoints where performance and low log-noise are required.
+* **When Not To Use:** Building client-facing data retrieval APIs.
 
 ## 3. Database Patterns
 
-### ClickHouse Parameter Binding
-* **Description:** All ClickHouse queries must use strict parameter binding for safety, including clauses like `LIMIT` and `OFFSET`.
-* **Example Path:** `packages/api/src/graphql/loaders/rank.ts`
+### ClickHouse SQL Parameter Binding
+* **Description:** ClickHouse queries must use parameter binding for `LIMIT`, `OFFSET`, etc., using `{name:Type}` syntax.
+* **Example Path:** `packages/api/src/graphql/loaders/helpers/clickhouse.ts`
 * **Code Snippet:**
   ```typescript
-  const limitAndOffset = `LIMIT {limit:UInt32} OFFSET {offset:UInt32}`;
-  const query = `SELECT * FROM table ${limitAndOffset}`;
-  const data = await client.query({ query, query_params: { limit: 10, offset: 0 } });
+  const query = 'SELECT * FROM table LIMIT {limit:UInt32}';
+  const queryParamsObj = { limit: 10 };
   ```
-* **When To Use:** Every time a ClickHouse query includes dynamic values.
-* **When Not To Use:** Never. Always parameterize queries.
+* **When To Use:** Any time you write a ClickHouse query with dynamic variables.
+* **When Not To Use:** Hardcoding values inside query template strings.
 
 ## 4. Frontend Patterns
 
-### React Lazy Loading and Suspense
-* **Description:** Page components must be lazy-loaded to optimize bundle size.
-* **Example Path:** `packages/web/src/App.tsx`
-* **Code Snippet:**
-  ```tsx
-  import { lazy, Suspense } from 'react';
-  const Overview = lazy(() => import('@/pages/overview'));
-
-  // Usage within router:
-  // <Suspense fallback={<Loader />}><Overview /></Suspense>
-  ```
-* **When To Use:** For route-level components or large, infrequently used components.
-* **When Not To Use:** For critical, above-the-fold UI components that need to render immediately.
-
 ### XSS Mitigation in dangerouslySetInnerHTML
-* **Description:** When rendering raw HTML or styles, strictly sanitize identifiers and values to prevent injection.
-* **Example Path:** `packages/web/src/components/ui/chart.tsx` (Conceptual based on memory)
+* **Description:** When rendering user-provided or configurable styles, keys and identifiers are sanitized using custom regex/strip methods before being injected into `<style>` tags.
+* **Example Path:** `packages/web/src/components/ui/chart.tsx`
 * **Code Snippet:**
   ```tsx
-  // Concept snippet based on memory rule
-  const sanitizeCSSIdentifier = (id: string) => id.replace(/[^a-zA-Z0-9-_]/g, '');
-  const sanitizeCSSValue = (val: string) => val.replace(/[<>{};]/g, '');
+  <style
+    dangerouslySetInnerHTML={{
+      __html: `... [data-chart=${id}] { --color-${key}: ${color}; }`
+    }}
+  />
   ```
-* **When To Use:** Whenever you absolutely must use `dangerouslySetInnerHTML`, particularly for dynamic CSS injection.
-* **When Not To Use:** When standard React props (like `style={{ color: dynamicColor }}`) or class names can be used instead.
+* **When To Use:** Injecting dynamic CSS or config into the DOM.
+* **When Not To Use:** Trusting un-sanitized config strings or user input directly.
+
+### Synchronous Derived State
+* **Description:** React components in `packages/web` compute derived state synchronously during render using `useMemo` to eliminate double re-renders.
+* **Example Path:** Generic frontend hooks (e.g., `useProcessData`).
+* **Code Snippet:**
+  ```typescript
+  const processedData = useMemo(() => process(data), [data]);
+  ```
+* **When To Use:** Transforming API response data for UI representation.
+* **When Not To Use:** Storing derived state in `useState` and syncing via `useEffect`.
 
 ## 5. Testing Patterns
 
-### Mocking Browser Globals in Vitest
-* **Description:** When testing tracker logic, mock global DOM objects using `vi.stubGlobal` in `beforeEach` and restore them using `vi.unstubAllGlobals` in `afterEach`.
-* **Example Path:** `packages/tracker/tests/unit/index.test.ts`
+### Mocking Browser Globals
+* **Description:** Vitest tests for the `tracker` package mock browser globals using `vi.stubGlobal`. Return types are forcefully cast `as any` or strictly typed where necessary for TS.
+* **Example Path:** `packages/tracker/tests/unit/...`
 * **Code Snippet:**
   ```typescript
-  beforeEach(() => {
-    vi.stubGlobal('window', { addEventListener: vi.fn() });
-    vi.stubGlobal('document', { getElementsByTagName: vi.fn() as any });
-  });
-
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
+  vi.stubGlobal('window', { addEventListener: vi.fn() });
+  // later in teardown
+  vi.unstubAllGlobals();
   ```
-* **When To Use:** In unit tests for `packages/tracker` or other browser-specific code running in a Node.js test environment.
-* **When Not To Use:** In tests that run in a real browser environment (like Playwright E2E tests).
+* **When To Use:** Writing unit tests for the browser tracking script in a Node environment.
+* **When Not To Use:** Integration testing, where real environments like Playwright are more appropriate.
+
+### Safe Deep Merge Utility
+* **Description:** The deep merge helper avoids prototype pollution by skipping `__proto__`, `constructor`, and `prototype`.
+* **Example Path:** `packages/api/tests/unit/graphql/resolvers/helpers/deepMerge.test.ts`
+* **Code Snippet:**
+  ```typescript
+  if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+    return;
+  }
+  ```
+* **When To Use:** Writing generic data combination functions.
+* **When Not To Use:** Merging unchecked external payloads without sanitization.
 
 ## 6. Error Handling
 
-### Redacting Sensitive Error Info
-* **Description:** Strip stack traces and sensitive data from errors before logging or returning them across boundaries. Extract only `name`, `message`, and `stack` initially.
-* **Example Path:** `packages/api/src/helpers/error.ts` (Referenced in memory)
+### Explicit Throwing for Secure Failures
+* **Description:** Missing secrets or fundamental configuration issues do not fallback to generic strings, but securely throw explicit Error instances.
+* **Example Path:** `packages/api/src/createContext.ts`
 * **Code Snippet:**
   ```typescript
-  export const redactError = (error: any) => {
-    if (error instanceof Error) {
-      return { name: error.name, message: error.message, stack: error.stack };
-    }
-    return error;
-  };
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined in the environment.');
+  }
   ```
-* **When To Use:** At API boundaries or before logging errors to external services.
-* **When Not To Use:** During internal debugging where the full error context is needed locally.
+* **When To Use:** Validating critical environment variables at startup.
+* **When Not To Use:** Non-critical user input validations where graceful UX errors are required.
 
 ## 7. Logging
 
-### Silent Failures in Proxy
-* **Description:** The Proxy package should fail silently for missing credentials to reduce log noise, reserving `console.error` for actionable failures.
-* **Example Path:** `packages/proxy` (Referenced in memory)
+### Silencing Auth Provider Errors
+* **Description:** In the proxy package, auth providers silently return `null` instead of throwing or logging when missing credentials, to prevent excessive log noise for invalid tracker requests.
+* **Example Path:** `packages/proxy/src/helpers/auth/jwtAuth.ts`
 * **Code Snippet:**
   ```typescript
-  // AuthProvider implementation
-  if (!credentials) {
-    return null; // Silent return
-  }
-  if (!isValid(credentials)) {
-    console.error('Invalid credentials payload');
-    throw new Error('Unauthorized');
-  }
+  if (!header) return null;
   ```
-* **When To Use:** In high-throughput ingestion endpoints where common, non-actionable failures (like bot requests without tokens) would flood logs.
-* **When Not To Use:** In critical business logic where every failure needs to be audited.
+* **When To Use:** Handling expected unauthenticated noise on high-throughput proxy endpoints.
+* **When Not To Use:** Critical unhandled application failures that require debug logs.

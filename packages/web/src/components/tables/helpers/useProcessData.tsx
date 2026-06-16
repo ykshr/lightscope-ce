@@ -1,6 +1,6 @@
 import { ArticleRankQuery } from '@/__generated__/graphql';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { type Column } from '../templates/types';
 
@@ -17,11 +17,10 @@ type ArticleData = {
 };
 
 export default function useProcessData(data: ArticleRankQuery | undefined, metric: string) {
-  const [articles, setArticles] = useState<ArticleData[] | undefined>(undefined);
-  const [columns, setColumns] = useState<Column<ArticleData>[]>([]);
   const isMobile = useIsMobile();
 
-  useEffect(() => {
+  // ⚡ Bolt Optimization: Use useMemo instead of useState + useEffect to prevent unnecessary double re-renders
+  const { articles, columns } = useMemo(() => {
     const mappedArticles: ArticleData[] | undefined = data?.rank?.articles?.map(
       ({ index, url, value, article }) => ({
         id: index + 1,
@@ -105,8 +104,7 @@ export default function useProcessData(data: ArticleRankQuery | undefined, metri
     ];
 
     const filteredArticleColumns = articleColumns.filter((col) => !(col.hideMobile && isMobile));
-    setArticles(mappedArticles);
-    setColumns(filteredArticleColumns);
+    return { articles: mappedArticles, columns: filteredArticleColumns };
   }, [data, metric, isMobile]);
 
   return { articles, columns };

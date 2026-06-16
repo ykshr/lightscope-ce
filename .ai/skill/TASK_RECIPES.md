@@ -75,3 +75,13 @@
   2. For ClickHouse: Add SQL file to `packages/clickhouse/src/sql/`.
 * **Validation:** Ensure Prisma generates the client correctly; verify ClickHouse starts up with the new schema in Docker.
 * **Common Mistakes:** Modifying auto-generated Prisma files directly.
+
+## Upgrade shadcn UI components
+* **Preconditions:** Need to upgrade installed shadcn ui components in the `packages/web` package.
+* **Steps:**
+  1. Navigate to the `packages/web` directory.
+  2. Check for available component updates and their feasibility by inspecting the diffs using `pnpm dlx shadcn diff`.
+  3. If the update is possible and safe, perform the update (e.g., `pnpm dlx shadcn add [component-name] -o` to overwrite with the new version).
+  4. Verify that the functionality and layout are maintained correctly before and after the version update. Use local dev preview if needed to verify UI consistency.
+* **Validation:** Run `pnpm --filter @lightscope-ce/web run lint` and run test commands to ensure no regressions.
+* **Common Mistakes:** Blindly updating components without reviewing the diffs, which can overwrite custom changes.

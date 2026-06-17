@@ -1,4 +1,4 @@
-import { renameKeySnakeToCamel } from '@/graphql/loaders/helpers/rename';
+import { renameKeySnakeToCamel, snakeToCamel } from '@/graphql/loaders/helpers/rename';
 import { ClickHouseClient } from '@clickhouse/client';
 
 export default async function <T>(
@@ -30,17 +30,27 @@ export const formatData = <T>(data: T[], dateKeys: string[] = []): T[] => {
     return data.map((row) => renameKeySnakeToCamel(row));
   }
 
+  // ⚡ Bolt Optimization: Combine snake_case to camelCase renaming and date string formatting into a single pass over the dataset
+  const dateKeysSet = new Set(dateKeys);
+
   return data.map((row) => {
-    const formattedRow = renameKeySnakeToCamel(row);
-    for (let i = 0; i < dateKeys.length; i++) {
-      const dateKey = dateKeys[i];
-      const val = formattedRow[dateKey];
-      if (val && typeof val === 'string') {
-        formattedRow[dateKey] = val.replace(' ', 'T') + 'Z';
+    if (row === null || typeof row !== 'object' || Array.isArray(row) || row instanceof Date) {
+      return renameKeySnakeToCamel(row);
+    }
+
+    const formattedRow: any = {};
+    for (const key of Object.keys(row)) {
+      const camelKey = snakeToCamel(key);
+      const val = (row as any)[key];
+
+      if (dateKeysSet.has(camelKey) && val && typeof val === 'string') {
+        formattedRow[camelKey] = val.replace(' ', 'T') + 'Z';
+      } else {
+        formattedRow[camelKey] = renameKeySnakeToCamel(val);
       }
     }
     return formattedRow;
-  });
+  }) as T[];
 };
 
 /**

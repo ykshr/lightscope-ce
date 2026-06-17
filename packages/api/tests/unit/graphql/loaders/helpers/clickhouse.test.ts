@@ -1,5 +1,75 @@
-import { formatToDateTime } from '@/graphql/loaders/helpers/clickhouse';
+import { formatData, formatToDateTime } from '@/graphql/loaders/helpers/clickhouse';
 import { describe, expect, it } from 'vitest';
+
+describe('formatData', () => {
+  it('should format nested objects correctly', () => {
+    const data = [
+      {
+        id: 1,
+        nested_obj: {
+          nested_key: 'value',
+        },
+      },
+      [{ array_item: 1 }],
+      new Date(),
+      null,
+      'primitive_string',
+    ];
+
+    const result = formatData(data, ['createdAt']);
+
+    expect(result[0]).toEqual({
+      id: 1,
+      nestedObj: {
+        nestedKey: 'value',
+      },
+    });
+    expect(result[1]).toEqual([{ arrayItem: 1 }]);
+    expect(result[2]).toBeInstanceOf(Date);
+    expect(result[3]).toBeNull();
+    expect(result[4]).toEqual('primitive_string');
+  });
+
+  it('should rename keys from snake_case to camelCase and format dates', () => {
+    const data = [
+      {
+        id: 1,
+        created_at: '2023-01-01 12:34:56',
+        updated_at: '2023-01-02 12:34:56',
+        user_name: 'John Doe',
+      },
+    ];
+
+    const result = formatData(data, ['createdAt', 'updatedAt']);
+
+    expect(result).toEqual([
+      {
+        id: 1,
+        createdAt: '2023-01-01T12:34:56Z',
+        updatedAt: '2023-01-02T12:34:56Z',
+        userName: 'John Doe',
+      },
+    ]);
+  });
+
+  it('should format data without dateKeys correctly', () => {
+    const data = [
+      {
+        id: 1,
+        user_name: 'John Doe',
+      },
+    ];
+
+    const result = formatData(data);
+
+    expect(result).toEqual([
+      {
+        id: 1,
+        userName: 'John Doe',
+      },
+    ]);
+  });
+});
 
 describe('formatToDateTime', () => {
   it('should format a regular date correctly', () => {

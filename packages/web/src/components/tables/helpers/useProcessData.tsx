@@ -19,7 +19,7 @@ type ArticleData = {
 export default function useProcessData(data: ArticleRankQuery | undefined, metric: string) {
   const isMobile = useIsMobile();
 
-  // ⚡ Bolt Optimization: Use useMemo instead of useState + useEffect to prevent unnecessary double re-renders
+  // Use useMemo instead of useState + useEffect to prevent unnecessary double re-renders
   const { articles, columns } = useMemo(() => {
     const mappedArticles: ArticleData[] | undefined = data?.rank?.articles?.map(
       ({ index, url, value, article }) => ({

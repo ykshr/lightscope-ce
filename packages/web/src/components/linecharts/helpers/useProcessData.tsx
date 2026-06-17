@@ -86,7 +86,7 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
     return;
   };
 
-  // ⚡ Bolt Optimization: Use useMemo instead of useState + useEffect to prevent unnecessary re-renders when data changes
+  // Use useMemo instead of useState + useEffect to prevent unnecessary re-renders when data changes
   const { chartData, chartConfigs } = useMemo(() => {
     const chartConfigMap: { [id: string]: AreaCategoryConfig } = {};
     const chartDataMap: { [dateString: string]: AreaChartDataItem } = {};

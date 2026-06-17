@@ -3,7 +3,7 @@ import type { Tracker } from '@/trackers/tracker';
 export function initScrollTracking(tracker: Tracker): () => void {
   const thresholds = [25, 50, 75, 100];
   const scrollTracked = new Set<number>();
-  // ⚡ Bolt Optimization: Throttle calculations using requestAnimationFrame to prevent main thread blocking
+  // Throttle calculations using requestAnimationFrame to prevent main thread blocking
   let ticking = false;
 
   const scrollHandler = () => {
@@ -24,7 +24,7 @@ export function initScrollTracking(tracker: Tracker): () => void {
     }
   };
 
-  // ⚡ Bolt Optimization: Mark listener as passive to improve scroll performance
+  // Mark listener as passive to improve scroll performance
   window.addEventListener('scroll', scrollHandler, { passive: true });
 
   const cleanup = () => {

@@ -30,7 +30,7 @@ export const formatData = <T>(data: T[], dateKeys: string[] = []): T[] => {
     return data.map((row) => renameKeySnakeToCamel(row));
   }
 
-  // ⚡ Bolt Optimization: Combine snake_case to camelCase renaming and date string formatting into a single pass over the dataset
+  // Combine snake_case to camelCase renaming and date string formatting into a single pass over the dataset
   const dateKeysSet = new Set(dateKeys);
 
   return data.map((row) => {

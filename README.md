@@ -1,6 +1,6 @@
 # LightScope CE
 
-LightScope CE (Community Edition) is a high-performance web analytics platform powered by ClickHouse. Built as a TypeScript monorepo, it provides real-time data aggregation and a modern dashboard.
+LightScope CE (Community Edition) is a high-performance web analytics platform powered by ClickHouse. Built as a TypeScript monorepo using pnpm workspaces, it provides real-time data aggregation and a modern dashboard.
 
 ## Project Structure
 

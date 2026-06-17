@@ -11,6 +11,8 @@ Entry: `src/index.ts`
 
 ---
 
+All `AGENTS.md` files in the repository must be structured with four specific English headers: `#### Coding Conventions`, `#### Build & Test Commands`, `#### Project Structure`, and `#### Restrictions`.
+
 #### Coding Conventions
 * Rules for indentation
   - Use 2 spaces for indentation (Prettier standard).

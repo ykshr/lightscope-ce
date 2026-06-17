@@ -30,8 +30,19 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - **State Management**:
     - Use React Query for managing server state.
     - Avoid introducing custom global stores, Redux, or Zustand.
+
+  - **Component & Helper Rules**:
+    - When building custom input components in `packages/web/src/components/inputs/` (like `TagInput` or `LogicalInput`), ensure screen reader accessibility by using React's `useId()` hook to generate a unique ID, applying it to the `<input id={id}>` and linking it to the corresponding label via `<Label htmlFor={id}>`.
+    - In `packages/web/src/helpers/`, the `category.ts` and `metric.ts` utilities transform `FilterToQuery` objects into `CategoryVariables` and `MetricVariables` respectively; these explicit return types are used to maintain type safety and eliminate `as any` assertions in the `ArticleAreaStacked` component.
+    - React components in `packages/web` (such as `useProcessData` hooks) must compute derived state synchronously during render using `useMemo` rather than managing it with `useState` combined with `useEffect`, in order to eliminate unnecessary double re-renders when data props change.
+    - The `findCategoryOptionByValue` and `findSortOptionByValue` helpers in `packages/web/src/helpers/constants/` identify matches using key filtering and order-insensitive array comparison; they utilize a `preprocessedOptions` constant to pre-calculate sorted keys/values and a `Map` for memoizing sorted input arrays to avoid redundant O(N log N) sorting and memory allocations in the search loops.
+    - The `ChartStyle` component in `packages/web/src/components/ui/chart.tsx` mitigates XSS vulnerabilities within `dangerouslySetInnerHTML` by sanitizing CSS identifiers (ids and config keys) with `sanitizeCSSIdentifier` (restricting to `[a-zA-Z0-9-_]+`) and CSS values (colors) with `sanitizeCSSValue` (stripping `<>{};` to prevent tag breakout and declaration injection).
+
   - **UI and Styling Rules**:
     - Use `shadcn/ui` primitive components whenever possible.
+
+    - To upgrade shadcn-ui components in `packages/web`, check update feasibility with `pnpm dlx shadcn diff`, apply updates using `pnpm dlx shadcn add [component-name] -o`, and verify functionality, layout, and lint rules (`pnpm --filter @lightscope-ce/web run lint`).
+
     - Use only Tailwind v4 utility classes for styling. Avoid custom CSS files or inline styles.
     - Constants and helper functions should be extracted to separate files (e.g., `src/helpers/constants/`) to prevent `react-refresh/only-export-components` ESLint warnings in component files.
     - Maintain consistency with existing components and keep the added `className` props to a minimum.

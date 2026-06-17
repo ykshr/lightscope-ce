@@ -14,7 +14,9 @@ This package is extremely performance-critical and highly sensitive to bundle si
   - The tracker package must not include heavy dependencies, React, or large libraries. Do not use Node.js specific APIs (like `fs`, `path`, etc.).
   - **Testing**: When mocking DOM globals (e.g., `document.getElementsByTagName`) in Vitest tests for the `tracker` package, the return value must be cast to `HTMLCollectionOf<Element>` (or `as any`) to satisfy the TypeScript compiler during project builds.
     - In `packages/tracker` unit tests, use `vi.stubGlobal('window', ...)` combined with `vi.unstubAllGlobals()` in setup/teardown hooks to mock browser globals like `addEventListener` safely without relying on a complete DOM environment.
-  - **Browser Environment**: Rely on global objects like `window`, `document`, and `navigator`. Ensure the script works natively in browser environments.
+  - **Browser Environment**:
+    - Rely on global objects like `window`, `document`, and `navigator`. Ensure the script works natively in browser environments. The `packages/tracker` package is performance-critical and bundle-size sensitive; it must rely on native browser globals (`window`, `document`, `navigator`) and avoid heavy external libraries (e.g., React) or Node.js-specific APIs to ensure native browser compatibility.
+
   - **Backward Compatibility**: Do not change public function signatures, event formats, or payload shapes without explicit instruction.
 
 #### Build & Test Commands
@@ -49,6 +51,11 @@ This package is extremely performance-critical and highly sensitive to bundle si
   * “Do not modify this directory”
     - Maintain the existing directory boundaries and responsibilities.
   - **Performance and Safety**:
+
+    - The `extractOGMetadata` method in `packages/tracker/src/index.ts` is optimized for performance by performing a single pass over all `<meta>` tags with `document.getElementsByTagName("meta")` and caching results in a prototype-less map (`Object.create(null)`), avoiding expensive `querySelector` calls in loops. This logic handles multiple values for the same property, prevents duplicates if `name` and `property` are identical, and filters tags with empty content.
+    - Scroll event tracking logic in `packages/tracker` must add `{ passive: true }` to the event listeners and throttle layout-dependent calculations (such as `document.body.scrollHeight`) via `requestAnimationFrame` to prevent main-thread blocking and forced synchronous layout thrashing.
+    - The `AnalyticsTracker` in `packages/tracker/src/index.ts` optimizes performance by deferring `localStorage` writes for the `analytics_visit_last_ts` key through a scheduled mechanism (`requestIdleCallback` or `setTimeout`) and ensuring data persistence on page exit via a `beforeunload` listener.
+
     - Do not introduce processes that unnecessarily block the main thread.
     - Do not add synchronous, heavy computational logic.
     - Ensure event listeners are properly cleaned up to avoid memory leaks.

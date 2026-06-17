@@ -32,7 +32,7 @@ test.describe('Authentication Flows', () => {
     await page.goto('/singin');
 
     // Click "SingUp" link
-    await page.getByRole('button', { name: 'SingUp', exact: true }).click();
+    await page.getByRole('link', { name: 'SingUp', exact: true }).click();
 
     // Verify navigation to signup
     await expect(page).toHaveURL(/.*\/signup/);
@@ -50,6 +50,6 @@ test.describe('Authentication Flows', () => {
     await expect(signUpBtn).toBeVisible();
 
     // Test navigation back to SignIn
-    await page.getByRole('button', { name: 'Login', exact: true }).click();
+    await page.getByRole('link', { name: 'Login', exact: true }).click();
   });
 });

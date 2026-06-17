@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import React, { useState } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 
 interface AuthContext {
   email: string;
@@ -15,8 +15,6 @@ export default function SingIn() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleSingIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,13 +79,9 @@ export default function SingIn() {
               >
                 Password
               </label>
-              <button
-                type="button"
-                className="text-sm text-primary hover:underline"
-                onClick={() => navigate('/forget-password')}
-              >
+              <Link to="/forget-password" className="text-sm text-primary hover:underline">
                 Forgot password?
-              </button>
+              </Link>
             </div>
             <Input
               id="password"
@@ -144,9 +138,9 @@ export default function SingIn() {
 
         <div className="text-center text-sm mt-4">
           Don't have an account?{' '}
-          <button onClick={() => navigate('/signup')} className="text-primary hover:underline">
+          <Link to="/signup" className="text-primary hover:underline">
             SingUp
-          </button>
+          </Link>
         </div>
       </div>
     </div>

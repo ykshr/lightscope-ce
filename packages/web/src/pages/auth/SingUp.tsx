@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import React, { useState } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 
 interface AuthContext {
   email: string;
@@ -15,8 +15,6 @@ export default function SingUp() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleSingUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,9 +133,9 @@ export default function SingUp() {
 
         <div className="text-center text-sm mt-4">
           Already have an account?{' '}
-          <button onClick={() => navigate('/login')} className="text-primary hover:underline">
+          <Link to="/login" className="text-primary hover:underline">
             Login
-          </button>
+          </Link>
         </div>
       </div>
     </div>

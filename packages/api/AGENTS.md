@@ -27,6 +27,15 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - **Resolver Responsibilities**: Keep resolvers thin. Business logic belongs in service modules. Do not write raw SQL inside the resolver body.
   - **Input Validation**: GraphQL type definitions do not guarantee runtime validation. All external inputs must be strictly validated with Zod and normalized before use.
   - **Performance**: Always assume large datasets. Avoid loading full result sets into memory. Prefer pre-aggregated tables whenever possible.
+
+  - **Helpers**:
+    - The `packages/api/src/helpers/apple.ts` utility is tested by `packages/api/tests/unit/helpers/apple.test.ts`, verifying that `generateAppleClientSecret` correctly handles partially missing parameters by returning `undefined`.
+    - The `packages/api/src/helpers/error.ts` utility is tested by `packages/api/tests/unit/helpers/error.test.ts`, verifying that it extracts only "name", "message", and "stack" from Error instances (including subclasses and objects with custom properties) while returning non-error values unchanged.
+    - The `deepMerge` utility in `packages/api/src/graphql/resolvers/helpers/deepMerge.ts` securely prevents prototype pollution by explicitly skipping `__proto__`, `constructor`, and `prototype` keys during iteration. This behavior is verified by unit tests in `packages/api/tests/unit/graphql/resolvers/helpers/deepMerge.test.ts`.
+    - The `formatToDateTime` utility in `packages/api/src/graphql/loaders/helpers/clickhouse.ts` converts JavaScript `Date` objects to ClickHouse-compatible "YYYY-MM-DD HH:mm:ss" strings and is verified by unit tests in `packages/api/tests/unit/graphql/loaders/helpers/clickhouse.test.ts`.
+    - The `formatData` utility in `packages/api/src/graphql/loaders/helpers/clickhouse.ts` is optimized for performance by combining snake_case to camelCase key renaming and date string formatting into a single pass over the dataset, eliminating multiple O(N * M) nested loops.
+    - The `packages/api/src/graphql/loaders/helpers/rename.ts` utility (tested by `packages/api/tests/unit/graphql/loaders/helpers/rename.test.ts`) provides `renameKeySnakeToCamel` and `camelToSnake`. The `renameKeySnakeToCamel` function's regex `/_([a-z])/g` strictly matches lowercase letters after underscores, meaning numbers (e.g., `user_1_name` becomes `user_1Name`) and uppercase letters (e.g., `Mixed_Case` remains unmodified) are excluded from camelCase conversion.
+
   - **Security**:
     - Sensitive information like `JWT_SECRET` must be explicitly configured in the environment. Hardcoded fallback values are strictly prohibited, and missing secrets must cause the request context creation to fail securely by throwing an error. Security standards for the `better-auth` configuration (located in `src/createContext.ts` and `src/types/auth.ts`) prohibit logging the sensitive password reset `url` within the `sendResetPassword` callback to prevent token leakage in system logs.
     - Do not log raw SQL errors.

@@ -45,9 +45,7 @@ export default function ForgetPassword() {
               A password reset link has been sent to your email.
             </div>
             <Button className="w-full" asChild>
-              <Link to="/singin">
-                Back to Sign In
-              </Link>
+              <Link to="/singin">Back to Sign In</Link>
             </Button>
           </div>
         ) : (

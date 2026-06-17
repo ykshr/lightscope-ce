@@ -68,9 +68,7 @@ export default function ResetPassword() {
               Your password has been successfully reset.
             </div>
             <Button className="w-full" asChild>
-              <Link to="/singin">
-                Go to Sign In
-              </Link>
+              <Link to="/singin">Go to Sign In</Link>
             </Button>
           </div>
         ) : (

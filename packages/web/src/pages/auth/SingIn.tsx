@@ -79,10 +79,7 @@ export default function SingIn() {
               >
                 Password
               </label>
-              <Link
-                to="/forget-password"
-                className="text-sm text-primary hover:underline"
-              >
+              <Link to="/forget-password" className="text-sm text-primary hover:underline">
                 Forgot password?
               </Link>
             </div>

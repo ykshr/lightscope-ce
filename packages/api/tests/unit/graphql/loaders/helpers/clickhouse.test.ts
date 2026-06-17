@@ -7,27 +7,23 @@ describe('formatData', () => {
       {
         id: 1,
         nested_obj: {
-          nested_key: 'value'
-        }
+          nested_key: 'value',
+        },
       },
-      [
-        { array_item: 1 }
-      ],
+      [{ array_item: 1 }],
       new Date(),
       null,
-      'primitive_string'
+      'primitive_string',
     ];
 
     const result = formatData(data, ['createdAt']);
 
-    expect(result[0]).toEqual(
-      {
-        id: 1,
-        nestedObj: {
-          nestedKey: 'value'
-        }
-      }
-    );
+    expect(result[0]).toEqual({
+      id: 1,
+      nestedObj: {
+        nestedKey: 'value',
+      },
+    });
     expect(result[1]).toEqual([{ arrayItem: 1 }]);
     expect(result[2]).toBeInstanceOf(Date);
     expect(result[3]).toBeNull();

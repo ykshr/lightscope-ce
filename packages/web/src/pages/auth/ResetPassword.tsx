@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
@@ -13,7 +13,6 @@ export default function ResetPassword() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   const token = searchParams.get('token');
 
@@ -68,8 +67,10 @@ export default function ResetPassword() {
             <div className="text-sm text-green-500 text-center">
               Your password has been successfully reset.
             </div>
-            <Button className="w-full" onClick={() => navigate('/singin')}>
-              Go to Sign In
+            <Button className="w-full" asChild>
+              <Link to="/singin">
+                Go to Sign In
+              </Link>
             </Button>
           </div>
         ) : (

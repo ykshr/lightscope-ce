@@ -3,15 +3,13 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleRequestReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,8 +44,10 @@ export default function ForgetPassword() {
             <div className="text-sm text-green-500 text-center">
               A password reset link has been sent to your email.
             </div>
-            <Button className="w-full" onClick={() => navigate('/singin')}>
-              Back to Sign In
+            <Button className="w-full" asChild>
+              <Link to="/singin">
+                Back to Sign In
+              </Link>
             </Button>
           </div>
         ) : (
@@ -80,9 +80,9 @@ export default function ForgetPassword() {
 
         <div className="text-center text-sm">
           Remember your password?{' '}
-          <button onClick={() => navigate('/singin')} className="text-primary hover:underline">
+          <Link to="/singin" className="text-primary hover:underline">
             Sign In
-          </button>
+          </Link>
         </div>
       </div>
     </div>

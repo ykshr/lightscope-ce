@@ -2,6 +2,38 @@ import { formatData, formatToDateTime } from '@/graphql/loaders/helpers/clickhou
 import { describe, expect, it } from 'vitest';
 
 describe('formatData', () => {
+  it('should format nested objects correctly', () => {
+    const data = [
+      {
+        id: 1,
+        nested_obj: {
+          nested_key: 'value'
+        }
+      },
+      [
+        { array_item: 1 }
+      ],
+      new Date(),
+      null,
+      'primitive_string'
+    ];
+
+    const result = formatData(data, ['createdAt']);
+
+    expect(result[0]).toEqual(
+      {
+        id: 1,
+        nestedObj: {
+          nestedKey: 'value'
+        }
+      }
+    );
+    expect(result[1]).toEqual([{ arrayItem: 1 }]);
+    expect(result[2]).toBeInstanceOf(Date);
+    expect(result[3]).toBeNull();
+    expect(result[4]).toEqual('primitive_string');
+  });
+
   it('should rename keys from snake_case to camelCase and format dates', () => {
     const data = [
       {

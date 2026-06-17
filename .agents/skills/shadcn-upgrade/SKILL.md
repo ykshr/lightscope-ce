@@ -19,18 +19,18 @@ When a user asks to upgrade Shadcn UI components, your goal is to:
 
 ### Step 1: Check for Available Updates
 
-First, move to the correct directory and run the `shadcn diff` command. The project uses pnpm.
+First, move to the correct directory and run the `shadcn add --diff` command to check differences for a specific component. The project uses pnpm. `shadcn diff` is deprecated.
 
 ```bash
 cd packages/web
-pnpm dlx shadcn diff
+pnpm dlx shadcn add [component-name] --diff
 ```
 
-This command will output a list of components that have changes available. Read this output carefully to see which components can be updated.
+This command will output the differences for the component if changes are available.
 
 ### Step 2: Inform the User (Optional but Recommended)
 
-If the user just asked "are there any updates?", list the components that have updates available and ask if they would like to proceed with the upgrade.
+If the user asked "are there any updates?", check the components and inform the user if they would like to proceed with the upgrade.
 
 If the user said "upgrade my components", you can proceed to the next step, but it's good practice to log what you are upgrading.
 
@@ -85,6 +85,6 @@ Inform the user about:
 
 ## Important Rules & Context
 
-- **Memory Context:** Remember the instruction: `To upgrade shadcn-ui components in packages/web, check update feasibility with pnpm dlx shadcn diff, apply updates using pnpm dlx shadcn add [component-name] -o, and verify functionality, layout, and lint rules (pnpm --filter @lightscope-ce/web run lint).`
+- **Memory Context:** Remember the instruction: `To upgrade shadcn-ui components in packages/web, check update feasibility with pnpm dlx shadcn add [component-name] --diff, apply updates using pnpm dlx shadcn add [component-name] -o, and verify functionality, layout, and lint rules (pnpm --filter @lightscope-ce/web run lint).`
 - **Pathing:** All shadcn commands MUST be run from inside the `packages/web` directory, or they will fail to find `components.json`.
 - **Overwrite:** Always use the `-o` (overwrite) flag when running `shadcn add` to update an existing component.

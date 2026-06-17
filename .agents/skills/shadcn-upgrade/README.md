@@ -4,7 +4,7 @@ This skill allows the AI assistant to safely and systematically upgrade Shadcn U
 
 ## Features
 
-- **Check Updates:** Determines which installed components have updates available using `pnpm dlx shadcn diff`.
+- **Check Updates:** Determines which installed components have updates available using `pnpm dlx shadcn add [component-name] --diff`.
 - **Apply Updates:** Upgrades specific components.
 - **Verification:** Ensures the application still builds, passes tests, and has no linting errors after the update.
 

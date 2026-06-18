@@ -1,13 +1,14 @@
 import { $, Bindings, Variables } from '@/types';
 import { Hono } from 'hono';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import trackerApp from '@/rest/routers/tracker';
+import * as trackerLoader from '@/rest/loaders/tracker';
 
 vi.mock('hono/jwt', () => ({
   sign: vi.fn().mockResolvedValue('mocked_token'),
 }));
 
-vi.mock('@/loaders/tracker', () => ({
+vi.mock('@/rest/loaders/tracker', () => ({
   default: vi.fn().mockResolvedValue([{ id: '1', token: 'mocked_token' }]),
 }));
 
@@ -50,6 +51,10 @@ const setupApp = (role: string = 'member') => {
 };
 
 describe('Tracker Router', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe('GET /tracker', () => {
     it('should return trackers for members', async () => {
       const app = setupApp('member');
@@ -57,6 +62,15 @@ describe('Tracker Router', () => {
       expect(res.status).toBe(200);
       const data = await res.json();
       expect(data).toHaveProperty('trackers');
+    });
+
+    it('should return 500 when getting trackers fails', async () => {
+      const app = setupApp('member');
+      vi.spyOn(trackerLoader, 'default').mockRejectedValueOnce(new Error('Test error'));
+      const res = await app.request('/tracker');
+      expect(res.status).toBe(500);
+      const data = await res.json();
+      expect(data).toHaveProperty('error', 'Failed to get a token list');
     });
   });
 

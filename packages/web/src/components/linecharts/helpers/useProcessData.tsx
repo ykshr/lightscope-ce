@@ -18,9 +18,18 @@ const dateToString = (date: Date) => {
 export default function useProcessData(data: ArticleTrendQuery | undefined) {
   const validateDataMap = (
     map: Record<string, AreaChartDataItem>,
+    dateCache: Record<string, string>,
     date: string | Date | number | any
   ) => {
-    const dateString = dateToString(new Date(date));
+    // ⚡ Bolt: Cache formatted date strings to avoid expensive repeated new Date() parsing
+    // for the same timestamp across multiple trend categories
+    const rawDate = String(date);
+    let dateString = dateCache[rawDate];
+    if (!dateString) {
+      dateString = dateToString(new Date(date));
+      dateCache[rawDate] = dateString;
+    }
+
     if (!map[dateString]) map[dateString] = { date: dateString };
     return dateString;
   };
@@ -90,56 +99,57 @@ export default function useProcessData(data: ArticleTrendQuery | undefined) {
   const { chartData, chartConfigs } = useMemo(() => {
     const chartConfigMap: { [id: string]: AreaCategoryConfig } = {};
     const chartDataMap: { [dateString: string]: AreaChartDataItem } = {};
+    const dateCache: Record<string, string> = {};
 
     // Process trend part of the data to extract date and value for the chart
     data?.trend?.total?.forEach(({ date, value }) => {
       const id = returnIdTotal();
       if (!id) return;
-      const dateString = validateDataMap(chartDataMap, date);
+      const dateString = validateDataMap(chartDataMap, dateCache, date);
       chartDataMap[dateString][id] = value;
     });
     data?.trend?.categoryAge?.forEach(({ date, value, age }) => {
       const id = returnIdCategoryAge(age);
       if (!id) return;
-      const dateString = validateDataMap(chartDataMap, date);
+      const dateString = validateDataMap(chartDataMap, dateCache, date);
       chartDataMap[dateString][id] = value;
     });
     data?.trend?.categoryApp?.forEach(({ date, value, appType, app }) => {
       const id = returnIdCategoryApp(appType, app);
       if (!id) return;
-      const dateString = validateDataMap(chartDataMap, date);
+      const dateString = validateDataMap(chartDataMap, dateCache, date);
       chartDataMap[dateString][id] = value;
     });
     data?.trend?.categoryDevice?.forEach(({ date, value, deviceType, device }) => {
       const id = returnIdCategoryDevice(deviceType, device);
       if (!id) return;
-      const dateString = validateDataMap(chartDataMap, date);
+      const dateString = validateDataMap(chartDataMap, dateCache, date);
       chartDataMap[dateString][id] = value;
     });
     data?.trend?.categoryGender?.forEach(({ date, value, gender }) => {
       const id = returnIdCategoryGender(gender);
       if (!id) return;
-      const dateString = validateDataMap(chartDataMap, date);
+      const dateString = validateDataMap(chartDataMap, dateCache, date);
       chartDataMap[dateString][id] = value;
     });
     data?.trend?.categoryGeo?.forEach(
       ({ date, value, geoContinent, geoCountry, geoSubdivision }) => {
         const id = returnIdCategoryGeo(geoContinent, geoCountry, geoSubdivision);
         if (!id) return;
-        const dateString = validateDataMap(chartDataMap, date);
+        const dateString = validateDataMap(chartDataMap, dateCache, date);
         chartDataMap[dateString][id] = value;
       }
     );
     data?.trend?.categoryReferrer?.forEach(({ date, value, domain, referrer }) => {
       const id = returnIdCategoryReferrer(domain, referrer);
       if (!id) return;
-      const dateString = validateDataMap(chartDataMap, date);
+      const dateString = validateDataMap(chartDataMap, dateCache, date);
       chartDataMap[dateString][id] = value;
     });
     data?.trend?.categoryUtm?.forEach(({ date, value, utmSource, utmMedium, utmCampaign }) => {
       const id = returnIdCategoryUtm(utmSource, utmMedium, utmCampaign);
       if (!id) return;
-      const dateString = validateDataMap(chartDataMap, date);
+      const dateString = validateDataMap(chartDataMap, dateCache, date);
       chartDataMap[dateString][id] = value;
     });
 

@@ -60,9 +60,16 @@ test.describe('Comprehensive Flow', () => {
     await page.locator('input[id="origin"]').fill(MOCK_SITE_URL);
     await page.getByRole('button', { name: 'Generate' }).click();
 
-    // Retrieve token (Wait for the token cell to appear)
-    const tokenSpan = page.locator('td span[dir="rtl"]').first();
-    await expect(tokenSpan).toBeVisible({ timeout: 10000 });
+    // Retrieve token
+    // The previous token retrieval failed in CI due to timeout.
+    // Ensure we wait for the table row corresponding to the mock site URL.
+    const tableRow = page
+      .locator('table[data-slot="table"] tbody tr', { hasText: MOCK_SITE_URL })
+      .first();
+    await expect(tableRow).toBeVisible({ timeout: 15000 });
+
+    const tokenSpan = tableRow.locator('span[dir="rtl"]');
+    await expect(tokenSpan).toBeVisible();
     const rawToken = await tokenSpan.textContent();
     const token = rawToken?.replace(/[\u200E]/g, '').trim();
     expect(token).toBeTruthy();

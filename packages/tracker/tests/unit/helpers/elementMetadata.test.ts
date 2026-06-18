@@ -62,8 +62,16 @@ describe('getElementMetadata', () => {
     test('should fallback to getElementPath when no IDs are present', () => {
       const parent = createMockElement({ tagName: 'DIV' });
       const sibling1 = createMockElement({ tagName: 'SPAN', parentElement: parent });
-      const sibling2 = createMockElement({ tagName: 'P', previousElementSibling: sibling1, parentElement: parent });
-      const target = createMockElement({ tagName: 'SPAN', previousElementSibling: sibling2, parentElement: parent });
+      const sibling2 = createMockElement({
+        tagName: 'P',
+        previousElementSibling: sibling1,
+        parentElement: parent,
+      });
+      const target = createMockElement({
+        tagName: 'SPAN',
+        previousElementSibling: sibling2,
+        parentElement: parent,
+      });
 
       const metadata = getElementMetadata(target);
       expect(metadata.element_id).toBe('div:nth-of-type(1) > span:nth-of-type(2)');
@@ -75,7 +83,9 @@ describe('getElementMetadata', () => {
       const target = createMockElement({ tagName: 'BUTTON', parentElement: parent });
 
       const metadata = getElementMetadata(target);
-      expect(metadata.element_id).toBe('section#main-section > div:nth-of-type(1) > button:nth-of-type(1)');
+      expect(metadata.element_id).toBe(
+        'section#main-section > div:nth-of-type(1) > button:nth-of-type(1)'
+      );
     });
   });
 

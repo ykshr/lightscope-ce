@@ -23,7 +23,7 @@ describe('ID Helpers', () => {
 
     // Mock crypto without random math to ensure stable different outputs for each call if needed.
     let counter = 0;
-    const stableCryptoMock = { randomUUID: vi.fn(() => 'mocked-uuid-' + (++counter)) };
+    const stableCryptoMock = { randomUUID: vi.fn(() => 'mocked-uuid-' + ++counter) };
     vi.stubGlobal('crypto', stableCryptoMock);
     vi.useFakeTimers();
   });

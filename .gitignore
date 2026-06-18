@@ -40,4 +40,4 @@ packages/api/prisma/db/*
 **/__generated__
 
 # Gemini
-.jules
+.jules/

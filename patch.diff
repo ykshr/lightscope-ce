@@ -1,0 +1,26 @@
+<<<<<<< SEARCH
+    it('should sanitize HTML from metadata fields to prevent XSS', () => {
+      const xssPayload = {
+        ...mockPayload,
+        app: '<script>alert("xss")</script>MyApp',
+        site_name: 'Site <img src=x onerror=alert(1)>',
+      };
+      const pv = createPV('default', xssPayload, null);
+
+      expect(pv.app).toBe('alert("xss")MyApp');
+      expect(pv.site_name).toBe('Site ');
+    });
+=======
+    it('should sanitize HTML from metadata fields to prevent XSS', () => {
+      const xssPayload = {
+        ...mockPayload,
+        app: '<script>alert("xss")</script>MyApp',
+        site_name: 'Site <img src=x onerror=alert(1)>',
+        'og:site_name': undefined, // ensure it uses site_name
+      };
+      const pv = createPV('default', xssPayload, null);
+
+      expect(pv.app).toBe('alert("xss")MyApp');
+      expect(pv.site_name).toBe('Site ');
+    });
+>>>>>>> REPLACE

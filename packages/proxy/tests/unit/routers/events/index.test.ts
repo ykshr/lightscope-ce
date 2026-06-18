@@ -156,6 +156,24 @@ describe('processEvent', () => {
       });
     });
 
+    it('should sanitize HTML from metadata fields to prevent XSS', () => {
+      const xssPayload = {
+        ...mockPayload,
+        'og:title': '<script>alert("xss")</script>Test Title',
+        'og:description': '<p>Description</p> with <b>tags</b>',
+        'og:site_name': 'Site <img src=x onerror=alert(1)>',
+        'og:type': 'article<iframe src="javascript:alert(1)"></iframe>',
+        'article:section': 'Tech <a href="#">Link</a>',
+      };
+      const article = createArticle('default', xssPayload);
+
+      expect(article.title).toBe('alert("xss")Test Title');
+      expect(article.description).toBe('Description with tags');
+      expect(article.site_name).toBe('Site ');
+      expect(article.type).toBe('article');
+      expect(article.section).toBe('Tech Link');
+    });
+
     it('should use payload.url if og:url is missing', () => {
       const payload = { ...mockPayload };
       delete payload['og:url'];
@@ -172,6 +190,19 @@ describe('processEvent', () => {
   });
 
   describe('createPV', () => {
+    it('should sanitize HTML from metadata fields to prevent XSS', () => {
+      const xssPayload = {
+        ...mockPayload,
+        app: '<script>alert("xss")</script>MyApp',
+        site_name: 'Site <img src=x onerror=alert(1)>',
+        'og:site_name': undefined, // ensure it uses site_name
+      };
+      const pv = createPV('default', xssPayload, null);
+
+      expect(pv.app).toBe('alert("xss")MyApp');
+      expect(pv.site_name).toBe('Site ');
+    });
+
     it('should create a PV object from payload with full geo info', () => {
       const mockGeo = {
         continent: 'NA',

@@ -60,9 +60,9 @@ test.describe('Comprehensive Flow', () => {
     await page.locator('input[id="origin"]').fill(MOCK_SITE_URL);
     await page.getByRole('button', { name: 'Generate' }).click();
 
-    // Retrieve token
-    const tokenSpan = page.locator('span[dir="rtl"]').first();
-    await expect(tokenSpan).toBeVisible();
+    // Retrieve token (Wait for the token cell to appear)
+    const tokenSpan = page.locator('td span[dir="rtl"]').first();
+    await expect(tokenSpan).toBeVisible({ timeout: 10000 });
     const rawToken = await tokenSpan.textContent();
     const token = rawToken?.replace(/[\u200E]/g, '').trim();
     expect(token).toBeTruthy();

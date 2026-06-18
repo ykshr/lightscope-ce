@@ -64,7 +64,7 @@ export type RequestAttributesWithArticle = (typeof RequestAttributesWithArticle)
 
 export function resolveRequestedAttributes(info: GraphQLResolveInfo): RequestAttribute[] {
   const selected = collectSelectedFields(info);
-  const selectedSnake = new Set(Array.from(selected).map(camelToSnake));
+  const selectedSnake = new Set(Array.from(selected, camelToSnake));
   return RequestAttributes.filter((a) => selectedSnake.has(a));
 }
 
@@ -72,6 +72,6 @@ export function resolveRequestedAttributesWithArticle(
   info: GraphQLResolveInfo
 ): RequestAttributesWithArticle[] {
   const selected = collectSelectedFields(info);
-  const selectedSnake = new Set(Array.from(selected).map(camelToSnake));
+  const selectedSnake = new Set(Array.from(selected, camelToSnake));
   return RequestAttributesWithArticle.filter((a) => selectedSnake.has(a));
 }

@@ -6,7 +6,7 @@ import { Page } from 'playwright';
 
 export async function generateToken(organizationId: string, origin: string) {
   const payload = { organizationId, origin };
-  const token = await sign(payload, JWT_SECRET, JWT_ALGORITHM as any);
+  const token = await sign(payload, JWT_SECRET as string, JWT_ALGORITHM as any);
   return token;
 }
 

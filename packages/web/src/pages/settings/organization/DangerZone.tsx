@@ -1,21 +1,28 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import { Props } from './type';
 
 export default function DangerZone({ org }: Props) {
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleDeleteOrg = async () => {
     if (!org?.id) return;
     if (
       confirm('Are you sure you want to delete this organization? This action cannot be undone.')
     ) {
+      setIsDeleting(true);
       const { error } = await authClient.organization.delete({
         organizationId: org.id,
       });
       if (error) {
         alert(error.message || 'Failed to delete organization');
+        setIsDeleting(false);
       } else {
         await authClient.organization.setActive({ organizationId: null });
+        setIsDeleting(false);
       }
     }
   };
@@ -33,7 +40,8 @@ export default function DangerZone({ org }: Props) {
               Permanently delete this organization and all data.
             </p>
           </div>
-          <Button variant="destructive" onClick={handleDeleteOrg}>
+          <Button variant="destructive" onClick={handleDeleteOrg} disabled={isDeleting}>
+            {isDeleting && <Spinner className="mr-2" />}
             Delete Organization
           </Button>
         </div>

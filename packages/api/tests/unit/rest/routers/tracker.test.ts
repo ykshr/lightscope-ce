@@ -11,7 +11,7 @@ vi.mock('@/loaders/tracker', () => ({
   default: vi.fn().mockResolvedValue([{ id: '1', token: 'mocked_token' }]),
 }));
 
-const setupApp = (role: string = 'member') => {
+const setupApp = (role: string = 'member', trackerMocks: any = {}) => {
   const app = new Hono<{ Variables: Variables; Bindings: Bindings }>();
 
   app.use('*', async (c, next) => {
@@ -36,9 +36,9 @@ const setupApp = (role: string = 'member') => {
       jwt: { secret: 'secret', algorithm: 'HS256' },
       prisma: {
         tracker: {
-          create: vi.fn().mockResolvedValue({}),
-          deleteMany: vi.fn().mockResolvedValue({ count: 1 }),
-          findMany: vi.fn().mockResolvedValue([{}]),
+          create: trackerMocks.create || vi.fn().mockResolvedValue({}),
+          deleteMany: trackerMocks.deleteMany || vi.fn().mockResolvedValue({ count: 1 }),
+          findMany: trackerMocks.findMany || vi.fn().mockResolvedValue([{}]),
         },
       },
     } as unknown as $);
@@ -111,6 +111,16 @@ describe('Tracker Router', () => {
       const app = setupApp('owner');
       const res = await app.request('/tracker/1', { method: 'DELETE' });
       expect(res.status).toBe(200);
+    });
+
+    it('should return 500 when tracker deletion fails', async () => {
+      const app = setupApp('admin', {
+        deleteMany: vi.fn().mockRejectedValue(new Error('Database error')),
+      });
+      const res = await app.request('/tracker/1', { method: 'DELETE' });
+      expect(res.status).toBe(500);
+      const data = await res.json();
+      expect(data).toEqual({ error: 'Failed to delete tracker' });
     });
   });
 });

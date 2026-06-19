@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import { useState } from 'react';
 
@@ -13,13 +14,17 @@ export default function NewOrganizationDialog({
 }) {
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateOrg = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
 
     const uuid = crypto.randomUUID();
     const { error } = await authClient.organization.create({ name, slug: uuid });
+
+    setIsLoading(false);
     if (error) {
       setError(error.message || 'Failed to create organization');
       return;
@@ -50,10 +55,13 @@ export default function NewOrganizationDialog({
           </div>
           {error && <div className="text-sm text-destructive">{error}</div>}
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
               Cancel
             </Button>
-            <Button type="submit">Create</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && <Spinner className="mr-2" />}
+              Create
+            </Button>
           </div>
         </form>
       </DialogContent>

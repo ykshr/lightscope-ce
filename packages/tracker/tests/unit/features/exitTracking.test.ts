@@ -31,7 +31,10 @@ describe('exitTracking', () => {
     initExitTracking(mockTracker as Tracker);
 
     expect(window.addEventListener).toHaveBeenCalledWith('beforeunload', expect.any(Function));
-    expect(document.addEventListener).toHaveBeenCalledWith('visibilitychange', expect.any(Function));
+    expect(document.addEventListener).toHaveBeenCalledWith(
+      'visibilitychange',
+      expect.any(Function)
+    );
   });
 
   test('should call tracker.trackPageEvent when beforeunload occurs', () => {
@@ -116,6 +119,9 @@ describe('exitTracking', () => {
     cleanup();
 
     expect(window.removeEventListener).toHaveBeenCalledWith('beforeunload', beforeUnloadListener);
-    expect(document.removeEventListener).toHaveBeenCalledWith('visibilitychange', visibilityChangeListener);
+    expect(document.removeEventListener).toHaveBeenCalledWith(
+      'visibilitychange',
+      visibilityChangeListener
+    );
   });
 });

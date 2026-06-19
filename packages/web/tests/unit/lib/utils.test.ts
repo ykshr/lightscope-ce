@@ -45,3 +45,22 @@ describe('cn utility function', () => {
     );
   });
 });
+
+import { sanitizeCSSIdentifier, sanitizeCSSValue } from '@/lib/utils';
+
+describe('sanitizeCSSIdentifier', () => {
+  it('should remove invalid characters', () => {
+    expect(sanitizeCSSIdentifier('valid-id_123')).toBe('valid-id_123');
+    expect(sanitizeCSSIdentifier('invalid;id')).toBe('invalidid');
+    expect(sanitizeCSSIdentifier('id<with>tags')).toBe('idwithtags');
+  });
+});
+
+describe('sanitizeCSSValue', () => {
+  it('should remove invalid characters', () => {
+    expect(sanitizeCSSValue('red')).toBe('red');
+    expect(sanitizeCSSValue('rgba(255,0,0,1)')).toBe('rgba(255,0,0,1)');
+    expect(sanitizeCSSValue('red; background: blue;')).toBe('red background: blue');
+    expect(sanitizeCSSValue('red <script>')).toBe('red script');
+  });
+});

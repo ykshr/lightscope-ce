@@ -92,25 +92,27 @@ export default function processArticleFilter(
   }
 
   if (filter.includeAuthors?.length) {
-    const sets: string[] = [];
-    for (const set of filter.includeAuthors) {
-      if (!set) continue;
-      const paramKey = `includeAuthors_${sets.length}`;
+    let count = 0;
+    const str = filter.includeAuthors.reduce((acc, set) => {
+      if (!set) return acc;
+      const paramKey = `includeAuthors_${count++}`;
       params[paramKey] = set;
-      sets.push(`hasAny(${col('authors')}, {${paramKey}:Array(String)})`);
-    }
-    if (sets.length) c.push(`(${sets.join(' AND ')})`);
+      const clause = `hasAny(${col('authors')}, {${paramKey}:Array(String)})`;
+      return acc ? `${acc} AND ${clause}` : clause;
+    }, '');
+    if (str) c.push(`(${str})`);
   }
 
   if (filter.excludeAuthors?.length) {
-    const sets: string[] = [];
-    for (const set of filter.excludeAuthors) {
-      if (!set) continue;
-      const paramKey = `excludeAuthors_${sets.length}`;
+    let count = 0;
+    const str = filter.excludeAuthors.reduce((acc, set) => {
+      if (!set) return acc;
+      const paramKey = `excludeAuthors_${count++}`;
       params[paramKey] = set;
-      sets.push(`NOT hasAny(${col('authors')}, {${paramKey}:Array(String)})`);
-    }
-    if (sets.length) c.push(`(${sets.join(' AND ')})`);
+      const clause = `NOT hasAny(${col('authors')}, {${paramKey}:Array(String)})`;
+      return acc ? `${acc} AND ${clause}` : clause;
+    }, '');
+    if (str) c.push(`(${str})`);
   }
 
   if (filter.includeSections?.length) {
@@ -124,25 +126,27 @@ export default function processArticleFilter(
   }
 
   if (filter.includeTags?.length) {
-    const sets: string[] = [];
-    for (const set of filter.includeTags) {
-      if (!set) continue;
-      const paramKey = `includeTags_${sets.length}`;
+    let count = 0;
+    const str = filter.includeTags.reduce((acc, set) => {
+      if (!set) return acc;
+      const paramKey = `includeTags_${count++}`;
       params[paramKey] = set;
-      sets.push(`hasAny(${col('tags')}, {${paramKey}:Array(String)})`);
-    }
-    if (sets.length) c.push(`(${sets.join(' AND ')})`);
+      const clause = `hasAny(${col('tags')}, {${paramKey}:Array(String)})`;
+      return acc ? `${acc} AND ${clause}` : clause;
+    }, '');
+    if (str) c.push(`(${str})`);
   }
 
   if (filter.excludeTags?.length) {
-    const sets: string[] = [];
-    for (const set of filter.excludeTags) {
-      if (!set) continue;
-      const paramKey = `excludeTags_${sets.length}`;
+    let count = 0;
+    const str = filter.excludeTags.reduce((acc, set) => {
+      if (!set) return acc;
+      const paramKey = `excludeTags_${count++}`;
       params[paramKey] = set;
-      sets.push(`NOT hasAny(${col('tags')}, {${paramKey}:Array(String)})`);
-    }
-    if (sets.length) c.push(`(${sets.join(' AND ')})`);
+      const clause = `NOT hasAny(${col('tags')}, {${paramKey}:Array(String)})`;
+      return acc ? `${acc} AND ${clause}` : clause;
+    }, '');
+    if (str) c.push(`(${str})`);
   }
 
   return c.length ? { query: c.join(' AND '), params } : undefined;

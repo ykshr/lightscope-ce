@@ -54,17 +54,17 @@ export function createArticle(organization_id: string, payload: Payload): Articl
   return {
     organization_id,
     url,
-    title: payload['og:title'] ?? undefined,
-    type: payload['og:type'] ?? undefined,
+    title: sanitizeString(payload['og:title']),
+    type: sanitizeString(payload['og:type']),
     image: payload['og:image'] ?? undefined,
-    description: payload['og:description'] ?? undefined,
-    site_name,
-    locale: payload['og:locale'] ?? undefined,
+    description: sanitizeString(payload['og:description']),
+    site_name: sanitizeString(site_name),
+    locale: sanitizeString(payload['og:locale']),
     published_time: payload['article:published_time'] ?? undefined,
     modified_time: payload['article:modified_time'] ?? undefined,
     expiration_time: payload['article:expiration_time'] ?? undefined,
     authors: payload['article:authors'] ?? undefined,
-    section: payload['article:section'] ?? undefined,
+    section: sanitizeString(payload['article:section']),
     tags: payload['article:tags'] ?? undefined,
   };
 }
@@ -99,7 +99,7 @@ export function createPV(
 
   return {
     organization_id,
-    site_name,
+    site_name: sanitizeString(site_name) ?? site_name,
     event_id,
     url,
     event_time: formatDate(payload.event_time_utc),
@@ -113,7 +113,7 @@ export function createPV(
     device_vendor: payload.device_vendor,
     os: payload.os,
     os_version: payload.os_version,
-    app: payload.app,
+    app: sanitizeString(payload.app),
     app_type: payload.app_type,
     app_version: payload.app_version,
     age: payload.age,
@@ -144,6 +144,11 @@ function processSiteName(payload: Payload) {
 
 function formatDate(date: Date | string): string {
   return new Date(date).toISOString().substring(0, 19);
+}
+
+export function sanitizeString(str: string | undefined | null): string | undefined {
+  if (!str) return undefined;
+  return str.replace(/<[^>]*>?/gm, '');
 }
 
 export default eventsRouter;

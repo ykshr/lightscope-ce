@@ -2,7 +2,6 @@ import createContext from '@/createContext';
 import { serve } from '@hono/node-server';
 import { createApp } from './app';
 
-// @ts-ignore
 const PROXY_PORT = process.env.PROXY_PORT ? parseInt(process.env.PROXY_PORT, 10) : 3002;
 
 const app = createApp(createContext);

@@ -48,3 +48,6 @@ jobs:
         run: pnpm run test:e2e
         env:
           JWT_SECRET: ci-test-secret-do-not-use-in-prod
+          CLICKHOUSE_USERNAME: lightscope
+          CLICKHOUSE_PASSWORD: lightscope
+          CLICKHOUSE_DB: lightscope

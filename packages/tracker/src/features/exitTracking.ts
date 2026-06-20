@@ -1,19 +1,22 @@
 import type { Tracker } from '@/trackers/tracker';
 
 export function initExitTracking(tracker: Tracker) {
-  window.addEventListener('beforeunload', () => {
+  const onBeforeUnload = () => {
     tracker.trackPageEvent('page_exit');
-  });
+  };
 
-  document.addEventListener('visibilitychange', () => {
+  const onVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {
       tracker.trackPageEvent('page_hidden');
     }
-  });
+  };
+
+  window.addEventListener('beforeunload', onBeforeUnload);
+  document.addEventListener('visibilitychange', onVisibilityChange);
 
   const cleanup = () => {
-    window.removeEventListener('beforeunload', () => {});
-    document.removeEventListener('visibilitychange', () => {});
+    window.removeEventListener('beforeunload', onBeforeUnload);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
   };
 
   return cleanup;

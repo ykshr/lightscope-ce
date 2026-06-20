@@ -86,6 +86,8 @@ export const allKeysUsedInSortOptions = Array.from(
   new Set<string>(sortOptions.flatMap((option) => Object.keys(option.value)))
 ).sort();
 
+export const allKeysUsedInSortOptionsSet = new Set(allKeysUsedInSortOptions);
+
 const preprocessedOptions = sortOptions.map((option, index) => {
   const value = { ...option.value } as Record<string, unknown>;
   const keys = Object.keys(value).sort();
@@ -106,7 +108,7 @@ const preprocessedOptions = sortOptions.map((option, index) => {
 
 export const findSortOptionByValue = (value: Record<string, unknown>) => {
   const categoryKeys = Object.keys(value)
-    .filter((key) => allKeysUsedInSortOptions.includes(key))
+    .filter((key) => allKeysUsedInSortOptionsSet.has(key))
     .sort();
 
   const sortedInputArrays = new Map<unknown[], unknown[]>();

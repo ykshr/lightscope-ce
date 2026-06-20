@@ -106,6 +106,78 @@ describe('Tracker Router', () => {
       });
       expect(res.status).toBe(200);
     });
+
+    it('should return 400 for invalid payload', async () => {
+      const app = setupApp('admin');
+      const res = await app.request('/tracker/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ origin: 'not-a-url' }), // invalid URL
+      });
+      expect(res.status).toBe(400);
+      const data = await res.json();
+      expect(data).toHaveProperty('error', 'Invalid payload');
+    });
+
+    it('should return 400 for excessively long origin', async () => {
+      const app = setupApp('admin');
+      const longOrigin = 'https://' + 'a'.repeat(1000) + '.com';
+      const res = await app.request('/tracker/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ origin: longOrigin }),
+      });
+      expect(res.status).toBe(400);
+      const data = await res.json();
+      expect(data).toHaveProperty('error', 'Origin is too long');
+    });
+
+    it('should allow token generation with expiry date', async () => {
+      const app = setupApp('admin');
+      const res = await app.request('/tracker/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          origin: 'https://example.com',
+          expiresAt: new Date().toISOString(),
+        }),
+      });
+      expect(res.status).toBe(200);
+    });
+
+    it('should handle errors and return 500', async () => {
+      const testApp = new Hono<{ Variables: Variables; Bindings: Bindings }>();
+      testApp.use('*', async (c, next) => {
+        c.set('user', { id: 'u1' } as any);
+        c.set('organization', { id: 'org1' });
+        c.set('me', { role: 'admin' } as any);
+        const mockPrisma = {
+          tracker: {
+            create: vi.fn().mockRejectedValue(new Error('Database error')),
+          },
+        };
+        c.set('$', {
+          jwt: { secret: 'secret', algorithm: 'HS256' },
+          prisma: mockPrisma,
+        } as unknown as $);
+        await next();
+      });
+      testApp.route('/tracker', trackerApp);
+
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const res = await testApp.request('/tracker/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ origin: 'https://example.com' }),
+      });
+
+      expect(res.status).toBe(500);
+      const data = await res.json();
+      expect(data).toHaveProperty('error', 'Failed to generate token');
+
+      consoleSpy.mockRestore();
+    });
   });
 
   describe('DELETE /tracker/:id', () => {
@@ -127,14 +199,29 @@ describe('Tracker Router', () => {
       expect(res.status).toBe(200);
     });
 
-    it('should return 500 when tracker deletion fails', async () => {
-      const app = setupApp('admin', {
-        deleteMany: vi.fn().mockRejectedValue(new Error('Database error')),
+    it('should handle errors and return 500', async () => {
+      const testApp = new Hono<{ Variables: Variables; Bindings: Bindings }>();
+      testApp.use('*', async (c, next) => {
+        c.set('user', { id: 'u1' } as any);
+        c.set('organization', { id: 'org1' });
+        c.set('me', { role: 'admin' } as any);
+        const mockPrisma = {
+          tracker: {
+            deleteMany: vi.fn().mockRejectedValue(new Error('Database error')),
+          },
+        };
+        c.set('$', {
+          prisma: mockPrisma,
+        } as unknown as $);
+        await next();
       });
-      const res = await app.request('/tracker/1', { method: 'DELETE' });
+      testApp.route('/tracker', trackerApp);
+
+      const res = await testApp.request('/tracker/1', { method: 'DELETE' });
+
       expect(res.status).toBe(500);
       const data = await res.json();
-      expect(data).toEqual({ error: 'Failed to delete tracker' });
+      expect(data).toHaveProperty('error', 'Failed to delete tracker');
     });
   });
 });

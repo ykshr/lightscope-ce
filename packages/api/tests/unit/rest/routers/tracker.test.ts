@@ -93,40 +93,6 @@ describe('Tracker Router', () => {
       expect(res.status).toBe(200);
     });
 
-    it('should handle errors and return 500', async () => {
-      const testApp = new Hono<{ Variables: Variables; Bindings: Bindings }>();
-      testApp.use('*', async (c, next) => {
-        c.set('user', { id: 'u1' } as any);
-        c.set('organization', { id: 'org1' });
-        c.set('me', { role: 'admin' } as any);
-        const mockPrisma = {
-          tracker: {
-            create: vi.fn().mockRejectedValue(new Error('Database error')),
-          }
-        };
-        c.set('$', {
-          jwt: { secret: 'secret', algorithm: 'HS256' },
-          prisma: mockPrisma
-        } as unknown as $);
-        await next();
-      });
-      testApp.route('/tracker', trackerApp);
-
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
-      const res = await testApp.request('/tracker/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ origin: 'https://example.com' }),
-      });
-
-      expect(res.status).toBe(500);
-      const data = await res.json();
-      expect(data).toHaveProperty('error', 'Failed to generate token');
-
-      consoleSpy.mockRestore();
-    });
-
     it('should return 400 for invalid payload', async () => {
       const app = setupApp('admin');
       const res = await app.request('/tracker/generate', {
@@ -159,10 +125,44 @@ describe('Tracker Router', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           origin: 'https://example.com',
-          expiresAt: new Date().toISOString()
+          expiresAt: new Date().toISOString(),
         }),
       });
       expect(res.status).toBe(200);
+    });
+
+    it('should handle errors and return 500', async () => {
+      const testApp = new Hono<{ Variables: Variables; Bindings: Bindings }>();
+      testApp.use('*', async (c, next) => {
+        c.set('user', { id: 'u1' } as any);
+        c.set('organization', { id: 'org1' });
+        c.set('me', { role: 'admin' } as any);
+        const mockPrisma = {
+          tracker: {
+            create: vi.fn().mockRejectedValue(new Error('Database error')),
+          },
+        };
+        c.set('$', {
+          jwt: { secret: 'secret', algorithm: 'HS256' },
+          prisma: mockPrisma,
+        } as unknown as $);
+        await next();
+      });
+      testApp.route('/tracker', trackerApp);
+
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const res = await testApp.request('/tracker/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ origin: 'https://example.com' }),
+      });
+
+      expect(res.status).toBe(500);
+      const data = await res.json();
+      expect(data).toHaveProperty('error', 'Failed to generate token');
+
+      consoleSpy.mockRestore();
     });
   });
 
@@ -194,10 +194,10 @@ describe('Tracker Router', () => {
         const mockPrisma = {
           tracker: {
             deleteMany: vi.fn().mockRejectedValue(new Error('Database error')),
-          }
+          },
         };
         c.set('$', {
-          prisma: mockPrisma
+          prisma: mockPrisma,
         } as unknown as $);
         await next();
       });
@@ -209,5 +209,5 @@ describe('Tracker Router', () => {
       const data = await res.json();
       expect(data).toHaveProperty('error', 'Failed to delete tracker');
     });
-});
+  });
 });

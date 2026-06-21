@@ -27,6 +27,8 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - **Resolver Responsibilities**: Keep resolvers thin. Business logic belongs in service modules. Do not write raw SQL inside the resolver body.
   - **Input Validation**: GraphQL type definitions do not guarantee runtime validation. All external inputs must be strictly validated with Zod and normalized before use.
   - **Performance**: Always assume large datasets. Avoid loading full result sets into memory. Prefer pre-aggregated tables whenever possible.
+    - Prisma automatically maps PostgreSQL/SQLite `DateTime` types to native JavaScript `Date` objects. To prevent unnecessary CPU overhead and memory allocation, avoid re-instantiating date fields with `new Date()` within `.map()` loops when transforming Prisma query results.
+    - When building dynamic string arrays (like SQL filter conditions), prefer a single-pass `Array.reduce` over separate `.filter().map()` chains or `for...of` loops mutating external arrays, as the single-pass functional approach significantly improves execution speed by reducing array allocations.
 
   - **Helpers**:
     - The `packages/api/src/helpers/apple.ts` utility is tested by `packages/api/tests/unit/helpers/apple.test.ts`, verifying that `generateAppleClientSecret` correctly handles partially missing parameters by returning `undefined`.
@@ -39,7 +41,7 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - **Security**:
     - Sensitive information like `JWT_SECRET` must be explicitly configured in the environment. Hardcoded fallback values are strictly prohibited, and missing secrets must cause the request context creation to fail securely by throwing an error. Security standards for the `better-auth` configuration (located in `src/createContext.ts` and `src/types/auth.ts`) prohibit logging the sensitive password reset `url` within the `sendResetPassword` callback to prevent token leakage in system logs.
     - Do not log raw SQL errors.
-    - ClickHouse queries in `packages/api/src/graphql/loaders/` must use parameter binding for `LIMIT`, `OFFSET`, and `LIMIT BY` clauses using the `{name:Type}` syntax (e.g., `{limit:UInt32}`) to prevent SQL injection; corresponding values should be stored in a `queryParamsObj` passed to the database client helper.
+    - ClickHouse queries in `packages/api/src/graphql/loaders/` must use parameter binding for `LIMIT`, `OFFSET`, and `LIMIT BY` clauses using the `{name:Type}` syntax (e.g., `{limit:UInt32}`) to prevent SQL injection; corresponding values should be stored in a `queryParamsObj` passed to the database client helper. Additionally, all ClickHouse queries must use parameter binding (passing `query_params` to the query helper) instead of direct string interpolation to prevent SQL injection and malformed queries.
     - Do not expose internal table names to the client.
     - Do not trust client-provided column names.
 
@@ -52,6 +54,8 @@ All `AGENTS.md` files in the repository must be structured with four specific En
     *Note: In environments where pnpm metadata fetching is restricted, bun test can be used as a reliable alternative for executing Vitest-based tests in packages/api.*
     - **Database Integration**: In `packages/api`, the `test:integration` script automatically provisions a local SQLite test database (`file:./prisma/db/test.db`), runs `prisma migrate reset --force`, and executes tests within the `tests/integration/` directory using Vitest.
     - **Test Definitions**: Unit tests are function-level without package startup. Integration tests are package-level, requiring only the target package to be started with external dependencies mocked/stubbed. E2E tests are fully integrated tests requiring all packages to be started to cover comprehensive user journeys and data flows.
+    - **Mocking Loaders**: In Vitest unit tests for Hono routers, when mocking loader dependencies, ensure the `vi.mock()` path strictly matches the exact alias path used in the source implementation (e.g., `@/rest/loaders/tracker`, not `@/loaders/tracker`). To simulate test-specific failures (like a 500 error path), import the module namespace (e.g., `import * as trackerLoader`) and use `vi.spyOn(trackerLoader, 'default').mockRejectedValueOnce(...)` rather than hardcoding rejections in the global module mock.
+    - **Mocking Prisma**: Prisma mocks are injected directly into the request context (e.g., `c.set('$', { prisma: ... })`) via setup helpers like `setupApp`. To mock database errors for specific tests (like a `deleteMany` failure), modify these setup helpers to accept custom mock override parameters (e.g., `trackerMocks`) instead of relying on global module mocks.
 
     ```bash
     pnpm --filter @lightscope-ce/api run test
@@ -80,6 +84,8 @@ All `AGENTS.md` files in the repository must be structured with four specific En
 * Guidance on where to place different types of code
   - GraphQL schema changes should affect `schema.graphql` and be codegen'd into `src/__generated__/`.
   - Unit and integration tests go in `tests/unit/` and `tests/integration/` respectively.
+  - Complex entity relationships and data fetching logic must be isolated within GraphQL resolvers that utilize Dataloaders to batch and optimize queries against ClickHouse.
+  - Temporary Node.js scripts that use CommonJS `require()` must use the `.cjs` extension to avoid ES module reference errors, as the `package.json` specifies `"type": "module"`.
 
 #### Restrictions
 * Guardrails such as:

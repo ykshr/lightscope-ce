@@ -20,8 +20,9 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - `camelCase` for variables/functions, `PascalCase` for types/interfaces/classes.
 * Restrictions on libraries that should or should not be used
   - Do not introduce heavy dependencies. Keep the proxy lightweight to maintain high performance.
-  - **Endpoint Responsibilities**: The primary role is to receive events from trackers quickly, validate them, and save them to ClickHouse. The Proxy package (`packages/proxy`) is a high-performance REST API built with Node.js and Hono, responsible for event ingestion from trackers and connected directly to ClickHouse.
+  - **Endpoint Responsibilities**: The primary role is to receive events from trackers quickly, validate them, and save them to ClickHouse. The Proxy package (`packages/proxy`) is a high-performance REST API built with Node.js and Hono, responsible for event ingestion from trackers and connected directly to ClickHouse. Fast-path telemetry events from `packages/tracker` are handled here by Hono REST endpoints rather than GraphQL to minimize latency and payload overhead.
   - **Input Validation**: Use Zod to strictly validate that the incoming payloads are in the correct format.
+  - **Testing**: Prioritize consistency and do not attempt to strictly type complex mock interfaces (e.g., `c.set` for Hono context) where `as any` is already established.
 
 #### Build & Test Commands
 * How to build the project

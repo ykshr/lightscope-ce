@@ -179,7 +179,11 @@ export function decodeUrlParams(search: string): FilterToQuery {
         convertedValue = convertDateString(value);
         break;
       case 'nestedArray':
-        convertedValue = value.split(',').map(decodeURIComponent).filter(Boolean);
+        convertedValue = value.split(',').reduce((acc: string[], val) => {
+          const decoded = decodeURIComponent(val);
+          if (decoded) acc.push(decoded);
+          return acc;
+        }, []);
         break;
       case 'array':
         convertedValue = value; // Use the value as is for push

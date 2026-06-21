@@ -135,7 +135,7 @@ test.describe('Comprehensive Flow', () => {
     }
 
     // TODO: Step 7: Wait for ingestion
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // Step 8: verify overview page
     await page.goto('/');

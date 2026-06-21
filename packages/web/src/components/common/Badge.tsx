@@ -6,12 +6,7 @@ export default function Badge({ name, onRemove }: { name: string; onRemove: () =
   return (
     <B variant="secondary" className="text-sm whitespace-normal break-all px-3">
       {name}
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon-sm"
-        onClick={onRemove}
-      >
+      <Button type="button" variant="ghost" size="icon-sm" onClick={onRemove}>
         <X />
         <span className="sr-only">Delete {name}</span>
       </Button>

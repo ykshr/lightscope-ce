@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Behavioral changes detected
+ *
+ * Upstream changes:
+ * Removed 'use client'.
+ *
+ * Manual review recommended.
+ */
 "use client"
 
 import * as React from "react"

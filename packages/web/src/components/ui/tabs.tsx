@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Visual/layout changes detected
+ *
+ * Upstream changes:
+ * Added has-data-[icon=...] padding to trigger.
+ *
+ * Manual review recommended.
+ */
 "use client"
 
 import * as React from "react"

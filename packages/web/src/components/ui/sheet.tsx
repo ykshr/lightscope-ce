@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Behavioral changes detected
+ *
+ * Upstream changes:
+ * Added 'use client'.
+ *
+ * Manual review recommended.
+ */
 import * as React from "react"
 import { Dialog as SheetPrimitive } from "radix-ui"
 

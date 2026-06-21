@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Local customizations detected
+ *
+ * Upstream changes:
+ * None (Custom component)
+ *
+ * Manual review recommended.
+ */
 import { cn } from "@/lib/utils"
 import { SpinnerIcon } from "@phosphor-icons/react"
 

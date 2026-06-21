@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * No update available
+ *
+ * Upstream changes:
+ * None
+ *
+ * Manual review recommended.
+ */
 import { cn } from "@/lib/utils"
 
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {

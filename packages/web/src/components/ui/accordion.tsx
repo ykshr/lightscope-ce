@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * No update available
+ *
+ * Upstream changes:
+ * None
+ *
+ * Manual review recommended.
+ */
 import * as React from "react"
 import { Accordion as AccordionPrimitive } from "radix-ui"
 

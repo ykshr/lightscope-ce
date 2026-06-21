@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Visual/layout changes detected
+ *
+ * Upstream changes:
+ * Secondary variant hovering changed to use color-mix; lg size inline padding reduced.
+ *
+ * Manual review recommended.
+ */
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"

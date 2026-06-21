@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Local customizations detected
+ *
+ * Upstream changes:
+ * None (Custom component)
+ *
+ * Manual review recommended.
+ */
 import { useMemo } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 

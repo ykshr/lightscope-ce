@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Visual/layout changes detected
+ *
+ * Upstream changes:
+ * Removed font-heading from title.
+ *
+ * Manual review recommended.
+ */
 import * as React from "react"
 import { Popover as PopoverPrimitive } from "radix-ui"
 

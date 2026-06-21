@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Visual/layout changes detected
+ *
+ * Upstream changes:
+ * Changed shadow border from hsl(var(--sidebar-border)) to var(--sidebar-border).
+ *
+ * Manual review recommended.
+ */
 "use client"
 
 import * as React from "react"

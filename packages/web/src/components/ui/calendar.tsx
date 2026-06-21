@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Visual/layout changes detected
+ *
+ * Upstream changes:
+ * Added 'use client'; table classname changed to month_grid.
+ *
+ * Manual review recommended.
+ */
 import * as React from "react"
 import {
   DayPicker,

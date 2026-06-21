@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Visual/layout changes detected
+ *
+ * Upstream changes:
+ * Removed 'use client'; Removed font-heading from title.
+ *
+ * Manual review recommended.
+ */
 "use client"
 
 import * as React from "react"

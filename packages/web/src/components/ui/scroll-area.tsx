@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * No update available
+ *
+ * Upstream changes:
+ * None
+ *
+ * Manual review recommended.
+ */
 "use client"
 
 import * as React from "react"

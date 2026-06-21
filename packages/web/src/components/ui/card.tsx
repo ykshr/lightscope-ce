@@ -1,3 +1,14 @@
+/**
+ * UPDATE SKIPPED
+ *
+ * Reason:
+ * Visual/layout changes detected
+ *
+ * Upstream changes:
+ * Replaced hardcoded gap and padding with --card-spacing CSS variables.
+ *
+ * Manual review recommended.
+ */
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

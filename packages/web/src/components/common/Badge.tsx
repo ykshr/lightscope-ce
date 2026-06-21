@@ -11,9 +11,9 @@ export default function Badge({ name, onRemove }: { name: string; onRemove: () =
         variant="ghost"
         size="icon-sm"
         onClick={onRemove}
-        aria-label={`Delete ${name}`}
       >
         <X />
+        <span className="sr-only">Delete {name}</span>
       </Button>
     </B>
   );

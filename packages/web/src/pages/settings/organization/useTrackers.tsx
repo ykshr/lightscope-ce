@@ -28,8 +28,8 @@ export default function useTrackers(organizationId: string) {
       }
       setIsPending(true);
       try {
-        const { body: trackers } = await customFetch('GET', '/tracker');
-        const formattedTrackers = trackers.map((tracker: Record<string, string>) => ({
+        const { body: fetchedTrackers } = await customFetch('GET', '/tracker');
+        const formattedTrackers = fetchedTrackers.map((tracker: Record<string, string>) => ({
           ...tracker,
           notBefore: new Date(tracker.notBefore),
           issuedAt: new Date(tracker.issuedAt),

@@ -97,7 +97,11 @@ export default function LogicalInput({ label, value, onChange }: LogicalInputPro
             {gIdx > 0 && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button type="button" variant="ghost">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    aria-label="Change logical operator (currently AND)"
+                  >
                     AND
                     <ChevronDown className="ml-0.5 h-3 w-3 opacity-50" />
                   </Button>
@@ -118,7 +122,11 @@ export default function LogicalInput({ label, value, onChange }: LogicalInputPro
                   {iIdx > 0 && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button type="button" variant="ghost">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          aria-label="Change logical operator (currently OR)"
+                        >
                           OR
                           <ChevronDown className="h-2 w-2 ml-0.5 opacity-50" />
                         </Button>

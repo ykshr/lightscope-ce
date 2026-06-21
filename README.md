@@ -105,3 +105,5 @@ MIT License
 ## Contributing
 
 Please read the `AGENTS.md` files located in the root directory and inside each package's directory for coding conventions, test execution commands, project structure rules, and restrictions. The AI rules outlined in `AGENTS.md` must be followed when contributing to the repository. It is strictly required that all documentation must be written in English. All documentation, including PR comments, `AGENTS.md`, `README.md`, and generated files, must strictly adhere to the English-only rule.
+
+The repository maintains a reusable, overarching AI Skill Specification package in the `.ai/skill/` directory, structured with exact markdown file headers. These files guide agent behavior and must contain verifiable, evidence-based rules specific to the LightScope CE monorepo. The repository also maintains AI skills in the `.agents/skills/` directory, where each distinct skill has its own sub-folder containing a `SKILL.md` and a `README.md`.

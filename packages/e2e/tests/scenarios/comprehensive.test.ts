@@ -134,15 +134,12 @@ test.describe('Comprehensive Flow', () => {
       await context.close();
     }
 
-    // TODO: Step 7: Wait for ingestion
-    await new Promise((resolve) => setTimeout(resolve, 10000));
-
-    // Step 8: verify overview page
+    // Step 7: verify overview page
     await page.goto('/');
-    await expect(page.locator('text=Total Page Views').first()).toBeVisible();
-    await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
+    await expect(page.locator('text=Total Page Views').first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible({ timeout: 30_000 });
 
-    // Step 9: Verify ranking page
+    // Step 8: Verify ranking page
     await page.goto('/ranking');
     await expect(
       page

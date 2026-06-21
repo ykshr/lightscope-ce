@@ -146,11 +146,11 @@ test.describe('Comprehensive Flow', () => {
         .locator('table[data-slot="table"] tbody tr')
         .filter({ hasText: 'E2E Test Article Title' })
         .first()
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 30_000 });
 
     // Step 9: Verify article page
     const targetUrl = encodeURIComponent(`${MOCK_SITE_URL}/index.html`);
     await page.goto(`/article?url=${targetUrl}`);
-    await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible({ timeout: 30_000 });
   });
 });

@@ -44,13 +44,7 @@ export default function TagInput({ label, value = [], onChange }: TagInputProps)
             }
           }}
         />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={addTag}
-          className="px-3 py-2"
-          aria-label="Add tag"
-        >
+        <Button type="button" variant="outline" onClick={addTag} className="px-3 py-2">
           Add
         </Button>
       </div>

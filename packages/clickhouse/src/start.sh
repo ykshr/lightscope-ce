@@ -3,8 +3,13 @@ set -e
 
 # Default values if not set
 CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-lightscope}
-CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-lightscope}
+CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
 CLICKHOUSE_DB=${CLICKHOUSE_DB:-lightscope}
+
+if [ -z "$CLICKHOUSE_PASSWORD" ]; then
+  echo "Error: CLICKHOUSE_PASSWORD environment variable is not set." >&2
+  exit 1
+fi
 
 # Path to the config file
 CONFIG_USER="/etc/clickhouse-server/users.d/littlescope.xml"

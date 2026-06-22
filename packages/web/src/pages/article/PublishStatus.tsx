@@ -1,4 +1,4 @@
-import { CheckCircle2, AlertCircle, Timer } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Timer } from 'lucide-react';
 
 function isAfter(date1: Date, date2: Date) {
   return date1.getTime() > date2.getTime();
@@ -15,10 +15,13 @@ export default function PublishStatus({
   publishedTime?: Date;
   expiredTime?: Date;
 }) {
+  const publishedTimeToUse = publishedTime?.getTime() === 0 ? undefined : publishedTime;
+  const expiredTimeToUse = expiredTime?.getTime() === 0 ? undefined : expiredTime;
+
   const getStatus = () => {
     const now = new Date();
 
-    if (expiredTime && isAfter(now, expiredTime)) {
+    if (expiredTimeToUse && isAfter(now, expiredTimeToUse)) {
       return {
         label: 'Expired',
         color: 'text-red-400',
@@ -27,7 +30,7 @@ export default function PublishStatus({
       };
     }
 
-    if (publishedTime && isBefore(now, publishedTime)) {
+    if (publishedTimeToUse && isBefore(now, publishedTimeToUse)) {
       return {
         label: 'Draft',
         color: 'text-yellow-400',
@@ -36,7 +39,7 @@ export default function PublishStatus({
       };
     }
 
-    if (publishedTime && isAfter(now, publishedTime)) {
+    if (publishedTimeToUse && isAfter(now, publishedTimeToUse)) {
       return {
         label: 'Published',
         color: 'text-emerald-400',

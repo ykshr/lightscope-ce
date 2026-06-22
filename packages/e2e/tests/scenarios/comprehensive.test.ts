@@ -197,6 +197,127 @@ test.describe.only('Comprehensive Flow', () => {
     // Step 9: Verify article page
     const targetUrl = encodeURIComponent(`${MOCK_SITE_URL}/index.html`);
     await page.goto(`/article?url=${targetUrl}`);
-    await expect(page.locator('.recharts-wrapper').first()).toBeVisible({ timeout: 30_000 });
+
+    // Wait for the main elements to load
+    await expect(page.locator('h1.text-3xl.font-bold')).toHaveText('E2E Test Article Title', {
+      timeout: 30_000,
+    });
+
+    // Verify Metadata Card Info
+    await expect(page.locator('img[alt="Thumbnail"]')).toHaveAttribute(
+      'src',
+      'http://localhost:3000/fixtures/test-image.jpg'
+    );
+    await expect(page.getByText('Status: Published')).toBeVisible();
+
+    const publishedTimeGrid = page
+      .locator('div', { has: page.getByText('Published Time', { exact: true }) })
+      .first();
+    await expect(publishedTimeGrid.locator('p')).toHaveText(
+      new Date('2024-01-01T10:00:00Z').toLocaleString()
+    );
+
+    const modifiedTimeGrid = page
+      .locator('div', { has: page.getByText('Modified Time', { exact: true }) })
+      .first();
+    await expect(modifiedTimeGrid.locator('p')).toHaveText(
+      new Date('2024-01-02T12:00:00Z').toLocaleString()
+    );
+
+    // Expand & Verify Accordion/Details
+    await page.getByRole('button', { name: 'Details' }).click();
+
+    const siteNameGrid = page
+      .locator('div', { has: page.getByText('Site Name', { exact: true }) })
+      .first();
+    await expect(siteNameGrid.locator('p')).toHaveText('Lightscope E2E Test Site');
+
+    const localeGrid = page
+      .locator('div', { has: page.getByText('Locale', { exact: true }) })
+      .first();
+    await expect(localeGrid.locator('p')).toHaveText('en_US');
+
+    const sectionGrid = page
+      .locator('div', { has: page.getByText('Section', { exact: true }) })
+      .first();
+    await expect(sectionGrid.locator('p')).toHaveText('Testing');
+
+    const typeGrid = page.locator('div', { has: page.getByText('Type', { exact: true }) }).first();
+    await expect(typeGrid.locator('p')).toHaveText('article');
+
+    const authorsGrid = page
+      .locator('div', { has: page.getByText('Authors', { exact: true }) })
+      .first();
+    await expect(authorsGrid.locator('p span').nth(0)).toHaveText('E2E Tester');
+    await expect(authorsGrid.locator('p span').nth(1)).toHaveText('Gemini CLI');
+
+    const tagsGrid = page.locator('div', { has: page.getByText('Tags', { exact: true }) }).first();
+    await expect(tagsGrid.locator('p span').nth(0)).toHaveText('e2e');
+    await expect(tagsGrid.locator('p span').nth(1)).toHaveText('test');
+
+    // Verify Stats Cards
+    const articleTotalViewsCard = page
+      .locator('[data-slot="card"]')
+      .filter({ has: page.getByText('Total Page Views', { exact: true }) })
+      .first();
+    await expect(articleTotalViewsCard.locator('h3')).toHaveText('3');
+
+    const articleUniqueUsersCard = page
+      .locator('[data-slot="card"]')
+      .filter({ has: page.getByText('Unique Users', { exact: true }) })
+      .first();
+    await expect(articleUniqueUsersCard.locator('h3')).toHaveText('1');
+
+    const engagementTimeCard = page
+      .locator('[data-slot="card"]')
+      .filter({ has: page.getByText('Avg. Engagement Time', { exact: true }) })
+      .first();
+    await expect(engagementTimeCard.locator('h3')).toHaveText('N/A');
+
+    const liveViewsCard = page
+      .locator('[data-slot="card"]')
+      .filter({ has: page.getByText('Realtime Visitors', { exact: true }) })
+      .first();
+    await expect(liveViewsCard.locator('h3')).toHaveText('3');
+
+    // Verify Referrer Domains pie chart
+    const articleReferrerCard = page
+      .locator('[data-slot="card"]')
+      .filter({ has: page.getByText('Referrer Domains') })
+      .first();
+    await expect(articleReferrerCard).toBeVisible();
+    await expect(articleReferrerCard.locator('svg text').getByText('3')).toBeVisible();
+    await expect(articleReferrerCard.locator('svg text').getByText('Visits')).toBeVisible();
+
+    const referrerLegend = articleReferrerCard.locator('.mt-6 > div');
+    await expect(referrerLegend.filter({ hasText: 'google.com' })).toContainText(
+      'google.com1 (33%)'
+    );
+    await expect(referrerLegend.filter({ hasText: 'facebook.com' })).toContainText(
+      'facebook.com1 (33%)'
+    );
+    await expect(referrerLegend.filter({ hasText: 'twitter.com' })).toContainText(
+      'twitter.com1 (33%)'
+    );
+
+    // Verify UTM Campaign pie chart (should be empty/0 Visits as it wasn't tracked)
+    const campaignCard = page
+      .locator('[data-slot="card"]')
+      .filter({ has: page.getByText('UTM Campaign') })
+      .first();
+    await expect(campaignCard).toBeVisible();
+    await expect(campaignCard.locator('svg text').getByText('0')).toBeVisible();
+    await expect(campaignCard.locator('svg text').getByText('Visits')).toBeVisible();
+
+    // Verify Locations card is visible
+    const locationsCard = page
+      .locator('[data-slot="card"]')
+      .filter({ has: page.getByText('Locations', { exact: true }) })
+      .first();
+    await expect(locationsCard).toBeVisible();
+    await expect(locationsCard.locator('h3')).toHaveText('Top Countries');
+
+    // Verify AreaStacked chart recharts wrapper is visible
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
   });
 });

@@ -48,7 +48,7 @@ const checkClickHouseReady = () =>
   new Promise((resolve) => {
     const req = http.get(
       'http://127.0.0.1:8123/?query=SELECT%201%20FROM%20system.tables%20WHERE%20database=%27lightscope%27%20AND%20name=%27pv_utm_hour_to_day_mv%27%20LIMIT%201',
-      { auth: 'lightscope:lightscope' },
+      { auth: `lightscope:${process.env.CLICKHOUSE_PASSWORD || 'lightscope'}` },
       (res) => {
         let data = '';
         res.on('data', (chunk) => {

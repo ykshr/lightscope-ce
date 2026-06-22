@@ -1,11 +1,11 @@
 import { type ArticleQuery } from '@/__generated__/graphql';
-import { Shapes, Languages, Tag, Globe, FileText, Users } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { FileText, Globe, Languages, Shapes, Tag, Users } from 'lucide-react';
 import PublishStatus from './PublishStatus';
 
 const MetaGridItem = ({
@@ -37,7 +37,9 @@ const MetaGridItem = ({
 export default function Metadata({ article }: { article: NonNullable<ArticleQuery['article']> }) {
   const formatDate = (dateStr?: string | null) => {
     if (!dateStr) return '-';
-    return new Date(dateStr).toLocaleString();
+    const date = new Date(dateStr);
+    if (date.getTime() === 0) return '-';
+    return date.toLocaleString();
   };
 
   return (

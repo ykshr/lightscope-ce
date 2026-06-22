@@ -38,7 +38,7 @@ export default function Metadata({ article }: { article: NonNullable<ArticleQuer
   const formatDate = (dateStr?: string | null) => {
     if (!dateStr) return '-';
     const date = new Date(dateStr);
-    if (date.getTime() === 0) return '-';
+    if (isNaN(date.getTime()) || date.getTime() === 0) return '-';
     return date.toLocaleString();
   };
 

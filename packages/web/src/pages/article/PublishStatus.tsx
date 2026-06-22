@@ -15,13 +15,10 @@ export default function PublishStatus({
   publishedTime?: Date;
   expiredTime?: Date;
 }) {
-  const publishedTimeToUse = publishedTime?.getTime() === 0 ? undefined : publishedTime;
-  const expiredTimeToUse = expiredTime?.getTime() === 0 ? undefined : expiredTime;
-
   const getStatus = () => {
     const now = new Date();
 
-    if (expiredTimeToUse && isAfter(now, expiredTimeToUse)) {
+    if (expiredTime && isAfter(now, expiredTime)) {
       return {
         label: 'Expired',
         color: 'text-red-400',
@@ -30,7 +27,7 @@ export default function PublishStatus({
       };
     }
 
-    if (publishedTimeToUse && isBefore(now, publishedTimeToUse)) {
+    if (publishedTime && isBefore(now, publishedTime)) {
       return {
         label: 'Draft',
         color: 'text-yellow-400',
@@ -39,7 +36,7 @@ export default function PublishStatus({
       };
     }
 
-    if (publishedTimeToUse && isAfter(now, publishedTimeToUse)) {
+    if (publishedTime && isAfter(now, publishedTime)) {
       return {
         label: 'Published',
         color: 'text-emerald-400',

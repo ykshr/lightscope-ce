@@ -37,9 +37,7 @@ const MetaGridItem = ({
 export default function Metadata({ article }: { article: NonNullable<ArticleQuery['article']> }) {
   const formatDate = (dateStr?: string | null) => {
     if (!dateStr) return '-';
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime()) || date.getTime() === 0) return '-';
-    return date.toLocaleString();
+    return dateStr.toLocaleString();
   };
 
   return (

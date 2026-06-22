@@ -44,7 +44,8 @@ export const formatData = <T>(data: T[], dateKeys: string[] = []): T[] => {
       const val = (row as any)[key];
 
       if (dateKeysSet.has(camelKey) && val && typeof val === 'string') {
-        formattedRow[camelKey] = val.replace(' ', 'T') + 'Z';
+        const dateStr = val.replace(' ', 'T') + 'Z';
+        formattedRow[camelKey] = new Date(dateStr).getTime() === 0 ? null : dateStr;
       } else {
         formattedRow[camelKey] = renameKeySnakeToCamel(val);
       }

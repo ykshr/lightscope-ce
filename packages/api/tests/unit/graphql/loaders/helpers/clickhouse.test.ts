@@ -52,6 +52,41 @@ describe('formatData', () => {
     ]);
   });
 
+  it('should format zero/epoch dates as null', () => {
+    const data = [
+      {
+        id: 1,
+        published_at: '1970-01-01 00:00:00',
+        modified_at: '1970-01-01',
+        expiration_at: '1970-01-01T00:00:00.000Z',
+        created_at: 0,
+        updated_at: '0',
+        other_date: new Date(0),
+      },
+    ];
+
+    const result = formatData(data, [
+      'publishedAt',
+      'modifiedAt',
+      'expirationAt',
+      'createdAt',
+      'updatedAt',
+      'otherDate',
+    ]);
+
+    expect(result).toEqual([
+      {
+        id: 1,
+        publishedAt: null,
+        modifiedAt: null,
+        expirationAt: null,
+        createdAt: null,
+        updatedAt: null,
+        otherDate: null,
+      },
+    ]);
+  });
+
   it('should format data without dateKeys correctly', () => {
     const data = [
       {

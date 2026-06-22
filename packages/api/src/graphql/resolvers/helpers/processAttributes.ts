@@ -1,4 +1,4 @@
-import { camelToSnake } from '@/graphql/loaders/helpers/rename';
+import { camelToSnake, snakeToCamel } from '@/graphql/loaders/helpers/rename';
 import { FragmentDefinitionNode, GraphQLResolveInfo, SelectionNode } from 'graphql';
 
 function collectSelectedFields(info: GraphQLResolveInfo): Set<string> {
@@ -64,14 +64,14 @@ export type RequestAttributesWithArticle = (typeof RequestAttributesWithArticle)
 
 export function resolveRequestedAttributes(info: GraphQLResolveInfo): RequestAttribute[] {
   const selected = collectSelectedFields(info);
-  const selectedSnake = new Set(Array.from(selected, camelToSnake));
-  return RequestAttributes.filter((a) => selectedSnake.has(a));
+  return RequestAttributes.filter((a) => selected.has(a) || selected.has(snakeToCamel(a)));
 }
 
 export function resolveRequestedAttributesWithArticle(
   info: GraphQLResolveInfo
 ): RequestAttributesWithArticle[] {
   const selected = collectSelectedFields(info);
-  const selectedSnake = new Set(Array.from(selected, camelToSnake));
-  return RequestAttributesWithArticle.filter((a) => selectedSnake.has(a));
+  return RequestAttributesWithArticle.filter(
+    (a) => selected.has(a) || selected.has(snakeToCamel(a))
+  );
 }

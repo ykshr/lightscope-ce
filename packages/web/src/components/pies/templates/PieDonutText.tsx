@@ -114,16 +114,19 @@ export default function PieDonutText({
         </ChartContainer>
 
         <div className="mt-6 space-y-3">
-          {chartData.map((item) => (
-            <LegendItem
-              key={item.id}
-              label={item.label}
-              value={item.value}
-              pct={item.pct}
-              pctToFixed={0}
-              color={item.fill}
-            />
-          ))}
+          {chartData
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 3)
+            .map((item) => (
+              <LegendItem
+                key={item.id}
+                label={item.label}
+                value={item.value}
+                pct={item.pct}
+                pctToFixed={0}
+                color={item.fill}
+              />
+            ))}
         </div>
       </CardContent>
     </Card>

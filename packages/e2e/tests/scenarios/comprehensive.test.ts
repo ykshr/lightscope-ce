@@ -174,12 +174,25 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 8: Verify ranking page
     await page.goto('/ranking');
-    await expect(
-      page
-        .locator('table[data-slot="table"] tbody tr')
-        .filter({ hasText: 'E2E Test Article Title' })
-        .first()
-    ).toBeVisible({ timeout: 30_000 });
+    const rows = page.locator('table[data-slot="table"] tbody tr');
+    const targetRow = rows.filter({
+      has: page.locator('td').nth(2).filter({ hasText: 'E2E Test Article Title' }),
+    });
+    await expect(targetRow.first()).toBeVisible({ timeout: 30_000 });
+
+    // Verify all columns in the ranking table based on the exact metadata values
+    await expect(targetRow.locator('td').nth(0)).toHaveText('1'); // Rank
+    await expect(targetRow.locator('td').nth(1).locator('img')).toHaveAttribute(
+      'src',
+      /\/LittleScope_logo\.png$/
+    ); // Image
+    await expect(targetRow.locator('td').nth(2).locator('a')).toHaveText('E2E Test Article Title'); // Title
+    await expect(targetRow.locator('td').nth(3)).toHaveText(
+      new Date('2024-01-01T10:00:00Z').toLocaleDateString()
+    ); // Published Date
+    await expect(targetRow.locator('td').nth(4)).toHaveText('Lightscope E2E Test Site'); // Site name
+    await expect(targetRow.locator('td').nth(5)).toHaveText('article'); // Type
+    await expect(targetRow.locator('td').nth(6)).toHaveText('3'); // Visits (Metric Value)
 
     // Step 9: Verify article page
     const targetUrl = encodeURIComponent(`${MOCK_SITE_URL}/index.html`);

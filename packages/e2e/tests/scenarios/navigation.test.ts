@@ -67,7 +67,7 @@ test.describe('Navigation', () => {
       .click();
 
     // Verify modal is open
-    await expect(page.locator('text=Advanced Filter')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Advanced Filter' })).toBeVisible();
 
     // Input "test-site" into "Site Names" TagInput
     const siteNamesInput = page.locator('div:has(> label:text-is("Site Names")) >> input');

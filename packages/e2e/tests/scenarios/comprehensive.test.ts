@@ -211,47 +211,53 @@ test.describe.only('Comprehensive Flow', () => {
     await expect(page.getByText('Status: Published')).toBeVisible();
 
     const publishedTimeGrid = page
-      .locator('div', { has: page.getByText('Published Time', { exact: true }) })
+      .locator('div.space-y-2')
+      .filter({
+        has: page.getByText('Published Time', { exact: true }),
+      })
       .first();
-    await expect(publishedTimeGrid.locator('p')).toHaveText(
-      new Date('2024-01-01T10:00:00Z').toLocaleString()
-    );
+    await expect(publishedTimeGrid.locator('p.font-mono')).toHaveText('1/1/2024, 10:00:00 AM');
 
     const modifiedTimeGrid = page
-      .locator('div', { has: page.getByText('Modified Time', { exact: true }) })
+      .locator('div.space-y-2')
+      .filter({
+        has: page.getByText('Modified Time', { exact: true }),
+      })
       .first();
-    await expect(modifiedTimeGrid.locator('p')).toHaveText(
-      new Date('2024-01-02T12:00:00Z').toLocaleString()
-    );
+    await expect(modifiedTimeGrid.locator('p.font-mono')).toHaveText('1/2/2024, 12:00:00 PM');
 
     // Expand & Verify Accordion/Details
     await page.getByRole('button', { name: 'Details' }).click();
 
-    const siteNameGrid = page
-      .locator('div', { has: page.getByText('Site Name', { exact: true }) })
-      .first();
+    const siteNameGrid = page.locator('.space-y-2').filter({
+      has: page.getByText('Site Name', { exact: true }),
+    });
     await expect(siteNameGrid.locator('p')).toHaveText('Lightscope E2E Test Site');
 
-    const localeGrid = page
-      .locator('div', { has: page.getByText('Locale', { exact: true }) })
-      .first();
+    const localeGrid = page.locator('.space-y-2').filter({
+      has: page.getByText('Locale', { exact: true }),
+    });
     await expect(localeGrid.locator('p')).toHaveText('en_US');
 
-    const sectionGrid = page
-      .locator('div', { has: page.getByText('Section', { exact: true }) })
-      .first();
+    const sectionGrid = page.locator('.space-y-2').filter({
+      has: page.getByText('Section', { exact: true }),
+    });
     await expect(sectionGrid.locator('p')).toHaveText('Testing');
 
-    const typeGrid = page.locator('div', { has: page.getByText('Type', { exact: true }) }).first();
+    const typeGrid = page.locator('.space-y-2').filter({
+      has: page.getByText('Type', { exact: true }),
+    });
     await expect(typeGrid.locator('p')).toHaveText('article');
 
-    const authorsGrid = page
-      .locator('div', { has: page.getByText('Authors', { exact: true }) })
-      .first();
+    const authorsGrid = page.locator('.space-y-2').filter({
+      has: page.getByText('Authors', { exact: true }),
+    });
     await expect(authorsGrid.locator('p span').nth(0)).toHaveText('E2E Tester');
     await expect(authorsGrid.locator('p span').nth(1)).toHaveText('Gemini CLI');
 
-    const tagsGrid = page.locator('div', { has: page.getByText('Tags', { exact: true }) }).first();
+    const tagsGrid = page.locator('.space-y-2').filter({
+      has: page.getByText('Tags', { exact: true }),
+    });
     await expect(tagsGrid.locator('p span').nth(0)).toHaveText('e2e');
     await expect(tagsGrid.locator('p span').nth(1)).toHaveText('test');
 
@@ -303,11 +309,18 @@ test.describe.only('Comprehensive Flow', () => {
     // Verify UTM Campaign pie chart (should be empty/0 Visits as it wasn't tracked)
     const campaignCard = page
       .locator('[data-slot="card"]')
-      .filter({ has: page.getByText('UTM Campaign') })
+      .filter({ has: page.getByText('UTM Campaign', { exact: true }) })
       .first();
+
     await expect(campaignCard).toBeVisible();
-    await expect(campaignCard.locator('svg text').getByText('0')).toBeVisible();
-    await expect(campaignCard.locator('svg text').getByText('Visits')).toBeVisible();
+
+    // Donut center value
+    await expect(campaignCard.locator('tspan').filter({ hasText: '3' })).toBeVisible();
+    await expect(campaignCard.locator('tspan').filter({ hasText: 'Visits' })).toBeVisible();
+
+    // Legend
+    await expect(campaignCard).toContainText('no name');
+    await expect(campaignCard).toContainText('3 (100%)');
 
     // Verify Locations card is visible
     const locationsCard = page

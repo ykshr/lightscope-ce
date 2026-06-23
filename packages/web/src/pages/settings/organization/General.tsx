@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import { useState } from 'react';
 import { Props } from './type';
@@ -52,6 +53,7 @@ export default function General({ org, me }: Props) {
         </div>
         <div className="flex gap-2 items-center justify-end">
           <Button size="sm" disabled={!isAdmin || !isChanged || isUpdating} onClick={handleUpdate}>
+            {isUpdating && <Spinner className="mr-2" />}
             Save
           </Button>
         </div>

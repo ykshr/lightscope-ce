@@ -259,6 +259,7 @@ function SidebarTrigger({
 
   return (
     <Button
+      data-testid="sidebar-trigger"
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
       variant="ghost"

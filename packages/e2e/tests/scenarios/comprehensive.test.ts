@@ -1,4 +1,4 @@
-import { MOCK_SITE_URL, PROXY_URL } from '@/helpers/env';
+import { MOCK_SITE_URL, PROXY_URL, TRANSITION_TIMEOUT } from '@/helpers/env';
 import { expect, test } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
@@ -14,9 +14,9 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 1: Sign up
     await page.goto('/signup');
-    await page.locator('input[id="email"]').fill(testEmail);
-    await page.locator('input[id="password"]').fill(testPassword);
-    await page.getByRole('button', { name: 'Create Account', exact: true }).click();
+    await page.getByTestId('email-input').fill(testEmail);
+    await page.getByTestId('password-input').fill(testPassword);
+    await page.getByTestId('submit-btn').click();
 
     // Should auto login and redirect to overview
     await expect(page).toHaveURL(/.*\/$/);
@@ -31,9 +31,9 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 3: Sign in
     await page.goto('/singin');
-    await page.locator('input[id="email"]').fill(testEmail);
-    await page.locator('input[id="password"]').fill(testPassword);
-    await page.getByRole('button', { name: 'Sign In', exact: true }).click();
+    await page.getByTestId('email-input').fill(testEmail);
+    await page.getByTestId('password-input').fill(testPassword);
+    await page.getByTestId('submit-btn').click();
 
     // Should login and redirect to overview
     await expect(page).toHaveURL(/.*\/$/);
@@ -136,8 +136,12 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 7: verify overview page
     await page.goto('/');
-    await expect(page.locator('text=Total Page Views').first()).toBeVisible({ timeout: 30_000 });
-    await expect(page.locator('.recharts-wrapper').first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator('text=Total Page Views').first()).toBeVisible({
+      timeout: TRANSITION_TIMEOUT,
+    });
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible({
+      timeout: TRANSITION_TIMEOUT,
+    });
 
     // Verify Total Page Views card value (3 page views)
     const totalViewsCard = page
@@ -174,11 +178,11 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 8: Verify ranking page
     await page.goto('/ranking');
-    const rows = page.locator('table[data-slot="table"] tbody tr');
+    const rows = page.getByTestId('ranking-table-row');
     const targetRow = rows.filter({
       has: page.locator('td').nth(2).filter({ hasText: 'E2E Test Article Title' }),
     });
-    await expect(targetRow.first()).toBeVisible({ timeout: 30_000 });
+    await expect(targetRow.first()).toBeVisible({ timeout: TRANSITION_TIMEOUT });
 
     // Verify all columns in the ranking table based on the exact metadata values
     await expect(targetRow.locator('td').nth(0)).toHaveText('1'); // Rank
@@ -200,7 +204,7 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Wait for the main elements to load
     await expect(page.locator('h1.text-3xl.font-bold')).toHaveText('E2E Test Article Title', {
-      timeout: 30_000,
+      timeout: TRANSITION_TIMEOUT,
     });
 
     // Verify Metadata Card Info

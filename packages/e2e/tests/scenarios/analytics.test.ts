@@ -118,24 +118,20 @@ test.describe('Analytics', () => {
     await page.goto('/');
 
     // 1. Articles Table: Wait for the table header to be loaded
-    await expect(page.locator('text=Ranking').first()).toBeVisible();
+    await expect(page.getByTestId('ranking-table').first()).toBeVisible();
 
     // Verify that the ingested test data (article title) is displayed in the table
     const targetRow = page
-      .locator('table[data-slot="table"] tbody tr')
+      .getByTestId('ranking-table-row')
       .filter({ hasText: 'E2E Test Article Title' });
     await expect(targetRow.first()).toBeVisible();
 
     // 2. Stats Row: Verify that each stats card is loaded and displays numerical data
     const statCards = ['Total Page Views', 'Unique Users', 'Engagement Time', 'Realtime Visitors'];
     for (const title of statCards) {
-      const titleLocator = page.locator(`text=${title}`).first();
-      await expect(titleLocator).toBeVisible();
-
-      // Traverse up to the parent Card element (e.g., shadcn/ui Card) and verify it contains some numbers
-      const cardLocator = titleLocator.locator(
-        'xpath=ancestor::div[contains(@class, "border") or contains(@class, "rounded")][1]'
-      );
+      const testId = `stat-card-${title.replace(/\s+/g, '-').toLowerCase()}`;
+      const cardLocator = page.getByTestId(testId).first();
+      await expect(cardLocator).toBeVisible();
       await expect(cardLocator).toContainText(/\d+|N\/A/);
     }
 
@@ -148,7 +144,7 @@ test.describe('Analytics', () => {
 
   test('should display ingested data on ranking', async ({ page }) => {
     await page.goto('/ranking');
-    const rows = page.locator('table[data-slot="table"] tbody tr');
+    const rows = page.getByTestId('ranking-table-row');
     const targetRow = rows.filter({
       has: page.locator('td').nth(2).filter({ hasText: 'E2E Test Article Title' }),
     });

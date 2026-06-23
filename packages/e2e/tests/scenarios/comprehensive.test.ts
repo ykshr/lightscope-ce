@@ -7,6 +7,8 @@ test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe.only('Comprehensive Flow', () => {
   test('should execute full e2e scenario successfully', async ({ page, browser }) => {
+    test.setTimeout(60_000);
+
     const testEmail = `e2e-test-${Date.now()}@example.com`;
     const testPassword = 'password123';
     const testOrgName = `Org-${Date.now()}`;

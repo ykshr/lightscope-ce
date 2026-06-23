@@ -22,7 +22,10 @@ export default function StatCardTrend({
   icon: Icon,
 }: ParamsTrend) {
   return (
-    <Card className="rounded-xl shadow-sm">
+    <Card
+      className="rounded-xl shadow-sm"
+      data-testid={`stat-card-${label.replace(/\s+/g, '-').toLowerCase()}`}
+    >
       <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
         <div className="space-y-1">
           <p className="text-sm font-medium text-muted-foreground">{label}</p>

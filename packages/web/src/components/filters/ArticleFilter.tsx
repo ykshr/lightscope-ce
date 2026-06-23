@@ -40,7 +40,7 @@ export default function ArticleFilter() {
   return (
     <ResponsiveModal
       trigger={
-        <Button variant="outline" className="gap-2">
+        <Button data-testid="article-filter-btn" variant="outline" className="gap-2">
           <Filter className="w-4 h-4" />
           <span className="sr-only">Open advanced filter</span>
         </Button>

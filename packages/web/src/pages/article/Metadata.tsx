@@ -37,7 +37,7 @@ const MetaGridItem = ({
 export default function Metadata({ article }: { article: NonNullable<ArticleQuery['article']> }) {
   const formatDate = (dateStr?: string | null) => {
     if (!dateStr) return '-';
-    return dateStr.toLocaleString();
+    return new Date(dateStr).toLocaleString();
   };
 
   return (
@@ -64,12 +64,8 @@ export default function Metadata({ article }: { article: NonNullable<ArticleQuer
           {/* Time Grid */}
           <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-9 gap-y-2 gap-x-6">
             <MetaGridItem label="Published Time" value={formatDate(article.publishedTime)} />
-            {article.modifiedTime && (
-              <MetaGridItem label="Modified Time" value={formatDate(article.modifiedTime)} />
-            )}
-            {article.expirationTime && (
-              <MetaGridItem label="Expiration Time" value={formatDate(article.expirationTime)} />
-            )}
+            <MetaGridItem label="Modified Time" value={formatDate(article.modifiedTime)} />
+            <MetaGridItem label="Expiration Time" value={formatDate(article.expirationTime)} />
           </div>
         </div>
       </div>

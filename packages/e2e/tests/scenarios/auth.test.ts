@@ -11,9 +11,9 @@ test.describe('Authentication Flows', () => {
     await expect(page.locator('h1')).toHaveText('SingIn');
 
     // Verify form elements exist
-    const emailInput = page.locator('input[type="email"]');
-    const passwordInput = page.locator('input[type="password"]');
-    const signInBtn = page.getByRole('button', { name: 'Sign In', exact: true });
+    const emailInput = page.getByTestId('email-input');
+    const passwordInput = page.getByTestId('password-input');
+    const signInBtn = page.getByTestId('submit-btn');
 
     await expect(emailInput).toBeVisible();
     await expect(passwordInput).toBeVisible();
@@ -41,9 +41,9 @@ test.describe('Authentication Flows', () => {
     await expect(page.locator('h1', { hasText: 'SingUp' })).toBeVisible();
 
     // Verify form elements exist
-    const emailInput = page.locator('input[type="email"]');
-    const passwordInput = page.locator('input[type="password"]');
-    const signUpBtn = page.getByRole('button', { name: 'Create Account', exact: true });
+    const emailInput = page.getByTestId('email-input');
+    const passwordInput = page.getByTestId('password-input');
+    const signUpBtn = page.getByTestId('submit-btn');
 
     await expect(emailInput).toBeVisible();
     await expect(passwordInput).toBeVisible();

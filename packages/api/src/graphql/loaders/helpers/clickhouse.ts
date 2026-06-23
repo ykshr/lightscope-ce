@@ -43,9 +43,21 @@ export const formatData = <T>(data: T[], dateKeys: string[] = []): T[] => {
       const camelKey = snakeToCamel(key);
       const val = (row as any)[key];
 
-      if (dateKeysSet.has(camelKey) && val && typeof val === 'string') {
-        const dateStr = val.replace(' ', 'T') + 'Z';
-        formattedRow[camelKey] = new Date(dateStr).getTime() === 0 ? null : dateStr;
+      if (dateKeysSet.has(camelKey) && val !== null && val !== undefined) {
+        if (typeof val === 'string') {
+          if (val === '0') {
+            formattedRow[camelKey] = null;
+          } else {
+            const dateStr = val.includes('T') ? val : val.replace(' ', 'T') + 'Z';
+            formattedRow[camelKey] = new Date(dateStr).getTime() === 0 ? null : dateStr;
+          }
+        } else if (typeof val === 'number') {
+          formattedRow[camelKey] = val === 0 ? null : new Date(val).toISOString();
+        } else if (val instanceof Date) {
+          formattedRow[camelKey] = val.getTime() === 0 ? null : val;
+        } else {
+          formattedRow[camelKey] = renameKeySnakeToCamel(val);
+        }
       } else {
         formattedRow[camelKey] = renameKeySnakeToCamel(val);
       }

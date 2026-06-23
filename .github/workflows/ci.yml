@@ -51,3 +51,4 @@ jobs:
           CLICKHOUSE_USERNAME: lightscope
           CLICKHOUSE_PASSWORD: lightscope
           CLICKHOUSE_DB: lightscope
+          CLICKHOUSE_INSERT_BATCH_SIZE: 1

@@ -20,11 +20,11 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Should auto login and redirect to overview
     await expect(page).toHaveURL(/.*\/$/);
-    await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
+    await expect(page.getByTestId('sidebar-title')).toHaveText('LittleScope');
 
     // Step 2: Logout
     await page.goto('/settings/profile');
-    await page.getByRole('button', { name: 'Log out', exact: true }).click();
+    await page.getByTestId('logout-btn').click();
 
     // Should redirect to singin page
     await expect(page).toHaveURL(/.*\/singin/);
@@ -37,27 +37,27 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Should login and redirect to overview
     await expect(page).toHaveURL(/.*\/$/);
-    await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
+    await expect(page.getByTestId('sidebar-title')).toHaveText('LittleScope');
 
     // Step 4: Create Organization
     // Open Account dropdown
-    await page.locator('button', { hasText: testEmail }).click();
+    await page.getByTestId('account-dropdown-trigger').click();
     // Hover "Active" submenu
-    await page.getByText('Active', { exact: true }).hover();
+    await page.getByTestId('active-org-trigger').hover();
     // Click "Add new organization"
-    await page.getByText('Add new organization', { exact: true }).click();
+    await page.getByTestId('add-new-org-btn').click();
     // Fill dialog
-    await page.locator('input[id="name"]').fill(testOrgName);
-    await page.getByRole('button', { name: 'Create', exact: true }).click();
+    await page.getByTestId('org-name-input').fill(testOrgName);
+    await page.getByTestId('create-org-btn').click();
 
     // Wait for the new org to be active (the page reloads via navigate(0) in Account.tsx)
     await page.waitForLoadState('networkidle');
 
     // Step 5: Generate Tracker Token
     await page.goto('/settings/organization');
-    await page.getByRole('button', { name: 'New Token' }).click();
-    await page.locator('input[id="origin"]').fill(MOCK_SITE_URL);
-    await page.getByRole('button', { name: 'Generate' }).click();
+    await page.getByTestId('new-token-btn').click();
+    await page.getByTestId('token-origin-input').fill(MOCK_SITE_URL);
+    await page.getByTestId('generate-token-btn').click();
 
     // Retrieve token
     // The previous token retrieval failed in CI due to timeout.
@@ -67,7 +67,7 @@ test.describe.only('Comprehensive Flow', () => {
       .first();
     await expect(tableRow).toBeVisible({ timeout: 15000 });
 
-    const tokenSpan = tableRow.locator('span[dir="rtl"]');
+    const tokenSpan = tableRow.getByTestId('tracker-token');
     await expect(tokenSpan).toBeVisible();
     const rawToken = await tokenSpan.textContent();
     const token = rawToken?.replace(/[\u200E]/g, '').trim();
@@ -144,22 +144,15 @@ test.describe.only('Comprehensive Flow', () => {
     });
 
     // Verify Total Page Views card value (3 page views)
-    const totalViewsCard = page
-      .locator('div.rounded-xl', { has: page.getByText('Total Page Views', { exact: true }) })
-      .first();
+    const totalViewsCard = page.getByTestId('stat-card-total-page-views');
     await expect(totalViewsCard.locator('h3')).toHaveText('3');
 
     // Verify Unique Users card value (1 unique user)
-    const uniqueUsersCard = page
-      .locator('div.rounded-xl', { has: page.getByText('Unique Users', { exact: true }) })
-      .first();
+    const uniqueUsersCard = page.getByTestId('stat-card-unique-users');
     await expect(uniqueUsersCard.locator('h3')).toHaveText('1');
 
     // Verify Referrer Domains pie chart values
-    const referrerCard = page
-      .locator('[data-slot="card"]')
-      .filter({ has: page.getByText('Referrer Domains') })
-      .first();
+    const referrerCard = page.getByTestId('pie-chart-referrer-domains');
 
     await expect(referrerCard).toBeVisible();
 
@@ -203,98 +196,61 @@ test.describe.only('Comprehensive Flow', () => {
     await page.goto(`/article?url=${targetUrl}`);
 
     // Wait for the main elements to load
-    await expect(page.locator('h1.text-3xl.font-bold')).toHaveText('E2E Test Article Title', {
+    await expect(page.getByTestId('article-title')).toHaveText('E2E Test Article Title', {
       timeout: TRANSITION_TIMEOUT,
     });
 
     // Verify Metadata Card Info
-    await expect(page.locator('img[alt="Thumbnail"]')).toHaveAttribute(
+    await expect(page.getByTestId('article-thumbnail')).toHaveAttribute(
       'src',
       'http://localhost:3000/fixtures/test-image.jpg'
     );
-    await expect(page.getByText('Status: Published')).toBeVisible();
+    await expect(page.getByTestId('publish-status')).toHaveText('Status: Published');
 
-    const publishedTimeGrid = page
-      .locator('div.space-y-2')
-      .filter({
-        has: page.getByText('Published Time', { exact: true }),
-      })
-      .first();
+    const publishedTimeGrid = page.getByTestId('meta-grid-published-time');
     await expect(publishedTimeGrid.locator('p.font-mono')).toHaveText('1/1/2024, 10:00:00 AM');
 
-    const modifiedTimeGrid = page
-      .locator('div.space-y-2')
-      .filter({
-        has: page.getByText('Modified Time', { exact: true }),
-      })
-      .first();
+    const modifiedTimeGrid = page.getByTestId('meta-grid-modified-time');
     await expect(modifiedTimeGrid.locator('p.font-mono')).toHaveText('1/2/2024, 12:00:00 PM');
 
     // Expand & Verify Accordion/Details
-    await page.getByRole('button', { name: 'Details' }).click();
+    await page.getByTestId('details-accordion-trigger').click();
 
-    const siteNameGrid = page.locator('.space-y-2').filter({
-      has: page.getByText('Site Name', { exact: true }),
-    });
+    const siteNameGrid = page.getByTestId('meta-grid-site-name');
     await expect(siteNameGrid.locator('p')).toHaveText('Lightscope E2E Test Site');
 
-    const localeGrid = page.locator('.space-y-2').filter({
-      has: page.getByText('Locale', { exact: true }),
-    });
+    const localeGrid = page.getByTestId('meta-grid-locale');
     await expect(localeGrid.locator('p')).toHaveText('en_US');
 
-    const sectionGrid = page.locator('.space-y-2').filter({
-      has: page.getByText('Section', { exact: true }),
-    });
+    const sectionGrid = page.getByTestId('meta-grid-section');
     await expect(sectionGrid.locator('p')).toHaveText('Testing');
 
-    const typeGrid = page.locator('.space-y-2').filter({
-      has: page.getByText('Type', { exact: true }),
-    });
+    const typeGrid = page.getByTestId('meta-grid-type');
     await expect(typeGrid.locator('p')).toHaveText('article');
 
-    const authorsGrid = page.locator('.space-y-2').filter({
-      has: page.getByText('Authors', { exact: true }),
-    });
+    const authorsGrid = page.getByTestId('meta-grid-authors');
     await expect(authorsGrid.locator('p span').nth(0)).toHaveText('E2E Tester');
     await expect(authorsGrid.locator('p span').nth(1)).toHaveText('Gemini CLI');
 
-    const tagsGrid = page.locator('.space-y-2').filter({
-      has: page.getByText('Tags', { exact: true }),
-    });
+    const tagsGrid = page.getByTestId('meta-grid-tags');
     await expect(tagsGrid.locator('p span').nth(0)).toHaveText('e2e');
     await expect(tagsGrid.locator('p span').nth(1)).toHaveText('test');
 
     // Verify Stats Cards
-    const articleTotalViewsCard = page
-      .locator('[data-slot="card"]')
-      .filter({ has: page.getByText('Total Page Views', { exact: true }) })
-      .first();
+    const articleTotalViewsCard = page.getByTestId('stat-card-total-page-views');
     await expect(articleTotalViewsCard.locator('h3')).toHaveText('3');
 
-    const articleUniqueUsersCard = page
-      .locator('[data-slot="card"]')
-      .filter({ has: page.getByText('Unique Users', { exact: true }) })
-      .first();
+    const articleUniqueUsersCard = page.getByTestId('stat-card-unique-users');
     await expect(articleUniqueUsersCard.locator('h3')).toHaveText('1');
 
-    const engagementTimeCard = page
-      .locator('[data-slot="card"]')
-      .filter({ has: page.getByText('Avg. Engagement Time', { exact: true }) })
-      .first();
+    const engagementTimeCard = page.getByTestId('stat-card-avg.-engagement-time');
     await expect(engagementTimeCard.locator('h3')).toHaveText('N/A');
 
-    const liveViewsCard = page
-      .locator('[data-slot="card"]')
-      .filter({ has: page.getByText('Realtime Visitors', { exact: true }) })
-      .first();
+    const liveViewsCard = page.getByTestId('stat-card-realtime-visitors');
     await expect(liveViewsCard.locator('h3')).toHaveText('3');
 
     // Verify Referrer Domains pie chart
-    const articleReferrerCard = page
-      .locator('[data-slot="card"]')
-      .filter({ has: page.getByText('Referrer Domains') })
-      .first();
+    const articleReferrerCard = page.getByTestId('pie-chart-referrer-domains');
     await expect(articleReferrerCard).toBeVisible();
     await expect(articleReferrerCard.locator('svg text').getByText('3')).toBeVisible();
     await expect(articleReferrerCard.locator('svg text').getByText('Visits')).toBeVisible();
@@ -311,10 +267,7 @@ test.describe.only('Comprehensive Flow', () => {
     );
 
     // Verify UTM Campaign pie chart (should be empty/0 Visits as it wasn't tracked)
-    const campaignCard = page
-      .locator('[data-slot="card"]')
-      .filter({ has: page.getByText('UTM Campaign', { exact: true }) })
-      .first();
+    const campaignCard = page.getByTestId('pie-chart-utm-campaign');
 
     await expect(campaignCard).toBeVisible();
 
@@ -327,10 +280,7 @@ test.describe.only('Comprehensive Flow', () => {
     await expect(campaignCard).toContainText('3 (100%)');
 
     // Verify Locations card is visible
-    const locationsCard = page
-      .locator('[data-slot="card"]')
-      .filter({ has: page.getByText('Locations', { exact: true }) })
-      .first();
+    const locationsCard = page.getByTestId('locations-card');
     await expect(locationsCard).toBeVisible();
     await expect(locationsCard.locator('h3')).toHaveText('Top Countries');
 

@@ -58,6 +58,7 @@ export default function PublishStatus({
 
   return (
     <div
+      data-testid="publish-status"
       className={`flex items-center gap-2 w-fit px-3 py-2 rounded-full border text-xs font-bold uppercase mb-5 ${status.bg} ${status.color}`}
     >
       <StatusIcon size={14} />

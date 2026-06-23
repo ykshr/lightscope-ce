@@ -122,7 +122,7 @@ export default function MapCountry() {
   };
 
   return (
-    <Card className="flex flex-col border-border h-full col-span-2">
+    <Card data-testid="locations-card" className="flex flex-col border-border h-full col-span-2">
       <CardHeader className="pb-0">
         <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-4">
           Locations
@@ -164,7 +164,10 @@ export default function MapCountry() {
         {/* List section */}
         <div className="lg:col-span-1 flex flex-col">
           <div className="pb-3 border-b">
-            <h3 className="text-xs font-bold flex justify-center text-muted-foreground items-center gap-2">
+            <h3
+              data-testid="locations-card-title"
+              className="text-xs font-bold flex justify-center text-muted-foreground items-center gap-2"
+            >
               {selectedCountry ? (
                 <>
                   <MapPin className="h-3 w-3 text-blue-500" />

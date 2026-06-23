@@ -207,7 +207,7 @@ export default function Profile() {
               <p className="font-medium text-sm">Log out of account</p>
               <p className="text-xs text-muted-foreground">Sign out of this browser.</p>
             </div>
-            <Button variant="outline" onClick={handleLogout}>
+            <Button data-testid="logout-btn" variant="outline" onClick={handleLogout}>
               Log out
             </Button>
           </div>

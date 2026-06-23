@@ -60,7 +60,10 @@ export default function PieDonutText({
   }, [data]);
 
   return (
-    <Card className="flex flex-col border-border h-full">
+    <Card
+      data-testid={`pie-chart-${title.replace(/\s+/g, '-').toLowerCase()}`}
+      className="flex flex-col border-border h-full"
+    >
       <CardHeader className="pb-0">
         <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-4">
           {title} {isLoading && <Spinner />}

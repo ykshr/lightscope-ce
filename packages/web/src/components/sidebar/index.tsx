@@ -47,7 +47,10 @@ export default function AppSidebar() {
             />
           </Link>
           {!isCollapsed && (
-            <h1 className="text-base font-bold leading-tight tracking-tight whitespace-nowrap overflow-hidden">
+            <h1
+              data-testid="sidebar-title"
+              className="text-base font-bold leading-tight tracking-tight whitespace-nowrap overflow-hidden"
+            >
               LittleScope
             </h1>
           )}

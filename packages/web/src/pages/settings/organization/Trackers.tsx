@@ -82,6 +82,7 @@ export default function Trackers({ org, me }: Props) {
                       className="max-w-[150px] truncate text-left sm:max-w-[250px]"
                       dir="rtl"
                       title={token}
+                      data-testid="tracker-token"
                     >
                       {token}&lrm;
                     </span>
@@ -159,7 +160,7 @@ function NewTokenDialog({
   return (
     <Dialog open={showDialog} onOpenChange={setShowDialog}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" disabled={!isAdmin}>
+        <Button variant="outline" size="sm" disabled={!isAdmin} data-testid="new-token-btn">
           New Token
         </Button>
       </DialogTrigger>
@@ -177,6 +178,7 @@ function NewTokenDialog({
             <Label htmlFor="origin">Origin</Label>
             <Input
               id="origin"
+              data-testid="token-origin-input"
               placeholder="https://example.com"
               required
               value={origin}
@@ -197,7 +199,7 @@ function NewTokenDialog({
             <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} data-testid="generate-token-btn">
               Generate
             </Button>
           </div>

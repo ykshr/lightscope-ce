@@ -17,7 +17,10 @@ const MetaGridItem = ({
   label: string;
   value: string | string[];
 }) => (
-  <div className="space-y-2 col-span-1 md:col-span-3">
+  <div
+    data-testid={`meta-grid-${label.replace(/\s+/g, '-').toLowerCase()}`}
+    className="space-y-2 col-span-1 md:col-span-3"
+  >
     <div className="flex items-center gap-2 text-muted-foreground">
       {Icon && <Icon size={16} />}
       <span className="text-xs uppercase tracking-wider font-bold">{label}</span>
@@ -47,13 +50,15 @@ export default function Metadata({ article }: { article: NonNullable<ArticleQuer
       <div className="flex flex-col lg:flex-row gap-8 w-full">
         {/* Thumbnail */}
         <div className="w-full lg:w-80">
-          <img src={article.image || ''} alt="Thumbnail" />
+          <img data-testid="article-thumbnail" src={article.image || ''} alt="Thumbnail" />
         </div>
 
         {/* Right Content */}
         <div className="flex-1 space-y-4">
           {/* Title */}
-          <h1 className="text-3xl font-bold">{article.title}</h1>
+          <h1 data-testid="article-title" className="text-3xl font-bold">
+            {article.title}
+          </h1>
 
           {/* Status Badge */}
           <PublishStatus
@@ -72,7 +77,7 @@ export default function Metadata({ article }: { article: NonNullable<ArticleQuer
 
       <Accordion type="single" collapsible>
         <AccordionItem value="details">
-          <AccordionTrigger>Details</AccordionTrigger>
+          <AccordionTrigger data-testid="details-accordion-trigger">Details</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-y-2">

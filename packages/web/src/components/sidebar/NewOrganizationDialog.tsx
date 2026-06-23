@@ -47,6 +47,7 @@ export default function NewOrganizationDialog({
             </label>
             <Input
               id="name"
+              data-testid="org-name-input"
               placeholder="My Organization"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -63,7 +64,7 @@ export default function NewOrganizationDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} data-testid="create-org-btn">
               {isLoading && <Spinner className="mr-2" />}
               Create
             </Button>

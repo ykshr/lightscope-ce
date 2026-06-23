@@ -1,9 +1,7 @@
-import { MOCK_SITE_URL, PROXY_URL } from '@/helpers/env';
+import { MOCK_SITE_URL, PROXY_URL, TRANSITION_TIMEOUT } from '@/helpers/env';
 import { expect, test } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
-
-const TRANSITION_TIMEOUT = 60_000;
 
 test.use({ storageState: { cookies: [], origins: [] } });
 

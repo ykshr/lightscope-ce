@@ -23,5 +23,5 @@ const ORG_SLUG = process.env.ORG_SLUG || 'test-org';
 
 export { ORG_NAME, ORG_SLUG, USER_EMAIL, USER_NAME, USER_PASSWORD };
 
-const TRANSITION_TIMEOUT = process.env.TRANSITION_TIMEOUT || 60_000;
-export { TRANSITION_TIMEOUT };
+const TIMEOUT = Number(process.env.TIMEOUT || 10_000);
+export { TIMEOUT };

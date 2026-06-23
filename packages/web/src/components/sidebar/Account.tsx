@@ -61,7 +61,10 @@ export default function Account() {
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="py-5 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                <SidebarMenuButton
+                  data-testid="account-dropdown-trigger"
+                  className="py-5 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
                   <UserIcon className="shrink-0" />
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate">{user?.name}</span>
@@ -79,7 +82,9 @@ export default function Account() {
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>Organization</DropdownMenuLabel>
                   <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>Active</DropdownMenuSubTrigger>
+                    <DropdownMenuSubTrigger data-testid="active-org-trigger">
+                      Active
+                    </DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
                       <DropdownMenuSubContent>
                         <DropdownMenuRadioGroup
@@ -96,7 +101,10 @@ export default function Account() {
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onSelect={() => setOpenAddDialog(true)}>
+                        <DropdownMenuItem
+                          data-testid="add-new-org-btn"
+                          onSelect={() => setOpenAddDialog(true)}
+                        >
                           <Plus className="size-4" />
                           <div>Add new organization</div>
                         </DropdownMenuItem>

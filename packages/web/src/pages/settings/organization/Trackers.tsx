@@ -224,7 +224,6 @@ function CopyTokenButton({ token }: { token: string }) {
         className={`h-6 ${copied ? 'px-2' : 'w-6'} transition-all duration-200`}
         onClick={handleCopy}
         title="Copy token"
-        aria-label="Copy token"
       >
         {copied ? (
           <>
@@ -232,7 +231,10 @@ function CopyTokenButton({ token }: { token: string }) {
             <span className="text-xs text-green-500">Copied</span>
           </>
         ) : (
-          <Copy className="size-3 shrink-0 text-muted-foreground" />
+          <>
+            <Copy className="size-3 shrink-0 text-muted-foreground" />
+            <span className="sr-only">Copy token</span>
+          </>
         )}
       </Button>
     </div>

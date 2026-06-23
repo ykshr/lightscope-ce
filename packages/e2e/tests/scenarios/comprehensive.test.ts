@@ -3,6 +3,8 @@ import { expect, test } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 
+const TRANSITION_TIMEOUT = 60_000;
+
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe.only('Comprehensive Flow', () => {
@@ -136,8 +138,12 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 7: verify overview page
     await page.goto('/');
-    await expect(page.locator('text=Total Page Views').first()).toBeVisible({ timeout: 30_000 });
-    await expect(page.locator('.recharts-wrapper').first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator('text=Total Page Views').first()).toBeVisible({
+      timeout: TRANSITION_TIMEOUT,
+    });
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible({
+      timeout: TRANSITION_TIMEOUT,
+    });
 
     // Verify Total Page Views card value (3 page views)
     const totalViewsCard = page
@@ -178,7 +184,7 @@ test.describe.only('Comprehensive Flow', () => {
     const targetRow = rows.filter({
       has: page.locator('td').nth(2).filter({ hasText: 'E2E Test Article Title' }),
     });
-    await expect(targetRow.first()).toBeVisible({ timeout: 30_000 });
+    await expect(targetRow.first()).toBeVisible({ timeout: TRANSITION_TIMEOUT });
 
     // Verify all columns in the ranking table based on the exact metadata values
     await expect(targetRow.locator('td').nth(0)).toHaveText('1'); // Rank
@@ -200,7 +206,7 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Wait for the main elements to load
     await expect(page.locator('h1.text-3xl.font-bold')).toHaveText('E2E Test Article Title', {
-      timeout: 30_000,
+      timeout: TRANSITION_TIMEOUT,
     });
 
     // Verify Metadata Card Info

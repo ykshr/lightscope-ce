@@ -14,9 +14,9 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 1: Sign up
     await page.goto('/signup');
-    await page.locator('input[id="email"]').fill(testEmail);
-    await page.locator('input[id="password"]').fill(testPassword);
-    await page.getByRole('button', { name: 'Create Account', exact: true }).click();
+    await page.getByTestId('email-input').fill(testEmail);
+    await page.getByTestId('password-input').fill(testPassword);
+    await page.getByTestId('submit-btn').click();
 
     // Should auto login and redirect to overview
     await expect(page).toHaveURL(/.*\/$/);
@@ -31,9 +31,9 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 3: Sign in
     await page.goto('/singin');
-    await page.locator('input[id="email"]').fill(testEmail);
-    await page.locator('input[id="password"]').fill(testPassword);
-    await page.getByRole('button', { name: 'Sign In', exact: true }).click();
+    await page.getByTestId('email-input').fill(testEmail);
+    await page.getByTestId('password-input').fill(testPassword);
+    await page.getByTestId('submit-btn').click();
 
     // Should login and redirect to overview
     await expect(page).toHaveURL(/.*\/$/);
@@ -174,7 +174,7 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 8: Verify ranking page
     await page.goto('/ranking');
-    const rows = page.locator('table[data-slot="table"] tbody tr');
+    const rows = page.getByTestId('ranking-table-row');
     const targetRow = rows.filter({
       has: page.locator('td').nth(2).filter({ hasText: 'E2E Test Article Title' }),
     });

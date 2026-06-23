@@ -63,6 +63,7 @@ export default function SingIn() {
               Email
             </label>
             <Input
+              data-testid="email-input"
               id="email"
               type="email"
               placeholder="m@example.com"
@@ -84,6 +85,7 @@ export default function SingIn() {
               </Link>
             </div>
             <Input
+              data-testid="password-input"
               id="password"
               type="password"
               required
@@ -94,7 +96,7 @@ export default function SingIn() {
 
           {error && <div className="text-sm text-destructive">{error}</div>}
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button data-testid="submit-btn" type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? <Spinner className="mr-2" /> : null}
             Sign In
           </Button>

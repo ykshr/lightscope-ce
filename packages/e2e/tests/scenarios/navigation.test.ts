@@ -9,13 +9,13 @@ test.describe('Navigation', () => {
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Verify key metrics cards are visible
-    await expect(page.locator('text=Total Page Views')).toBeVisible();
-    await expect(page.locator('text=Unique Users')).toBeVisible();
-    await expect(page.locator('text=Engagement Time')).toBeVisible();
-    await expect(page.locator('text=Realtime Visitors')).toBeVisible();
+    await expect(page.getByTestId('stat-card-total-page-views')).toBeVisible();
+    await expect(page.getByTestId('stat-card-unique-users')).toBeVisible();
+    await expect(page.getByTestId('stat-card-engagement-time')).toBeVisible();
+    await expect(page.getByTestId('stat-card-realtime-visitors')).toBeVisible();
 
     // The table should have the title "Ranking"
-    await expect(page.locator('text=Ranking').first()).toBeVisible();
+    await expect(page.getByTestId('ranking-table').first()).toBeVisible();
   });
 
   test('should navigate to the ranking page', async ({ page }) => {
@@ -28,7 +28,7 @@ test.describe('Navigation', () => {
     await expect(page).toHaveURL(`${WEB_URL}/ranking`);
 
     // Verify the page content is loaded
-    await expect(page.locator('text=Ranking').first()).toBeVisible();
+    await expect(page.getByTestId('ranking-table').first()).toBeVisible();
   });
 
   test('should navigate to the article page', async ({ page }) => {
@@ -60,11 +60,7 @@ test.describe('Navigation', () => {
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Click the filter button (has the lucide-funnel icon)
-    await page
-      .locator('button')
-      .filter({ has: page.locator('.lucide-funnel') })
-      .first()
-      .click();
+    await page.getByTestId('article-filter-btn').first().click();
 
     // Verify modal is open
     await expect(page.getByRole('heading', { name: 'Advanced Filter' })).toBeVisible();
@@ -89,13 +85,13 @@ test.describe('Navigation', () => {
     await expect(sidebar).toHaveAttribute('data-state', 'expanded');
 
     // Click the trigger button to collapse
-    await page.locator('button[data-sidebar="trigger"]').click();
+    await page.getByTestId('sidebar-trigger').click();
 
     // Sidebar should be collapsed
     await expect(sidebar).toHaveAttribute('data-state', 'collapsed');
 
     // Click the trigger button to expand
-    await page.locator('button[data-sidebar="trigger"]').click();
+    await page.getByTestId('sidebar-trigger').click();
 
     // Sidebar should be expanded again
     await expect(sidebar).toHaveAttribute('data-state', 'expanded');
@@ -106,11 +102,7 @@ test.describe('Navigation', () => {
     await expect(page.locator('h1', { hasText: 'LittleScope' })).toBeVisible();
 
     // Open the Date Filter modal
-    await page
-      .locator('button')
-      .filter({ has: page.locator('.lucide-calendar') })
-      .first()
-      .click();
+    await page.getByTestId('date-filter-btn').first().click();
 
     // Verify modal is open
     await expect(page.getByRole('heading', { name: 'Advanced Date Filter' })).toBeVisible();
@@ -142,7 +134,7 @@ test.describe('Navigation', () => {
     await page.goto('/ranking');
 
     // Wait for the table to load
-    await expect(page.locator('text=Ranking').first()).toBeVisible();
+    await expect(page.getByTestId('ranking-table').first()).toBeVisible();
 
     // Check if Pagination is rendered (it depends on data, but if there's data, we can check for the Pagination item or at least that it doesn't crash)
     // If there's no data, the pagination might not be visible, so we check if the Footer exists

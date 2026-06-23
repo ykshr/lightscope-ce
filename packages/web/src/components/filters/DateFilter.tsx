@@ -165,7 +165,11 @@ function CustomDateRangeDialog({
   return (
     <ResponsiveModal
       trigger={
-        <Button variant={isActive ? 'default' : 'outline'} className="gap-2">
+        <Button
+          data-testid="date-filter-btn"
+          variant={isActive ? 'default' : 'outline'}
+          className="gap-2"
+        >
           <CalendarIcon className="h-4 w-4" />
           <span className="hidden md:inline">Custom Date</span>
         </Button>

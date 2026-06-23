@@ -1,4 +1,4 @@
-import { MOCK_SITE_URL, PROXY_URL, TRANSITION_TIMEOUT } from '@/helpers/env';
+import { MOCK_SITE_URL, PROXY_URL, TIMEOUT } from '@/helpers/env';
 import { expect, test } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
@@ -65,7 +65,7 @@ test.describe.only('Comprehensive Flow', () => {
     const tableRow = page
       .locator('table[data-slot="table"] tbody tr', { hasText: MOCK_SITE_URL })
       .first();
-    await expect(tableRow).toBeVisible({ timeout: 15000 });
+    await expect(tableRow).toBeVisible({ timeout: TIMEOUT });
 
     const tokenSpan = tableRow.getByTestId('tracker-token');
     await expect(tokenSpan).toBeVisible();
@@ -135,13 +135,9 @@ test.describe.only('Comprehensive Flow', () => {
     }
 
     // Step 7: verify overview page
-    await page.goto('/');
-    await expect(page.locator('text=Total Page Views').first()).toBeVisible({
-      timeout: TRANSITION_TIMEOUT,
-    });
-    await expect(page.locator('.recharts-wrapper').first()).toBeVisible({
-      timeout: TRANSITION_TIMEOUT,
-    });
+    await page.goto('/', { waitUntil: 'networkidle' });
+    await expect(page.locator('text=Total Page Views').first()).toBeVisible({ timeout: TIMEOUT });
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible({ timeout: TIMEOUT });
 
     // Verify Total Page Views card value (3 page views)
     const totalViewsCard = page.getByTestId('stat-card-total-page-views');
@@ -170,12 +166,12 @@ test.describe.only('Comprehensive Flow', () => {
     await expect(legend.filter({ hasText: 'twitter.com' })).toContainText('twitter.com1 (33%)');
 
     // Step 8: Verify ranking page
-    await page.goto('/ranking');
+    await page.goto('/ranking', { waitUntil: 'networkidle' });
     const rows = page.getByTestId('ranking-table-row');
     const targetRow = rows.filter({
       has: page.locator('td').nth(2).filter({ hasText: 'E2E Test Article Title' }),
     });
-    await expect(targetRow.first()).toBeVisible({ timeout: TRANSITION_TIMEOUT });
+    await expect(targetRow.first()).toBeVisible({ timeout: TIMEOUT });
 
     // Verify all columns in the ranking table based on the exact metadata values
     await expect(targetRow.locator('td').nth(0)).toHaveText('1'); // Rank
@@ -193,11 +189,11 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Step 9: Verify article page
     const targetUrl = encodeURIComponent(`${MOCK_SITE_URL}/index.html`);
-    await page.goto(`/article?url=${targetUrl}`);
+    await page.goto(`/article?url=${targetUrl}`, { waitUntil: 'networkidle' });
 
     // Wait for the main elements to load
     await expect(page.getByTestId('article-title')).toHaveText('E2E Test Article Title', {
-      timeout: TRANSITION_TIMEOUT,
+      timeout: TIMEOUT,
     });
 
     // Verify Metadata Card Info

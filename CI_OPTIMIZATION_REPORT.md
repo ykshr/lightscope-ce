@@ -3,12 +3,13 @@
 * **Current bottlenecks:**
     * Fully sequential execution of formatting, linting, building, and unit testing within a single job.
     * Downloading Playwright browsers on every run without caching.
+    * Running a full, heavy application build (`vite build` & `tsc`) before running unit tests, which only strictly require generated GraphQL schemas.
     * Running potentially slow E2E tests in the same job as the CI checks.
 * **Estimated total runtime reduction:** 30-50%
 * **Priority ranking:**
-    1. Parallelize CI checks (lint, format, test, build).
-    2. Cache Playwright browser binaries.
-    3. Split E2E tests into a separate dependent job.
+    1. Parallelize CI checks (lint, format, test, e2e).
+    2. Optimize test dependencies (replace full build with schema generation).
+    3. Cache Playwright browser binaries.
 
 ## High Impact Optimizations
 
@@ -16,41 +17,33 @@
 
 * **Expected improvement:** 30-40% reduction in total time before E2E tests start.
 * **Complexity:** Low
-* **Risk:** None. These tasks are inherently independent (except potentially build before some tests, but typical setups allow independent runs).
-* **Recommendation:** Break out `format`, `lint`, `test`, and `build` into separate jobs or use a build tool like Turborepo. For pure GitHub Actions, parallel jobs are simplest.
+* **Risk:** None.
+* **Recommendation:** Break out `format`, `lint`, `test`, and `e2e` into separate parallel jobs.
+
+### Optimization 2: Avoid Redundant Builds for Unit Tests
+
+* **Expected improvement:** ~1 minute per run.
+* **Complexity:** Low
+* **Risk:** Low. Vitest processes TypeScript natively, so a full build is redundant.
+* **Recommendation:** Replace `pnpm run build` in the test job with targeted `codegen` commands to only generate necessary GraphQL schemas.
 
 ```yaml
-jobs:
-  lint-and-format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm run format:check
-      - run: pnpm run lint
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - run: pnpm run build
-
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm run test
-        env:
-          JWT_SECRET: ci-test-secret-do-not-use-in-prod
+      - name: Generate Schemas
+        run: pnpm --filter @lightscope-ce/api run codegen && pnpm --filter @lightscope-ce/web run codegen
+      - name: Run test
+        run: pnpm run test
 ```
 
-### Optimization 2: Cache Playwright Browsers
+### Optimization 3: Cache Playwright Browsers
 
 * **Expected improvement:** 1-2 minutes per run (skipping ~300MB+ download and extraction).
 * **Complexity:** Medium
-* **Risk:** Low. If the cache is corrupted or stale, Playwright will fail to find the browser, but the cache key relies on the Playwright version.
+* **Risk:** Low. Playwright natively skips browser downloads if the binaries are present in the cache, but `install --with-deps` must still run without conditional blocks to ensure OS dependencies (like `libnss3`) are installed on fresh runners.
 * **Recommendation:** Cache the `~/.cache/ms-playwright` directory using the Playwright version as the key.
 
 ```yaml
@@ -66,44 +59,33 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ env.VERSION }}
 
       - name: Install Playwright Browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm --filter @lightscope-ce/e2e exec playwright install --with-deps
 ```
 
 ## Medium Impact Optimizations
 
-### Optimization 3: Split E2E into a separate dependent job
+### Optimization 4: Split E2E into a separate dependent job
 
-* **Expected improvement:** Better feedback loop. Developers see unit test/lint failures sooner without waiting for the entire E2E setup.
-* **Complexity:** Medium
+* **Expected improvement:** Better feedback loop. Developers see unit test/lint failures sooner.
+* **Complexity:** Low
 * **Risk:** Low.
-* **Recommendation:** Create a separate `e2e` job that `needs: [build, test]`.
-
-```yaml
-  e2e:
-    needs: [build, test, lint-and-format]
-    runs-on: ubuntu-latest
-    steps:
-       # ... setup steps, playwright cache, and install ...
-      - name: Run E2E tests
-        run: pnpm run test:e2e
-        env: ...
-```
+* **Recommendation:** Create a separate `e2e` job that `needs: [lint-and-format, test]`.
 
 ## Low Impact Optimizations
 
-### Optimization 4: Optimize pnpm cache action
+### Optimization 5: Optimize pnpm cache action
 
 * **Expected improvement:** Minor (seconds).
 * **Complexity:** Low
 * **Risk:** Low.
-* **Recommendation:** The current setup action manually configures pnpm cache. The `pnpm/action-setup` or `actions/setup-node` can often handle this natively, though the current composite action is decent.
+* **Recommendation:** Remove redundant custom cache logic in the composite setup action, as `actions/setup-node` handles `cache: 'pnpm'` natively.
 
 ## Proposed Optimized Workflow Architecture
 
-1. **Parallel Static Analysis & Unit Tests:** `lint-and-format`, `test`, and `build` jobs run concurrently.
-2. **Dependent E2E:** An `e2e` job depends on the success of the static analysis and unit tests.
-3. **Playwright Caching:** The E2E job utilizes caching for Playwright browsers.
+1. **Parallel Jobs:** `lint-and-format` and `test` jobs run concurrently.
+2. **Optimized Test Data:** The `test` job only generates schemas (`codegen`) instead of running a full Vite/TypeScript build.
+3. **Dependent E2E:** An `e2e` job depends on the success of the static analysis and unit tests, and performs the only full build.
+4. **Playwright Caching:** The E2E job utilizes caching for Playwright binaries.
 
 ## Example Optimized Workflow
 
@@ -141,8 +123,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup Node and pnpm
         uses: ./.github/actions/setup
-      - name: Run build (needed for schema/codegen)
-        run: pnpm run build
+      - name: Generate Schemas
+        run: pnpm --filter @lightscope-ce/api run codegen && pnpm --filter @lightscope-ce/web run codegen
       - name: Run test
         run: pnpm run test
         env:
@@ -155,25 +137,19 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup Node and pnpm
         uses: ./.github/actions/setup
-
-      # We need a build before e2e as pretest:e2e builds tracker
       - name: Run build
         run: pnpm run build
-
       - name: Get Playwright version
         id: playwright-version
         run: echo "VERSION=$(pnpm --filter @lightscope-ce/e2e exec playwright --version | awk '{print $2}')" >> $GITHUB_ENV
-
       - name: Cache Playwright Browsers
         uses: actions/cache@v4
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.VERSION }}
-
-      - name: Install Playwright Browsers & OS Deps
+      - name: Install Playwright Browsers
         run: pnpm --filter @lightscope-ce/e2e exec playwright install --with-deps
-
       - name: Run E2E tests
         run: pnpm run test:e2e
         env:
@@ -184,10 +160,9 @@ jobs:
           CLICKHOUSE_INSERT_BATCH_SIZE: 1
 ```
 
-*(Note: In a true monorepo, Turborepo (`turbo run test lint build`) is highly recommended to manage these dependencies and cache local builds across jobs, but purely restructuring the workflow provides immediate gains without adopting a new tool).*
-
 ## Migration Plan
 
-1. **Implement Playwright caching in the single job.** (Immediate time savings).
-2. **Split the single job into parallel jobs (`lint`, `test`, `e2e`).** Note that because it's a monorepo, GraphQL codegen or builds may be required before testing. In the example above, `build` is run inside the `test` and `e2e` jobs to ensure assets are ready.
-3. **(Future) Adopt a task runner like Turborepo or Nx.** This would allow a single job to run `turbo run lint format test build e2e` while utilizing remote caching, or simplify the parallel matrix.
+1. **Implement Playwright and native pnpm caching.**
+2. **Split the single workflow into three parallel jobs (`lint-and-format`, `test`, `e2e`).**
+3. **Refactor the `test` job to only run `codegen` instead of `build`.**
+4. **(Future) Adopt a task runner like Turborepo or Nx.** This would allow shared caching across local and remote environments.

@@ -6,18 +6,24 @@ export function useValidateUrlParams(allowedParams: string[]) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const allowedShortParams = allowedParams
-    .map((param) => PARAM_CONFIG[param].short)
-    .filter(Boolean);
-  const allowedShortParamsRef = useRef(allowedShortParams);
-  allowedShortParamsRef.current = allowedShortParams;
+  // Precompute Set to achieve O(1) lookup time inside the iteration loop,
+  // and use single-pass reduce to avoid intermediate array allocations from .map().filter()
+  const allowedShortParamsSet = allowedParams.reduce((acc, param) => {
+    const short = PARAM_CONFIG[param]?.short;
+    if (short) acc.add(short);
+    return acc;
+  }, new Set<string>());
+
+  const allowedShortParamsRef = useRef(allowedShortParamsSet);
+  allowedShortParamsRef.current = allowedShortParamsSet;
 
   useEffect(() => {
     const newParams = new URLSearchParams();
     let hasInvalidParam = false;
 
     searchParams.forEach((value, key) => {
-      if (allowedShortParamsRef.current.includes(key)) {
+      // Use Set.has() instead of Array.prototype.includes() for O(1) lookup
+      if (allowedShortParamsRef.current.has(key)) {
         newParams.append(key, value);
       } else {
         hasInvalidParam = true;

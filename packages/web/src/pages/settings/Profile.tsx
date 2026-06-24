@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 import {
   Select,
   SelectContent,
@@ -110,6 +111,7 @@ export default function Profile() {
           </div>
           <div className="flex gap-2 items-center justify-end">
             <Button size="sm" disabled={!isChanged || isUpdating} onClick={handleUpdate}>
+              {isUpdating && <Spinner className="mr-2" />}
               Save
             </Button>
           </div>
@@ -162,6 +164,7 @@ export default function Profile() {
                 }
                 onClick={handleChangePassword}
               >
+                {isChangingPassword && <Spinner className="mr-2" />}
                 Change Password
               </Button>
             </div>

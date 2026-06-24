@@ -36,8 +36,8 @@ jobs:
       - name: Setup Node and pnpm
         uses: ./.github/actions/setup
 
-      - name: Run build
-        run: pnpm run build
+      - name: Generate Schemas
+        run: pnpm --filter @lightscope-ce/api run codegen && pnpm --filter @lightscope-ce/web run codegen
 
       - name: Run test
         run: pnpm run test

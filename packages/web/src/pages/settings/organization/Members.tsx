@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Spinner } from '@/components/ui/spinner';
 import {
   Dialog,
   DialogContent,
@@ -190,8 +189,7 @@ function InviteDialog({ name, isAdmin }: { name: string; isAdmin: boolean }) {
             <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading && <Spinner className="mr-2" />}
+            <Button type="submit" isLoading={isLoading}>
               Invite
             </Button>
           </div>

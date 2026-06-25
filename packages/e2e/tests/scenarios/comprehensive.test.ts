@@ -84,22 +84,30 @@ test.describe.only('Comprehensive Flow', () => {
         userAgent:
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         referer: 'https://google.com',
+        ip: '128.101.101.101',
       },
       {
         userAgent:
           'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
         referer: 'https://twitter.com',
+        ip: '81.2.69.142',
       },
       {
         userAgent:
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/115.0',
         referer: 'https://facebook.com',
+        ip: '2.125.160.216',
       },
     ];
 
     for (let i = 0; i < sessions.length; i++) {
       const session = sessions[i];
-      const context = await browser.newContext({ userAgent: session.userAgent });
+      const context = await browser.newContext({
+        userAgent: session.userAgent,
+        extraHTTPHeaders: {
+          'X-Forwarded-For': session.ip,
+        },
+      });
       const mockPage = await context.newPage();
 
       // Navigate multiple times per session
@@ -281,6 +289,39 @@ test.describe.only('Comprehensive Flow', () => {
     const locationsCard = page.getByTestId('locations-card');
     await expect(locationsCard).toBeVisible();
     await expect(locationsCard.locator('h3')).toHaveText('Top Countries');
+
+    // Verify country values in locations card table
+    const gbRow = locationsCard.locator('table tbody tr').filter({ hasText: 'United Kingdom' });
+    await expect(gbRow).toBeVisible();
+    await expect(gbRow.locator('td').nth(1)).toHaveText('2');
+
+    const usRow = locationsCard.locator('table tbody tr').filter({ hasText: 'United States' });
+    await expect(usRow).toBeVisible();
+    await expect(usRow.locator('td').nth(1)).toHaveText('1');
+
+    // Click United Kingdom to see cities
+    await gbRow.click();
+    await expect(locationsCard.locator('h3')).toHaveText('United Kingdom');
+    const londonRow = locationsCard.locator('table tbody tr').filter({ hasText: 'London' });
+    await expect(londonRow).toBeVisible();
+    await expect(londonRow.locator('td').nth(1)).toHaveText('1');
+
+    const boxfordRow = locationsCard.locator('table tbody tr').filter({ hasText: 'Boxford' });
+    await expect(boxfordRow).toBeVisible();
+    await expect(boxfordRow.locator('td').nth(1)).toHaveText('1');
+
+    // Reset selected country by clicking the SVG map background
+    await locationsCard.locator('svg').first().click();
+    await expect(locationsCard.locator('h3')).toHaveText('Top Countries');
+
+    // Click United States to see cities
+    await usRow.click();
+    await expect(locationsCard.locator('h3')).toHaveText('United States');
+    const minneapolisRow = locationsCard
+      .locator('table tbody tr')
+      .filter({ hasText: 'Minneapolis' });
+    await expect(minneapolisRow).toBeVisible();
+    await expect(minneapolisRow.locator('td').nth(1)).toHaveText('1');
 
     // Verify AreaStacked chart recharts wrapper is visible
     await expect(page.locator('.recharts-wrapper').first()).toBeVisible();

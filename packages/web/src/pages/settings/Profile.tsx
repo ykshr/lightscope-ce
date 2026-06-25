@@ -157,9 +157,7 @@ export default function Profile() {
             <div className="flex gap-2 items-center justify-end">
               <Button
                 size="sm"
-                disabled={
-                  !currentPassword || !newPassword || !confirmPassword
-                }
+                disabled={!currentPassword || !newPassword || !confirmPassword}
                 isLoading={isChangingPassword}
                 onClick={handleChangePassword}
               >

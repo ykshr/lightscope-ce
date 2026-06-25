@@ -1,4 +1,4 @@
-import processAllowedOriginsString from '@/helpers/allowedOrigins';
+import processAllowedOriginsString, { splitCommaSeparated } from '@/helpers/allowedOrigins';
 import { redactError } from '@/helpers/error';
 import createContextMiddleware from '@/middlewares/context';
 import createTrackerMiddleware from '@/middlewares/tracker';
@@ -14,13 +14,19 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.use('*', logger());
   app.use('*', async (c, next) => {
-    const { PROXY_ALLOWED_ORIGINS } = env(c);
+    const { PROXY_ALLOWED_ORIGINS, PROXY_CORS_ALLOW_HEADERS } = env(c);
     const origins = processAllowedOriginsString(PROXY_ALLOWED_ORIGINS);
-    if (!origins) return next();
+    const allowHeaders = splitCommaSeparated(PROXY_CORS_ALLOW_HEADERS) || [
+      'Content-Type',
+      'Authorization',
+    ];
 
     const corsMiddlewareHandler = cors({
-      origin: origins.length === 1 ? origins[0] : origins,
-      allowHeaders: ['Content-Type', 'Authorization'],
+      origin: (origin) => {
+        if (!origins || origins.includes('*')) return origin;
+        return origins.includes(origin) ? origin : undefined;
+      },
+      allowHeaders,
     });
     return corsMiddlewareHandler(c, next);
   });

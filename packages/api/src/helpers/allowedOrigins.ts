@@ -1,5 +1,8 @@
+export function splitCommaSeparated(str: string | undefined): string[] | undefined {
+  if (!str) return undefined;
+  return str.split(',').map((o) => o.trim());
+}
+
 export default function processAllowedOriginsString(allowedOrigins: string | undefined) {
-  if (!allowedOrigins) return undefined;
-  const origins = allowedOrigins.split(',').map((o) => o.trim());
-  return origins;
+  return splitCommaSeparated(allowedOrigins);
 }

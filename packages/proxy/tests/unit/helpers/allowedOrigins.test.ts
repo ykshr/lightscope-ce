@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import processAllowedOriginsString from '@/helpers/allowedOrigins';
+import processAllowedOriginsString, { splitCommaSeparated } from '@/helpers/allowedOrigins';
 
 describe('processAllowedOriginsString', () => {
   it('should return undefined if allowedOrigins is undefined', () => {
@@ -19,5 +19,19 @@ describe('processAllowedOriginsString', () => {
 
   it('should return an array of one origin when given a single origin', () => {
     expect(processAllowedOriginsString('http://example.com')).toEqual(['http://example.com']);
+  });
+});
+
+describe('splitCommaSeparated', () => {
+  it('should return undefined if input is undefined', () => {
+    expect(splitCommaSeparated(undefined)).toBeUndefined();
+  });
+
+  it('should return undefined if input is empty string', () => {
+    expect(splitCommaSeparated('')).toBeUndefined();
+  });
+
+  it('should correctly split and trim elements', () => {
+    expect(splitCommaSeparated('a, b , c  ')).toEqual(['a', 'b', 'c']);
   });
 });

@@ -22,7 +22,7 @@ describe('App', () => {
   });
 
   describe('App CORS', () => {
-    it('should NOT set CORS headers if ALLOWED_ORIGINS is missing', async () => {
+    it('should NOT set CORS headers if ALLOWED_ORIGINS is missing and request has no Origin header', async () => {
       vi.mocked(env).mockReturnValue({});
       const mockCreateContext = vi.fn().mockResolvedValue({});
       const app = createApp(mockCreateContext);
@@ -31,6 +31,24 @@ describe('App', () => {
 
       expect(res.status).toBe(200);
       expect(res.headers.get('access-control-allow-origin')).toBeNull();
+    });
+
+    it('should set CORS headers matching request Origin if ALLOWED_ORIGINS is missing', async () => {
+      vi.mocked(env).mockReturnValue({});
+      const mockCreateContext = vi.fn().mockResolvedValue({});
+      const app = createApp(mockCreateContext);
+      app.get('/test-cors', (c) => c.json({ ok: true }));
+
+      const res = await app.request(
+        new Request('http://localhost/test-cors', {
+          method: 'GET',
+          headers: {
+            Origin: 'http://example.com',
+          },
+        })
+      );
+
+      expect(res.headers.get('access-control-allow-origin')).toBe('http://example.com');
     });
 
     it('should set CORS headers if ALLOWED_ORIGINS matches', async () => {
@@ -68,6 +86,45 @@ describe('App', () => {
       );
 
       expect(res.headers.get('access-control-allow-origin')).toBeNull();
+    });
+
+    it('should set default CORS allow headers if PROXY_CORS_ALLOW_HEADERS is missing', async () => {
+      vi.mocked(env).mockReturnValue({ PROXY_ALLOWED_ORIGINS: 'http://example.com' });
+      const mockCreateContext = vi.fn().mockResolvedValue({});
+      const app = createApp(mockCreateContext);
+
+      const res = await app.request(
+        new Request('http://localhost/health', {
+          method: 'OPTIONS',
+          headers: {
+            Origin: 'http://example.com',
+            'Access-Control-Request-Method': 'GET',
+          },
+        })
+      );
+
+      expect(res.headers.get('access-control-allow-headers')).toBe('Content-Type,Authorization');
+    });
+
+    it('should set custom CORS allow headers if PROXY_CORS_ALLOW_HEADERS is specified', async () => {
+      vi.mocked(env).mockReturnValue({
+        PROXY_ALLOWED_ORIGINS: 'http://example.com',
+        PROXY_CORS_ALLOW_HEADERS: 'Content-Type, X-Custom-Header',
+      });
+      const mockCreateContext = vi.fn().mockResolvedValue({});
+      const app = createApp(mockCreateContext);
+
+      const res = await app.request(
+        new Request('http://localhost/health', {
+          method: 'OPTIONS',
+          headers: {
+            Origin: 'http://example.com',
+            'Access-Control-Request-Method': 'GET',
+          },
+        })
+      );
+
+      expect(res.headers.get('access-control-allow-headers')).toBe('Content-Type,X-Custom-Header');
     });
   });
 

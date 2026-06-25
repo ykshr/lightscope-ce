@@ -40,15 +40,22 @@ All `AGENTS.md` files in the repository must be structured with four specific En
     - The `ChartStyle` component in `packages/web/src/components/ui/chart.tsx` mitigates XSS vulnerabilities within `dangerouslySetInnerHTML` by sanitizing CSS identifiers (ids and config keys) with `sanitizeCSSIdentifier` (restricting to `[a-zA-Z0-9-_]+`) and CSS values (colors) with `sanitizeCSSValue` (stripping `<>{};` to prevent tag breakout and declaration injection). Ensure `sanitizeCSSValue` does not strip parentheses `()` to avoid breaking standard CSS functions like `rgba()`.
 
   - **UI and Styling Rules**:
-    - Use `shadcn/ui` primitive components whenever possible.
 
-    - To upgrade shadcn-ui components in `packages/web`, check update feasibility with `pnpm dlx shadcn add [component-name] --diff` (since `shadcn diff` is deprecated), apply updates using `pnpm dlx shadcn add [component-name] -o`, and verify functionality, layout, and lint rules (`pnpm --filter @lightscope-ce/web run lint`).
+    - **Accessibility**:
+      - The established pattern for providing accessible names to icon-only buttons (such as close or clear buttons) is to nest a `<span className="sr-only">` inside the button containing the text, rather than using the `aria-label` attribute directly on the button component. Avoid using `aria-label` on buttons that already contain clear, descriptive visible text, as the `aria-label` attribute redundantly overrides the visible text for assistive technologies.
+      - When adding `aria-label` attributes to elements with existing visible text (such as stateful toggle buttons), ensure the `aria-label` describes both the action and the current state (e.g., 'Change logical operator (currently AND)'), because the `aria-label` completely overrides the visible text for assistive technologies.
+
+    - Use `shadcn/ui` primitive components whenever possible.
+    - When modifying shadcn/ui components like `Button` that support the `asChild` pattern via Radix UI's `Slot`, use `<Slottable>` around `{children}` if inserting sibling elements (like a loading `<Spinner />`). Otherwise, the `asChild` composition delegation will break.
+
+
+    - To safely upgrade shadcn/ui components in `packages/web`, be aware that running `pnpm dlx shadcn add [component]` may generate files in a literal `@/components/ui/` folder due to path aliases rather than directly updating `src/components/ui/`. Use standard `diff -u` between these directories to check for local customizations or visual regressions. If an update is unsafe, skip it and prepend a `/** UPDATE SKIPPED ... */` comment block detailing the reason and upstream changes. Check update feasibility with `pnpm dlx shadcn add [component-name] --diff` and apply updates using `pnpm dlx shadcn add [component-name] -o`.
 
     - Use only Tailwind v4 utility classes for styling. Avoid custom CSS files or inline styles.
     - Constants and helper functions should be extracted to separate files (e.g., `src/helpers/constants/`) to prevent `react-refresh/only-export-components` ESLint warnings in component files.
     - Maintain consistency with existing components and keep the added `className` props to a minimum.
     - For client-side navigation, use semantic `<Link>` components from `react-router-dom` rather than `<button>` elements with `onClick={() => navigate(...)}` to ensure accessibility (screen reader compatibility, middle-click to open in new tab).
-    - Buttons triggering asynchronous operations (especially destructive actions like deletions that follow a native confirmation dialog) must display a `<Spinner />` component while in a loading or disabled state to provide essential visual feedback and prevent user anxiety.
+    - Buttons triggering asynchronous operations must provide visual feedback by passing the `isLoading={true}` prop to the central `@/components/ui/button` component, which centrally handles rendering the `Spinner` and managing the disabled state, rather than manually inserting `<Spinner />` elements across pages. For specific cases (like deletions that follow a native confirmation dialog), ensure this loading state prevents user anxiety.
   - **Performance**:
     - Analytics dashboards can become heavy. Do not execute intensive aggregation processing during rendering. Rely on the backend (ClickHouse) for aggregations. If necessary, use `useMemo` to memoize heavy data transformations.
     - To maintain optimal frontend bundle sizes, page components in `App.tsx` must be lazy-loaded using `React.lazy()` and `<Suspense>`, and large third-party dependencies should be explicitly separated into groups (e.g., `vendor`, `ui`, `charts`) using `manualChunks` in `vite.config.ts`.

@@ -51,6 +51,8 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   - To ensure `@prisma/client` types are available during CI builds where `node_modules` are freshly installed, the `build` script in `package.json` must explicitly generate the Prisma client before running the TypeScript compiler (e.g., `"build": "npx prisma generate && pnpm run codegen && tsc -b"`).
 * How to run tests (commands and steps)
   - Run Tests (Vitest):
+    - In CI workflows, the unit test job does not require a full monorepo build (`pnpm run build`). It only needs GraphQL schemas to be generated (`pnpm --filter @lightscope-ce/api run codegen && pnpm --filter @lightscope-ce/web run codegen`) prior to running tests, which significantly reduces execution time.
+
     *Note: In environments where pnpm metadata fetching is restricted, bun test can be used as a reliable alternative for executing Vitest-based tests in packages/api.*
     - **Database Integration**: In `packages/api`, the `test:integration` script automatically provisions a local SQLite test database (`file:./prisma/db/test.db`), runs `prisma migrate reset --force`, and executes tests within the `tests/integration/` directory using Vitest.
     - **Test Definitions**: Unit tests are function-level without package startup. Integration tests are package-level, requiring only the target package to be started with external dependencies mocked/stubbed. E2E tests are fully integrated tests requiring all packages to be started to cover comprehensive user journeys and data flows.

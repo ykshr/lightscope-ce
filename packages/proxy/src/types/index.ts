@@ -16,7 +16,7 @@ export type Bindings = {
   CLICKHOUSE_INSERT_FLUSH_INTERVAL_MS: number;
   CLICKHOUSE_INSERT_MAX_TRY: number;
   MAXMIND_DB_PATH: string;
-  PROXY_ALLOWED_ORIGINS?: string;
+  PROXY_ALLOW_ORIGINS?: string;
   PROXY_CORS_ALLOW_HEADERS?: string;
 };
 

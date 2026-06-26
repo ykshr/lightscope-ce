@@ -19,8 +19,8 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.use('*', logger());
   app.use('*', async (c, next) => {
-    const { API_ALLOWED_ORIGINS, API_CORS_ALLOW_HEADERS } = env(c);
-    const origins = processAllowedOriginsString(API_ALLOWED_ORIGINS);
+    const { API_ALLOW_ORIGINS, API_CORS_ALLOW_HEADERS } = env(c);
+    const origins = processAllowedOriginsString(API_ALLOW_ORIGINS);
     const allowHeaders = splitCommaSeparated(API_CORS_ALLOW_HEADERS) || [
       'Content-Type',
       'Authorization',

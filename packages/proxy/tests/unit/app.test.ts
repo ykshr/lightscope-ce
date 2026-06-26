@@ -22,7 +22,7 @@ describe('App', () => {
   });
 
   describe('App CORS', () => {
-    it('should NOT set CORS headers if ALLOWED_ORIGINS is missing and request has no Origin header', async () => {
+    it('should NOT set CORS headers if ALLOW_ORIGINS is missing and request has no Origin header', async () => {
       vi.mocked(env).mockReturnValue({});
       const mockCreateContext = vi.fn().mockResolvedValue({});
       const app = createApp(mockCreateContext);
@@ -33,7 +33,7 @@ describe('App', () => {
       expect(res.headers.get('access-control-allow-origin')).toBeNull();
     });
 
-    it('should set CORS headers matching request Origin if ALLOWED_ORIGINS is missing', async () => {
+    it('should set CORS headers matching request Origin if ALLOW_ORIGINS is missing', async () => {
       vi.mocked(env).mockReturnValue({});
       const mockCreateContext = vi.fn().mockResolvedValue({});
       const app = createApp(mockCreateContext);
@@ -51,8 +51,8 @@ describe('App', () => {
       expect(res.headers.get('access-control-allow-origin')).toBe('http://example.com');
     });
 
-    it('should set CORS headers if ALLOWED_ORIGINS matches', async () => {
-      vi.mocked(env).mockReturnValue({ PROXY_ALLOWED_ORIGINS: 'http://example.com' });
+    it('should set CORS headers if ALLOW_ORIGINS matches', async () => {
+      vi.mocked(env).mockReturnValue({ PROXY_ALLOW_ORIGINS: 'http://example.com' });
       const mockCreateContext = vi.fn().mockResolvedValue({});
       const app = createApp(mockCreateContext);
 
@@ -70,8 +70,8 @@ describe('App', () => {
       expect(res.headers.get('access-control-allow-origin')).toBe('http://example.com');
     });
 
-    it('should NOT set CORS headers if ALLOWED_ORIGINS does NOT match', async () => {
-      vi.mocked(env).mockReturnValue({ PROXY_ALLOWED_ORIGINS: 'http://example.com' });
+    it('should NOT set CORS headers if ALLOW_ORIGINS does NOT match', async () => {
+      vi.mocked(env).mockReturnValue({ PROXY_ALLOW_ORIGINS: 'http://example.com' });
       const mockCreateContext = vi.fn().mockResolvedValue({});
       const app = createApp(mockCreateContext);
       app.get('/test-cors', (c) => c.json({ ok: true }));
@@ -89,7 +89,7 @@ describe('App', () => {
     });
 
     it('should set default CORS allow headers if PROXY_CORS_ALLOW_HEADERS is missing', async () => {
-      vi.mocked(env).mockReturnValue({ PROXY_ALLOWED_ORIGINS: 'http://example.com' });
+      vi.mocked(env).mockReturnValue({ PROXY_ALLOW_ORIGINS: 'http://example.com' });
       const mockCreateContext = vi.fn().mockResolvedValue({});
       const app = createApp(mockCreateContext);
 
@@ -108,7 +108,7 @@ describe('App', () => {
 
     it('should set custom CORS allow headers if PROXY_CORS_ALLOW_HEADERS is specified', async () => {
       vi.mocked(env).mockReturnValue({
-        PROXY_ALLOWED_ORIGINS: 'http://example.com',
+        PROXY_ALLOW_ORIGINS: 'http://example.com',
         PROXY_CORS_ALLOW_HEADERS: 'Content-Type, X-Custom-Header',
       });
       const mockCreateContext = vi.fn().mockResolvedValue({});

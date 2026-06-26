@@ -30,7 +30,7 @@ export const mockClickhouseQuery = vi.fn().mockResolvedValue({
 export const mockSendResetPassword = vi.fn();
 
 export default async function createContext(c: Context): Promise<$> {
-  const { DATABASE_URL, ALLOWED_ORIGINS } = env(c);
+  const { DATABASE_URL, API_ALLOW_ORIGINS } = env(c);
   if (!DATABASE_URL) {
     throw new Error('DATABASE_URL is not defined in the environment.');
   }
@@ -40,7 +40,7 @@ export default async function createContext(c: Context): Promise<$> {
   });
   const prisma = new PrismaClient({ adapter });
 
-  const trustedOrigins = processAllowedOriginsString(ALLOWED_ORIGINS);
+  const trustedOrigins = processAllowedOriginsString(API_ALLOW_ORIGINS);
   const auth = createBetterAuth({
     trustedOrigins,
     emailAndPassword: {

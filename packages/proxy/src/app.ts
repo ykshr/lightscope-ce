@@ -14,8 +14,8 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
   app.use('*', logger());
   app.use('*', async (c, next) => {
-    const { PROXY_ALLOWED_ORIGINS, PROXY_CORS_ALLOW_HEADERS } = env(c);
-    const origins = processAllowedOriginsString(PROXY_ALLOWED_ORIGINS);
+    const { PROXY_ALLOW_ORIGINS, PROXY_CORS_ALLOW_HEADERS } = env(c);
+    const origins = processAllowedOriginsString(PROXY_ALLOW_ORIGINS);
     const allowHeaders = splitCommaSeparated(PROXY_CORS_ALLOW_HEADERS) || [
       'Content-Type',
       'Authorization',

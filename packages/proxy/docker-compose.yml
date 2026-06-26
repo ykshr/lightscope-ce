@@ -5,7 +5,7 @@ services:
       dockerfile: packages/proxy/Dockerfile
     environment:
       - PROXY_PORT=${PROXY_PORT:-3002}
-      - PROXY_ALLOWED_ORIGINS=${PROXY_ALLOWED_ORIGINS:-*}
+      - PROXY_ALLOW_ORIGINS=${PROXY_ALLOW_ORIGINS:-*}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
       - CLICKHOUSE_URL=${CLICKHOUSE_URL:-http://clickhouse:8123}

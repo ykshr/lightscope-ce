@@ -52,3 +52,4 @@ jobs:
           CLICKHOUSE_PASSWORD: lightscope
           CLICKHOUSE_DB: lightscope
           CLICKHOUSE_INSERT_BATCH_SIZE: 1
+          PROXY_CORS_ALLOW_HEADERS: Content-Type,Authorization,X-Forwarded-For

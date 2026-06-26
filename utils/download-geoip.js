@@ -4,7 +4,7 @@ const path = require('path');
 
 const url =
   'https://raw.githubusercontent.com/maxmind/MaxMind-DB/main/test-data/GeoIP2-City-Test.mmdb';
-const destDir = path.resolve(__dirname, '../data');
+const destDir = path.resolve(__dirname, './packages/proxy/data');
 const dest = path.resolve(destDir, 'GeoLite2-City.mmdb');
 
 // Ensure directory exists

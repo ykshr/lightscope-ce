@@ -3,27 +3,9 @@ include:
   - packages/clickhouse/docker-compose.yml
   - packages/proxy/docker-compose.yml
   - packages/web/docker-compose.yml
+  - packages/mock-site/docker-compose.yml
 
 services:
-  api:
-    environment:
-      - JWT_SECRET=ci-test-secret-do-not-use-in-prod
-      - CLICKHOUSE_USERNAME=lightscope
-      - CLICKHOUSE_PASSWORD=lightscope
-      - CLICKHOUSE_DB=lightscope
-  clickhouse:
-    environment:
-      - CLICKHOUSE_USERNAME=lightscope
-      - CLICKHOUSE_PASSWORD=lightscope
-      - CLICKHOUSE_DB=lightscope
-  proxy:
-    environment:
-      - JWT_SECRET=ci-test-secret-do-not-use-in-prod
-      - CLICKHOUSE_USERNAME=lightscope
-      - CLICKHOUSE_PASSWORD=lightscope
-      - CLICKHOUSE_DB=lightscope
-      - CLICKHOUSE_INSERT_BATCH_SIZE=1
-      - PROXY_CORS_ALLOW_HEADERS=Content-Type,Authorization,X-Forwarded-For
   mock-site:
     depends_on:
       api:

@@ -46,3 +46,10 @@ jobs:
 
       - name: Run E2E tests
         run: pnpm run test:e2e
+        env:
+          JWT_SECRET: ci-test-secret-do-not-use-in-prod
+          CLICKHOUSE_USERNAME: lightscope
+          CLICKHOUSE_PASSWORD: lightscope
+          CLICKHOUSE_DB: lightscope
+          CLICKHOUSE_INSERT_BATCH_SIZE: 1
+          PROXY_CORS_ALLOW_HEADERS: Content-Type,Authorization,X-Forwarded-For

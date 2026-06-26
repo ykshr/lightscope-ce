@@ -6,6 +6,7 @@ services:
     environment:
       - API_PORT=${API_PORT:-3001}
       - API_ALLOW_ORIGINS=${API_ALLOW_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      - API_CORS_ALLOW_HEADERS=${API_CORS_ALLOW_HEADERS:-Content-Type,Authorization}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
       - DATABASE_URL=${DATABASE_URL:-file:./prisma/dev.db}

@@ -3,7 +3,6 @@ include:
   - packages/clickhouse/docker-compose.yml
   - packages/proxy/docker-compose.yml
   - packages/web/docker-compose.yml
-  - packages/mock-site/docker-compose.yml
 
 services:
   mock-site:

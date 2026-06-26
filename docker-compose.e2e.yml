@@ -7,6 +7,9 @@ include:
 
 services:
   mock-site:
+    extends:
+      file: packages/mock-site/docker-compose.yml
+      service: mock-site
     depends_on:
       api:
         condition: service_healthy

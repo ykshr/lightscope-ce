@@ -15,9 +15,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check --cache --cache-location .prettier-cache .",
     "ci": "pnpm run format:check && pnpm run lint && pnpm run build && pnpm run test",
-    "test:e2e": "node utils/download-geoip.js && pnpm run docker:up -d && node utils/wait-for-services.js && pnpm --filter @lightscope-ce/e2e run test:e2e && pnpm run docker:down",
     "docker:up": "docker compose up --build",
     "docker:down": "docker compose down -v",
+    "test:e2e": "node utils/download-geoip.js && pnpm run test:e2e:docker:up -d && node utils/wait-for-services.js && pnpm --filter @lightscope-ce/e2e run test:e2e && pnpm run test:e2e:docker:down",
+    "test:e2e:docker:up": "docker compose -f docker-compose.e2e.yml up --build",
+    "test:e2e:docker:down": "docker compose -f docker-compose.e2e.yml down -v",
     "test:integration": "pnpm --recursive --if-present run test:integration"
   },
   "devDependencies": {

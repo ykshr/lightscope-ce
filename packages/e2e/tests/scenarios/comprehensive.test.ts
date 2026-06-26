@@ -291,7 +291,7 @@ test.describe.only('Comprehensive Flow', () => {
     await expect(locationsCard.locator('h3')).toHaveText('Top Countries');
 
     // Verify country values in locations card table
-    const gbRow = locationsCard.locator('table tbody tr').filter({ hasText: 'United Kingdom' });
+    const gbRow = locationsCard.locator('table tbody tr').filter({ hasText: 'GB' });
     await expect(gbRow).toBeVisible();
     await expect(gbRow.locator('td').nth(1)).toHaveText('2');
 
@@ -301,7 +301,7 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Click United Kingdom to see cities
     await gbRow.click();
-    await expect(locationsCard.locator('h3')).toHaveText('United Kingdom');
+    await expect(locationsCard.locator('h3')).toHaveText('GB');
     const londonRow = locationsCard.locator('table tbody tr').filter({ hasText: 'London' });
     await expect(londonRow).toBeVisible();
     await expect(londonRow.locator('td').nth(1)).toHaveText('1');

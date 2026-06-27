@@ -1,6 +1,6 @@
 import { UAParser } from 'ua-parser-js';
 import { describe, expect, test } from 'vitest';
-import { generateMinimalPayload, generatePayload } from './generator';
+import { generateMinimalPayload, generatePayload } from '../../src/helpers/generator';
 
 describe('Data Generator Logic Verification', () => {
   test('generatePayload should create a valid full payload structure', () => {

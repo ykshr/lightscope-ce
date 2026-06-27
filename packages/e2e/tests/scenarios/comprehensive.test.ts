@@ -5,7 +5,7 @@ import path from 'path';
 
 test.use({ storageState: { cookies: [], origins: [] } });
 
-test.describe.only('Comprehensive Flow', () => {
+test.describe('Comprehensive Flow', () => {
   test('should execute full e2e scenario successfully', async ({ page, browser }) => {
     test.setTimeout(60_000);
 

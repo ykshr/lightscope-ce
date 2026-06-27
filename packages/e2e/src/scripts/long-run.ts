@@ -1,5 +1,5 @@
-import { generateToken } from '@/setup/tracker';
-import { generatePayload } from '@/utils/generator';
+import { generatePayload } from '../helpers/generator';
+import { generateToken } from '../helpers/tracker';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
 const PROXY_URL = process.env.PROXY_URL || 'http://localhost:3001';

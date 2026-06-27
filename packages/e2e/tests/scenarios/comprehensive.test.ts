@@ -297,7 +297,7 @@ test.describe.only('Comprehensive Flow', () => {
 
     // United Kingdom and see its cities
     await gbRow.click();
-    await expect(locationsCard.locator('h3')).toHaveText('GB');
+    await expect(locationsCard.locator('h3')).toHaveText('United Kingdom');
     const londonRow = locationsCard.locator('table tbody tr').filter({ hasText: 'London' });
     await expect(londonRow).toBeVisible();
     await expect(londonRow.locator('td').nth(1)).toHaveText('1');

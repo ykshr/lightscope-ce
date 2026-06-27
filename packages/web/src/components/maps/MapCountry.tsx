@@ -93,7 +93,7 @@ export default function MapCountry() {
   );
   const cities =
     dataCities?.trend?.categoryGeo
-      ?.filter((d): d is typeof d & { city: string } => !!d.geoCity)
+      ?.filter((d): d is typeof d & { geoCity: string } => !!d.geoCity)
       .map((d) => ({ name: d.geoCity, value: d.value, count: d.value })) || [];
 
   const projection = d3.geoMercator().scale(120).translate([400, 280]);

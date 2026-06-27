@@ -24,6 +24,7 @@ interface GenericDonutChartProps {
   isLoading?: boolean;
   data: ChartDataItem[];
   centerLabel: string;
+  legendPosition?: 'auto' | 'horizontal' | 'vertical';
 }
 
 export default function PieDonutText({
@@ -32,6 +33,7 @@ export default function PieDonutText({
   isLoading,
   data,
   centerLabel,
+  legendPosition = 'auto',
 }: GenericDonutChartProps) {
   const totalValue = useMemo(() => {
     return data.reduce((acc, curr) => acc + curr.value, 0);
@@ -71,8 +73,21 @@ export default function PieDonutText({
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
 
-      <CardContent className="flex flex-col">
-        <ChartContainer config={config} className="mx-auto aspect-square w-full max-h-[250px]">
+      <CardContent
+        className={
+          legendPosition === 'vertical'
+            ? 'flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6'
+            : 'flex flex-col'
+        }
+      >
+        <ChartContainer
+          config={config}
+          className={`mx-auto aspect-square w-full ${
+            legendPosition === 'vertical'
+              ? 'max-h-[180px] max-w-[180px] sm:max-h-[200px] sm:max-w-[200px]'
+              : 'max-h-[250px]'
+          }`}
+        >
           <PieChart>
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Pie
@@ -97,7 +112,7 @@ export default function PieDonutText({
                       <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        className="fill-foreground text-2xl font-bold"
+                        className="fill-foreground text-xl sm:text-2xl font-bold"
                       >
                         {totalValue.toLocaleString()}
                       </tspan>
@@ -116,7 +131,13 @@ export default function PieDonutText({
           </PieChart>
         </ChartContainer>
 
-        <div className="mt-6 space-y-3">
+        <div
+          className={
+            legendPosition === 'vertical'
+              ? 'space-y-3 w-full sm:w-auto flex-1 mt-4 sm:mt-0'
+              : 'mt-6 space-y-3'
+          }
+        >
           {chartData
             .sort((a, b) => b.value - a.value)
             .slice(0, 3)

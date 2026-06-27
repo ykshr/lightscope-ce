@@ -4,8 +4,9 @@ services:
       context: ../..
       dockerfile: packages/proxy/Dockerfile
     environment:
-      - PROXY_PORT=3002
-      - PROXY_ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
+      - PROXY_PORT=${PROXY_PORT:-3002}
+      - PROXY_ALLOW_ORIGINS=${PROXY_ALLOW_ORIGINS:-*}
+      - PROXY_CORS_ALLOW_HEADERS=${PROXY_CORS_ALLOW_HEADERS:-Content-Type,Authorization}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
       - CLICKHOUSE_URL=${CLICKHOUSE_URL:-http://clickhouse:8123}

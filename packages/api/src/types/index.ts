@@ -14,7 +14,8 @@ type Organization = {
 };
 
 export type Bindings = {
-  API_ALLOWED_ORIGINS?: string;
+  API_ALLOW_ORIGINS?: string;
+  API_CORS_ALLOW_HEADERS?: string;
   JWT_SECRET: string;
   JWT_ALGORITHM?: AlgorithmTypes;
   DATABASE_URL: string;

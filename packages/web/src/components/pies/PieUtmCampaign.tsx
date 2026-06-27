@@ -1,5 +1,5 @@
 import { useTotalUtmCampaignQuery } from '@/__generated__/graphql';
-import PieDonutText, { type ChartDataItem } from '@/components/pies/templates/PieDonutText';
+import PieDonut, { type ChartDataItem } from '@/components/pies/templates/PieDonut';
 import { useUrlParams } from '@/hooks/useUrl';
 
 export default function PieUtmCampaign() {
@@ -25,11 +25,6 @@ export default function PieUtmCampaign() {
   }));
 
   return (
-    <PieDonutText
-      title="UTM Campaign"
-      isLoading={isLoading}
-      data={trafficData}
-      centerLabel="Visits"
-    />
+    <PieDonut title="UTM Campaign" isLoading={isLoading} data={trafficData} centerLabel="Visits" />
   );
 }

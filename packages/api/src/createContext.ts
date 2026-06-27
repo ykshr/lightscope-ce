@@ -34,8 +34,8 @@ export default async function createContext(c: Context): Promise<$> {
     APPLE_APP_BUNDLE_IDENTIFIER,
   } = env(c);
 
-  const { API_ALLOWED_ORIGINS } = env(c);
-  const trustedOrigins = processAllowedOriginsString(API_ALLOWED_ORIGINS);
+  const { API_ALLOW_ORIGINS } = env(c);
+  const trustedOrigins = processAllowedOriginsString(API_ALLOW_ORIGINS);
   const auth = createBetterAuth({
     trustedOrigins,
     emailAndPassword: {

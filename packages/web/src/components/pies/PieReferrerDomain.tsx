@@ -1,5 +1,5 @@
 import { useTotalReferrerDomainQuery } from '@/__generated__/graphql';
-import PieDonutText, { type ChartDataItem } from '@/components/pies/templates/PieDonutText';
+import PieDonut, { type ChartDataItem } from '@/components/pies/templates/PieDonut';
 import { useUrlParams } from '@/hooks/useUrl';
 
 export default function PieReferrerDomain() {
@@ -25,7 +25,7 @@ export default function PieReferrerDomain() {
   }));
 
   return (
-    <PieDonutText
+    <PieDonut
       title="Referrer Domains"
       isLoading={isLoading}
       data={trafficData}

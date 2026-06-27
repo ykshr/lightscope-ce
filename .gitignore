@@ -39,5 +39,7 @@ test-results
 packages/api/prisma/db/*
 **/__generated__
 
-# Gemini
+# ai
 .jules/
+
+packages/proxy/data/

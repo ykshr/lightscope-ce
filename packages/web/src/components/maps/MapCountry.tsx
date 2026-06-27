@@ -10,9 +10,12 @@ import { interpolateRgb } from 'd3-interpolate';
 import { select } from 'd3-selection';
 import * as d3Zoom from 'd3-zoom';
 import i18n from 'i18n-iso-countries';
+import enLocale from 'i18n-iso-countries/langs/en.json';
 import { MapPin } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { feature } from 'topojson-client';
+
+i18n.registerLocale(enLocale);
 
 const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
@@ -68,11 +71,11 @@ export default function MapCountry() {
   const countries = useMemo(() => {
     return (
       dataCountries?.trend?.categoryGeo
-        ?.filter((d): d is typeof d & { country: string } => !!d.geoCountry)
+        ?.filter((d): d is typeof d & { geoCountry: string } => !!d.geoCountry)
         .map((d) => ({
-          id: i18n.alpha2ToNumeric(d.country),
-          name: i18n.getName(d.country, 'en'),
-          code: d.country,
+          id: i18n.alpha2ToNumeric(d.geoCountry),
+          name: i18n.getName(d.geoCountry, 'en') || d.geoCountry,
+          code: d.geoCountry,
           value: d.value,
         }))
         .filter((d): d is typeof d & { id: string } => !!d.id) || []
@@ -90,8 +93,8 @@ export default function MapCountry() {
   );
   const cities =
     dataCities?.trend?.categoryGeo
-      ?.filter((d): d is typeof d & { city: string } => !!d.geoCity)
-      .map((d) => ({ name: d.city, value: d.value, count: d.value })) || [];
+      ?.filter((d): d is typeof d & { geoCity: string } => !!d.geoCity)
+      .map((d) => ({ name: d.geoCity, value: d.value, count: d.value })) || [];
 
   const projection = d3.geoMercator().scale(120).translate([400, 280]);
   const pathGenerator = d3.geoPath().projection(projection);

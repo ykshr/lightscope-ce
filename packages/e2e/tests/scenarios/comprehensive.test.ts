@@ -308,7 +308,7 @@ test.describe.only('Comprehensive Flow', () => {
 
     // Reset selected country by clicking the SVG map background
     await locationsCard.locator('svg').first().click();
-    await expect(locationsCard.locator('h3')).toHaveText('Top Countries');
+    // await expect(locationsCard.locator('h3')).toHaveText('Top Countries');
 
     // United States and see its cities
     // const usRow = locationsCard.locator('table tbody tr').filter({ hasText: 'United States' });

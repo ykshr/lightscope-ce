@@ -14,9 +14,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci-e2e:
+  lint-and-format:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -29,17 +28,44 @@ jobs:
       - name: Run lint
         run: pnpm run lint
 
-      - name: Run build
-        run: pnpm run build
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup
+
+      - name: Generate Schemas
+        run: pnpm --filter @lightscope-ce/api run codegen && pnpm --filter @lightscope-ce/web run codegen
 
       - name: Run test
         run: pnpm run test
         env:
           JWT_SECRET: ci-test-secret-do-not-use-in-prod
 
+  e2e:
+    needs: [lint-and-format, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup
+
+      - name: Run build
+        run: pnpm run build
+
       - name: Get Playwright version
         id: playwright-version
         run: echo "VERSION=$(pnpm --filter @lightscope-ce/e2e exec playwright --version | awk '{print $2}')" >> $GITHUB_ENV
+
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.VERSION }}
 
       - name: Install Playwright Browsers
         run: pnpm --filter @lightscope-ce/e2e exec playwright install --with-deps

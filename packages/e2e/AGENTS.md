@@ -17,6 +17,8 @@ End-to-End Tests using Playwright and standard testing scripts.
 
 #### Build & Test Commands
 * How to build the project
+  - **System Dependencies**: To significantly reduce Playwright CI execution time while ensuring OS-level dependencies are installed, cache the `~/.cache/ms-playwright` directory utilizing the exact Playwright version as part of the cache key, and run `playwright install --with-deps` unconditionally. Playwright will natively skip re-downloading the cached browser binaries while still installing required OS dependencies.
+
   - Run `pnpm install` in the root workspace.
 * How to run tests (commands and steps)
   - **Smoke Test**:

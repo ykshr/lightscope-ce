@@ -99,7 +99,8 @@ export default function Trackers({ org, me }: Props) {
                     variant="destructive"
                     size="sm"
                     onClick={() => handleRemoveToken(id)}
-                    disabled={!isAdmin || isLoading}
+                    disabled={!isAdmin}
+                    isLoading={isLoading}
                   >
                     Delete
                   </Button>
@@ -199,7 +200,7 @@ function NewTokenDialog({
             <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading} data-testid="generate-token-btn">
+            <Button type="submit" isLoading={isLoading} data-testid="generate-token-btn">
               Generate
             </Button>
           </div>

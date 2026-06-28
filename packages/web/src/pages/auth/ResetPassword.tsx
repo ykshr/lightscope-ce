@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -106,8 +105,7 @@ export default function ResetPassword() {
 
             {error && <div className="text-sm text-destructive">{error}</div>}
 
-            <Button type="submit" className="w-full" disabled={!token || isLoading}>
-              {isLoading ? <Spinner className="mr-2" /> : null}
+            <Button type="submit" className="w-full" disabled={!token} isLoading={isLoading}>
               Reset Password
             </Button>
           </form>

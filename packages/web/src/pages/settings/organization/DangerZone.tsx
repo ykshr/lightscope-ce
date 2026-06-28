@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import { Props } from './type';
 
@@ -40,8 +39,7 @@ export default function DangerZone({ org }: Props) {
               Permanently delete this organization and all data.
             </p>
           </div>
-          <Button variant="destructive" onClick={handleDeleteOrg} disabled={isDeleting}>
-            {isDeleting && <Spinner className="mr-2" />}
+          <Button variant="destructive" onClick={handleDeleteOrg} isLoading={isDeleting}>
             Delete Organization
           </Button>
         </div>

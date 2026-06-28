@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import React, { useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
@@ -96,8 +95,7 @@ export default function SingIn() {
 
           {error && <div className="text-sm text-destructive">{error}</div>}
 
-          <Button data-testid="submit-btn" type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? <Spinner className="mr-2" /> : null}
+          <Button data-testid="submit-btn" type="submit" className="w-full" isLoading={isLoading}>
             Sign In
           </Button>
         </form>

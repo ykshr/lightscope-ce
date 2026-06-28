@@ -1,4 +1,5 @@
 import { renameKeySnakeToCamel, snakeToCamel } from '@/graphql/loaders/helpers/rename';
+import { redactError } from '@/helpers/error';
 import { ClickHouseClient } from '@clickhouse/client';
 
 export default async function <T>(
@@ -16,7 +17,7 @@ export default async function <T>(
     const data = await rows.json<T>();
     return data;
   } catch (error) {
-    console.error('CLICKHOUSE ERROR:', error);
+    console.error('CLICKHOUSE ERROR:', redactError(error));
     throw error;
   }
 }

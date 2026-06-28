@@ -3,7 +3,6 @@ export function redactError(err: unknown) {
     return {
       name: err.name,
       message: err.message,
-      stack: err.stack,
     };
   }
   return err;

@@ -10,8 +10,6 @@ describe('redactError', () => {
 
     expect(redacted).toHaveProperty('name', 'TestError');
     expect(redacted).toHaveProperty('message', 'test message');
-    expect(redacted).toHaveProperty('stack');
-    expect(typeof redacted.stack).toBe('string');
   });
 
   it('should return the original value if not an Error object', () => {

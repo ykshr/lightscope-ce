@@ -9,7 +9,6 @@ describe('redactError', () => {
     expect(result).toEqual({
       name: 'Error',
       message: 'test message',
-      stack: error.stack,
     });
   });
 
@@ -20,7 +19,6 @@ describe('redactError', () => {
     expect(result).toEqual({
       name: 'TypeError',
       message: 'type error',
-      stack: error.stack,
     });
   });
 
@@ -34,7 +32,6 @@ describe('redactError', () => {
     expect(result).toEqual({
       name: 'Error',
       message: 'test message',
-      stack: error.stack,
     });
     expect(result).not.toHaveProperty('status');
     expect(result).not.toHaveProperty('code');

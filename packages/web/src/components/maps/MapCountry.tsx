@@ -107,6 +107,11 @@ export default function MapCountry() {
     };
   }, [countries]);
 
+  // ⚡ Bolt: Precompute Map for O(1) lookups inside the render loop to prevent O(N^2) complexity
+  const countriesMap = useMemo(() => {
+    return new Map(countries.map((c) => [c.id, c]));
+  }, [countries]);
+
   // Toggle on country click
   const handleCountryClick = (e: React.MouseEvent, d: { id?: string | number }) => {
     e.stopPropagation(); // Prevent background click
@@ -114,7 +119,7 @@ export default function MapCountry() {
     if (selectedCountry?.id === clickedId) {
       setSelectedCountry(null); // Reset if same country
     } else {
-      const country = countries.find((c) => c.id === clickedId);
+      const country = countriesMap.get(clickedId);
       if (!country) return;
       setSelectedCountry({
         id: clickedId,
@@ -145,7 +150,7 @@ export default function MapCountry() {
               {geographies?.map(
                 (d: { id?: string | number; geometry: unknown; properties: { name?: string } }) => {
                   if (!d.id) return;
-                  const stat = countries.find((s) => s.id === String(d.id));
+                  const stat = countriesMap.get(String(d.id));
                   const isSelected = d.id != null && selectedCountry?.id === String(d.id);
                   return (
                     <path

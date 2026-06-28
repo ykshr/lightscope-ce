@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
 import authClient from '@/helpers/auth';
 import { useState } from 'react';
 
@@ -64,8 +63,7 @@ export default function NewOrganizationDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading} data-testid="create-org-btn">
-              {isLoading && <Spinner className="mr-2" />}
+            <Button type="submit" isLoading={isLoading} data-testid="create-org-btn">
               Create
             </Button>
           </div>

@@ -189,7 +189,7 @@ function InviteDialog({ name, isAdmin }: { name: string; isAdmin: boolean }) {
             <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" isLoading={isLoading}>
               Invite
             </Button>
           </div>

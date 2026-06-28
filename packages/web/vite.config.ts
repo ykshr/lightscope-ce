@@ -18,33 +18,38 @@ export default defineConfig(({ mode }) => {
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
-            vendor: ['react', 'react-dom', 'react-router-dom'],
-            ui: [
-              '@radix-ui/react-accordion',
-              '@radix-ui/react-avatar',
-              '@radix-ui/react-dialog',
-              '@radix-ui/react-dropdown-menu',
-              '@radix-ui/react-label',
-              '@radix-ui/react-popover',
-              '@radix-ui/react-scroll-area',
-              '@radix-ui/react-select',
-              '@radix-ui/react-separator',
-              '@radix-ui/react-slot',
-              '@radix-ui/react-tabs',
-              'lucide-react',
-              '@phosphor-icons/react',
-            ],
-            charts: [
-              'recharts',
-              'd3-geo',
-              'd3-interpolate',
-              'd3-selection',
-              'd3-zoom',
-              'topojson-client',
-            ],
-            date: ['date-fns', 'dayjs', 'react-day-picker'],
-            query: ['@tanstack/react-query'],
+          manualChunks(id) {
+            if (
+              id.includes('node_modules/react') ||
+              id.includes('node_modules/react-dom') ||
+              id.includes('node_modules/react-router-dom')
+            ) {
+              return 'vendor';
+            }
+            if (
+              id.includes('node_modules/@radix-ui') ||
+              id.includes('node_modules/lucide-react') ||
+              id.includes('node_modules/@phosphor-icons/react')
+            ) {
+              return 'ui';
+            }
+            if (
+              id.includes('node_modules/recharts') ||
+              id.includes('node_modules/d3-') ||
+              id.includes('node_modules/topojson-client')
+            ) {
+              return 'charts';
+            }
+            if (
+              id.includes('node_modules/date-fns') ||
+              id.includes('node_modules/dayjs') ||
+              id.includes('node_modules/react-day-picker')
+            ) {
+              return 'date';
+            }
+            if (id.includes('node_modules/@tanstack/react-query')) {
+              return 'query';
+            }
           },
         },
       },

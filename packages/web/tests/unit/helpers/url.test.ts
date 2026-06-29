@@ -1,7 +1,47 @@
 import { describe, it, expect } from 'vitest';
-import { encodeUrlParams, decodeUrlParams } from '@/helpers/url';
+import { encodeUrlParams, decodeUrlParams, PARAM_CONFIG } from '@/helpers/url';
 
 describe('url helpers', () => {
+
+  describe('PARAM_CONFIG', () => {
+    it('should have unique short keys for all parameters', () => {
+      const shortKeys = Object.values(PARAM_CONFIG).map((config) => config.short);
+      const uniqueShortKeys = new Set(shortKeys);
+      expect(shortKeys.length).toBe(uniqueShortKeys.size);
+    });
+
+    it('should configure date parameters correctly', () => {
+      expect(PARAM_CONFIG.startDate).toEqual({ short: 'sd', type: 'date' });
+      expect(PARAM_CONFIG.endDate).toEqual({ short: 'ed', type: 'date' });
+    });
+
+    it('should properly configure fields under articleFilter parent', () => {
+      const articleFilterFields = Object.entries(PARAM_CONFIG).filter(
+        ([, config]) => config.parent === 'articleFilter'
+      );
+
+      expect(articleFilterFields.length).toBeGreaterThan(0);
+
+      // Verify a few specific ones
+      const titleConfig = PARAM_CONFIG.title;
+      expect(titleConfig).toEqual({ short: 'tt', type: 'string', parent: 'articleFilter' });
+
+      const includeUrlsConfig = PARAM_CONFIG.includeUrls;
+      expect(includeUrlsConfig).toEqual({ short: 'iu', type: 'array', parent: 'articleFilter' });
+    });
+
+    it('should configure array and nested array types correctly', () => {
+      expect(PARAM_CONFIG.includeAges).toEqual({ short: 'iag', type: 'array' });
+      expect(PARAM_CONFIG.includeAuthors).toEqual({ short: 'ia', type: 'nestedArray', parent: 'articleFilter' });
+    });
+
+    it('should configure pagination and sorting correctly', () => {
+      expect(PARAM_CONFIG.limit).toEqual({ short: 'lm', type: 'number' });
+      expect(PARAM_CONFIG.page).toEqual({ short: 'pg', type: 'number' });
+      expect(PARAM_CONFIG.order).toEqual({ short: 'ord', type: 'string' });
+    });
+  });
+
   describe('encodeUrlParams', () => {
     it('should encode string params', () => {
       const params = { category: 'test' };

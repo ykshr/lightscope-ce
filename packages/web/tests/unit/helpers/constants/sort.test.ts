@@ -1,4 +1,9 @@
-import { sortOptions, allKeysUsedInSortOptions, allKeysUsedInSortOptionsSet, findSortOptionByValue } from '@/helpers/constants/sort';
+import {
+  sortOptions,
+  allKeysUsedInSortOptions,
+  allKeysUsedInSortOptionsSet,
+  findSortOptionByValue,
+} from '@/helpers/constants/sort';
 import { describe, expect, it } from 'vitest';
 
 describe('sort constant helpers', () => {
@@ -23,14 +28,16 @@ describe('sort constant helpers', () => {
     });
 
     it('should contain expected specific options', () => {
-      const options = sortOptions.map(o => o.label);
+      const options = sortOptions.map((o) => o.label);
       expect(options).toContain('Continent:Africa');
       expect(options).toContain('Device:Mobile');
       expect(options).toContain('Referrer:Direct');
     });
 
     it('should have correct structural integrity for geo category', () => {
-      const geoOptions = sortOptions.filter(o => o.value && (o.value as Record<string, unknown>).category === 'geo');
+      const geoOptions = sortOptions.filter(
+        (o) => o.value && (o.value as Record<string, unknown>).category === 'geo'
+      );
       expect(geoOptions.length).toBe(7); // Africa, Antarctica, Asia, Europe, North America, Oceania, South America
 
       for (const option of geoOptions) {

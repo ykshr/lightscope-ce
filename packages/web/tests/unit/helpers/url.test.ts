@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { encodeUrlParams, decodeUrlParams, PARAM_CONFIG } from '@/helpers/url';
 
 describe('url helpers', () => {
-
   describe('PARAM_CONFIG', () => {
     it('should have unique short keys for all parameters', () => {
       const shortKeys = Object.values(PARAM_CONFIG).map((config) => config.short);
@@ -32,7 +31,11 @@ describe('url helpers', () => {
 
     it('should configure array and nested array types correctly', () => {
       expect(PARAM_CONFIG.includeAges).toEqual({ short: 'iag', type: 'array' });
-      expect(PARAM_CONFIG.includeAuthors).toEqual({ short: 'ia', type: 'nestedArray', parent: 'articleFilter' });
+      expect(PARAM_CONFIG.includeAuthors).toEqual({
+        short: 'ia',
+        type: 'nestedArray',
+        parent: 'articleFilter',
+      });
     });
 
     it('should configure pagination and sorting correctly', () => {

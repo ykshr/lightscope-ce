@@ -1,4 +1,8 @@
-import { allKeysUsedInCategoryOptions, allKeysUsedInCategoryOptionsSet, findCategoryOptionByValue } from '@/helpers/constants/category';
+import {
+  allKeysUsedInCategoryOptions,
+  allKeysUsedInCategoryOptionsSet,
+  findCategoryOptionByValue,
+} from '@/helpers/constants/category';
 import { describe, expect, it } from 'vitest';
 
 describe('category constant helpers', () => {
@@ -86,5 +90,4 @@ describe('category constant helpers', () => {
       expect(allKeysUsedInCategoryOptionsSet.has('category')).toBe(true);
     });
   });
-
 });

@@ -184,9 +184,7 @@ describe('Proxy Integration Test', () => {
     });
 
     it('should reject payload missing required fields', async () => {
-      const payload = createValidPayload();
-      // @ts-ignore
-      delete payload.event_id;
+      const { event_id, ...payloadWithoutEventId } = createValidPayload();
 
       const res = await app.request('/events', {
         method: 'POST',
@@ -196,7 +194,7 @@ describe('Proxy Integration Test', () => {
           Origin: origin,
           'X-Forwarded-For': '127.0.0.1',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payloadWithoutEventId),
       });
       expect(res.status).toBe(400);
     });

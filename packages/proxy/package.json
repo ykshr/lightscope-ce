@@ -16,7 +16,7 @@
   "dependencies": {
     "@clickhouse/client": "^1.14.0",
     "@hono/node-server": "^1.19.11",
-    "hono": "^4.12.5",
+    "hono": "^4.12.25",
     "lru-cache": "^11.2.7",
     "maxmind": "^5.0.1",
     "tldts": "^7.0.23",

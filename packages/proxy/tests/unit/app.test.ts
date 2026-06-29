@@ -33,7 +33,7 @@ describe('App', () => {
       expect(res.headers.get('access-control-allow-origin')).toBeNull();
     });
 
-    it('should set CORS headers matching request Origin if ALLOW_ORIGINS is missing', async () => {
+    it('should NOT set CORS headers matching request Origin if ALLOW_ORIGINS is missing', async () => {
       vi.mocked(env).mockReturnValue({});
       const mockCreateContext = vi.fn().mockResolvedValue({});
       const app = createApp(mockCreateContext);
@@ -48,7 +48,7 @@ describe('App', () => {
         })
       );
 
-      expect(res.headers.get('access-control-allow-origin')).toBe('http://example.com');
+      expect(res.headers.get('access-control-allow-origin')).toBeNull();
     });
 
     it('should set CORS headers if ALLOW_ORIGINS matches', async () => {

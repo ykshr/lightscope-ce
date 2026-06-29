@@ -11,6 +11,7 @@ import {
   getStartOfNextFiveMinutes,
   getStartOfNextMinute,
   getTimeBetween,
+  timezoneOffset,
 } from '@/helpers/date';
 
 describe('date helpers', () => {
@@ -182,6 +183,13 @@ describe('date helpers', () => {
       expect(date.getFullYear()).toBe(2023);
       expect(date.getMonth()).toBe(0); // Jan
       expect(date.getDate()).toBe(1);
+    });
+  });
+
+  describe('timezoneOffset', () => {
+    it('should return a valid timezone offset string', () => {
+      expect(timezoneOffset).toMatch(/^[+-]\d{2}:\d{2}$/);
+      expect(timezoneOffset).toBe(dayjs().format('Z'));
     });
   });
 });

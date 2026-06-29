@@ -39,7 +39,7 @@ eventsRouter.post('/', async (c: Context) => {
     }
 
     return c.json({ ok: true }, 201);
-  } catch (e: any) {
+  } catch (e) {
     if (e instanceof SyntaxError) {
       return c.json({ error: 'Bad request: Invalid JSON' }, 400);
     }
@@ -91,7 +91,7 @@ export function createPV(
     new URL(payload.url).searchParams.forEach((value, key) => {
       query_params[key] = value;
     });
-  } catch (e) {
+  } catch {
     // Should not happen if payload validation passes url check
   }
 

@@ -88,8 +88,8 @@ describe('renameKeySnakeToCamel', () => {
     input.own_key = 2;
     const expected = { ownKey: 2 };
     expect(renameKeySnakeToCamel(input)).toEqual(expected);
-    expect(renameKeySnakeToCamel(input).inheritedKey).toBeUndefined();
-    expect(renameKeySnakeToCamel(input).inherited_key).toBeUndefined();
+    expect(renameKeySnakeToCamel<Record<string, unknown>>(input).inheritedKey).toBeUndefined();
+    expect(renameKeySnakeToCamel<Record<string, unknown>>(input).inherited_key).toBeUndefined();
   });
 });
 

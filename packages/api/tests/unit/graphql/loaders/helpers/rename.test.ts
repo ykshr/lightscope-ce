@@ -1,4 +1,8 @@
-import { renameKeySnakeToCamel, camelToSnake } from '@/graphql/loaders/helpers/rename';
+import {
+  renameKeySnakeToCamel,
+  camelToSnake,
+  snakeToCamel,
+} from '@/graphql/loaders/helpers/rename';
 import { describe, expect, it } from 'vitest';
 
 describe('renameKeySnakeToCamel', () => {
@@ -111,7 +115,7 @@ describe('camelToSnake', () => {
   });
 });
 
-describe('camelToSnake', () => {
+describe('camelToSnake (Keys)', () => {
   it('should convert camelCase keys to snake_case', () => {
     expect(camelToSnake('firstName')).toEqual('first_name');
     expect(camelToSnake('userProfileAge')).toEqual('user_profile_age');
@@ -125,5 +129,38 @@ describe('camelToSnake', () => {
     const secondCall = camelToSnake('someValue');
     expect(firstCall).toEqual('some_value');
     expect(firstCall).toEqual(secondCall);
+  });
+});
+
+describe('snakeToCamel', () => {
+  it('should convert snake_case string to camelCase', () => {
+    expect(snakeToCamel('first_name')).toBe('firstName');
+    expect(snakeToCamel('last_name')).toBe('lastName');
+    expect(snakeToCamel('user_profile_age')).toBe('userProfileAge');
+  });
+
+  it('should handle strings with no underscores', () => {
+    expect(snakeToCamel('lowercase')).toBe('lowercase');
+    expect(snakeToCamel('camelCase')).toBe('camelCase');
+  });
+
+  it('should handle strings starting with underscores', () => {
+    expect(snakeToCamel('_id')).toBe('Id');
+    expect(snakeToCamel('_pascal_case')).toBe('PascalCase');
+  });
+
+  it('should handle consecutive underscores', () => {
+    expect(snakeToCamel('double__underscore')).toBe('double_Underscore');
+  });
+
+  it('should handle empty strings', () => {
+    expect(snakeToCamel('')).toBe('');
+  });
+
+  it('should return cached value if called multiple times', () => {
+    const firstCall = snakeToCamel('some_value');
+    const secondCall = snakeToCamel('some_value');
+    expect(firstCall).toBe('someValue');
+    expect(firstCall).toBe(secondCall);
   });
 });

@@ -1,4 +1,8 @@
-import { RELATIVE_OPTIONS, RELATIVE_OPTIONS_QUICK_ACCESS, DEFAULT_DATE_STRING } from '@/helpers/constants/date';
+import {
+  RELATIVE_OPTIONS,
+  RELATIVE_OPTIONS_QUICK_ACCESS,
+  DEFAULT_DATE_STRING,
+} from '@/helpers/constants/date';
 import { timezoneOffset as tOffset } from '@/helpers/date';
 import { describe, expect, it } from 'vitest';
 
@@ -9,7 +13,7 @@ describe('date constants', () => {
     });
 
     it('should contain the expected labels', () => {
-      const labels = RELATIVE_OPTIONS_QUICK_ACCESS.map(option => option.label);
+      const labels = RELATIVE_OPTIONS_QUICK_ACCESS.map((option) => option.label);
       expect(labels).toEqual(['Today', 'This week', 'This month']);
     });
 
@@ -28,7 +32,7 @@ describe('date constants', () => {
     });
 
     it('should contain specific predefined labels', () => {
-      const labels = RELATIVE_OPTIONS.map(option => option.label);
+      const labels = RELATIVE_OPTIONS.map((option) => option.label);
       expect(labels).toContain('Past 12 hours');
       expect(labels).toContain('Past 24 hours');
       expect(labels).toContain('Today');
@@ -43,13 +47,13 @@ describe('date constants', () => {
     });
 
     it('should structure PT hours correctly without timezone in startDateString', () => {
-      const past12Hours = RELATIVE_OPTIONS.find(o => o.label === 'Past 12 hours');
+      const past12Hours = RELATIVE_OPTIONS.find((o) => o.label === 'Past 12 hours');
       expect(past12Hours?.startDateString).toBe('PT12H');
       expect(past12Hours?.endDateString).toBe(`So1D${tOffset}`);
     });
 
     it('should structure So days correctly with timezone', () => {
-      const yesterday = RELATIVE_OPTIONS.find(o => o.label === 'Yesterday');
+      const yesterday = RELATIVE_OPTIONS.find((o) => o.label === 'Yesterday');
       expect(yesterday?.startDateString).toBe(`So-1D${tOffset}`);
       expect(yesterday?.endDateString).toBe(`So0D${tOffset}`);
     });

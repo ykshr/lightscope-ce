@@ -88,7 +88,7 @@ export class Tracker {
       if (!this.pendingStorageWrite) return;
       try {
         localStorage.setItem('analytics_visit_last_ts', this.lastEventTime.toString());
-      } catch (e) {
+      } catch {
         // Ignore quota errors
       }
       this.pendingStorageWrite = false;
@@ -105,7 +105,7 @@ export class Tracker {
     if (this.pendingStorageWrite) {
       try {
         localStorage.setItem('analytics_visit_last_ts', this.lastEventTime.toString());
-      } catch (e) {
+      } catch {
         // Ignore quota errors
       }
       this.pendingStorageWrite = false;
@@ -159,7 +159,7 @@ export class Tracker {
 
       this.lastEventTime = now;
       this.scheduleStorageWrite();
-    } catch (e) {
+    } catch {
       // Error handling can be added here if needed
     }
   }

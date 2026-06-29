@@ -1,4 +1,8 @@
-import { findCategoryOptionByValue } from '@/helpers/constants/category';
+import {
+  findCategoryOptionByValue,
+  allKeysUsedInCategoryOptions,
+  allKeysUsedInCategoryOptionsSet,
+} from '@/helpers/constants/category';
 import { describe, expect, it } from 'vitest';
 
 describe('category constant helpers', () => {
@@ -69,6 +73,25 @@ describe('category constant helpers', () => {
       const result = findCategoryOptionByValue({ category: ['b', 'a'] });
       expect(result.label).toBe('Custom');
       expect(result.value).toEqual({ category: ['b', 'a'] });
+    });
+  });
+
+  describe('allKeysUsedInCategoryOptions & allKeysUsedInCategoryOptionsSet', () => {
+    it('should extract correct keys from categoryOptions', () => {
+      expect(allKeysUsedInCategoryOptions).toContain('category');
+      expect(allKeysUsedInCategoryOptions.length).toBeGreaterThan(0);
+    });
+
+    it('should have allKeysUsedInCategoryOptions array sorted', () => {
+      const sorted = [...allKeysUsedInCategoryOptions].sort();
+      expect(allKeysUsedInCategoryOptions).toEqual(sorted);
+    });
+
+    it('should have a Set that exactly matches the Array', () => {
+      expect(allKeysUsedInCategoryOptionsSet.size).toBe(allKeysUsedInCategoryOptions.length);
+      for (const key of allKeysUsedInCategoryOptions) {
+        expect(allKeysUsedInCategoryOptionsSet.has(key)).toBe(true);
+      }
     });
   });
 });

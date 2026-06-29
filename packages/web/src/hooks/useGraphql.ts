@@ -9,7 +9,7 @@ type GqlKey = {
 
 const chunkSize = 10;
 
-const gqlBatch = create<Map<string, any>, GqlKey>({
+const gqlBatch = create<any, GqlKey>({
   fetcher: async (keys) => {
     const chunkPromises: Promise<void>[] = [];
     const flatResponses: any[] = new Array(keys.length);
@@ -42,7 +42,7 @@ const gqlBatch = create<Map<string, any>, GqlKey>({
     // ⚡ Bolt: Return a Map to allow O(1) lookups in the resolver
     const resultMap = new Map<string, any>();
     for (let i = 0; i < keys.length; i++) {
-      resultMap.set(keys[i].id, flatResponses[i]);
+      resultMap.set(keys[i].id, { data: flatResponses[i] });
     }
 
     return resultMap;
@@ -63,7 +63,7 @@ export const useGraphql = <TData, TVariables>(
     const serializedVariables = variables ? serializeDates(variables) : undefined;
     const id = crypto.randomUUID();
 
-    const data = await gqlBatch.fetch({
+    const { data } = await gqlBatch.fetch({
       id,
       query,
       variables: serializedVariables,

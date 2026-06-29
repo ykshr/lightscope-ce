@@ -28,7 +28,8 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
 
     const handler = cors({
       origin: (origin) => {
-        if (!origins || origins.includes('*')) return origin;
+        if (!origins) return undefined;
+        if (origins.includes('*')) return origin;
         return origins.includes(origin) ? origin : undefined;
       },
       allowHeaders,

@@ -63,7 +63,7 @@ export const useGraphql = <TData, TVariables>(
     const serializedVariables = variables ? serializeDates(variables) : undefined;
     const id = crypto.randomUUID();
 
-    const { data } = await gqlBatch.fetch({
+    const data = await gqlBatch.fetch({
       id,
       query,
       variables: serializedVariables,

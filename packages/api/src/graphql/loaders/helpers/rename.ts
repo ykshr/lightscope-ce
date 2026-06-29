@@ -9,21 +9,21 @@ export const snakeToCamel = (str: string): string => {
   return result;
 };
 
-export function renameKeySnakeToCamel(obj: any): any {
+export function renameKeySnakeToCamel<T = unknown>(obj: unknown): T {
   if (Array.isArray(obj)) {
-    return obj.map((item) => renameKeySnakeToCamel(item));
+    return obj.map((item) => renameKeySnakeToCamel(item)) as unknown as T;
   } else if (obj !== null && typeof obj === 'object') {
     if (obj instanceof Date) {
-      return obj;
+      return obj as unknown as T;
     }
-    const newObj: any = {};
+    const newObj: Record<string, unknown> = {};
     for (const key of Object.keys(obj)) {
       const camelKey = snakeToCamel(key);
-      newObj[camelKey] = renameKeySnakeToCamel(obj[key]);
+      newObj[camelKey] = renameKeySnakeToCamel((obj as Record<string, unknown>)[key]);
     }
-    return newObj;
+    return newObj as unknown as T;
   }
-  return obj;
+  return obj as unknown as T;
 }
 
 const camelToSnakeCache = new Map<string, string>();

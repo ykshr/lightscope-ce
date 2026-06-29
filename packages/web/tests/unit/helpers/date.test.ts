@@ -1,15 +1,17 @@
-import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
+import dayjs from 'dayjs';
 import {
   convertDateString,
   formatDate,
   getPastDate,
+  getPreviousDates,
   getStartOfDay,
   getStartOfMinute,
   getStartOfNextDay,
   getStartOfNextFiveMinutes,
   getStartOfNextMinute,
   getTimeBetween,
+  timezoneOffset,
 } from '@/helpers/date';
 
 describe('date helpers', () => {
@@ -90,6 +92,51 @@ describe('date helpers', () => {
     });
   });
 
+  describe('getPreviousDates', () => {
+    it('should calculate previous dates for a standard duration (e.g., 1 day)', () => {
+      const startDate = new Date('2023-01-02T12:00:00Z');
+      const endDate = new Date('2023-01-03T12:00:00Z'); // 1 day later
+
+      const result = getPreviousDates(startDate, endDate);
+
+      // timeBetween = 1 day
+      // startDatePrevious = 2023-01-02 - 1 day = 2023-01-01
+      expect(result.startDatePrevious.toISOString()).toBe('2023-01-01T12:00:00.000Z');
+      expect(result.endDatePrevious.toISOString()).toBe('2023-01-02T12:00:00.000Z');
+    });
+
+    it('should calculate previous dates for a longer duration (e.g., 1 week)', () => {
+      const startDate = new Date('2023-01-10T00:00:00Z');
+      const endDate = new Date('2023-01-17T00:00:00Z'); // 7 days later
+
+      const result = getPreviousDates(startDate, endDate);
+
+      expect(result.startDatePrevious.toISOString()).toBe('2023-01-03T00:00:00.000Z');
+      expect(result.endDatePrevious.toISOString()).toBe('2023-01-10T00:00:00.000Z');
+    });
+
+    it('should handle identical start and end dates (zero duration)', () => {
+      const date = new Date('2023-01-01T12:00:00Z');
+
+      const result = getPreviousDates(date, date);
+
+      expect(result.startDatePrevious.toISOString()).toBe('2023-01-01T12:00:00.000Z');
+      expect(result.endDatePrevious.toISOString()).toBe('2023-01-01T12:00:00.000Z');
+    });
+
+    it('should handle start date after end date (negative duration)', () => {
+      const startDate = new Date('2023-01-02T12:00:00Z');
+      const endDate = new Date('2023-01-01T12:00:00Z'); // 1 day earlier
+
+      const result = getPreviousDates(startDate, endDate);
+
+      // timeBetween = -1 day
+      // startDatePrevious = 2023-01-02 - (-1 day) = 2023-01-03
+      expect(result.startDatePrevious.toISOString()).toBe('2023-01-03T12:00:00.000Z');
+      expect(result.endDatePrevious.toISOString()).toBe('2023-01-02T12:00:00.000Z');
+    });
+  });
+
   describe('convertDateString', () => {
     it('should return date object if input is Date', () => {
       const date = new Date();
@@ -136,6 +183,13 @@ describe('date helpers', () => {
       expect(date.getFullYear()).toBe(2023);
       expect(date.getMonth()).toBe(0); // Jan
       expect(date.getDate()).toBe(1);
+    });
+  });
+
+  describe('timezoneOffset', () => {
+    it('should return a valid timezone offset string', () => {
+      expect(timezoneOffset).toMatch(/^[+-]\d{2}:\d{2}$/);
+      expect(timezoneOffset).toBe(dayjs().format('Z'));
     });
   });
 });

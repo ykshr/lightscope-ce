@@ -1,6 +1,7 @@
 import App from '@/App';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,7 +15,9 @@ export default function Main() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <App />
+        <TooltipProvider delayDuration={0}>
+          <App />
+        </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

@@ -1,0 +1,3 @@
+🎯 **What:** Adding missing tests for the `allKeysUsedInCategoryOptions` and `allKeysUsedInCategoryOptionsSet` exports in `packages/web/src/helpers/constants/category.ts`.
+📊 **Coverage:** The new tests cover that both exports return the expected values (an array and Set of strings respectively) and that they accurately represent the keys from `categoryOptions`.
+✨ **Result:** Improved unit test coverage and reliability for the category constants, providing a safety net for future refactoring of these options.

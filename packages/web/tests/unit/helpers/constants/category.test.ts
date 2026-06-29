@@ -1,4 +1,4 @@
-import { findCategoryOptionByValue } from '@/helpers/constants/category';
+import { allKeysUsedInCategoryOptions, allKeysUsedInCategoryOptionsSet, findCategoryOptionByValue } from '@/helpers/constants/category';
 import { describe, expect, it } from 'vitest';
 
 describe('category constant helpers', () => {
@@ -71,4 +71,20 @@ describe('category constant helpers', () => {
       expect(result.value).toEqual({ category: ['b', 'a'] });
     });
   });
+
+  describe('allKeysUsedInCategoryOptions', () => {
+    it('should be an array of all keys used in category options values', () => {
+      expect(Array.isArray(allKeysUsedInCategoryOptions)).toBe(true);
+      expect(allKeysUsedInCategoryOptions).toEqual(['category']);
+    });
+  });
+
+  describe('allKeysUsedInCategoryOptionsSet', () => {
+    it('should be a Set of all keys used in category options values', () => {
+      expect(allKeysUsedInCategoryOptionsSet instanceof Set).toBe(true);
+      expect(allKeysUsedInCategoryOptionsSet.size).toBe(1);
+      expect(allKeysUsedInCategoryOptionsSet.has('category')).toBe(true);
+    });
+  });
+
 });

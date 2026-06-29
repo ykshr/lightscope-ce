@@ -121,3 +121,14 @@ All `AGENTS.md` files in the repository must be structured with four specific En
   * “Do not modify this directory”
     - Do not modify build output directories manually.
   - Do not leave temporary scratchpad scripts (e.g., .sh, .js, .py files) used for text processing or validation in the working directory when finalizing code or committing changes. Always clean up garbage files to avoid codebase pollution.
+
+#### Coding Conventions
+* Commenting: Code comments should be descriptive and concise. Avoid redundant comments that merely restate the code. Instead, explain the "why" behind complex logic, non-obvious workarounds, or business rules. Use standard `//` for single-line and `/* ... */` for multi-line block comments. When documenting performance optimizations under the 'Bolt' persona, do not include the `⚡ Bolt:` prefix in the code comments.
+* Git Branch & PR Naming: When creating branches or pull requests, follow these conventions:
+  - Git Branches: Use standard, hyphenated lowercase names without special characters (e.g., `feature/add-login`, `fix/auth-bug`, `sentinel/critical-auth-bypass`, `bolt/optimize-image-loading`, `palette/improve-contrast`, `health/refactor-api`, `test/add-unit-tests`).
+  - Pull Request Titles: PR titles must use specific prefixes to categorize the work:
+    - Security fixes/enhancements: `🛡️ Sentinel: [CRITICAL/HIGH/MEDIUM] Fix [vulnerability type]` or `🛡️ Sentinel: [security improvement]`
+    - Code health improvements: `🧹 [code health improvement description]`
+    - Testing improvements: `🧪 [testing improvement description]`
+    - Performance optimizations: `⚡ Bolt: [performance improvement]`
+    - UX/accessibility enhancements: `🎨 Palette: [UX improvement]`

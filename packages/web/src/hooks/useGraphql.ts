@@ -11,32 +11,42 @@ const chunkSize = 10;
 
 const gqlBatch = create<any, GqlKey>({
   fetcher: async (keys) => {
-    const chunks: (typeof keys)[] = [];
+    const chunkPromises: Promise<any[]>[] = [];
+
     for (let i = 0; i < keys.length; i += chunkSize) {
-      chunks.push(keys.slice(i, i + chunkSize));
+      const requestBody: { query: string; variables: any }[] = [];
+      const end = Math.min(i + chunkSize, keys.length);
+      for (let j = i; j < end; j++) {
+        requestBody.push({
+          query: keys[j].query,
+          variables: keys[j].variables ?? {},
+        });
+      }
+
+      chunkPromises.push(
+        customFetch('POST', '/graphql', {
+          body: requestBody,
+        }).then(({ body }) => body as any[])
+      );
     }
 
-    const chunkPromises = chunks.map(async (chunk) => {
-      const requestBody = chunk.map(({ query, variables = {} }) => ({
-        query,
-        variables,
-      }));
-
-      const { body: responseBody } = await customFetch('POST', '/graphql', {
-        body: requestBody,
-      });
-
-      return responseBody as any[];
-    });
-
     const chunkResults = await Promise.all(chunkPromises);
+    const results: { id: string; result: any }[] = [];
+    let k = 0;
 
-    const flatResponses = chunkResults.flat();
+    for (let i = 0; i < chunkResults.length; i++) {
+      const chunk = chunkResults[i];
+      if (chunk) {
+        for (let j = 0; j < chunk.length; j++) {
+          results.push({
+            id: keys[k++].id,
+            result: chunk[j],
+          });
+        }
+      }
+    }
 
-    return keys.map((key, index) => ({
-      id: key.id,
-      result: flatResponses[index],
-    }));
+    return results;
   },
 
   resolver: (items: any[], query) => {

@@ -3,6 +3,7 @@ import DateBeforeAfterInput from '@/components/inputs/DateBeforeAfterInput';
 import LogicalInput from '@/components/inputs/LogicalInput';
 import TagInput from '@/components/inputs/TagInput';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Label } from '@/components/ui/label';
 import { useUrlParams } from '@/hooks/useUrl';
 import { type ArticleFilter } from '@/types/filter';
@@ -40,10 +41,15 @@ export default function ArticleFilter() {
   return (
     <ResponsiveModal
       trigger={
-        <Button data-testid="article-filter-btn" variant="outline" className="gap-2">
-          <Filter className="w-4 h-4" />
-          <span className="sr-only">Open advanced filter</span>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button data-testid="article-filter-btn" variant="outline" className="gap-2">
+              <Filter className="w-4 h-4" />
+              <span className="sr-only">Open advanced filter</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Open advanced filter</TooltipContent>
+        </Tooltip>
       }
       title="Advanced Filter"
       description="Set detailed filter for articles"

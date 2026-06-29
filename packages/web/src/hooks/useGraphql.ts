@@ -9,38 +9,48 @@ type GqlKey = {
 
 const chunkSize = 10;
 
-const gqlBatch = create<any, GqlKey>({
+const gqlBatch = create<Map<string, any>, GqlKey>({
   fetcher: async (keys) => {
-    const chunks: (typeof keys)[] = [];
+    const chunkPromises: Promise<void>[] = [];
+    const flatResponses: any[] = new Array(keys.length);
+
     for (let i = 0; i < keys.length; i += chunkSize) {
-      chunks.push(keys.slice(i, i + chunkSize));
-    }
+      const chunkEnd = Math.min(i + chunkSize, keys.length);
+      const requestBody = new Array(chunkEnd - i);
 
-    const chunkPromises = chunks.map(async (chunk) => {
-      const requestBody = chunk.map(({ query, variables = {} }) => ({
-        query,
-        variables,
-      }));
+      for (let j = i; j < chunkEnd; j++) {
+        requestBody[j - i] = {
+          query: keys[j].query,
+          variables: keys[j].variables || {},
+        };
+      }
 
-      const { body: responseBody } = await customFetch('POST', '/graphql', {
+      const chunkPromise = customFetch('POST', '/graphql', {
         body: requestBody,
+      }).then(({ body }) => {
+        const results = body as any[];
+        for (let j = 0; j < results.length; j++) {
+          flatResponses[i + j] = results[j];
+        }
       });
 
-      return responseBody as any[];
-    });
+      chunkPromises.push(chunkPromise);
+    }
 
-    const chunkResults = await Promise.all(chunkPromises);
+    await Promise.all(chunkPromises);
 
-    const flatResponses = chunkResults.flat();
+    // ⚡ Bolt: Return a Map to allow O(1) lookups in the resolver
+    const resultMap = new Map<string, any>();
+    for (let i = 0; i < keys.length; i++) {
+      resultMap.set(keys[i].id, flatResponses[i]);
+    }
 
-    return keys.map((key, index) => ({
-      id: key.id,
-      result: flatResponses[index],
-    }));
+    return resultMap;
   },
 
-  resolver: (items: any[], query) => {
-    return items.find((item) => item.id === query.id)?.result;
+  resolver: (items: Map<string, any>, query) => {
+    // ⚡ Bolt: O(1) lookup instead of O(N^2) items.find
+    return items.get(query.id);
   },
 
   scheduler: windowScheduler(10),

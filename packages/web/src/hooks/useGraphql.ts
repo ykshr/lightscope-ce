@@ -31,17 +31,14 @@ const gqlBatch = create<any, GqlKey>({
     }
 
     const chunkResults = await Promise.all(chunkPromises);
-    const results: { id: string; result: any }[] = [];
+    const results = new Map<string, any>();
     let k = 0;
 
     for (let i = 0; i < chunkResults.length; i++) {
       const chunk = chunkResults[i];
       if (chunk) {
         for (let j = 0; j < chunk.length; j++) {
-          results.push({
-            id: keys[k++].id,
-            result: chunk[j],
-          });
+          results.set(keys[k++].id, chunk[j]);
         }
       }
     }
@@ -49,8 +46,8 @@ const gqlBatch = create<any, GqlKey>({
     return results;
   },
 
-  resolver: (items: any[], query) => {
-    return items.find((item) => item.id === query.id)?.result;
+  resolver: (items: Map<string, any>, query) => {
+    return items.get(query.id);
   },
 
   scheduler: windowScheduler(10),

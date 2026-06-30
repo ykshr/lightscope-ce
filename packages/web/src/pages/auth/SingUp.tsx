@@ -3,6 +3,11 @@ import { Input } from '@/components/ui/input';
 import authClient from '@/helpers/auth';
 import React, { useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
+import {
+  IS_APPLE_AUTH_ENABLED,
+  IS_GOOGLE_AUTH_ENABLED,
+  IS_MICROSOFT_AUTH_ENABLED,
+} from '@/helpers/env';
 
 interface AuthContext {
   email: string;
@@ -95,40 +100,48 @@ export default function SingUp() {
           </Button>
         </form>
 
-        <div className="relative my-4">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border" />
+        {(IS_GOOGLE_AUTH_ENABLED || IS_APPLE_AUTH_ENABLED || IS_MICROSOFT_AUTH_ENABLED) && (
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+            </div>
           </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-          </div>
-        </div>
+        )}
 
         <div className="space-y-3">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={() => handleSocialSignIn('google')}
-          >
-            Sign up with Google
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={() => handleSocialSignIn('apple')}
-          >
-            Sign up with Apple
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={() => handleSocialSignIn('microsoft')}
-          >
-            Sign up with Microsoft
-          </Button>
+          {IS_GOOGLE_AUTH_ENABLED && (
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => handleSocialSignIn('google')}
+            >
+              Sign up with Google
+            </Button>
+          )}
+          {IS_APPLE_AUTH_ENABLED && (
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => handleSocialSignIn('apple')}
+            >
+              Sign up with Apple
+            </Button>
+          )}
+          {IS_MICROSOFT_AUTH_ENABLED && (
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => handleSocialSignIn('microsoft')}
+            >
+              Sign up with Microsoft
+            </Button>
+          )}
         </div>
 
         <div className="text-center text-sm mt-4">

@@ -54,19 +54,31 @@ const auth = createBetterAuth({
   },
   plugins: [organization()],
   socialProviders: {
-    google: {
-      clientId: '',
-      clientSecret: '',
-    },
-    microsoft: {
-      clientId: '',
-      clientSecret: '',
-    },
-    apple: {
-      clientId: '',
-      clientSecret: '',
-      appBundleIdentifier: '',
-    },
+    ...(process.env.GOOGLE_CLIENT_ID &&
+      process.env.GOOGLE_CLIENT_SECRET && {
+        google: {
+          clientId: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        },
+      }),
+    ...(process.env.MICROSOFT_CLIENT_ID &&
+      process.env.MICROSOFT_CLIENT_SECRET && {
+        microsoft: {
+          clientId: process.env.MICROSOFT_CLIENT_ID,
+          clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
+        },
+      }),
+    ...(process.env.APPLE_CLIENT_ID &&
+      process.env.APPLE_TEAM_ID &&
+      process.env.APPLE_KEY_ID &&
+      process.env.APPLE_PRIVATE_KEY &&
+      process.env.APPLE_APP_BUNDLE_IDENTIFIER && {
+        apple: {
+          clientId: process.env.APPLE_CLIENT_ID,
+          clientSecret: process.env.APPLE_CLIENT_SECRET || '',
+          appBundleIdentifier: process.env.APPLE_APP_BUNDLE_IDENTIFIER,
+        },
+      }),
   },
 });
 

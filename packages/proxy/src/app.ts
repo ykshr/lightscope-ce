@@ -24,7 +24,7 @@ export function createApp(createContext: (c: Context) => Promise<$>) {
     const corsMiddlewareHandler = cors({
       origin: (origin) => {
         if (!origins) return undefined;
-        if (origins.includes('*')) return origin;
+        if (origins.includes('*')) return '*';
         return origins.includes(origin) ? origin : undefined;
       },
       allowHeaders,

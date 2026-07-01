@@ -19,4 +19,4 @@ COPY packages/api ./packages/api
 
 # Start dev server
 WORKDIR /app/packages/api
-CMD sh -c "pnpm run db:push && pnpm dev"
+CMD sh -c "pnpm run prebuild && pnpm run db:push && pnpm dev"

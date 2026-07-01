@@ -12,8 +12,10 @@
   "scripts": {
     "test": "vitest run tests/unit",
     "test:watch": "vitest",
-    "build": "prisma generate && pnpm run codegen && tsc -b",
-    "build:notypecheck": "esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js --alias:@=./src",
+    "test:integration": "export DATABASE_URL=file:./prisma/db/test.db && prisma migrate reset --force && vitest run tests/integration",
+    "prebuild": "prisma generate && pnpm run codegen",
+    "build": "pnpm run prebuild && tsc -b",
+    "build:notypecheck": "pnpm run prebuild && esbuild src/index.ts --platform=node --bundle --outfile=dist/bundle.js --alias:@=./src",
     "start": "node dist/bundle.js",
     "dev": "tsx --tsconfig tsconfig.app.json src/index.ts",
     "codegen": "graphql-codegen --config codegen.ts",
@@ -21,8 +23,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "test:integration": "export DATABASE_URL=file:./prisma/db/test.db && prisma migrate reset --force && vitest run tests/integration",
-    "postinstall": "prisma generate && pnpm run codegen"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@clickhouse/client": "^1.14.0",

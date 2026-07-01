@@ -12,14 +12,14 @@
   "scripts": {
     "test": "vitest run tests/unit",
     "test:watch": "vitest",
+    "test:integration": "WAIT_PORTS=3000 docker compose up -d web && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v",
     "dev": "vite --host",
-    "build": "pnpm run codegen && tsc -b && vite build",
+    "prebuild": "pnpm run codegen && tsc -b",
+    "build": "pnpm run prebuild && vite build",
     "lint": "eslint . --cache --cache-location .eslintcache",
     "preview": "vite preview",
     "shadcn": "pnpm dlx shadcn@latest add",
-    "codegen": "graphql-codegen --config codegen.ts",
-    "test:integration": "WAIT_PORTS=3000 docker compose up -d web && node ../../utils/wait-for-services.js && vitest run integration ; docker compose down -v",
-    "postinstall": "pnpm run codegen"
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@graphql-codegen/cli": "^6.1.0",

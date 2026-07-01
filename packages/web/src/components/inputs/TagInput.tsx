@@ -33,6 +33,7 @@ export default function TagInput({ label, value = [], onChange }: TagInputProps)
       <div className="flex gap-2 justify-center items-center">
         <input
           id={inputId}
+          aria-label={label ? undefined : 'Add new tag'}
           className="flex-1 px-3 py-2 border rounded-lg"
           placeholder="New..."
           value={inputValue}

@@ -90,7 +90,17 @@ export default function Trackers({ org, me }: Props) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {isActive(expiresAt) ? <Check color="green" /> : <X color="red" />}
+                  {isActive(expiresAt) ? (
+                    <>
+                      <Check color="green" aria-hidden="true" />
+                      <span className="sr-only">Active</span>
+                    </>
+                  ) : (
+                    <>
+                      <X color="red" aria-hidden="true" />
+                      <span className="sr-only">Inactive</span>
+                    </>
+                  )}
                 </TableCell>
                 <TableCell>{createdAt.toLocaleString()}</TableCell>
                 <TableCell>{expiresAt?.toLocaleString() || 'Never'}</TableCell>

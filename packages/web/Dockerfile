@@ -19,4 +19,4 @@ COPY packages/web ./packages/web
 
 # Start dev server
 WORKDIR /app/packages/web
-CMD sh -c "pnpm dev --host"
+CMD sh -c "pnpm run codegen && pnpm dev --host"

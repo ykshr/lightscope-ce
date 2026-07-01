@@ -1,4 +1,4 @@
-FROM clickhouse/clickhouse-server:25.5.3.75
+FROM clickhouse/clickhouse-server:25.5.3.75-alpine
 
 
 COPY ./src/config.xml /etc/clickhouse-server/config.xml

@@ -45,16 +45,12 @@ jobs:
           JWT_SECRET: ci-test-secret-do-not-use-in-prod
 
   e2e:
-    needs: [lint-and-format, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Node and pnpm
         uses: ./.github/actions/setup
-
-      - name: Run build
-        run: pnpm run build
 
       - name: Get Playwright version
         id: playwright-version

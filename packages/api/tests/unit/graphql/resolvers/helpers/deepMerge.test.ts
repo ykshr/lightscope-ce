@@ -41,7 +41,7 @@ describe('deepMerge', () => {
 
   it('should ignore non-object sources', () => {
     const target = { a: 1 };
-    // @ts-expect-error - testing invalid inputs
+    // @ts-ignore
     expect(deepMerge(target, null, undefined, 123, 'string')).toEqual({ a: 1 });
   });
 
